@@ -32,7 +32,7 @@ public class CoaraServiceImpl implements CoaraService{
 //		if(dao.updateInquiry(inquiry) == 0) {
 //			throw new InquiryNotFoundException("can't find the same ID");
 //		}
-//	}testdayo
+//	}testdayo test2
 	
 	@Override
 	public List<Coara> getAll() {
