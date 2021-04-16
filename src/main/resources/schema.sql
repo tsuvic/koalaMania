@@ -1,0 +1,7 @@
+CREATE TABLE coara
+(
+   id INT NOT NULL AUTO_INCREMENT,
+   name VARCHAR(100) NOT NULL,
+   sex INT(1) NOT NULL,
+   PRIMARY KEY(id)
+);
