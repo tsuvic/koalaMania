@@ -1,31 +1,29 @@
 package com.example.demo.entity;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Coara {
-	private int id;
-	private String name;
-	private String email;
-	private String contents;
-	private LocalDateTime created;
 	
-	public Coara() {};
-	
-	public Coara(int id, String name, String email, String contents, LocalDateTime created) {
+	public Coara() {
 		super();
-		this.id = id;
-		this.name = name;
-		this.email = email;
-		this.contents = contents;
-		this.created = created;
+		// TODO Auto-generated constructor stub
 	}
-
-
-	public int getId() {
-		return id;
+	
+	private int coara_id;
+	private String name;
+	private int is_male;
+	private Date birthdate;
+	private int is_alive;
+	private Date deathdate;
+	private String zoo;
+	private String mother;
+	private String father;
+	
+	public int getCoara_id() {
+		return coara_id;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setCoara_id(int coara_id) {
+		this.coara_id = coara_id;
 	}
 	public String getName() {
 		return name;
@@ -33,22 +31,46 @@ public class Coara {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getEmail() {
-		return email;
+	public int getIs_male() {
+		return is_male;
 	}
-	public void setEmail(String email) {
-		this.email = email;
+	public void setIs_male(int is_male) {
+		this.is_male = is_male;
 	}
-	public String getContents() {
-		return contents;
+	public Date getBirthdate() {
+		return birthdate;
 	}
-	public void setContents(String contents) {
-		this.contents = contents;
+	public void setBirthdate(Date birthdate) {
+		this.birthdate = birthdate;
 	}
-	public LocalDateTime getCreated() {
-		return created;
+	public int getIs_alive() {
+		return is_alive;
 	}
-	public void setCreated(LocalDateTime created) {
-		this.created = created;
+	public void setIs_alive(int is_alive) {
+		this.is_alive = is_alive;
+	}
+	public String getZoo() {
+		return zoo;
+	}
+	public void setZoo(String zoo) {
+		this.zoo = zoo;
+	}
+	public String getMother() {
+		return mother;
+	}
+	public void setMother(String mother) {
+		this.mother = mother;
+	}
+	public String getFather() {
+		return father;
+	}
+	public void setFather(String father) {
+		this.father = father;
+	}
+	public Date getDeathdate() {
+		return deathdate;
+	}
+	public void setDeathdate(Date deathdate) {
+		this.deathdate = deathdate;
 	}
 }
