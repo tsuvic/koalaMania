@@ -17,7 +17,6 @@ public class CoaraServiceImpl implements CoaraService{
 	public CoaraServiceImpl(CoaraDao dao) {
 		this.dao = dao;
 	}
-	
 
 	@Override
 	public List<Coara> getAll() {

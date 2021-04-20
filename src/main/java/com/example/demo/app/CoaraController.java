@@ -14,18 +14,41 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.entity.Coara;
+import com.example.demo.service.CoaraService;
+
+
 @Controller
-@RequestMapping("/")
+@RequestMapping("/")  
 public class CoaraController {
 	
+//	下記のリクエストで使用するために、CoaraService型のフィールド用意 & @AutowiredでDIを実施する。	
+	private final CoaraService coaraService;
+
+	@Autowired
+	public CoaraController(CoaraService coaraService) {
+		this.coaraService = coaraService;
+	}	
+
+//ドメインに対してリクエストが来た際には/indexを返す
 	@GetMapping
 	public String index() {
-		
 		return"/index";
 	}
 	
+	// /indexに対してリクエストが来た際には/indexを返す
+	@GetMapping("/index")
+	public String indexReload() {
+		return"/index";
+	}
+
+
 	@GetMapping("/search")
-	public String form() {
+	public String form(Model model) {
+		List<Coara> list = coaraService.getAll();
+		model.addAttribute("coaraList", list);
+		model.addAttribute("title","コアラ一覧");
+		
 		return "/search";
 	}
 	

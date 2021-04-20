@@ -1,12 +1,74 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title th:text="${title}">Search</title>
-</head>
-<body>
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
-test
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author"
+	content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+<meta name="generator" content="Hugo 0.79.0">
+<title>coaraMania</title>
+
+<link rel="canonical"
+	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
+<!-- Bootstrap core CSS -->
+<link
+	href=https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css
+	rel="stylesheet"
+	integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+	crossorigin="anonymous">
+
+<!-- Custom styles for this template -->
+<link href="/css/starter-template.css" rel="stylesheet">
+<title th:text="${title}">Insert title here</title>
+</head>
+
+<body>
+	<h1 th:text="${title}">タイトル</h1>
+	<!--タイトル名を 変数式でControllerから取得 -->
+
+	<div class="container">
+		<table class="table table-striped">
+			<thead class="thead-dark">
+				<tr>
+					<th>コアラID</th>
+					<th>コアラ名</th>
+					<th>性別</th>
+					<th>生年月日</th>
+					<th>生死</th>
+					<th>死亡日</th>
+					<th>動物園ID（FK制約）</th>
+					<th>母親（FK制約）</th>
+					<th>父親（FK制約）</th>
+					<th colspan="2"></th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr th:each="coara : ${coaraList}">
+					<td th:text="${coara.coara_id}"></td>
+					<td th:text="${coara.name}"></td>
+					<td th:if="${coara.is_male == 1}">男</td>
+					<td th:if="${coara.is_male == 0}">女</td>
+					<td th:text="${coara.birthdate}"></td>
+					<td th:if="${coara.is_alive == 1}">生</td>
+					<td th:if="${coara.is_alive == 0}">死亡</td>
+					<td th:text="${coara.deathdate}"></td>
+					<td th:text="${coara.zoo}"></td>
+					<td th:text="${coara.mother}"></td>
+					<td th:text="${coara.father}"></td>
+					<td><a class="btn btn-outline-primary btn-sm">編集</a></td>
+					<td>
+						<form th:action="@{/}" method="post">
+							<button class="delete-action btn btn-outline-danger btn-sm"
+								type="submit">削除</button>
+						</form>
+					</td>
+			</tbody>
+		</table>
+	</div>
 
 </body>
 </html>

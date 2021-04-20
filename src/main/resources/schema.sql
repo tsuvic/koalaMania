@@ -5,6 +5,7 @@ CREATE TABLE coara
    is_male INT(1) NOT NULL,
    birthdate DATE,
    is_alive INT(1) NOT NULL,
+　　deathdate DATE,
    zoo VARCHAR(50) NOT NULL,
    mother VARCHAR(50) NOT NULL,
    father VARCHAR(50) NOT NULL,
