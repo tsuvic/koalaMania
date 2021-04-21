@@ -47,7 +47,7 @@ public class CoaraController {
 	public String form(Model model) {
 		List<Coara> list = coaraService.getAll();
 		model.addAttribute("coaraList", list);
-		model.addAttribute("title","コアラ一覧");
+		model.addAttribute("searchResult","検索結果一覧");
 		
 		return "/search";
 	}

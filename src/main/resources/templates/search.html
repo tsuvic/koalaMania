@@ -4,11 +4,7 @@
 
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="author"
-	content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-<meta name="generator" content="Hugo 0.79.0">
+
 <title>coaraMania</title>
 
 <link rel="canonical"
@@ -22,15 +18,24 @@
 
 <!-- Custom styles for this template -->
 <link href="/css/starter-template.css" rel="stylesheet">
-<title th:text="${title}">Insert title here</title>
+<title th:text="${title}">検索画面</title>
 </head>
 
 <body>
-	<h1 th:text="${title}">タイトル</h1>
-	<!--タイトル名を 変数式でControllerから取得 -->
 
 	<div class="container">
-		<table class="table table-striped">
+	<label for="coara_name">コアラ名:</label>
+	<input id="coara_name" name="coara_name" type="text"><br>
+
+	<label for="zoo_id">動物園名:</label>
+	<input id="coara_name" name="coara_name" type="text"><br>
+	
+	<input type="submit" value="検索"><br><br><br>
+
+
+		<h2 th:text="${searchResult}">検索結果一覧</h2>
+		<!--タイトル名を 変数式でControllerから取得 -->
+		<table class="table table-hover table-responsive">
 			<thead class="thead-dark">
 				<tr>
 					<th>コアラID</th>
@@ -45,9 +50,8 @@
 					<th colspan="2"></th>
 				</tr>
 			</thead>
-
 			<tbody>
-				<tr th:each="coara : ${coaraList}">
+				<tr style="height: 100px;" th:each="coara : ${coaraList}">
 					<td th:text="${coara.coara_id}"></td>
 					<td th:text="${coara.name}"></td>
 					<td th:if="${coara.is_male == 1}">男</td>
