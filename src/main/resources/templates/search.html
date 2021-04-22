@@ -24,13 +24,21 @@
 <body>
 
 	<div class="container">
-	<label for="coara_name">コアラ名:</label>
-	<input id="coara_name" name="coara_name" type="text"><br>
-
-	<label for="zoo_id">動物園名:</label>
-	<input id="coara_name" name="coara_name" type="text"><br>
 	
-	<input type="submit" value="検索"><br><br><br>
+			<h2>検索条件</h2>
+			
+	<div class="d-flex justify-content-center">
+	<label class="mx-2"  for="coara_name">コアラ名:</label>
+	<input class="mx-2"  id="coara_name" name="coara_name" type="text">
+
+	<label class="mx-2"  for="zoo_id">動物園名:</label>
+	<input class="mx-2"  id="zoo_id" name="zoo_id" type="text">
+</div>
+<br>
+	<div class="d-grid col-6 mx-auto">
+	<input class="btn btn-md btn-primary" type="submit" value="検索">
+	</div>
+	<br><br>
 
 
 		<h2 th:text="${searchResult}">検索結果一覧</h2>
@@ -47,7 +55,7 @@
 					<th>動物園ID（FK制約）</th>
 					<th>母親（FK制約）</th>
 					<th>父親（FK制約）</th>
-					<th colspan="2"></th>
+					<th colspan="1"></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -63,13 +71,7 @@
 					<td th:text="${coara.zoo}"></td>
 					<td th:text="${coara.mother}"></td>
 					<td th:text="${coara.father}"></td>
-					<td><a class="btn btn-outline-primary btn-sm">編集</a></td>
-					<td>
-						<form th:action="@{/}" method="post">
-							<button class="delete-action btn btn-outline-danger btn-sm"
-								type="submit">削除</button>
-						</form>
-					</td>
+					<td><a class="btn btn-sm btn-info" th:href="@{/search}">詳細情報</a></td>
 			</tbody>
 		</table>
 	</div>
