@@ -9,4 +9,7 @@ import com.example.demo.entity.Coara;
 public interface CoaraDao {
 	
 	List<Coara> getAll();
+	
+	Coara findById(Long id);
+	
 }

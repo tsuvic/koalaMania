@@ -22,4 +22,11 @@ public class CoaraServiceImpl implements CoaraService{
 	public List<Coara> getAll() {
 		return dao.getAll();
 	}
+	
+	@Override
+	public Coara findById(Long id) {
+		return dao.findById(id);
+	}
+	
+	
 }

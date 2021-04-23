@@ -9,4 +9,6 @@ public interface CoaraService {
 	
 	List<Coara> getAll();
 
+	Coara findById(Long id);
+	
 }
