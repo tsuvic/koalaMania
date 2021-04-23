@@ -21,6 +21,8 @@ public class Coara {
 	private String zoo;
 	private String mother;
 	private String father;
+	private String details;
+	private String feature;
 	
 	public Coara(String name, String zoo) {
 		this.name = name;
