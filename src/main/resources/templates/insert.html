@@ -1,0 +1,90 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author"
+	content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+<meta name="generator" content="Hugo 0.79.0">
+<title>coaraMania</title>
+
+<link rel="canonical"
+	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
+<!-- Bootstrap core CSS -->
+<link
+	href=https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css
+	rel="stylesheet"
+	integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+	crossorigin="anonymous">
+
+<!-- Custom styles for this template -->
+<link href="/css/starter-template.css" rel="stylesheet">
+<title th:text="${title}">Insert title here</title>
+</head>
+
+<body>
+	<h1 th:text="${title}">タイトル</h1>
+	<!--タイトル名を 変数式でControllerから取得 -->
+
+	<div class="container">
+		<form  action="/insert"  method="post">
+			 <div class="form-group">
+				名前：<input type="text" class="form-control"  name="name" />
+			</div>
+			<div class="form-group">
+			性別：<select name="is_male">
+              		<option th:each="item : ${sexItems}" th:value="${item.key}" th:text="${item.value}">
+              		</option>
+              		</select>
+            </div>
+             <div class="form-group">
+            生死：<select name="is_alive">
+              		<option th:each="item : ${isAliveItems}" th:value="${item.key}" th:text="${item.value}">
+              		</option>
+				  </select>
+			</div>
+			 <div class="form-group">
+			生年月日：<select name="birthYear">
+							  	<option th:each="i : ${#numbers.sequence(1900, 2021)}" th:value="${i}" th:text="${i}"></option>
+							 </select>年
+							<select name="birthMonth">
+								<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}" th:text="${i}"></option>
+							</select>月
+							<select name="birthDay">
+								<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}" th:text="${i}"></option>
+							</select>日
+			</div>
+			<div class="form-group">
+			死亡日：<select name="deathYear">
+							  	<option th:each="i : ${#numbers.sequence(1900, 2021)}" th:value="${i}" th:text="${i}"></option>
+							 </select>年
+							<select name="deathMonth">
+								<option th:each="i : ${#numbers.sequence(01, 12)}" th:value="${i}" th:text="${i}"></option>
+							</select>月
+							<select name="deathDay">
+								<option th:each="i : ${#numbers.sequence(01, 31)}" th:value="${i}" th:text="${i}"></option>
+							</select>日
+			</div>
+			<div class="form-group">
+				動物園：<input type="text" class="form-control"  name="zoo"/>
+			</div>
+			<div class="form-group">
+				母親：<input type="text" class="form-control"  name="mother"/>
+				父親：<input type="text" class="form-control"  name="father"/>
+			</div>
+			 <div class="form-group">
+				詳細：<textarea  class="form-control" name="details"></textarea>
+			</div>
+			<div class="form-group">
+				特徴：<textarea  class="form-control" name="feature"></textarea>
+			</div>
+			<button class="btn btn-outline-primary btn-sm"
+								type="submit">追加</button>
+			</form>	
+	</div>
+
+</body>
+</html>

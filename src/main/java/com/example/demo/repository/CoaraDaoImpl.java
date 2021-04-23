@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -46,4 +47,26 @@ public class CoaraDaoImpl implements CoaraDao{
 		return list;
 	}
 	
+	@Override
+	public void insert(Coara coara){
+		jdbcTemplate.update("INSERT INTO coara(name, is_male, birthdate, is_alive, deathdate, zoo, mother, father, details, feature) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+				coara.getName(),coara.getIs_male(),coara.getBirthdate(),coara.getIs_alive(),coara.getDeathdate(),coara.getZoo(),coara.getMother(),coara.getFather(),coara.getDetails(),coara.getFeature());
+	}
+	
+}
+
+	@Override
+	public Coara findById(Long id) {
+		String sql = "SELECT name, zoo FROM coara WHERE coara_id = ?";
+
+		Map<String, Object> oneCoara = jdbcTemplate.queryForMap(sql, id);
+		
+		Coara coara = new Coara(
+				(String)oneCoara.get("name")
+				,(String)oneCoara.get("zoo")
+				);	
+		
+		return coara;
+		
+	}
 }

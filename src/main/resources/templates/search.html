@@ -4,11 +4,7 @@
 
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="author"
-	content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-<meta name="generator" content="Hugo 0.79.0">
+
 <title>coaraMania</title>
 
 <link rel="canonical"
@@ -22,15 +18,32 @@
 
 <!-- Custom styles for this template -->
 <link href="/css/starter-template.css" rel="stylesheet">
-<title th:text="${title}">Insert title here</title>
+<title th:text="${title}">検索画面</title>
 </head>
 
 <body>
-	<h1 th:text="${title}">タイトル</h1>
-	<!--タイトル名を 変数式でControllerから取得 -->
 
 	<div class="container">
-		<table class="table table-striped">
+	
+			<h2>検索条件</h2>
+			
+	<div class="d-flex justify-content-center">
+	<label class="mx-2"  for="coara_name">コアラ名:</label>
+	<input class="mx-2"  id="coara_name" name="coara_name" type="text">
+
+	<label class="mx-2"  for="zoo_id">動物園名:</label>
+	<input class="mx-2"  id="zoo_id" name="zoo_id" type="text">
+</div>
+<br>
+	<div class="d-grid col-6 mx-auto">
+	<input class="btn btn-md btn-primary" type="submit" value="検索">
+	</div>
+	<br><br>
+
+
+		<h2 th:text="${searchResult}">検索結果一覧</h2>
+		<!--タイトル名を 変数式でControllerから取得 -->
+		<table class="table table-hover table-responsive">
 			<thead class="thead-dark">
 				<tr>
 					<th>コアラID</th>
@@ -42,32 +55,26 @@
 					<th>動物園ID（FK制約）</th>
 					<th>母親（FK制約）</th>
 					<th>父親（FK制約）</th>
-					<th colspan="2"></th>
+					<th colspan="1"></th>
 				</tr>
 			</thead>
-
 			<tbody>
-				<tr th:each="coara : ${coaraList}">
-					<td th:text="${coara.coara_id}"></td>
-					<td th:text="${coara.name}"></td>
-					<td th:if="${coara.is_male == 1}">男</td>
-					<td th:if="${coara.is_male == 0}">女</td>
-					<td th:text="${coara.birthdate}"></td>
-					<td th:if="${coara.is_alive == 1}">生</td>
-					<td th:if="${coara.is_alive == 0}">死亡</td>
-					<td th:text="${coara.deathdate}"></td>
-					<td th:text="${coara.zoo}"></td>
-					<td th:text="${coara.mother}"></td>
-					<td th:text="${coara.father}"></td>
-					<td><a class="btn btn-outline-primary btn-sm">編集</a></td>
-					<td>
-						<form th:action="@{/}" method="post">
-							<button class="delete-action btn btn-outline-danger btn-sm"
-								type="submit">削除</button>
-						</form>
-					</td>
+				<tr style="height: 100px;" th:each="coara : ${coaraList}" th:object="${coara}">
+					<td th:text="*{coara_id}"></td>
+					<td th:text="*{name}"></td>
+					<td th:if="*{is_male == 1}">男</td>
+					<td th:if="*{is_male == 0}">女</td>
+					<td th:text="*{birthdate}"></td>
+					<td th:if="*{is_alive == 1}">生</td>
+					<td th:if="*{is_alive == 0}">死亡</td>
+					<td th:text="*{deathdate}"></td>
+					<td th:text="*{zoo}"></td>
+					<td th:text="*{mother}"></td>
+					<td th:text="*{father}"></td>
+					<td><a class="btn btn-sm btn-info" th:href="@{/detail/{coara_id}(coara_id=*{coara_id})}">詳細情報</a></td>
 			</tbody>
 		</table>
+		<a class="btn btn-outline-primary btn-sm" href="/insert" >追加</a>
 	</div>
 
 </body>
