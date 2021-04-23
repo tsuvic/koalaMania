@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -41,10 +43,10 @@ public class CoaraController {
 
 
 	@GetMapping("/search")
-	public String form(Model model) {
+	public String displayAllCoara(Model model) {
 		List<Coara> list = coaraService.getAll();
 		model.addAttribute("coaraList", list);
-		model.addAttribute("title","コアラ一覧");
+		model.addAttribute("searchResult","検索結果一覧");
 		
 		return "/search";
 	}
@@ -86,5 +88,11 @@ public class CoaraController {
 		return "/search";
 	}
 	
+	@GetMapping("/detail/{id}")
+	public String displayDetailCoara(@PathVariable Long id, Model model) {
+		Coara coara = coaraService.findById(id);
+		model.addAttribute("detail", coara);
+		return "/detail";
+	}
 	
 }

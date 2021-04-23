@@ -9,4 +9,7 @@ public interface CoaraDao {
 	List<Coara> getAll();
 	
 	void insert(Coara coara);
+
+  Coara findById(Long id);
+	
 }

@@ -12,4 +12,6 @@ public interface CoaraService {
 	
 	void insert(CoaraInsertForm form);
 
+	Coara findById(Long id);
+	
 }
