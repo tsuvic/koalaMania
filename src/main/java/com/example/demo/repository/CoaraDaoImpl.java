@@ -52,8 +52,6 @@ public class CoaraDaoImpl implements CoaraDao{
 		jdbcTemplate.update("INSERT INTO coara(name, is_male, birthdate, is_alive, deathdate, zoo, mother, father, details, feature) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 				coara.getName(),coara.getIs_male(),coara.getBirthdate(),coara.getIs_alive(),coara.getDeathdate(),coara.getZoo(),coara.getMother(),coara.getFather(),coara.getDetails(),coara.getFeature());
 	}
-	
-}
 
 	@Override
 	public Coara findById(Long id) {
