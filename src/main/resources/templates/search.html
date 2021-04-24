@@ -66,13 +66,20 @@
 					th:object="${coara}">
 					<td th:text="*{coara_id}"></td>
 					<td th:text="*{name}"></td>
+
+          <td th:if="*{is_male == 1}">男</td>
+					<td th:if="*{is_male == 0}">女</td>
+					<td th:if="*{birthdate.toString().equals('9999-01-01')}">不明</td>
+					<td th:unless="*{birthdate.toString().equals('9999-01-01')}" th:text="*{birthdate}"></td>
 					<td th:if="*{sex == 0}">不明</td>
 					<td th:if="*{sex == 1}">男</td>
 					<td th:if="*{sex == 2}">女</td>
 					<td th:text="*{birthdate}"></td>
-					<td th:if="*{is_alive == 1}">生</td>
+
+          <td th:if="*{is_alive == 1}">生</td>
 					<td th:if="*{is_alive == 0}">死亡</td>
-					<td th:text="*{deathdate}"></td>
+					<td th:if="*{deathdate.toString().equals('9999-01-01')}">-</td>
+					<td th:unless="*{deathdate.toString().equals('9999-01-01')}" th:text="*{deathdate}"></td>
 					<td th:text="*{zoo}"></td>
 					<td th:text="*{mother}"></td>
 					<td th:text="*{father}"></td>
