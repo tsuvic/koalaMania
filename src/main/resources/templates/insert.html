@@ -52,7 +52,7 @@
 		const deathDay = $this.elements["deathDay"].value;
 		const birth = [ birthYear, birthMonth, birthDay ];
 		const death = [ deathYear, deathMonth, deathDay ];
-
+		
 		let birthZeroCount = 0;
 		for (let i = 0; i < birth.length; i++) {
 			if (birth[i] == 0) {
@@ -90,7 +90,7 @@
 			alert('特徴を入力してください。');
 			featureFlag = false;
 		}
-		
+		alert(ameFlag && birthFlag && deathFlag && detailsFlag && featureFlag) ;
 		if (nameFlag && birthFlag && deathFlag && detailsFlag && featureFlag) {
 			return true;
 		} else {
