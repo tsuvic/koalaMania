@@ -16,6 +16,9 @@ public class CoaraInsertForm {
 	@Max(1)
 	private int is_alive = 1;
 	@NotBlank
+	private int sex=1;
+	private int is_alive=1;
+  
 	private String birthYear;
 	@NotBlank
 	private String birthMonth;

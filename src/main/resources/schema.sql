@@ -2,7 +2,7 @@ CREATE TABLE coara
 (
    coara_id INT NOT NULL AUTO_INCREMENT,
    name VARCHAR(100) NOT NULL,
-   is_male INT(1) NOT NULL,
+   sex INT(1) NOT NULL,
    birthdate DATE,
    is_alive INT(1) NOT NULL,
 　　deathdate DATE,

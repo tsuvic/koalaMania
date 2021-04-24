@@ -23,22 +23,25 @@
 
 <body>
 
-	<div class="container">
-	
-			<h2>検索条件</h2>
-			
-	<div class="d-flex justify-content-center">
-	<label class="mx-2"  for="coara_name">コアラ名:</label>
-	<input class="mx-2"  id="coara_name" name="coara_name" type="text">
+	<div th:replace="~{block/header_boot::headerA_boot}"></div>
 
-	<label class="mx-2"  for="zoo_id">動物園名:</label>
-	<input class="mx-2"  id="zoo_id" name="zoo_id" type="text">
-</div>
-<br>
-	<div class="d-grid col-6 mx-auto">
-	<input class="btn btn-md btn-primary" type="submit" value="検索">
-	</div>
-	<br><br>
+
+	<div class="container">
+
+		<h2>検索条件</h2>
+
+		<div class="d-flex justify-content-center">
+			<label class="mx-2" for="coara_name">コアラ名:</label> <input
+				class="mx-2" id="coara_name" name="coara_name" type="text">
+
+			<label class="mx-2" for="zoo_id">動物園名:</label> <input class="mx-2"
+				id="zoo_id" name="zoo_id" type="text">
+		</div>
+		<br>
+		<div class="d-grid col-6 mx-auto">
+			<input class="btn btn-md btn-primary" type="submit" value="検索">
+		</div>
+		<br> <br>
 
 
 		<h2 th:text="${searchResult}">検索結果一覧</h2>
@@ -59,25 +62,31 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr style="height: 100px;" th:each="coara : ${coaraList}" th:object="${coara}">
+				<tr style="height: 100px;" th:each="coara : ${coaraList}"
+					th:object="${coara}">
 					<td th:text="*{coara_id}"></td>
 					<td th:text="*{name}"></td>
-					<td th:if="*{is_male == 1}">男</td>
+
+          <td th:if="*{is_male == 1}">男</td>
 					<td th:if="*{is_male == 0}">女</td>
 					<td th:if="*{birthdate.toString().equals('9999-01-01')}">不明</td>
 					<td th:unless="*{birthdate.toString().equals('9999-01-01')}" th:text="*{birthdate}"></td>
-					<td th:if="*{is_alive == 1}">生</td>
+					<td th:if="*{sex == 0}">不明</td>
+					<td th:if="*{sex == 1}">男</td>
+					<td th:if="*{sex == 2}">女</td>
+					<td th:text="*{birthdate}"></td>
+
+          <td th:if="*{is_alive == 1}">生</td>
 					<td th:if="*{is_alive == 0}">死亡</td>
 					<td th:if="*{deathdate.toString().equals('9999-01-01')}">-</td>
 					<td th:unless="*{deathdate.toString().equals('9999-01-01')}" th:text="*{deathdate}"></td>
 					<td th:text="*{zoo}"></td>
 					<td th:text="*{mother}"></td>
 					<td th:text="*{father}"></td>
-					<td><a class="btn btn-sm btn-info" th:href="@{/detail/{coara_id}(coara_id=*{coara_id})}">詳細情報</a></td>
+					<td><a class="btn btn-sm btn-info"
+						th:href="@{/detail/{coara_id}(coara_id=*{coara_id})}">詳細情報</a></td>
 			</tbody>
 		</table>
-		<a class="btn btn-outline-primary btn-sm" href="/insert" >追加</a>
 	</div>
-
 </body>
 </html>

@@ -21,24 +21,22 @@
 <title th:text="${title}">詳細画面</title>
 </head>
 
-  <body>
-  <h1>コアラ情報詳細</h1>
-  <table th:object="${detail}">
-    <tr>
-      <th class="cell_title">名前</th>
-      <th class="cell_required"></th>
-      <td th:text="*{name}"></td>
-    </tr>
-    <tr>
-      <th class="cell_title">動物園</th>
-      <th class="cell_required"></th>
-      <td th:text="*{zoo}"></td>
-    </tr>
-  </table>
-  <div class="btn_area_center">
-    <a th:href="@{/user/{id}/edit(id=*{id})}">編集</a>
-    <a th:href="@{/user/{id}/delete(id=*{id})}">削除</a>
-    <a href="/search">一覧に戻る</a>
-  </div>
-  </body>
+<body>
+		<div th:replace="~{block/header_boot::headerA_boot}"></div>
+		<h2>コアラ情報詳細</h2>
+		<table th:object="${detail}" class="table table-hover table-responsive">	
+			<tr>
+				<th class="cell_title">名前</th>
+				<td th:text="*{name}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">動物園</th>
+				<td th:text="*{zoo}"></td>
+			</tr>
+		</table>
+		<div class="btn_area_center">
+			<a th:href="@{/user/{id}/edit(id=*{id})}">編集</a> <a
+				th:href="@{/user/{id}/delete(id=*{id})}">削除</a> <a href="/search">一覧に戻る</a>
+		</div>
+</body>
 </html>
