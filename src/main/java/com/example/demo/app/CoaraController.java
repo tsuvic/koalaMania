@@ -34,13 +34,13 @@ public class CoaraController {
 //ドメインに対してリクエストが来た際には/indexを返す
 	@GetMapping
 	public String index() {
-		return"/index";
+		return"index";
 	}
 	
 	// /indexに対してリクエストが来た際には/indexを返す
 	@GetMapping("/index")
 	public String indexReload() {
-		return"/index";
+		return"index";
 	}
 
 
@@ -50,7 +50,7 @@ public class CoaraController {
 		model.addAttribute("coaraList", list);
 		model.addAttribute("searchResult","検索結果一覧");
 		
-		return "/search";
+		return "search";
 	}
 	
 	/**
@@ -77,7 +77,7 @@ public class CoaraController {
 		model.addAttribute("title","コアラの登録");
 		model.addAttribute("sexItems",SEX_ITEMS);
 		model.addAttribute("isAliveItems",IS_ALIVE_ITEMS);
-		return "/insert";
+		return "insert";
 	}
 
 	@Autowired
@@ -99,7 +99,7 @@ public class CoaraController {
 	public String displayDetailCoara(@PathVariable Long id, Model model) {
 		Coara coara = coaraService.findById(id);
 		model.addAttribute("detail", coara);
-		return "/detail";
+		return "detail";
 	}
 	
 }
