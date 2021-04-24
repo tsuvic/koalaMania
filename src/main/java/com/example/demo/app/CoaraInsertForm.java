@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class CoaraInsertForm {
 	private String name;
-	private int is_male;
+	private int sex;
 	private int is_alive;
 	private String birthYear;
 	private String birthMonth;

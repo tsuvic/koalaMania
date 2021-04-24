@@ -38,7 +38,7 @@
 					名前：<input type="text" class="form-control" name="name" />
 				</div>
 				<div class="form-group">
-					性別：<select name="is_male">
+					性別：<select name="sex">
 						<option th:each="item : ${sexItems}" th:value="${item.key}"
 							th:text="${item.value}"></option>
 					</select>

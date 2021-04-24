@@ -14,7 +14,7 @@ public class Coara {
 	
 	private int coara_id;
 	private String name;
-	private int is_male;
+	private int sex;
 	private Date birthdate;
 	private int is_alive;
 	private Date deathdate;
