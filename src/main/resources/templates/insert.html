@@ -23,68 +23,169 @@
 <!-- Custom styles for this template -->
 <link href="/css/starter-template.css" rel="stylesheet">
 <title th:text="${title}">Insert title here</title>
+<script type="text/javascript">
+	function isAliveFlag($this) {
+		const isAliveFlag = $this.value;
+		if (isAliveFlag == 1) {
+			document.getElementById("deathYear").disabled = true;
+			document.getElementById("deathMonth").disabled = true;
+			document.getElementById("deathDay").disabled = true;
+		} else {
+			document.getElementById("deathYear").disabled = false;
+			document.getElementById("deathMonth").disabled = false;
+			document.getElementById("deathDay").disabled = false;
+		}
+	}
+
+	function validateSubmit($this) {
+		let nameFlag = true;
+		if(!$this.elements["name"].value){
+			alert('名前を入力してください。');
+			nameFlag = false;
+		}
+		
+		const birthYear = $this.elements["birthYear"].value;
+		const birthMonth = $this.elements["birthMonth"].value;
+		const birthDay = $this.elements["birthDay"].value;
+		const deathYear = $this.elements["deathYear"].value;
+		const deathMonth = $this.elements["deathMonth"].value;
+		const deathDay = $this.elements["deathDay"].value;
+		const birth = [ birthYear, birthMonth, birthDay ];
+		const death = [ deathYear, deathMonth, deathDay ];
+
+		let birthZeroCount = 0;
+		for (let i = 0; i < birth.length; i++) {
+			if (birth[i] == 0) {
+				birthZeroCount++;
+			}
+		}
+
+		let deathZeroCount = 0;
+		for (let i = 0; i < death.length; i++) {
+			if (death[i] == 0) {
+				deathZeroCount++;
+			}
+		}
+
+		let birthFlag = true;
+		if (1 <= birthZeroCount && birthZeroCount <= 2) {
+			alert('生年月日が不正です。');
+			birthFlag = false;
+		}
+
+		let deathFlag = true;
+		if (1 <= deathZeroCount && deathZeroCount <= 2) {
+			alert('死亡日が不正です。');
+			deathFlag = false;
+		}
+		
+		let detailsFlag = true;
+		if(!$this.elements["details"].value){
+			alert('詳細を入力してください。');
+			detailsFlag = false;
+		}
+		
+		let featureFlag = true;
+		if(!$this.elements["feature"].value){
+			alert('特徴を入力してください。');
+			featureFlag = false;
+		}
+		
+		if (nameFlag && birthFlag && deathFlag && detailsFlag && featureFlag) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+</script>
 </head>
 
-<body>
-	<h1 th:text="${title}">タイトル</h1>
-	<!--タイトル名を 変数式でControllerから取得 -->
+		<div th:replace="~{block/header_boot::headerA_boot}"></div>
 
+
+	<body>
+		
 	<div class="container">
-		<form  action="/insert"  method="post">
-			 <div class="form-group">
-				名前：<input type="text" class="form-control"  name="name" />
+	<h1 th:text="${title}">タイトル</h1>
+		<!--タイトル名を 変数式でControllerから取得 -->
+	
+	
+		<form action="/insert" method="post" th:object="${coaraInsertForm}"
+			onsubmit="return validateSubmit(this);">
+			<div class="form-group">
+				名前：<input type="text" class="form-control" th:field="*{name}"
+					th:errorclass="is-invalid" />
+				<div class="invalid-feedback" th:errors="*{name}"></div>
 			</div>
 			<div class="form-group">
-			性別：<select name="is_male">
-              		<option th:each="item : ${sexItems}" th:value="${item.key}" th:text="${item.value}">
-              		</option>
-              		</select>
-            </div>
-             <div class="form-group">
-            生死：<select name="is_alive">
-              		<option th:each="item : ${isAliveItems}" th:value="${item.key}" th:text="${item.value}">
-              		</option>
-				  </select>
-			</div>
-			 <div class="form-group">
-			生年月日：<select name="birthYear">
-							  	<option th:each="i : ${#numbers.sequence(1900, 2021)}" th:value="${i}" th:text="${i}"></option>
-							 </select>年
-							<select name="birthMonth">
-								<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}" th:text="${i}"></option>
-							</select>月
-							<select name="birthDay">
-								<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}" th:text="${i}"></option>
-							</select>日
+				性別：<select th:field="*{sex}">
+					<option th:each="item : ${sexItems}" th:value="${item.key}"
+						th:text="${item.value}"></option>
+				</select>
 			</div>
 			<div class="form-group">
-			死亡日：<select name="deathYear">
-							  	<option th:each="i : ${#numbers.sequence(1900, 2021)}" th:value="${i}" th:text="${i}"></option>
-							 </select>年
-							<select name="deathMonth">
-								<option th:each="i : ${#numbers.sequence(01, 12)}" th:value="${i}" th:text="${i}"></option>
-							</select>月
-							<select name="deathDay">
-								<option th:each="i : ${#numbers.sequence(01, 31)}" th:value="${i}" th:text="${i}"></option>
-							</select>日
+				生死：<select th:field="*{is_alive}" onchange="isAliveFlag(this);">
+					<option th:each="item : ${isAliveItems}" th:value="${item.key}"
+						th:text="${item.value}"></option>
+				</select>
+			</div>
+					<div class="form-group">
+					生年月日：<select th:field="*{birthYear}">
+						<option th:each="i : ${#numbers.sequence(1900, 2021)}"
+							th:value="${i}" th:text="${i}" ></option>
+					</select>年 <select th:field="*{birthMonth}">
+						<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}"
+							th:text="${i}"></option>
+					</select>月 <select th:field="*{birthDay}">
+						<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}"
+							th:text="${i}"></option>
+					</select>日
+				</div>
+			<div class="form-group">
+				死亡日：<select th:field="*{deathYear}" th:disabled="*{is_alive} == 1">
+					<option value="0">--</option>
+					<option th:each="i : ${#numbers.sequence(1900, 2021)}"
+						th:value="${i}" th:text="${i}" th:selected = "${i}==2000"></option>
+				</select>年 <select th:field="*{deathMonth}" th:disabled="*{is_alive} == 1">
+					<option value="0">--</option>
+					<option th:each="i : ${#numbers.sequence(01, 12)}" th:value="${i}"
+						th:text="${i}"></option>
+				</select>月 <select th:field="*{deathDay}" th:disabled="*{is_alive} == 1">
+					<option value="0">--</option>
+					<option th:each="i : ${#numbers.sequence(01, 31)}" th:value="${i}"
+						th:text="${i}"></option>
+				</select>日
 			</div>
 			<div class="form-group">
-				動物園：<input type="text" class="form-control"  name="zoo"/>
+				動物園：<input type="text" class="form-control" th:field="*{zoo}"
+					th:errorclass="is-invalid" />
+				<div class="invalid-feedback" th:errors="*{zoo}"></div>
 			</div>
 			<div class="form-group">
-				母親：<input type="text" class="form-control"  name="mother"/>
-				父親：<input type="text" class="form-control"  name="father"/>
-			</div>
-			 <div class="form-group">
-				詳細：<textarea  class="form-control" name="details"></textarea>
+				母親：<input type="text" class="form-control" th:field="*{mother}"
+					th:errorclass="is-invalid" />
+				<div class="invalid-feedback" th:errors="*{mother}"></div>
+				父親：<input type="text" class="form-control" th:field="*{father}"
+					th:errorclass="is-invalid" />
+				<div class="invalid-feedback" th:errors="*{father}"></div>
 			</div>
 			<div class="form-group">
-				特徴：<textarea  class="form-control" name="feature"></textarea>
+				詳細：
+				<textarea class="form-control" th:field="*{details}"
+					th:errorclass="is-invalid"></textarea>
+				<div class="invalid-feedback" th:errors="*{details}"></div>
 			</div>
-			<button class="btn btn-outline-primary btn-sm"
-								type="submit">追加</button>
-			</form>	
+			<div class="form-group">
+				特徴：
+				<textarea class="form-control" th:field="*{feature}"
+					th:errorclass="is-invalid"></textarea>
+				<div class="invalid-feedback" th:errors="*{feature}"></div>
+			</div>
+			<button class="btn btn-outline-primary btn-sm" type="submit">追加</button>
+		</form>
 	</div>
 
-</body>
+	</body>
+
+
 </html>

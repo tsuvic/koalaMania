@@ -32,7 +32,7 @@ public class CoaraServiceImpl implements CoaraService{
 	public void insert(CoaraInsertForm form){
 		Coara coara = new Coara();
 		coara.setName(form.getName());
-		coara.setIs_male(form.getIs_male());
+		coara.setSex(form.getSex());
 		Date birthDate = getDate(form.getBirthYear(),form.getBirthMonth(),form.getBirthDay());
 		if(birthDate != null) {
 			coara.setBirthdate(birthDate);

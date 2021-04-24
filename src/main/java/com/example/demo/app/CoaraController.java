@@ -7,6 +7,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,36 +58,41 @@ public class CoaraController {
 	 */
 	final static Map<Integer, String> SEX_ITEMS =
 	   (Map<Integer, String>) new LinkedHashMap<Integer, String> (){{
-	      put(0, "女性");
+		  put(2, "女性");
 	      put(1, "男性");
+	      put(0, "不明");
 	}};
 	   
 	/**
-	 * 性別の表示に使用するアイテム
+	 * 生死の表示に使用するアイテム
 	 */
 	final static Map<Integer, String> IS_ALIVE_ITEMS =
 		   (Map<Integer, String>) new LinkedHashMap<Integer, String> (){{
-		      put(0, "死亡");
 		      put(1, "生存");
+		      put(0, "死亡");
   	}};
 	
 	@GetMapping("/insert")
-	public String insert(Model model) {
-		model.addAttribute("title","コアラ追加");
+	public String getInsert(Model model,@ModelAttribute CoaraInsertForm form) {
+		model.addAttribute("title","コアラの登録");
 		model.addAttribute("sexItems",SEX_ITEMS);
 		model.addAttribute("isAliveItems",IS_ALIVE_ITEMS);
 		return "/insert";
 	}
-	
+
 	@Autowired
 	CoaraService service;
 	@PostMapping("/insert")
-	public String insertCoara(Model model,CoaraInsertForm form) {
+	public String insertCoara(Model model,@Validated CoaraInsertForm form,BindingResult bindingResult) {
+		if(bindingResult.hasErrors()) {
+			return getInsert(model,form);
+		}
 		service.insert(form);
 		List<Coara> list = coaraService.getAll();
 		model.addAttribute("coaraList", list);
 		model.addAttribute("title","コアラ一覧");
-		return "/search";
+		return "redirect:/search";
+
 	}
 	
 	@GetMapping("/detail/{id}")
