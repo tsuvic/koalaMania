@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class CoaraInsertForm {
 	private String name;
-	private int sex;
-	private int is_alive;
+	private int sex=1;
+	private int is_alive=1;
 	private String birthYear;
 	private String birthMonth;
 	private String birthDay;

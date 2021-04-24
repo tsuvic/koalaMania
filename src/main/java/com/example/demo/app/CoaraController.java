@@ -56,8 +56,9 @@ public class CoaraController {
 	 */
 	final static Map<Integer, String> SEX_ITEMS =
 	   (Map<Integer, String>) new LinkedHashMap<Integer, String> (){{
-	      put(0, "女性");
+		  put(2, "女性");
 	      put(1, "男性");
+	      put(0, "不明");
 	}};
 	   
 	/**
@@ -65,8 +66,8 @@ public class CoaraController {
 	 */
 	final static Map<Integer, String> IS_ALIVE_ITEMS =
 		   (Map<Integer, String>) new LinkedHashMap<Integer, String> (){{
-		      put(0, "死亡");
 		      put(1, "生存");
+		      put(0, "死亡");
   	}};
 	
 	@GetMapping("/insert")
