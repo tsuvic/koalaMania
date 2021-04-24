@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -53,7 +52,6 @@ public class CoaraDaoImpl implements CoaraDao{
 				coara.getName(),coara.getIs_male(),coara.getBirthdate(),coara.getIs_alive(),coara.getDeathdate(),coara.getZoo(),coara.getMother(),coara.getFather(),coara.getDetails(),coara.getFeature());
 	}
 	
-}
 
 	@Override
 	public Coara findById(Long id) {
