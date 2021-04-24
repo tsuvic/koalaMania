@@ -52,6 +52,13 @@ public class CoaraServiceImpl implements CoaraService{
 	
 	public Date getDate(String year , String month , String day){
 		String hyphen = "-";
+		//年、月、日の中に"--"が含まれていたら、"9999-01-01"を返す。
+		String dummyValue = "0";
+		if(year.equals(dummyValue) || month.equals(dummyValue) || day.equals(dummyValue)) {
+			year = "9999";
+			month = "01";
+			day = "01";
+		}
 		StringBuilder sb = new StringBuilder();
 		sb.append(year);
 		sb.append(hyphen);
