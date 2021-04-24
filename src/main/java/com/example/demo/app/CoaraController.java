@@ -74,7 +74,7 @@ public class CoaraController {
 	
 	@GetMapping("/insert")
 	public String getInsert(Model model,@ModelAttribute CoaraInsertForm form) {
-		model.addAttribute("title","コアラ追加");
+		model.addAttribute("title","コアラの登録");
 		model.addAttribute("sexItems",SEX_ITEMS);
 		model.addAttribute("isAliveItems",IS_ALIVE_ITEMS);
 		return "/insert";

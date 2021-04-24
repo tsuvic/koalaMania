@@ -12,14 +12,12 @@ public class CoaraInsertForm {
 	@NotBlank
 	private String name;
 	@Max(1)
-	private int is_male ;
-	@Max(1)
 	private int is_alive = 1;
-	@NotBlank
-	private int sex=1;
-	private int is_alive=1;
+	
+	private int sex=2;
+
   
-	private String birthYear;
+	private String birthYear = "2000";
 	@NotBlank
 	private String birthMonth;
 	@NotBlank
