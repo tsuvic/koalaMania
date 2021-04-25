@@ -80,9 +80,9 @@
 			birthFlag = false;
 		}
 		
-		const birthDate = parseInt(birthYear + birthMonth + birthDay);
-		let deathDate = parseInt(deathYear + deathMonth + deathDay);
-		if(deathDate == 000){
+		const birthDate = zeroPadding(birthYear,birthMonth,birthDay);
+		let deathDate = zeroPadding(deathYear,deathMonth,deathDay);
+		if(deathDate == 00000000){
 			deathDate = 99990101;
 		}
 		
@@ -109,6 +109,14 @@
 		} else {
 			return false;
 		}
+	}
+	
+	function zeroPadding(year,month,day) {
+		let intYear = ("0000" + parseInt(year)).slice(-4) ;
+		let intMonth = ("00" + parseInt(month)).slice(-2) ;
+		let intDay = ("00" + parseInt(day)).slice(-2) ;
+		
+		return parseInt(""+intYear+intMonth+intDay);
 	}
 </script>
 </head>

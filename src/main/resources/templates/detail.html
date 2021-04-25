@@ -46,8 +46,8 @@
 			</tr>
 			<tr>
 				<th class="cell_title">生年月日</th>
-				<td th:if="*{stringBirthDate.equals('9999年01月01日')}">不明</td>
-				<td th:unless="*{stringBirthDate.toString().equals('9999年01月01日')}"
+				<td th:if="*{stringBirthDate.equals('9999年1月1日')}">不明</td>
+				<td th:unless="*{stringBirthDate.toString().equals('9999年1月1日')}"
 						th:text="*{stringBirthDate}"></td>
 			</tr>
 			<tr>
@@ -57,8 +57,8 @@
 			</tr>
 			<tr>
 				<th class="cell_title">死亡日</th>
-				<td th:if="*{stringDeathDate.equals('9999年01月01日')}">-</td>
-				<td th:unless="*{stringDeathDate.equals('9999年01月01日')}"
+				<td th:if="*{stringDeathDate.equals('9999年1月1日')}">-</td>
+				<td th:unless="*{stringDeathDate.equals('9999年1月1日')}"
 						th:text="*{stringDeathDate}"></td>
 			</tr>
 			<tr>

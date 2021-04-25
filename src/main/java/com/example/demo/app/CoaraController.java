@@ -106,7 +106,7 @@ public class CoaraController {
 		model.addAttribute("title","コアラ情報詳細");
 		Date birthDate = (Date) coara.getBirthdate();
 		Date deathDate = (Date) coara.getDeathdate();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日");
 		String stringBirthDate =  sdf.format(birthDate);
 		String stringDeathDate =  sdf.format(deathDate);
 		coara.setStringBirthDate(stringBirthDate);
