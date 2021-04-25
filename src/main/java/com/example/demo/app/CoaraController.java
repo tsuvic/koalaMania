@@ -88,9 +88,6 @@ public class CoaraController {
 			return getInsert(model,form);
 		}
 		service.insert(form);
-		List<Coara> list = coaraService.getAll();
-		model.addAttribute("coaraList", list);
-		model.addAttribute("title","コアラ一覧");
 		return "redirect:/search";
 
 	}
