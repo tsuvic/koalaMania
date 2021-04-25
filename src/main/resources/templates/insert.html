@@ -38,6 +38,9 @@
 			document.getElementById("deathYear").disabled = false;
 			document.getElementById("deathMonth").disabled = false;
 			document.getElementById("deathDay").disabled = false;
+			document.getElementById("deathYear").value = "2000";
+			document.getElementById("deathMonth").value = "1";
+			document.getElementById("deathDay").value = "1";
 		}
 	}
 
@@ -122,6 +125,7 @@
 	
 		<form action="/insert" method="post" th:object="${coaraInsertForm}"
 			onsubmit="return validateSubmit(this);">
+			<input th:unless="*{coara_id}==0" type="hidden" th:field="*{coara_id}">
 			<div class="form-group">
 				名前：<input type="text" class="form-control" th:field="*{name}"
 					th:errorclass="is-invalid" />
@@ -194,7 +198,8 @@
 					th:errorclass="is-invalid"></textarea>
 				<div class="invalid-feedback" th:errors="*{feature}"></div>
 			</div>
-			<button class="btn btn-outline-primary btn-sm" type="submit">追加</button>
+			<button th:if="*{coara_id}==0" class="btn btn-outline-primary btn-sm" type="submit">追加</button>
+			<button th:unless="*{coara_id}==0" class="btn btn-outline-primary btn-sm" type="submit">保存</button>
 			<button class="btn btn-outline-danger btn-sm" type="button" onclick="location.href='/search'" >一覧に戻る</button>
 		</form>
 	</div>

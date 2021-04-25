@@ -75,9 +75,38 @@ public class CoaraServiceImpl implements CoaraService{
 			return null;
 		}
 	}
+	
 	@Override
 	public Coara findById(Long id) {
 		return dao.findById(id);
+	}
+	
+	@Override
+	public void update(CoaraInsertForm form) {
+		Coara coara = new Coara();
+		coara.setCoara_id(form.getCoara_id());
+		coara.setName(form.getName());
+		coara.setSex(form.getSex());
+		Date birthDate = getDate(form.getBirthYear(),form.getBirthMonth(),form.getBirthDay());
+		if(birthDate != null) {
+			coara.setBirthdate(birthDate);
+		}
+		coara.setIs_alive(form.getIs_alive());
+		Date deathDate = getDate(form.getDeathYear(),form.getDeathMonth(),form.getDeathDay());
+		if(deathDate != null) {
+			coara.setDeathdate(deathDate);
+		}
+		coara.setZoo(form.getZoo());
+		coara.setMother(form.getMother());
+		coara.setFather(form.getFather());
+		coara.setDetails(form.getDetails());
+		coara.setFeature(form.getFeature());
+		dao.update(coara);
+	}
+	
+	@Override
+	public void delete(int coara_id) {
+		dao.delete(coara_id);
 	}
 		
 }

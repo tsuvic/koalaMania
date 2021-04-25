@@ -76,7 +76,6 @@
 					<td th:if="*{birthdate.toString().equals('9999-01-01')}">不明</td>
 					<td th:unless="*{birthdate.toString().equals('9999-01-01')}"
 						th:text="*{birthdate}"></td>
-
 					<td th:if="*{is_alive == 1}">生</td>
 					<td th:if="*{is_alive == 0}">死亡</td>
 					<td th:if="*{deathdate.toString().equals('9999-01-01')}">-</td>
