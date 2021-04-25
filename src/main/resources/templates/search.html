@@ -73,14 +73,14 @@
 					<td th:if="*{sex == 2}">女</td>
 					<td th:if="*{sex == 9}"> </td>
 
-					<td th:if="*{birthdate.toString().equals('9999-01-01')}">不明</td>
-					<td th:unless="*{birthdate.toString().equals('9999-01-01')}"
-						th:text="*{birthdate}"></td>
+					<td th:if="*{stringBirthDate.equals('9999年1月1日')}">不明</td>
+					<td th:unless="*{stringBirthDate.equals('9999年1月1日')}"
+						th:text="*{stringBirthDate}"></td>
 					<td th:if="*{is_alive == 1}">生</td>
 					<td th:if="*{is_alive == 0}">死亡</td>
-					<td th:if="*{deathdate.toString().equals('9999-01-01')}">-</td>
-					<td th:unless="*{deathdate.toString().equals('9999-01-01')}"
-						th:text="*{deathdate}"></td>
+					<td th:if="*{stringDeathDate.equals('9999年1月1日')}">-</td>
+					<td th:unless="*{stringDeathDate.equals('9999年1月1日')}"
+						th:text="*{stringDeathDate}"></td>
 					<td th:text="*{zoo}"></td>
 					<td th:text="*{mother}"></td>
 					<td th:text="*{father}"></td>

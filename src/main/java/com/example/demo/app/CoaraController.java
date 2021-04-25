@@ -50,9 +50,14 @@ public class CoaraController {
 	@GetMapping("/search")
 	public String displayAllCoara(Model model) {
 		List<Coara> list = coaraService.getAll();
+		for(Coara coara : list) {
+			Date birthDate = (Date) coara.getBirthdate();
+			Date deathDate = (Date) coara.getDeathdate();
+			coara.setStringBirthDate(disPlayDate(birthDate));
+			coara.setStringDeathDate(disPlayDate(deathDate));
+		}
 		model.addAttribute("coaraList", list);
 		model.addAttribute("searchResult","検索結果一覧");
-		
 		return "search";
 	}
 	
@@ -106,9 +111,8 @@ public class CoaraController {
 		model.addAttribute("title","コアラ情報詳細");
 		Date birthDate = (Date) coara.getBirthdate();
 		Date deathDate = (Date) coara.getDeathdate();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日");
-		String stringBirthDate =  sdf.format(birthDate);
-		String stringDeathDate =  sdf.format(deathDate);
+		String stringBirthDate =  disPlayDate(birthDate);
+		String stringDeathDate =  disPlayDate(deathDate);
 		coara.setStringBirthDate(stringBirthDate);
 		coara.setStringDeathDate(stringDeathDate);
 		model.addAttribute("detail", coara);
@@ -167,5 +171,15 @@ public class CoaraController {
 			}
 		}
 		return number;
+	}
+	
+	/**
+	   * yyyy年m月d日にした文字列を返す
+	   * @param Date date
+	   * @return yyyy年m月d日の文字列
+	   */
+	private String disPlayDate(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日");
+		return  sdf.format(date);
 	}
 }
