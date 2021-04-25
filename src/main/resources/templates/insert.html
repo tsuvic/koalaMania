@@ -30,6 +30,10 @@
 			document.getElementById("deathYear").disabled = true;
 			document.getElementById("deathMonth").disabled = true;
 			document.getElementById("deathDay").disabled = true;
+			document.getElementById("deathYear").value = 0;
+			document.getElementById("deathMonth").value = 0;
+			document.getElementById("deathDay").value = 0;
+			
 		} else {
 			document.getElementById("deathYear").disabled = false;
 			document.getElementById("deathMonth").disabled = false;
@@ -74,7 +78,11 @@
 		}
 		
 		const birthDate = parseInt(birthYear + birthMonth + birthDay);
-		const deathDate = parseInt(deathYear + deathMonth + deathDay);
+		let deathDate = parseInt(deathYear + deathMonth + deathDay);
+		if(deathDate == 000){
+			deathDate = 99990101;
+		}
+		
 		let deathFlag = true;
 		if ((1 <= deathZeroCount && deathZeroCount <= 2) || (birthDate > deathDate)) {
 			alert('死亡日が不正です。');
