@@ -5,8 +5,6 @@
 <head>
 <meta charset="utf-8">
 
-<title>coaraMania</title>
-
 <link rel="canonical"
 	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
 <!-- Bootstrap core CSS -->
@@ -18,7 +16,17 @@
 
 <!-- Custom styles for this template -->
 <link href="/css/starter-template.css" rel="stylesheet">
-<title th:text="${title}">詳細画面</title>
+<script type="text/javascript">
+	function deleteFunc(coara_id) {
+		const deleteFalg = confirm('このコアラを削除してもよろしいですか？');
+		if(deleteFalg){
+			location.href = '/delete/'+ coara_id;
+		}else{
+			return;
+		}
+	}
+</script>
+<title th:text="${title}"></title>
 </head>
 
 <body>
@@ -30,13 +38,54 @@
 				<td th:text="*{name}"></td>
 			</tr>
 			<tr>
+				<th class="cell_title">性別</th>
+				<td th:if="*{sex == 0}">不明</td>
+				<td th:if="*{sex == 1}">男</td>
+				<td th:if="*{sex == 2}">女</td>
+				<td th:if="*{sex == 9}"> </td>
+			</tr>
+			<tr>
+				<th class="cell_title">生年月日</th>
+				<td th:if="*{stringBirthDate.equals('9999年1月1日')}">不明</td>
+				<td th:unless="*{stringBirthDate.toString().equals('9999年1月1日')}"
+						th:text="*{stringBirthDate}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">生死</th>
+				<td th:if="*{is_alive == 1}">生存</td>
+				<td th:if="*{is_alive == 0}">死亡</td>
+			</tr>
+			<tr>
+				<th class="cell_title">死亡日</th>
+				<td th:if="*{stringDeathDate.equals('9999年1月1日')}">-</td>
+				<td th:unless="*{stringDeathDate.equals('9999年1月1日')}"
+						th:text="*{stringDeathDate}"></td>
+			</tr>
+			<tr>
 				<th class="cell_title">動物園</th>
 				<td th:text="*{zoo}"></td>
 			</tr>
+			<tr>
+				<th class="cell_title">母親</th>
+				<td th:text="*{mother}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">父親</th>
+				<td th:text="*{father}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">詳細</th>
+				<td th:text="*{details}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">特徴</th>
+				<td th:text="*{feature}"></td>
+			</tr>
 		</table>
 		<div class="btn_area_center">
-			<a th:href="@{/user/{id}/edit(id=*{id})}">編集</a> <a
-				th:href="@{/user/{id}/delete(id=*{id})}">削除</a> <a href="/search">一覧に戻る</a>
+			<button class="btn btn-primary btn-sm" type="button" th:onclick="'location.href = \'' +@{/edit/{coara_id}(coara_id=${detail.coara_id})} + '\''" >編集</button>
+			<button class="btn btn-danger btn-sm" type="button" th:onclick="'deleteFunc(' + ${detail.coara_id} + ');'">削除</button>
+			<button class="btn btn-warning btn-sm" type="button" onclick="location.href='/search'" >一覧に戻る</button>
 		</div>
 </body>
 </html>

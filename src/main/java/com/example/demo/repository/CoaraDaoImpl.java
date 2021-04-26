@@ -55,16 +55,35 @@ public class CoaraDaoImpl implements CoaraDao{
 
 	@Override
 	public Coara findById(Long id) {
-		String sql = "SELECT name, zoo FROM coara WHERE coara_id = ?";
+		String sql = "SELECT coara_id,name, sex,birthdate,is_alive,deathdate,zoo,mother,father,details,feature FROM coara WHERE coara_id = ?";
 
 		Map<String, Object> oneCoara = jdbcTemplate.queryForMap(sql, id);
 		
 		Coara coara = new Coara(
-				(String)oneCoara.get("name")
-				,(String)oneCoara.get("zoo")
-				);	
+				(int)oneCoara.get("coara_id"),
+				(String)oneCoara.get("name"),
+				(int)oneCoara.get("sex"),
+				(Date)oneCoara.get("birthdate"),
+				(int)oneCoara.get("is_alive"),
+				(Date)oneCoara.get("deathdate"),
+				(String)oneCoara.get("zoo"),
+				(String)oneCoara.get("mother"),
+				(String)oneCoara.get("father"),
+				(String)oneCoara.get("details"),
+				(String)oneCoara.get("feature")
+		);	
 		
-		return coara;
-		
+		return coara;	
+	}
+	
+	@Override
+	public void update(Coara coara){
+		jdbcTemplate.update("UPDATE coara SET  name=?, sex=?,birthdate=?,is_alive=?,deathdate=?,zoo=?,mother=?,father=?,details=?,feature=? WHERE coara_id = ?",
+				coara.getName(),coara.getSex(),coara.getBirthdate(),coara.getIs_alive(),coara.getDeathdate(),coara.getZoo(),coara.getMother(),coara.getFather(),coara.getDetails(),coara.getFeature(),coara.getCoara_id());
+	}
+	
+	@Override
+	public void delete(int coara_id){
+		jdbcTemplate.update("DELETE FROM coara WHERE coara_id = ?",coara_id);
 	}
 }

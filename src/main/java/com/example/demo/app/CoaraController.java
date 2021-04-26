@@ -1,5 +1,8 @@
 package com.example.demo.app;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +50,14 @@ public class CoaraController {
 	@GetMapping("/search")
 	public String displayAllCoara(Model model) {
 		List<Coara> list = coaraService.getAll();
+		for(Coara coara : list) {
+			Date birthDate = (Date) coara.getBirthdate();
+			Date deathDate = (Date) coara.getDeathdate();
+			coara.setStringBirthDate(disPlayDate(birthDate));
+			coara.setStringDeathDate(disPlayDate(deathDate));
+		}
 		model.addAttribute("coaraList", list);
 		model.addAttribute("searchResult","検索結果一覧");
-		
 		return "search";
 	}
 	
@@ -74,9 +82,11 @@ public class CoaraController {
 	
 	@GetMapping("/insert")
 	public String getInsert(Model model,@ModelAttribute CoaraInsertForm form) {
-		model.addAttribute("title","コアラの登録");
-		model.addAttribute("sexItems",SEX_ITEMS);
-		model.addAttribute("isAliveItems",IS_ALIVE_ITEMS);
+		if(model.getAttribute("title")==null) {
+			model.addAttribute("title","コアラの登録");
+			model.addAttribute("sexItems",SEX_ITEMS);
+			model.addAttribute("isAliveItems",IS_ALIVE_ITEMS);
+		}
 		return "insert";
 	}
 
@@ -87,16 +97,89 @@ public class CoaraController {
 		if(bindingResult.hasErrors()) {
 			return getInsert(model,form);
 		}
-		service.insert(form);
+		if(form.getCoara_id() == 0){
+			service.insert(form);
+		}else {
+			service.update(form);
+		}
 		return "redirect:/search";
-
 	}
 	
 	@GetMapping("/detail/{id}")
-	public String displayDetailCoara(@PathVariable Long id, Model model) {
+	public String displayDetailCoara(@PathVariable Long id, Model model){
 		Coara coara = coaraService.findById(id);
+		model.addAttribute("title","コアラ情報詳細");
+		Date birthDate = (Date) coara.getBirthdate();
+		Date deathDate = (Date) coara.getDeathdate();
+		String stringBirthDate =  disPlayDate(birthDate);
+		String stringDeathDate =  disPlayDate(deathDate);
+		coara.setStringBirthDate(stringBirthDate);
+		coara.setStringDeathDate(stringDeathDate);
 		model.addAttribute("detail", coara);
 		return "detail";
 	}
 	
+	@GetMapping("/edit/{id}")
+	public String editCoara(@PathVariable Long id, Model model,@ModelAttribute CoaraInsertForm form) throws ParseException {
+		model.addAttribute("title","コアラ編集画面");
+		model.addAttribute("sexItems",SEX_ITEMS);
+		model.addAttribute("isAliveItems",IS_ALIVE_ITEMS);
+		Coara coara = coaraService.findById(id);
+		form.setCoara_id(coara.getCoara_id());
+		form.setName(coara.getName());
+		form.setIs_alive(coara.getIs_alive());
+		form.setSex(coara.getSex());
+		String[] birthDate = coara.getBirthdate().toString().split("-");
+		form.setBirthYear(birthDate[0]);
+		birthDate[1] = zeroCut(birthDate[1],birthDate[0]);
+		birthDate[2] = zeroCut(birthDate[2],birthDate[0]);
+		form.setBirthMonth(birthDate[1]);
+		form.setBirthDay(birthDate[2]);
+		String[] deathDate = coara.getDeathdate().toString().split("-");
+		form.setDeathYear(deathDate[0]);
+		deathDate[1] = zeroCut(deathDate[1],deathDate[0]);
+		deathDate[2] = zeroCut(deathDate[2],deathDate[0]);
+		form.setDeathMonth(deathDate[1]);
+		form.setDeathDay(deathDate[2]);
+		form.setZoo(coara.getZoo());
+		form.setMother(coara.getMother());
+		form.setFather(coara.getFather());
+		form.setDetails(coara.getDetails());
+		form.setFeature(coara.getFeature());
+		return "insert";
+	}
+	
+	@GetMapping("/delete/{coara_id}")
+	public String getDelete(@PathVariable int coara_id) {
+		service.delete(coara_id);
+		return "redirect:/search";
+	}
+	
+	 /**
+	   * 0を省いた数字を返す
+	   * @param number 月or日の数字
+	   * @param year 年
+	   * @return 0落ちさせた数字
+	   */
+	private String zeroCut(String number,String year) {
+		if(year.equals("9999")) {
+			return "0";
+		}else {
+			String cutNumber = number.substring(0,1);
+			if(cutNumber.equals("0")){
+				number = number.substring(1,2);
+			}
+		}
+		return number;
+	}
+	
+	/**
+	   * yyyy年m月d日にした文字列を返す
+	   * @param Date date
+	   * @return yyyy年m月d日の文字列
+	   */
+	private String disPlayDate(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日");
+		return  sdf.format(date);
+	}
 }

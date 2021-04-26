@@ -14,4 +14,7 @@ public interface CoaraService {
 
 	Coara findById(Long id);
 	
+	void update(CoaraInsertForm form);
+	
+	void delete(int coara_id);
 }
