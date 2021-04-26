@@ -9,6 +9,8 @@ import lombok.Data;
 
 @Data
 public class CoaraInsertForm {
+	
+	private int coara_id;
 	@NotBlank
 	private String name;
 	@Max(1)

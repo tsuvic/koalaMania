@@ -10,6 +10,9 @@ public interface CoaraDao {
 	
 	void insert(Coara coara);
 
-  Coara findById(Long id);
+	Coara findById(Long id);
 	
+	void update(Coara coara);
+	
+	void delete(int coara_id);
 }
