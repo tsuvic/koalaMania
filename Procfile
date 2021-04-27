@@ -1,1 +1,1 @@
-web: java  -jar coaraMania-0.0.1-SNAPSHOT.jar -Dserver.port=$PORT --server.port=$PORT --spring.profiles.active=heroku
+web: java -Dserver.port=$PORT -jar target/coaraMania-0.0.1-SNAPSHOT.jar
