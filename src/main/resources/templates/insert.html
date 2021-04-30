@@ -9,7 +9,7 @@
 <meta name="author"
 	content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
 <meta name="generator" content="Hugo 0.79.0">
-<title>coaraMania</title>
+<title>koalaMania</title>
 
 <link rel="canonical"
 	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
@@ -125,18 +125,18 @@
 
 	$(function() {
 		$('.addInputFileButton').click(function(e) {
-			const input = $("#coaraImage").clone(true);
+			const input = $("#koalaImage").clone(true);
 			const cancelButton = $('#cancelInputFileButton').clone(true);
 			input.val("");
-			input.appendTo("#coaraImages");
-			cancelButton.appendTo("#coaraImages");
-			$("#coaraImages").append("<br>");
+			input.appendTo("#koalaImages");
+			cancelButton.appendTo("#koalaImages");
+			$("#koalaImages").append("<br>");
 		});
 	});
 	
 	$(function() {
 		$('#cancelInputFileButton').click(function(e) {
-			const contents = $("#coaraImages > input").length;
+			const contents = $("#koalaImages > input").length;
 			if(contents > 1){
 				$(this).prev().remove();
 				$(this).next().remove();
@@ -153,14 +153,14 @@
 			if (!deleteImageFalg) {
 				return;
 			}
-			let coaraImageId = $(this).parent().attr("id");
-			let deleteIds = $('#deleteCoaraImageFiles').val();
+			let koalaImageId = $(this).parent().attr("id");
+			let deleteIds = $('#deleteKoalaImageFiles').val();
 			if (!deleteIds) {
-				deleteIds = coaraImageId;
+				deleteIds = koalaImageId;
 			} else {
-				deleteIds += ',' + coaraImageId;
+				deleteIds += ',' + koalaImageId;
 			}
-			$('#deleteCoaraImageFiles').val(deleteIds);
+			$('#deleteKoalaImageFiles').val(deleteIds);
 			$(this).parent('span').remove();
 		});
 	});
@@ -178,10 +178,10 @@
 
 
 		<form action="/insert" method="post" enctype="multipart/form-data"
-			th:object="${coaraInsertForm}"
+			th:object="${koalaInsertForm}"
 			onsubmit="return validateSubmit(this);">
-			<input th:unless="*{coara_id}==0" type="hidden"
-				th:field="*{coara_id}">
+			<input th:unless="*{koala_id}==0" type="hidden"
+				th:field="*{koala_id}">
 			<div class="form-group">
 				名前：<input type="text" class="form-control" th:field="*{name}"
 					th:errorclass="is-invalid" />
@@ -256,20 +256,20 @@
 			</div>
 			<div class="form-group">
 				写真：<br> 
-				<span th:unless="*{coaraImageList.size} == 0"
-					th:each="coaraImage,index:*{coaraImageList}"
-					th:object="${coaraImage}" th:id="*{coaraimage_id} + *{filetype}"
+				<span th:unless="*{koalaImageList.size} == 0"
+					th:each="koalaImage,index:*{koalaImageList}"
+					th:object="${koalaImage}" th:id="*{koalaimage_id} + *{filetype}"
 					style="display: inline-block">
 					<div>
 						<img
-							th:src="@{/images/coara/{coara_id}/{fileName}(coara_id=*{coara_id},fileName=*{coaraimage_id} + *{filetype})}"
+							th:src="@{/images/koala/{koala_id}/{fileName}(koala_id=*{koala_id},fileName=*{koalaimage_id} + *{filetype})}"
 							width="200" height="200">
 					</div>
 					<button class="btn btn-danger btn-sm deleteImageButton"
 						type="button">削除</button>
 				</span>
-				<div id="coaraImages">
-					<input type="file" accept="image/*" th:field="*{coaraImage}"
+				<div id="koalaImages">
+					<input type="file" accept="image/*" th:field="*{koalaImage}"
 						th:errorclass="is-invalid" class="form-control-file"><button class="btn btn-outline-warning btn-sm"
 						id="cancelInputFileButton" type="button">取り消し</button>
 					<br>
@@ -277,10 +277,10 @@
 				<button class="btn btn-outline-success btn-sm addInputFileButton"
 					type="button">入力欄追加追加</button>
 			</div>
-			<input type="hidden" th:field="*{deleteCoaraImageFiles}">
-			<button th:if="*{coara_id}==0" class="btn btn-outline-primary btn-sm"
+			<input type="hidden" th:field="*{deleteKoalaImageFiles}">
+			<button th:if="*{koala_id}==0" class="btn btn-outline-primary btn-sm"
 				type="submit">追加</button>
-			<button th:unless="*{coara_id}==0"
+			<button th:unless="*{koala_id}==0"
 				class="btn btn-outline-primary btn-sm" type="submit">保存</button>
 			<button class="btn btn-outline-danger btn-sm" type="button"
 				onclick="location.href='/search'">一覧に戻る</button>

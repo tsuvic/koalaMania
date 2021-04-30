@@ -18,20 +18,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.demo.entity.Coara;
-import com.example.demo.service.CoaraService;
+import com.example.demo.entity.Koala;
+import com.example.demo.service.KoalaService;
 
 
 @Controller
 @RequestMapping("/")  
-public class CoaraController {
+public class KoalaController {
 	
-//	下記のリクエストで使用するために、CoaraService型のフィールド用意 & @AutowiredでDIを実施する。	
-	private final CoaraService coaraService;
+//	下記のリクエストで使用するために、KoalaService型のフィールド用意 & @AutowiredでDIを実施する。	
+	private final KoalaService koalaService;
 
 	@Autowired
-	public CoaraController(CoaraService coaraService) {
-		this.coaraService = coaraService;
+	public KoalaController(KoalaService koalaService) {
+		this.koalaService = koalaService;
 	}	
 
 //ドメインに対してリクエストが来た際には/indexを返す
@@ -48,15 +48,15 @@ public class CoaraController {
 
 
 	@GetMapping("/search")
-	public String displayAllCoara(Model model) {
-		List<Coara> list = coaraService.getAll();
-		for(Coara coara : list) {
-			Date birthDate = (Date) coara.getBirthdate();
-			Date deathDate = (Date) coara.getDeathdate();
-			coara.setStringBirthDate(disPlayDate(birthDate));
-			coara.setStringDeathDate(disPlayDate(deathDate));
+	public String displayAllKoala(Model model) {
+		List<Koala> list = koalaService.getAll();
+		for(Koala koala : list) {
+			Date birthDate = (Date) koala.getBirthdate();
+			Date deathDate = (Date) koala.getDeathdate();
+			koala.setStringBirthDate(disPlayDate(birthDate));
+			koala.setStringDeathDate(disPlayDate(deathDate));
 		}
-		model.addAttribute("coaraList", list);
+		model.addAttribute("koalaList", list);
 		model.addAttribute("searchResult","検索結果一覧");
 		return "search";
 	}
@@ -65,7 +65,7 @@ public class CoaraController {
 	 * 性別の表示に使用するアイテム
 	 */
 	final static Map<Integer, String> SEX_ITEMS =
-	   (Map<Integer, String>) new LinkedHashMap<Integer, String> (){{
+	   new LinkedHashMap<Integer, String> (){{
 		  put(2, "女性");
 	      put(1, "男性");
 	      put(0, "不明");
@@ -75,13 +75,13 @@ public class CoaraController {
 	 * 生死の表示に使用するアイテム
 	 */
 	final static Map<Integer, String> IS_ALIVE_ITEMS =
-		   (Map<Integer, String>) new LinkedHashMap<Integer, String> (){{
-		      put(1, "生存");
-		      put(0, "死亡");
-  	}};
+		   new LinkedHashMap<Integer, String> (){{
+	      put(1, "生存");
+	      put(0, "死亡");
+ 	}};
 	
 	@GetMapping("/insert")
-	public String getInsert(Model model,@ModelAttribute CoaraInsertForm form) {
+	public String getInsert(Model model,@ModelAttribute KoalaInsertForm form) {
 		if(model.getAttribute("title")==null) {
 			model.addAttribute("title","コアラの登録");
 			model.addAttribute("sexItems",SEX_ITEMS);
@@ -91,68 +91,68 @@ public class CoaraController {
 	}
 
 	@PostMapping("/insert")
-	public String insertCoara(Model model,@Validated CoaraInsertForm form,BindingResult bindingResult) {
+	public String insertKoala(Model model,@Validated KoalaInsertForm form,BindingResult bindingResult) {
 		if(bindingResult.hasErrors()) {
 			return getInsert(model,form);
 		}
 	
-		if(form.getCoara_id() == 0){
-			coaraService.insert(form);
+		if(form.getKoala_id() == 0){
+			koalaService.insert(form);
 		}else {
-			coaraService.update(form);
+			koalaService.update(form);
 		}
 		return "redirect:/search";
 	}
 	
 	@GetMapping("/detail/{id}")
-	public String displayDetailCoara(@PathVariable Long id, Model model){
-		Coara coara = coaraService.findById(id);
+	public String displayDetailKoala(@PathVariable Long id, Model model){
+		Koala koala = koalaService.findById(id);
 		model.addAttribute("title","コアラ情報詳細");
-		Date birthDate = (Date) coara.getBirthdate();
-		Date deathDate = (Date) coara.getDeathdate();
+		Date birthDate = (Date) koala.getBirthdate();
+		Date deathDate = (Date) koala.getDeathdate();
 		String stringBirthDate =  disPlayDate(birthDate);
 		String stringDeathDate =  disPlayDate(deathDate);
-		coara.setStringBirthDate(stringBirthDate);
-		coara.setStringDeathDate(stringDeathDate);
-		model.addAttribute("detail", coara);
+		koala.setStringBirthDate(stringBirthDate);
+		koala.setStringDeathDate(stringDeathDate);
+		model.addAttribute("detail", koala);
 		model.addAttribute("fileName","13.jpg");
 		return "detail";
 	}
 	
 	@GetMapping("/edit/{id}")
-	public String editCoara(@PathVariable Long id, Model model,@ModelAttribute CoaraInsertForm form) throws ParseException {
+	public String editKoala(@PathVariable Long id, Model model,@ModelAttribute KoalaInsertForm form) throws ParseException {
 		model.addAttribute("title","コアラ編集画面");
 		model.addAttribute("sexItems",SEX_ITEMS);
 		model.addAttribute("isAliveItems",IS_ALIVE_ITEMS);
-		Coara coara = coaraService.findById(id);
-		form.setCoara_id(coara.getCoara_id());
-		form.setName(coara.getName());
-		form.setIs_alive(coara.getIs_alive());
-		form.setSex(coara.getSex());
-		String[] birthDate = coara.getBirthdate().toString().split("-");
+		Koala koala = koalaService.findById(id);
+		form.setKoala_id(koala.getKoala_id());
+		form.setName(koala.getName());
+		form.setIs_alive(koala.getIs_alive());
+		form.setSex(koala.getSex());
+		String[] birthDate = koala.getBirthdate().toString().split("-");
 		form.setBirthYear(birthDate[0]);
 		birthDate[1] = zeroCut(birthDate[1],birthDate[0]);
 		birthDate[2] = zeroCut(birthDate[2],birthDate[0]);
 		form.setBirthMonth(birthDate[1]);
 		form.setBirthDay(birthDate[2]);
-		String[] deathDate = coara.getDeathdate().toString().split("-");
+		String[] deathDate = koala.getDeathdate().toString().split("-");
 		form.setDeathYear(deathDate[0]);
 		deathDate[1] = zeroCut(deathDate[1],deathDate[0]);
 		deathDate[2] = zeroCut(deathDate[2],deathDate[0]);
 		form.setDeathMonth(deathDate[1]);
 		form.setDeathDay(deathDate[2]);
-		form.setZoo(coara.getZoo());
-		form.setMother(coara.getMother());
-		form.setFather(coara.getFather());
-		form.setDetails(coara.getDetails());
-		form.setFeature(coara.getFeature());
-		form.setCoaraImageList(coara.getCoaraImageList());
+		form.setZoo(koala.getZoo());
+		form.setMother(koala.getMother());
+		form.setFather(koala.getFather());
+		form.setDetails(koala.getDetails());
+		form.setFeature(koala.getFeature());
+		form.setKoalaImageList(koala.getKoalaImageList());
 		return "insert";
 	}
 	
-	@GetMapping("/delete/{coara_id}")
-	public String getDelete(@PathVariable int coara_id) {
-		coaraService.delete(coara_id);
+	@GetMapping("/delete/{koala_id}")
+	public String getDelete(@PathVariable int koala_id) {
+		koalaService.delete(koala_id);
 		return "redirect:/search";
 	}
 	

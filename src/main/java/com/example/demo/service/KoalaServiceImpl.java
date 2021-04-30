@@ -23,61 +23,61 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.app.CoaraInsertForm;
-import com.example.demo.entity.Coara;
-import com.example.demo.entity.CoaraImage;
-import com.example.demo.repository.CoaraDao;
-import com.example.demo.repository.CoaraImageDao;
+import com.example.demo.app.KoalaInsertForm;
+import com.example.demo.entity.Koala;
+import com.example.demo.entity.KoalaImage;
+import com.example.demo.repository.KoalaDao;
+import com.example.demo.repository.KoalaImageDao;
 
 @Service
-public class CoaraServiceImpl implements CoaraService{
+public class KoalaServiceImpl implements KoalaService{
 
-	private final CoaraDao dao;
-	private final CoaraImageDao coaraImageDao;
+	private final KoalaDao dao;
+	private final KoalaImageDao koalaImageDao;
 	
 	@Autowired
-	public CoaraServiceImpl(CoaraDao dao,CoaraImageDao coaraImageDao) {
+	public KoalaServiceImpl(KoalaDao dao,KoalaImageDao koalaImageDao) {
 		this.dao = dao;
-		this.coaraImageDao = coaraImageDao;
+		this.koalaImageDao = koalaImageDao;
 	}
 
 	@Override
-	public List<Coara> getAll() {
+	public List<Koala> getAll() {
 		return dao.getAll();
 	}
 	
-	Coara coara;
+	Koala koala;
 	@Override
 	@Transactional
-	public void insert(CoaraInsertForm form){
-		Coara coara = new Coara();
-		coara.setName(form.getName());
-		coara.setSex(form.getSex());
+	public void insert(KoalaInsertForm form){
+		Koala koala = new Koala();
+		koala.setName(form.getName());
+		koala.setSex(form.getSex());
 		Date birthDate = getDate(form.getBirthYear(),form.getBirthMonth(),form.getBirthDay());
 		if(birthDate != null) {
-			coara.setBirthdate(birthDate);
+			koala.setBirthdate(birthDate);
 		}
-		coara.setIs_alive(form.getIs_alive());
+		koala.setIs_alive(form.getIs_alive());
 		Date deathDate = getDate(form.getDeathYear(),form.getDeathMonth(),form.getDeathDay());
 		if(deathDate != null) {
-			coara.setDeathdate(deathDate);
+			koala.setDeathdate(deathDate);
 		}
-		coara.setZoo(form.getZoo());
-		coara.setMother(form.getMother());
-		coara.setFather(form.getFather());
-		coara.setDetails(form.getDetails());
-		coara.setFeature(form.getFeature());
-		int insertCoara_id = dao.insert(coara);
+		koala.setZoo(form.getZoo());
+		koala.setMother(form.getMother());
+		koala.setFather(form.getFather());
+		koala.setDetails(form.getDetails());
+		koala.setFeature(form.getFeature());
+		int insertKoala_id = dao.insert(koala);
 		//追加するコアラに画像が添付されているか確認
-		boolean coaraImageInsetFlag =false;
-		for (MultipartFile coaraImgae : form.getCoaraImage()) {
-			if(coaraImgae.getSize() != 0){
-				coaraImageInsetFlag = true;
+		boolean koalaImageInsetFlag =false;
+		for (MultipartFile koalaImgae : form.getKoalaImage()) {
+			if(koalaImgae.getSize() != 0){
+				koalaImageInsetFlag = true;
 				break;
 			}
 		}
-		if(coaraImageInsetFlag) {
-			inserCoaraImage(insertCoara_id,form.getCoaraImage());
+		if(koalaImageInsetFlag) {
+			inserKoalaImage(insertKoala_id,form.getKoalaImage());
 		}
 	}
 	
@@ -108,70 +108,70 @@ public class CoaraServiceImpl implements CoaraService{
 	}
 	
 	@Override
-	public Coara findById(Long id) {
+	public Koala findById(Long id) {
 		return dao.findById(id);
 	}
 	
 	@Override
-	public void update(CoaraInsertForm form) {
-		Coara coara = new Coara();
-		coara.setCoara_id(form.getCoara_id());
-		coara.setName(form.getName());
-		coara.setSex(form.getSex());
+	public void update(KoalaInsertForm form) {
+		Koala koala = new Koala();
+		koala.setKoala_id(form.getKoala_id());
+		koala.setName(form.getName());
+		koala.setSex(form.getSex());
 		Date birthDate = getDate(form.getBirthYear(),form.getBirthMonth(),form.getBirthDay());
 		if(birthDate != null) {
-			coara.setBirthdate(birthDate);
+			koala.setBirthdate(birthDate);
 		}
-		coara.setIs_alive(form.getIs_alive());
+		koala.setIs_alive(form.getIs_alive());
 		Date deathDate = getDate(form.getDeathYear(),form.getDeathMonth(),form.getDeathDay());
 		if(deathDate != null) {
-			coara.setDeathdate(deathDate);
+			koala.setDeathdate(deathDate);
 		}
-		coara.setZoo(form.getZoo());
-		coara.setMother(form.getMother());
-		coara.setFather(form.getFather());
-		coara.setDetails(form.getDetails());
-		coara.setFeature(form.getFeature());
-		dao.update(coara);
-		if(form.getCoaraImage()	!= null) {
-			inserCoaraImage(form.getCoara_id(),form.getCoaraImage());
+		koala.setZoo(form.getZoo());
+		koala.setMother(form.getMother());
+		koala.setFather(form.getFather());
+		koala.setDetails(form.getDetails());
+		koala.setFeature(form.getFeature());
+		dao.update(koala);
+		if(form.getKoalaImage()	!= null) {
+			inserKoalaImage(form.getKoala_id(),form.getKoalaImage());
 		}
-		if(form.getDeleteCoaraImageFiles() != null) {
-			deleteCoaraImage(form.getDeleteCoaraImageFiles(),form.getCoara_id());
+		if(form.getDeleteKoalaImageFiles() != null) {
+			deleteKoalaImage(form.getDeleteKoalaImageFiles(),form.getKoala_id());
 		}
 	}
 	
 	@Override
 	@Transactional
-	public void delete(int coara_id) {
-		dao.delete(coara_id);
-		deleteDirs(coara_id);
+	public void delete(int koala_id) {
+		dao.delete(koala_id);
+		deleteDirs(koala_id);
 	}
 	
 	@Override
-	public void inserCoaraImage(int coara_id, List<MultipartFile> coaraImageLust) {
-		CoaraImage coaraImage = new CoaraImage();
-		coaraImage.setCoara_id(coara_id);
+	public void inserKoalaImage(int koala_id, List<MultipartFile> koalaImageLust) {
+		KoalaImage koalaImage = new KoalaImage();
+		koalaImage.setKoala_id(koala_id);
 		
 		// 写真を格納するファイルのパス
-        String filePath =  getcoaraUploadDir(coara_id);
+        String filePath =  getkoalaUploadDir(koala_id);
         
         // アップロードファイルを格納するディレクトリを作成する
         
         File uploadDir = mkdirs(filePath);
         
-		for(MultipartFile inputImage:coaraImageLust) {
+		for(MultipartFile inputImage:koalaImageLust) {
 			if(inputImage.getSize() != 0) {
 				//ファイルの拡張子を取得する
 				String fileExtension = inputImage.getOriginalFilename().substring(inputImage.getOriginalFilename().lastIndexOf("."));
 				
-				coaraImage.setFiletype(fileExtension);
+				koalaImage.setFiletype(fileExtension);
 				
-				int coaraImageId = coaraImageDao.insert(coaraImage);
+				int koalaImageId = koalaImageDao.insert(koalaImage);
 				try {
 		            // アップロードファイルを置く
 		            File uploadFile =
-		                    new File(uploadDir.getPath() + File.separator + String.valueOf(coaraImageId) + fileExtension);
+		                    new File(uploadDir.getPath() + File.separator + String.valueOf(koalaImageId) + fileExtension);
 		            
 		            byte[] bytes = fileResize(inputImage.getBytes(),fileExtension.substring(1));
 		            
@@ -198,17 +198,17 @@ public class CoaraServiceImpl implements CoaraService{
 	}
 	
 	@Override
-	public void deleteCoaraImage(String CoaraImageFilesString,int coara_id) {
-		String[] coaraImageFiles = CoaraImageFilesString.split(",");
-		List<Integer> coaraImageIds = new ArrayList<Integer>();
-		for(String coaraImageFile:coaraImageFiles) {
-			int dot = coaraImageFile.lastIndexOf('.');
-			String stringCoaraImageId = (dot == -1) ? coaraImageFile : coaraImageFile.substring(0, dot);
-			Integer coaraImageId = Integer.valueOf(stringCoaraImageId);
-			coaraImageIds.add(coaraImageId);
+	public void deleteKoalaImage(String KoalaImageFilesString,int koala_id) {
+		String[] koalaImageFiles = KoalaImageFilesString.split(",");
+		List<Integer> koalaImageIds = new ArrayList<Integer>();
+		for(String koalaImageFile:koalaImageFiles) {
+			int dot = koalaImageFile.lastIndexOf('.');
+			String stringKoalaImageId = (dot == -1) ? koalaImageFile : koalaImageFile.substring(0, dot);
+			Integer koalaImageId = Integer.valueOf(stringKoalaImageId);
+			koalaImageIds.add(koalaImageId);
 		}
-		coaraImageDao.delete(coaraImageIds);
-		deleteFiles(coaraImageFiles,coara_id);
+		koalaImageDao.delete(koalaImageIds);
+		deleteFiles(koalaImageFiles,koala_id);
 	}
 	
 	private File  mkdirs(String filePath) {
@@ -220,9 +220,9 @@ public class CoaraServiceImpl implements CoaraService{
         return uploadDir;
 	}
 	
-	private void  deleteDirs(int coara_id) {
+	private void  deleteDirs(int koala_id) {
 		// 写真を格納するファイルのパス
-		File deleteDir = new File(getcoaraUploadDir(coara_id));
+		File deleteDir = new File(getkoalaUploadDir(koala_id));
 		
 		 //ディレクトリ内の一覧を取得
         File[] files = deleteDir.listFiles();
@@ -235,19 +235,19 @@ public class CoaraServiceImpl implements CoaraService{
 		deleteDir.delete();
 	}
 	
-	private void  deleteFiles(String[] coaraImageFiles,int coara_id) {
-		String deleteFilePath = getcoaraUploadDir(coara_id);
-		for(String coaraImageFile : coaraImageFiles) {
-			File deleteFile = new File(deleteFilePath + File.separator + coaraImageFile);
+	private void  deleteFiles(String[] koalaImageFiles,int koala_id) {
+		String deleteFilePath = getkoalaUploadDir(koala_id);
+		for(String koalaImageFile : koalaImageFiles) {
+			File deleteFile = new File(deleteFilePath + File.separator + koalaImageFile);
 			deleteFile.delete();
 		}
 	}
 	
-	private String getcoaraUploadDir(int coara_id) {
+	private String getkoalaUploadDir(int koala_id) {
 		// 写真を格納するファイルのパス
         StringBuffer dirPath = new StringBuffer("images").append(File.separator)
-                                        .append("coara").append(File.separator)
-        								.append(String.valueOf(coara_id));
+                                        .append("koala").append(File.separator)
+        								.append(String.valueOf(koala_id));
         
         return dirPath.toString();
     }

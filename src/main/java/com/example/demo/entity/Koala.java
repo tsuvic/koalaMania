@@ -6,14 +6,14 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class Coara {
+public class Koala {
 	
-	public Coara() {
+	public Koala() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
-	private int coara_id;
+	private int koala_id;
 	private String name;
 	private int sex;
 	private Date birthdate;
@@ -26,12 +26,12 @@ public class Coara {
 	private String feature;
 	private String stringBirthDate;
 	private String stringDeathDate;
-	private List<CoaraImage> coaraImageList;
+	private List<KoalaImage> koalaImageList;
 	
-	public Coara(int coara_id,String name,int sex ,Date birthDate,
+	public Koala(int koala_id,String name,int sex ,Date birthDate,
 			int is_alive,Date deathDate,String zoo,String mother,String father,
 			String details,String feature) {
-		this.coara_id = coara_id;
+		this.koala_id = koala_id;
 		this.name = name;
 		this.sex = sex;
 		this.birthdate = birthDate;

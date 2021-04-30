@@ -4,7 +4,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class CoaraForm{
+public class KoalaForm{
 	
 	@Size(min = 1, max = 20, message = "Please input 20 characters or less")
 	private String name;
@@ -16,7 +16,7 @@ public class CoaraForm{
 	@NotNull
 	private String contents;
 	
-	public CoaraForm() {
+	public KoalaForm() {
 	}
 	
 	public String getName() {
