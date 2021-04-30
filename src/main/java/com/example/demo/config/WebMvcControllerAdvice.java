@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 
-import com.example.demo.service.InquiryNotFoundException;
-
 @ControllerAdvice
 public class WebMvcControllerAdvice {
 
