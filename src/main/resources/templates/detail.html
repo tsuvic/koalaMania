@@ -4,7 +4,6 @@
 
 <head>
 <meta charset="utf-8">
-
 <link rel="canonical"
 	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
 <!-- Bootstrap core CSS -->
@@ -16,6 +15,8 @@
 
 <!-- Custom styles for this template -->
 <link href="/css/starter-template.css" rel="stylesheet">
+
+
 <script type="text/javascript">
 	function deleteFunc(coara_id) {
 		const deleteFalg = confirm('このコアラを削除してもよろしいですか？');
@@ -80,6 +81,14 @@
 			<tr>
 				<th class="cell_title">特徴</th>
 				<td th:text="*{feature}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">写真</th>
+				<td>
+					<span th:each="coaraImage,index:*{coaraImageList}" th:object="${coaraImage}">
+					<img th:src="@{/images/coara/{coara_id}/{fileName}(coara_id=${detail.coara_id},fileName=*{coaraimage_id} + *{filetype})}" width="200" height="200">
+					</span>
+				</td>
 			</tr>
 		</table>
 		<div class="btn_area_center">

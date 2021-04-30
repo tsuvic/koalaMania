@@ -8,7 +8,7 @@ public interface CoaraDao {
 	
 	List<Coara> getAll();
 	
-	void insert(Coara coara);
+	int insert(Coara coara);
 
 	Coara findById(Long id);
 	
