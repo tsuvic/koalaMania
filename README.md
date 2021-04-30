@@ -1,2 +1,2 @@
-# coaraMania
+# koalaMania
 コアラマニアのリポジトリです。
