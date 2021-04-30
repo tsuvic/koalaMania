@@ -46,45 +46,34 @@
 
 		<h2 th:text="${searchResult}">検索結果一覧</h2>
 		<!--タイトル名を 変数式でControllerから取得 -->
-		<table class="table table-hover table-responsive">
+		
+		<table class="table table-hover table-responsive" >
 			<thead class="thead-dark">
 				<tr>
-					<th>コアラID</th>
-					<th>コアラ名</th>
-					<th>性別</th>
-					<th>生年月日</th>
-					<th>生死</th>
-					<th>死亡日</th>
-					<th>動物園ID（FK制約）</th>
-					<th>母親（FK制約）</th>
-					<th>父親（FK制約）</th>
-					<th colspan="1"></th>
+					<th style="width: 32%">名前</th>
+					<th style="width: 27%">性別</th>
+					<th style="width: 42%">生年月日</th>
+					<th style="width: 47%">動物園</th>
+					<th style="width: 32%">母親</th>
+					<th style="width: 35%">父親</th>
+					<th style="width: 30%" colspan="1"></th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr style="height: 100px;" th:each="koala : ${koalaList}"
+				<tr style="height: 85px;" th:each="koala : ${koalaList}"
 					th:object="${koala}">
-
-					<td th:text="*{koala_id}"></td>
-					<td th:text="*{name}"></td>
-
+					<td width="20" th:text="*{name}"></td>
 					<td th:if="*{sex == 0}">不明</td>
 					<td th:if="*{sex == 1}">男</td>
 					<td th:if="*{sex == 2}">女</td>
-					<td th:if="*{sex == 9}"> </td>
-
+					<td th:if="*{sex == 9}"></td>
 					<td th:if="*{stringBirthDate.equals('9999年1月1日')}">不明</td>
 					<td th:unless="*{stringBirthDate.equals('9999年1月1日')}"
 						th:text="*{stringBirthDate}"></td>
-					<td th:if="*{is_alive == 1}">生</td>
-					<td th:if="*{is_alive == 0}">死亡</td>
-					<td th:if="*{stringDeathDate.equals('9999年1月1日')}">-</td>
-					<td th:unless="*{stringDeathDate.equals('9999年1月1日')}"
-						th:text="*{stringDeathDate}"></td>
-					<td th:text="*{zoo}"></td>
+					<td th:text="*{zoo}" ></td>
 					<td th:text="*{mother}"></td>
 					<td th:text="*{father}"></td>
-					<td><a class="btn btn-sm btn-info"
+					<td><a class="btn btn-md btn-info"
 						th:href="@{/detail/{koala_id}(koala_id=*{koala_id})}">詳細情報</a></td>
 			</tbody>
 		</table>
