@@ -1,9 +1,14 @@
 package com.example.demo.app;
 
+import java.util.List;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.demo.entity.CoaraImage;
 
 import lombok.Data;
 
@@ -42,4 +47,10 @@ public class CoaraInsertForm {
 	@NotBlank
 	@Length(min = 1,max = 50)
 	private String feature;
+	
+	private List<MultipartFile> coaraImage;
+	
+	private List<CoaraImage> coaraImageList;
+	
+	private String deleteCoaraImageFiles;
 }

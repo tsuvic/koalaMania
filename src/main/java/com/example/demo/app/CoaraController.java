@@ -90,17 +90,16 @@ public class CoaraController {
 		return "insert";
 	}
 
-	@Autowired
-	CoaraService service;
 	@PostMapping("/insert")
 	public String insertCoara(Model model,@Validated CoaraInsertForm form,BindingResult bindingResult) {
 		if(bindingResult.hasErrors()) {
 			return getInsert(model,form);
 		}
+	
 		if(form.getCoara_id() == 0){
-			service.insert(form);
+			coaraService.insert(form);
 		}else {
-			service.update(form);
+			coaraService.update(form);
 		}
 		return "redirect:/search";
 	}
@@ -116,6 +115,7 @@ public class CoaraController {
 		coara.setStringBirthDate(stringBirthDate);
 		coara.setStringDeathDate(stringDeathDate);
 		model.addAttribute("detail", coara);
+		model.addAttribute("fileName","13.jpg");
 		return "detail";
 	}
 	
@@ -146,12 +146,13 @@ public class CoaraController {
 		form.setFather(coara.getFather());
 		form.setDetails(coara.getDetails());
 		form.setFeature(coara.getFeature());
+		form.setCoaraImageList(coara.getCoaraImageList());
 		return "insert";
 	}
 	
 	@GetMapping("/delete/{coara_id}")
 	public String getDelete(@PathVariable int coara_id) {
-		service.delete(coara_id);
+		coaraService.delete(coara_id);
 		return "redirect:/search";
 	}
 	

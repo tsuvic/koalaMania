@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.Data;
 
@@ -25,6 +26,7 @@ public class Coara {
 	private String feature;
 	private String stringBirthDate;
 	private String stringDeathDate;
+	private List<CoaraImage> coaraImageList;
 	
 	public Coara(int coara_id,String name,int sex ,Date birthDate,
 			int is_alive,Date deathDate,String zoo,String mother,String father,

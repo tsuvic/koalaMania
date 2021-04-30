@@ -13,3 +13,9 @@ CREATE TABLE coara
    feature VARCHAR(50) NOT NULL,
    PRIMARY KEY(coara_id)
 );
+CREATE TABLE coaraimage
+(
+   coaraimage_id INT NOT NULL AUTO_INCREMENT,
+   coara_id INT NOT NULL,
+   PRIMARY KEY(coaraImage_id)
+);

@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.Coara;
+import com.example.demo.entity.CoaraImage;
 
 @Repository
 public class CoaraDaoImpl implements CoaraDao{
@@ -47,16 +48,51 @@ public class CoaraDaoImpl implements CoaraDao{
 	}
 	
 	@Override
-	public void insert(Coara coara){
-		jdbcTemplate.update("INSERT INTO coara(name, sex, birthdate, is_alive, deathdate, zoo, mother, father, details, feature) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+	public int insert(Coara coara){
+		Map<String, Object> insertId = jdbcTemplate.queryForMap("INSERT INTO coara(name, sex, birthdate, is_alive, deathdate, zoo, mother, father, details, feature) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING coara_id",
 				coara.getName(),coara.getSex(),coara.getBirthdate(),coara.getIs_alive(),coara.getDeathdate(),coara.getZoo(),coara.getMother(),coara.getFather(),coara.getDetails(),coara.getFeature());
+		 
+		// インサートしたコアラidを取得
+		return (int)insertId.get("coara_id");
 	}
 	
 
 	@Override
 	public Coara findById(Long id) {
-		String sql = "SELECT coara_id,name, sex,birthdate,is_alive,deathdate,zoo,mother,father,details,feature FROM coara WHERE coara_id = ?";
-
+		String sql = "SELECT coara.coara_id,name, sex,birthdate,is_alive,deathdate,zoo,mother,father,details,feature ,coaraimage_id ,filetype FROM coara LEFT OUTER JOIN coaraimage ON coara.coara_id = coaraimage.coara_id WHERE coara.coara_id = ?";
+		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, id);
+		
+		Coara coara = new Coara();
+		coara.setCoara_id((int)resultList.get(0).get("coara_id"));
+		coara.setName((String)resultList.get(0).get("name"));
+		coara.setSex((int)resultList.get(0).get("sex"));
+		coara.setBirthdate((Date)resultList.get(0).get("birthdate"));
+		coara.setIs_alive((int)resultList.get(0).get("is_alive"));
+		coara.setDeathdate((Date)resultList.get(0).get("deathdate"));
+		coara.setZoo((String)resultList.get(0).get("zoo"));
+		coara.setMother((String)resultList.get(0).get("mother"));
+		coara.setFather((String)resultList.get(0).get("father"));
+		coara.setDetails((String)resultList.get(0).get("details"));
+		coara.setFeature((String)resultList.get(0).get("feature"));
+	
+		if(resultList.size() < 2 && resultList.get(0).get("coaraimage_id") == null) {
+			return coara;	
+		}
+		
+		List<CoaraImage> coaraImageList = new ArrayList<CoaraImage>();
+		for(Map<String, Object> result : resultList) {
+			CoaraImage coaraImage = new CoaraImage();
+			coaraImage.setCoaraimage_id((int)result.get("coaraimage_id"));
+			coaraImage.setCoara_id((int)resultList.get(0).get("coara_id"));
+			coaraImage.setFiletype((String)result.get("filetype"));
+			coaraImageList.add(coaraImage);
+			coaraImage = null;
+		}
+		
+		coara.setCoaraImageList(coaraImageList);
+		
+		
+		/*
 		Map<String, Object> oneCoara = jdbcTemplate.queryForMap(sql, id);
 		
 		Coara coara = new Coara(
@@ -71,7 +107,9 @@ public class CoaraDaoImpl implements CoaraDao{
 				(String)oneCoara.get("father"),
 				(String)oneCoara.get("details"),
 				(String)oneCoara.get("feature")
-		);	
+		);
+		for(Map<String, Object> result : resultList) {
+		*/
 		
 		return coara;	
 	}
