@@ -133,19 +133,19 @@
 			$("#koalaImages").append("<br>");
 		});
 	});
-	
+
 	$(function() {
 		$('#cancelInputFileButton').click(function(e) {
 			const contents = $("#koalaImages > input").length;
-			if(contents > 1){
+			if (contents > 1) {
 				$(this).prev().remove();
 				$(this).next().remove();
 				$(this).remove();
-			}else{
+			} else {
 				$(this).prev().val("");
 			}
 		});
-	});	
+	});
 
 	$(function() {
 		$('.deleteImageButton').click(function(e) {
@@ -164,6 +164,12 @@
 			$(this).parent('span').remove();
 		});
 	});
+	
+	$(function () {
+		  $('form').submit(function () {
+		    $(this).find(':submit').prop('disabled', 'true');
+		  });
+		});
 </script>
 </head>
 
@@ -255,14 +261,13 @@
 				<div class="invalid-feedback" th:errors="*{feature}"></div>
 			</div>
 			<div class="form-group">
-				写真：<br> 
-				<span th:unless="*{koalaImageList.size} == 0"
+				写真：<br> <span th:unless="*{koalaImageList.size} == 0"
 					th:each="koalaImage,index:*{koalaImageList}"
 					th:object="${koalaImage}" th:id="*{koalaimage_id} + *{filetype}"
 					style="display: inline-block">
 					<div>
 						<img
-							th:src="@{/images/koala/{koala_id}/{fileName}(koala_id=*{koala_id},fileName=*{koalaimage_id} + *{filetype})}"
+							th:src="@{{cloudinaryImageUrl}{koala_id}/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},koala_id=${koalaInsertForm.koala_id},fileName=*{koalaimage_id} + *{filetype})}"
 							width="200" height="200">
 					</div>
 					<button class="btn btn-danger btn-sm deleteImageButton"

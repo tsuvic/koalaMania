@@ -18,9 +18,12 @@
 
 
 <script type="text/javascript">
-	function deleteFunc(koala_id) {
+	function deleteFunc(koala_id,thisButton) {
 		const deleteFalg = confirm('このコアラを削除してもよろしいですか？');
 		if(deleteFalg){
+			thisButton.disabled = true;
+			thisButton.previousElementSibling.disabled = true;
+			thisButton.nextElementSibling.disabled = true;
 			location.href = '/delete/'+ koala_id;
 		}else{
 			return;
@@ -86,14 +89,14 @@
 				<th class="cell_title">写真</th>
 				<td>
 					<span th:each="koalaImage,index:*{koalaImageList}" th:object="${koalaImage}">
-					<img th:src="@{/images/koala/{koala_id}/{fileName}(koala_id=${detail.koala_id},fileName=*{koalaimage_id} + *{filetype})}" width="200" height="200">
+					<img th:src="@{{cloudinaryImageUrl}{koala_id}/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},koala_id=${detail.koala_id},fileName=*{koalaimage_id} + *{filetype})}" width="200" height="200">
 					</span>
 				</td>
 			</tr>
 		</table>
 		<div class="btn_area_center">
 			<button class="btn btn-primary btn-sm" type="button" th:onclick="'location.href = \'' +@{/edit/{koala_id}(koala_id=${detail.koala_id})} + '\''" >編集</button>
-			<button class="btn btn-danger btn-sm" type="button" th:onclick="'deleteFunc(' + ${detail.koala_id} + ');'">削除</button>
+			<button class="btn btn-danger btn-sm" type="button" th:onclick="'deleteFunc(' + ${detail.koala_id} + ',this);'">削除</button>
 			<button class="btn btn-warning btn-sm" type="button" onclick="location.href='/search'" >一覧に戻る</button>
 		</div>
 </body>

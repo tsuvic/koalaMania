@@ -24,7 +24,7 @@ public class KoalaDaoImpl implements KoalaDao{
 
 	@Override
 	public List<Koala> getAll() {
-		String sql = "SELECT koala_id, name, sex, birthdate, is_alive, deathdate, zoo, mother, father FROM koala";
+		String sql = "SELECT koala_id, name, sex, birthdate, is_alive, deathdate, mother, father FROM koala";
 		//SQL実行結果をMap型リストへ代入		
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql);
 		 //view返却用のリストを生成
@@ -38,7 +38,7 @@ public class KoalaDaoImpl implements KoalaDao{
 			koala.setBirthdate((Date)result.get("birthdate"));
 			koala.setIs_alive((int)result.get("is_alive"));
 			koala.setDeathdate((Date)result.get("deathdate"));
-			koala.setZoo((String)result.get("zoo"));
+			//koala.setZoo((String)result.get("zoo"));
 			koala.setMother((String)result.get("mother"));
 			koala.setFather((String)result.get("father"));
 			// Koalaインスタンスをview返却用のリストに詰め込んでいく
@@ -49,8 +49,8 @@ public class KoalaDaoImpl implements KoalaDao{
 	
 	@Override
 	public int insert(Koala koala){
-		Map<String, Object> insertId = jdbcTemplate.queryForMap("INSERT INTO koala(name, sex, birthdate, is_alive, deathdate, zoo, mother, father, details, feature) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING koala_id",
-				koala.getName(),koala.getSex(),koala.getBirthdate(),koala.getIs_alive(),koala.getDeathdate(),koala.getZoo(),koala.getMother(),koala.getFather(),koala.getDetails(),koala.getFeature());
+		Map<String, Object> insertId = jdbcTemplate.queryForMap("INSERT INTO koala(name, sex, birthdate, is_alive, deathdate,  mother, father, details, feature) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING koala_id",
+				koala.getName(),koala.getSex(),koala.getBirthdate(),koala.getIs_alive(),koala.getDeathdate(),koala.getMother(),koala.getFather(),koala.getDetails(),koala.getFeature());
 		 
 		// インサートしたコアラidを取得
 		return (int)insertId.get("koala_id");
@@ -58,8 +58,8 @@ public class KoalaDaoImpl implements KoalaDao{
 	
 
 	@Override
-	public Koala findById(Long id) {
-		String sql = "SELECT koala.koala_id,name, sex,birthdate,is_alive,deathdate,zoo,mother,father,details,feature ,koalaimage_id ,filetype FROM koala LEFT OUTER JOIN koalaimage ON koala.koala_id = koalaimage.koala_id WHERE koala.koala_id = ?";
+	public Koala findById(int id) {
+		String sql = "SELECT koala.koala_id,name, sex,birthdate,is_alive,deathdate,mother,father,details,feature ,koalaimage_id ,filetype FROM koala LEFT OUTER JOIN koalaimage ON koala.koala_id = koalaimage.koala_id WHERE koala.koala_id = ?";
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, id);
 		
 		Koala koala = new Koala();
@@ -69,7 +69,7 @@ public class KoalaDaoImpl implements KoalaDao{
 		koala.setBirthdate((Date)resultList.get(0).get("birthdate"));
 		koala.setIs_alive((int)resultList.get(0).get("is_alive"));
 		koala.setDeathdate((Date)resultList.get(0).get("deathdate"));
-		koala.setZoo((String)resultList.get(0).get("zoo"));
+		//koala.setZoo((String)resultList.get(0).get("zoo"));
 		koala.setMother((String)resultList.get(0).get("mother"));
 		koala.setFather((String)resultList.get(0).get("father"));
 		koala.setDetails((String)resultList.get(0).get("details"));
@@ -116,8 +116,8 @@ public class KoalaDaoImpl implements KoalaDao{
 	
 	@Override
 	public void update(Koala koala){
-		jdbcTemplate.update("UPDATE koala SET  name=?, sex=?,birthdate=?,is_alive=?,deathdate=?,zoo=?,mother=?,father=?,details=?,feature=? WHERE koala_id = ?",
-				koala.getName(),koala.getSex(),koala.getBirthdate(),koala.getIs_alive(),koala.getDeathdate(),koala.getZoo(),koala.getMother(),koala.getFather(),koala.getDetails(),koala.getFeature(),koala.getKoala_id());
+		jdbcTemplate.update("UPDATE koala SET  name=?, sex=?,birthdate=?,is_alive=?,deathdate=?,mother=?,father=?,details=?,feature=? WHERE koala_id = ?",
+				koala.getName(),koala.getSex(),koala.getBirthdate(),koala.getIs_alive(),koala.getDeathdate(),koala.getMother(),koala.getFather(),koala.getDetails(),koala.getFeature(),koala.getKoala_id());
 	}
 	
 	@Override
