@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.Koala;
 import com.example.demo.entity.KoalaImage;
+import com.example.demo.entity.Zoo;
 
 @Repository
 public class KoalaDaoImpl implements KoalaDao {
@@ -48,6 +49,20 @@ public class KoalaDaoImpl implements KoalaDao {
 		return list;
 	}
 
+	@Override
+	public List<Zoo> getZooList(){
+		String sql = "SELECT zoo_id, zoo_name FROM zoo";
+		List<Map<String, Object>> resultZooList = jdbcTemplate.queryForList(sql);
+		List<Zoo> zooList = new ArrayList<Zoo>();
+		for (Map<String, Object> result : resultZooList ){
+			Zoo zoo = new Zoo();
+			zoo.setZoo_id((int)result.get("zoo_id"));
+			zoo.setZoo_name((String)result.get("zoo_name"));
+			zooList.add(zoo);
+		}
+		return zooList;
+	}
+	
 	@Override
 	public int insert(Koala koala) {
 		Map<String, Object> insertId = jdbcTemplate.queryForMap(

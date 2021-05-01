@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.app.KoalaInsertForm;
 import com.example.demo.entity.Koala;
 import com.example.demo.entity.KoalaImage;
+import com.example.demo.entity.Zoo;
 import com.example.demo.repository.KoalaDao;
 import com.example.demo.repository.KoalaImageDao;
 
@@ -44,6 +45,11 @@ public class KoalaServiceImpl implements KoalaService{
 	@Override
 	public List<Koala> getAll() {
 		return dao.getAll();
+	}
+
+	@Override
+	public List<Zoo> getZooList(){
+		return dao.getZooList();
 	}
 	
 	Koala koala;

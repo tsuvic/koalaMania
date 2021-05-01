@@ -229,11 +229,19 @@
 						th:text="${i}"></option>
 				</select>日
 			</div>
-			<div class="form-group">
+			
+				<div class="form-group">
+				動物園：<select th:field="*{zoo}">
+					<option th:each="zoo : ${zooList}"  th:value="${zoo.zoo_id}"  th:text="${zoo.zoo_name}" ></option>
+					<!--fieldは送信先のフォームクラスの変数、 each は繰り返し、valueはフォームで送信する実際の値、textはHTMLに表示される名前 --> 
+				</select>
+			</div>
+		<!-- 	<div class="form-group">
 				動物園：<input type="text" class="form-control" th:field="*{zoo}"
 					th:errorclass="is-invalid" />
 				<div class="invalid-feedback" th:errors="*{zoo}"></div>
-			</div>
+			</div> -->
+			
 			<div class="form-group">
 				母親：<input type="text" class="form-control" th:field="*{mother}"
 					th:errorclass="is-invalid" />

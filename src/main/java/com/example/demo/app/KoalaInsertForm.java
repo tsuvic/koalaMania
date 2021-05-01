@@ -36,7 +36,7 @@ public class KoalaInsertForm {
 	@NotBlank
 	private String deathDay= "0";
 	@NotBlank
-	private String zoo;
+	private String zoo = "選択してください";
 	@NotBlank
 	private String mother;
 	@NotBlank
