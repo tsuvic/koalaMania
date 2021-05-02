@@ -46,8 +46,15 @@
 			document.getElementById("deathDay").value = "1";
 		}
 	}
+	
+	let doubleClick = false;
 
 	function validateSubmit($this) {
+		
+		if(doubleClick){
+			return false;
+		}
+		
 		let nameFlag = true;
 		if (!$this.elements["name"].value) {
 			alert('名前を入力してください。');
@@ -109,6 +116,7 @@
 		}
 
 		if (nameFlag && birthFlag && deathFlag && detailsFlag && featureFlag) {
+			doubleClick = true;
 			return true;
 		} else {
 			return false;
@@ -164,12 +172,7 @@
 			$(this).parent('span').remove();
 		});
 	});
-	
-	$(function () {
-		  $('form').submit(function () {
-		    $(this).find(':submit').prop('disabled', 'true');
-		  });
-		});
+
 </script>
 </head>
 
