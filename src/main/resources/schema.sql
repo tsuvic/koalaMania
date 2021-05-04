@@ -1,6 +1,6 @@
-CREATE TABLE coara
+CREATE TABLE koala
 (
-   coara_id INT NOT NULL AUTO_INCREMENT,
+   koala_id INT NOT NULL AUTO_INCREMENT,
    name VARCHAR(100) NOT NULL,
    sex INT(1) NOT NULL,
    birthdate DATE,
@@ -11,5 +11,11 @@ CREATE TABLE coara
    father VARCHAR(50) NOT NULL,
    details VARCHAR(300) NOT NULL,
    feature VARCHAR(50) NOT NULL,
-   PRIMARY KEY(coara_id)
+   PRIMARY KEY(koala_id)
+);
+CREATE TABLE koalaimage
+(
+   koalaimage_id INT NOT NULL AUTO_INCREMENT,
+   koala_id INT NOT NULL,
+   PRIMARY KEY(koalaImage_id)
 );

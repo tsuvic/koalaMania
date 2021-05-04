@@ -1,16 +1,23 @@
 package com.example.demo.app;
 
+import java.util.List;
+
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.demo.entity.KoalaImage;
 
 import lombok.Data;
 
 @Data
-public class CoaraInsertForm {
+public class KoalaInsertForm {
 	
-	private int coara_id;
+	private int koala_id;
 	@NotBlank
 	private String name;
 	@Max(1)
@@ -30,8 +37,8 @@ public class CoaraInsertForm {
 	private String deathMonth = "0";
 	@NotBlank
 	private String deathDay= "0";
-	@NotBlank
-	private String zoo;
+	@Min(0)
+	private int zoo=-1;
 	@NotBlank
 	private String mother;
 	@NotBlank
@@ -42,4 +49,10 @@ public class CoaraInsertForm {
 	@NotBlank
 	@Length(min = 1,max = 50)
 	private String feature;
+	
+	private List<MultipartFile> koalaImage;
+	
+	private List<KoalaImage> koalaImageList;
+	
+	private String deleteKoalaImageFiles;
 }

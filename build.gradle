@@ -19,6 +19,12 @@ configurations {
     }
 }
 
+jar
+{
+	baseName = 'spring-cloudinary'
+	version = '0.1.0'
+}
+
 dependencies {
 	
 	compile("org.springframework.boot:spring-boot-starter-web") {
@@ -42,6 +48,8 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 	implementation 'org.webjars:jquery:3.5.0'
     implementation 'org.webjars:bootstrap:4.4.1-1'
+    implementation 'org.webjars:webjars-locator:0.40'
+    implementation('com.cloudinary:cloudinary-http44:1.29.0')
 }
 
 test {

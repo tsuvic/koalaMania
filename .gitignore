@@ -37,3 +37,6 @@ bin/
 
 ### gradle ###
 .gradle
+
+### images ###
+images/koala
