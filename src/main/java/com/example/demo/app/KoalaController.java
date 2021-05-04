@@ -138,6 +138,7 @@ public class KoalaController {
 	
 	@GetMapping("/detail/{id}")
 	public String displayDetailKoala(@PathVariable int id, Model model){
+		Koala koala = koalaService.findById(id);
 		model.addAttribute("title","コアラ情報詳細");
 		model.addAttribute("cloudinaryImageUrl",cloudinaryImageUrl);
 		Koala koala = koalaService.findById(id);
