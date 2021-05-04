@@ -3,7 +3,9 @@ package com.example.demo.app;
 import java.util.List;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,8 +37,8 @@ public class KoalaInsertForm {
 	private String deathMonth = "0";
 	@NotBlank
 	private String deathDay= "0";
-	@NotBlank
-	private String zoo = "選択してください";
+	@Min(0)
+	private int zoo=-1;
 	@NotBlank
 	private String mother;
 	@NotBlank

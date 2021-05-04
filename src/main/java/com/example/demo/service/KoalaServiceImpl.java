@@ -49,7 +49,20 @@ public class KoalaServiceImpl implements KoalaService{
 
 	@Override
 	public List<Zoo> getZooList(){
-		return dao.getZooList();
+		List<Zoo> zooList = dao.getZooList();
+		
+		Zoo other_zoo = new Zoo();
+		other_zoo = zooList.get(0);
+		zooList.remove(0);
+		zooList.add(other_zoo);
+		
+		Zoo zoo = new Zoo();
+		zoo.setZoo_id(-1);
+		zoo.setZoo_name("---");
+		zooList.add(0,zoo);
+
+		return zooList;
+		
 	}
 	
 	Koala koala;
