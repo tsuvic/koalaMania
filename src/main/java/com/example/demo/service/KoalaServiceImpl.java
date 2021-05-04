@@ -50,6 +50,12 @@ public class KoalaServiceImpl implements KoalaService{
 	}
 
 	@Override
+	public List<Koala> findByKeyword(String keyword) {
+		return dao.findByKeyword(keyword);
+	}
+	
+	
+	@Override
 	public List<Zoo> getZooList(){
 		List<Zoo> zooList = dao.getZooList();
 		

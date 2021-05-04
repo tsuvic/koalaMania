@@ -28,23 +28,24 @@
 
 	<div class="container">
 
-		<h2>検索条件</h2>
-
-		<div class="d-flex justify-content-center">
-			<label class="mx-2" for="koala_name">コアラ名:</label> <input
-				class="mx-2" id="koala_name" name="koala_name" type="text">
-
-			<label class="mx-2" for="zoo_id">動物園名:</label> <input class="mx-2"
-				id="zoo_id" name="zoo_id" type="text">
-		</div>
-		<br>
-		<div class="d-grid col-6 mx-auto">
-			<input class="btn btn-md btn-primary" type="submit" value="検索">
-		</div>
+		<h2>検索</h2>
+				<form class="card-body row no-gutters align-items-center" method="post" action="#" th:action="@{/search}" th:object="${koalaSearchForm}">
+					<div class="col-auto">
+						<i class="fas fa-search h4 text-body"></i>
+					</div>
+					<div class="col">
+						<input
+							class="form-control form-control-lg form-control-borderless"
+							type="text"  name="keyword" th:field="*{keyword}" placeholder="コアラ名 or 動物園名" >
+					</div>
+					<div class="col-auto">
+						<button class="btn btn-lg btn-success" type="submit">検索</button>
+					</div>
+				</form>
 		<br> <br>
 
 
-		<h2 th:text="${searchResult}">検索結果一覧</h2>
+		<h2 th:text="${searchResult}"></h2>
 		<!--タイトル名を 変数式でControllerから取得 -->
 		
 		<table class="table table-hover table-responsive" >
