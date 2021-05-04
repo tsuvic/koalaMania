@@ -12,9 +12,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -35,11 +35,13 @@ public class KoalaServiceImpl implements KoalaService{
 
 	private final KoalaDao dao;
 	private final KoalaImageDao koalaImageDao;
+	private final CloudinaryService cloudinaryService;
 	
 	@Autowired
-	public KoalaServiceImpl(KoalaDao dao,KoalaImageDao koalaImageDao) {
+	public KoalaServiceImpl(KoalaDao dao,KoalaImageDao koalaImageDao,CloudinaryService cloudinaryService) {
 		this.dao = dao;
 		this.koalaImageDao = koalaImageDao;
+		this.cloudinaryService = cloudinaryService;
 	}
 
 	@Override
@@ -168,16 +170,14 @@ public class KoalaServiceImpl implements KoalaService{
 	}
 	
 	@Override
+	public List<KoalaImage> findKoalaImageById(int id) {
+		return koalaImageDao.findByKoala_id(id);
+	}
+	
+	@Override
 	public void inserKoalaImage(int koala_id, List<MultipartFile> koalaImageLust) {
 		KoalaImage koalaImage = new KoalaImage();
 		koalaImage.setKoala_id(koala_id);
-		
-		// 写真を格納するファイルのパス
-        String filePath =  getkoalaUploadDir(koala_id);
-        
-        // アップロードファイルを格納するディレクトリを作成する
-        
-        File uploadDir = mkdirs(filePath);
         
 		for(MultipartFile inputImage:koalaImageLust) {
 			if(inputImage.getSize() != 0) {
@@ -189,8 +189,7 @@ public class KoalaServiceImpl implements KoalaService{
 				int koalaImageId = koalaImageDao.insert(koalaImage);
 				try {
 		            // アップロードファイルを置く
-		            File uploadFile =
-		                    new File(uploadDir.getPath() + File.separator + String.valueOf(koalaImageId) + fileExtension);
+		            File uploadFile = new File("images/" + koalaImageId + fileExtension);
 		            
 		            byte[] bytes = fileResize(inputImage.getBytes(),fileExtension.substring(1));
 		            
@@ -205,6 +204,9 @@ public class KoalaServiceImpl implements KoalaService{
 		            
 		            uploadFileStream.close();
 		            
+		            //cloudinaryに写真をアップロードする
+		            Map resultmap = cloudinaryService.uploadKoalaImage(uploadFile, koala_id);
+		            uploadFile.delete();
 		        } catch (Exception e) {
 		            // 異常終了時の処理
 		        	continue;
@@ -219,57 +221,16 @@ public class KoalaServiceImpl implements KoalaService{
 	@Override
 	public void deleteKoalaImage(String KoalaImageFilesString,int koala_id) {
 		String[] koalaImageFiles = KoalaImageFilesString.split(",");
-		List<Integer> koalaImageIds = new ArrayList<Integer>();
-		for(String koalaImageFile:koalaImageFiles) {
-			int dot = koalaImageFile.lastIndexOf('.');
-			String stringKoalaImageId = (dot == -1) ? koalaImageFile : koalaImageFile.substring(0, dot);
-			Integer koalaImageId = Integer.valueOf(stringKoalaImageId);
-			koalaImageIds.add(koalaImageId);
-		}
-		koalaImageDao.delete(koalaImageIds);
-		deleteFiles(koalaImageFiles,koala_id);
-	}
-	
-	private File  mkdirs(String filePath) {
-		File uploadDir = new File(filePath);
+
+		//cloudinaryにあるファイルを削除
+		List<String> koalaImageIds = cloudinaryService.deleteKoalaImage(koalaImageFiles, koala_id);
 		
-		// フォルダ作成
-        uploadDir.mkdirs();
-        
-        return uploadDir;
+		koalaImageDao.delete(koalaImageIds);
 	}
 	
 	private void  deleteDirs(int koala_id) {
-		// 写真を格納するファイルのパス
-		File deleteDir = new File(getkoalaUploadDir(koala_id));
-		
-		 //ディレクトリ内の一覧を取得
-        File[] files = deleteDir.listFiles();
-        
-        //存在するファイル数分ループして再帰的に削除
-        for(int i=0; i<files.length; i++) {
-            files[i].delete();
-        }
-		// フォルダ削除
-		deleteDir.delete();
+		cloudinaryService.deleteDirs(koala_id);
 	}
-	
-	private void  deleteFiles(String[] koalaImageFiles,int koala_id) {
-		String deleteFilePath = getkoalaUploadDir(koala_id);
-		for(String koalaImageFile : koalaImageFiles) {
-			File deleteFile = new File(deleteFilePath + File.separator + koalaImageFile);
-			deleteFile.delete();
-		}
-	}
-	
-	private String getkoalaUploadDir(int koala_id) {
-		// 写真を格納するファイルのパス
-        StringBuffer dirPath = new StringBuffer("images").append(File.separator)
-                                        .append("koala").append(File.separator)
-        								.append(String.valueOf(koala_id));
-        
-        return dirPath.toString();
-    }
 	
 	private byte[] fileResize(byte[] originalImage ,String originalExtension) {
 		BufferedImage src = null;
@@ -296,7 +257,7 @@ public class KoalaServiceImpl implements KoalaService{
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ImageIO.write(dst, originalExtension, baos);
 			originalImage = baos.toByteArray();
-			  return originalImage;
+			return originalImage;
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
