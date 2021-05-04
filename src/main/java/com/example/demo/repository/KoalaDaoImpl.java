@@ -94,7 +94,7 @@ public class KoalaDaoImpl implements KoalaDao {
 
 	@Override
 	public Koala findById(int id) {
-		String sql = "SELECT koala.koala_id,name, sex,birthdate,is_alive,deathdate,zoo_name,mother,father,details,feature ,koalaimage_id ,filetype "
+		String sql = "SELECT koala.koala_id,name, sex,birthdate,is_alive,deathdate,koala_zoo_history.zoo_id,zoo_name,mother,father,details,feature ,koalaimage_id ,filetype "
 				+ "FROM koala LEFT OUTER JOIN koalaimage ON koala.koala_id = koalaimage.koala_id "
 				
 				+ "LEFT OUTER JOIN koala_zoo_history ON koala.koala_id = koala_zoo_history.koala_id "
@@ -112,6 +112,7 @@ public class KoalaDaoImpl implements KoalaDao {
 		koala.setBirthdate((Date) resultList.get(0).get("birthdate"));
 		koala.setIs_alive((int) resultList.get(0).get("is_alive"));
 		koala.setDeathdate((Date) resultList.get(0).get("deathdate"));
+		koala.setZoo((int) resultList.get(0).get("zoo_id"));
 		koala.setZooName((String) resultList.get(0).get("zoo_name"));
 		koala.setMother((String) resultList.get(0).get("mother"));
 		koala.setFather((String) resultList.get(0).get("father"));
@@ -151,9 +152,13 @@ public class KoalaDaoImpl implements KoalaDao {
 
 	@Override
 	public void update(Koala koala){
-		jdbcTemplate.update("UPDATE koala SET  name=?, sex=?,birthdate=?,is_alive=?,deathdate=?,mother=?,father=?,details=?,feature=? WHERE koala_id = ?",
+		jdbcTemplate.update("UPDATE koala SET name=?, sex=?,birthdate=?,is_alive=?,deathdate=?,mother=?,father=?,details=?,feature=? WHERE koala_id = ?",
 				koala.getName(),koala.getSex(),koala.getBirthdate(),koala.getIs_alive(),koala.getDeathdate(),koala.getMother(),koala.getFather(),koala.getDetails(),koala.getFeature(),koala.getKoala_id());
+
+		jdbcTemplate.update("UPDATE koala_zoo_history SET zoo_id=? WHERE koala_id = ?",
+				koala.getZoo(), koala.getKoala_id());
 	}
+	
 	
 	@Override
 	public void delete(int koala_id) {
