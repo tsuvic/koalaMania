@@ -58,9 +58,8 @@ public class KoalaController {
 		List<Koala> list = koalaService.getAll();
 		for(Koala koala : list) {
 			Date birthDate = (Date) koala.getBirthdate();
-			Date deathDate = (Date) koala.getDeathdate();
 			koala.setStringBirthDate(disPlayDate(birthDate));
-			koala.setStringDeathDate(disPlayDate(deathDate));
+
 		}
 		model.addAttribute("koalaList", list);
 		model.addAttribute("searchResult","検索結果一覧");
