@@ -141,7 +141,6 @@ public class KoalaController {
 		Koala koala = koalaService.findById(id);
 		model.addAttribute("title","コアラ情報詳細");
 		model.addAttribute("cloudinaryImageUrl",cloudinaryImageUrl);
-		Koala koala = koalaService.findById(id);
 		Date birthDate = (Date) koala.getBirthdate();
 		Date deathDate = (Date) koala.getDeathdate();
 		String stringBirthDate =  disPlayDate(birthDate);

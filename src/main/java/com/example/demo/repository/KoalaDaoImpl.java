@@ -153,7 +153,8 @@ public class KoalaDaoImpl implements KoalaDao {
 	public void update(Koala koala){
 		jdbcTemplate.update("UPDATE koala SET  name=?, sex=?,birthdate=?,is_alive=?,deathdate=?,mother=?,father=?,details=?,feature=? WHERE koala_id = ?",
 				koala.getName(),koala.getSex(),koala.getBirthdate(),koala.getIs_alive(),koala.getDeathdate(),koala.getMother(),koala.getFather(),koala.getDetails(),koala.getFeature(),koala.getKoala_id());
-
+	}
+	
 	@Override
 	public void delete(int koala_id) {
 		jdbcTemplate.update("DELETE FROM koala WHERE koala_id = ?", koala_id);
