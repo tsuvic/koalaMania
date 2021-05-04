@@ -8,5 +8,7 @@ public interface KoalaImageDao {
 	
 	int insert(KoalaImage koalaImage);
 	
-	void delete(List<Integer> koalaimage_idList);
+	void delete(List<String> koalaimage_idList);
+	
+	List<KoalaImage> findByKoala_id(int id);
 }

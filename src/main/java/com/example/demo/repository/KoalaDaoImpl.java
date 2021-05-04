@@ -39,13 +39,15 @@ public class KoalaDaoImpl implements KoalaDao {
 		// MAP型リストからMapを繰り返し出力し、MapのバリューObjectをKoalaインスタンスに詰め込む
 		for (Map<String, Object> result : resultList) {
 			Koala koala = new Koala();
+
+      // Koalaインスタンスをview返却用のリストに詰め込んでいく
 			koala.setName((String) result.get("name"));
 			koala.setSex((int) result.get("sex"));
 			koala.setBirthdate((Date) result.get("birthdate"));
 			koala.setZooName((String) result.get("zoo_name"));
 			koala.setMother((String) result.get("mother"));
 			koala.setFather((String) result.get("father"));
-			// Koalaインスタンスをview返却用のリストに詰め込んでいく
+			
 			list.add(koala);
 		}
 		return list;
@@ -90,25 +92,25 @@ public class KoalaDaoImpl implements KoalaDao {
 	}
 
 	@Override
-	public Koala findById(Long id) {
-		String sql = "SELECT koala.koala_id,name, sex,birthdate,is_alive,deathdate,zoo,mother,father,details,feature ,koalaimage_id ,filetype FROM koala LEFT OUTER JOIN koalaimage ON koala.koala_id = koalaimage.koala_id WHERE koala.koala_id = ?";
+	public Koala findById(int id) {
+		String sql = "SELECT koala.koala_id,name, sex,birthdate,is_alive,deathdate,mother,father,details,feature ,koalaimage_id ,filetype FROM koala LEFT OUTER JOIN koalaimage ON koala.koala_id = koalaimage.koala_id WHERE koala.koala_id = ?";
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, id);
 
 		Koala koala = new Koala();
-		koala.setKoala_id((int) resultList.get(0).get("koala_id"));
-		koala.setName((String) resultList.get(0).get("name"));
-		koala.setSex((int) resultList.get(0).get("sex"));
-		koala.setBirthdate((Date) resultList.get(0).get("birthdate"));
-		koala.setIs_alive((int) resultList.get(0).get("is_alive"));
-		koala.setDeathdate((Date) resultList.get(0).get("deathdate"));
-		koala.setZoo((int) resultList.get(0).get("zoo"));
-		koala.setMother((String) resultList.get(0).get("mother"));
-		koala.setFather((String) resultList.get(0).get("father"));
-		koala.setDetails((String) resultList.get(0).get("details"));
-		koala.setFeature((String) resultList.get(0).get("feature"));
-
-		if (resultList.size() < 2 && resultList.get(0).get("koalaimage_id") == null) {
-			return koala;
+		koala.setKoala_id((int)resultList.get(0).get("koala_id"));
+		koala.setName((String)resultList.get(0).get("name"));
+		koala.setSex((int)resultList.get(0).get("sex"));
+		koala.setBirthdate((Date)resultList.get(0).get("birthdate"));
+		koala.setIs_alive((int)resultList.get(0).get("is_alive"));
+		koala.setDeathdate((Date)resultList.get(0).get("deathdate"));
+		//koala.setZoo((String)resultList.get(0).get("zoo"));
+		koala.setMother((String)resultList.get(0).get("mother"));
+		koala.setFather((String)resultList.get(0).get("father"));
+		koala.setDetails((String)resultList.get(0).get("details"));
+		koala.setFeature((String)resultList.get(0).get("feature"));
+	
+		if(resultList.size() < 2 && resultList.get(0).get("koalaimage_id") == null) {
+			return koala;	
 		}
 
 		List<KoalaImage> koalaImageList = new ArrayList<KoalaImage>();
@@ -139,13 +141,9 @@ public class KoalaDaoImpl implements KoalaDao {
 	}
 
 	@Override
-	public void update(Koala koala) {
-		jdbcTemplate.update(
-				"UPDATE koala SET  name=?, sex=?,birthdate=?,is_alive=?,deathdate=?,zoo=?,mother=?,father=?,details=?,feature=? WHERE koala_id = ?",
-				koala.getName(), koala.getSex(), koala.getBirthdate(), koala.getIs_alive(), koala.getDeathdate(),
-				koala.getZoo(), koala.getMother(), koala.getFather(), koala.getDetails(), koala.getFeature(),
-				koala.getKoala_id());
-	}
+	public void update(Koala koala){
+		jdbcTemplate.update("UPDATE koala SET  name=?, sex=?,birthdate=?,is_alive=?,deathdate=?,mother=?,father=?,details=?,feature=? WHERE koala_id = ?",
+				koala.getName(),koala.getSex(),koala.getBirthdate(),koala.getIs_alive(),koala.getDeathdate(),koala.getMother(),koala.getFather(),koala.getDetails(),koala.getFeature(),koala.getKoala_id());
 
 	@Override
 	public void delete(int koala_id) {

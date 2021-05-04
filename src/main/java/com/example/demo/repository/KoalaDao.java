@@ -13,7 +13,7 @@ public interface KoalaDao {
 	
 	int insert(Koala koala);
 
-	Koala findById(Long id);
+	Koala findById(int id);
 	
 	void update(Koala koala);
 	

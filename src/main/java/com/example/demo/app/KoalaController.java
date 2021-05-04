@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.demo.entity.Koala;
+
 import com.example.demo.entity.Zoo;
+import com.example.demo.entity.KoalaImage;
 import com.example.demo.service.KoalaService;
 
 
@@ -33,7 +36,11 @@ public class KoalaController {
 	@Autowired
 	public KoalaController(KoalaService koalaService) {
 		this.koalaService = koalaService;
-	}	
+	}
+	
+	@Autowired
+    @Qualifier("com.cloudinary.image.url")
+    String cloudinaryImageUrl;
 
 //ドメインに対してリクエストが来た際には/indexを返す
 	@GetMapping
@@ -81,22 +88,44 @@ public class KoalaController {
  	}};
 	
 	@GetMapping("/insert")
-	public String getInsert(Model model,@ModelAttribute KoalaInsertForm form) {
-		if(model.getAttribute("title")==null) {
+	public String getInsert(Model model,@ModelAttribute KoalaInsertForm form,boolean updateFlag) {
+		//新しいコアラ登録画面からか、編集画面のバリデーションでエラーが出て戻ってきたか判定
+		if(updateFlag) {
+			model.addAttribute("title","コアラ編集画面");
+			model.addAttribute("cloudinaryImageUrl",cloudinaryImageUrl);
+		}else {
 			model.addAttribute("title","コアラの登録");
-			model.addAttribute("sexItems",SEX_ITEMS);
-			model.addAttribute("isAliveItems",IS_ALIVE_ITEMS);
-			
-			List<Zoo> zooList = koalaService.getZooList();
-			model.addAttribute("zooList", zooList);
 		}
+		model.addAttribute("sexItems",SEX_ITEMS);
+		model.addAttribute("isAliveItems",IS_ALIVE_ITEMS);
+    List<Zoo> zooList = koalaService.getZooList();
+		model.addAttribute("zooList", zooList);
 		return "insert";
 	}
 
 	@PostMapping("/insert")
 	public String insertKoala(Model model,@Validated KoalaInsertForm form,BindingResult bindingResult) {
 		if(bindingResult.hasErrors()) {
-			return getInsert(model,form);
+			//エラーになった場合、コアラの写真情報を引き継ぐための処理
+			List<KoalaImage> koalaImageList = koalaService.findKoalaImageById(form.getKoala_id());
+			//削除したい写真がある場合、表示しない
+			if(form.getDeleteKoalaImageFiles() != null) {
+				//拡張子の前のkoalaImageIdを取得
+				String[] koalaImageFiles = form.getDeleteKoalaImageFiles().split(",");
+				//削除したいkoalaImageIdと表示しようとしているkoalaImageIdが一致していたら表示させない
+				for(int i=0;i<koalaImageFiles.length;++i) {
+					String koalaImageId = koalaImageFiles[i].split("\\.")[0];
+					for(int index=0;index<koalaImageList.size();++index) {
+						KoalaImage koalaImage = koalaImageList.get(index);
+						if(koalaImage.getKoalaimage_id() == Integer.parseInt(koalaImageId)) {
+							koalaImageList.remove(index);
+							break;
+						}
+					}
+				}
+			}
+			form.setKoalaImageList(koalaImageList);
+			return getInsert(model,form,true);
 		}
 	
 		if(form.getKoala_id() == 0){
@@ -108,9 +137,10 @@ public class KoalaController {
 	}
 	
 	@GetMapping("/detail/{id}")
-	public String displayDetailKoala(@PathVariable Long id, Model model){
-		Koala koala = koalaService.findById(id);
+	public String displayDetailKoala(@PathVariable int id, Model model){
 		model.addAttribute("title","コアラ情報詳細");
+		model.addAttribute("cloudinaryImageUrl",cloudinaryImageUrl);
+		Koala koala = koalaService.findById(id);
 		Date birthDate = (Date) koala.getBirthdate();
 		Date deathDate = (Date) koala.getDeathdate();
 		String stringBirthDate =  disPlayDate(birthDate);
@@ -118,15 +148,15 @@ public class KoalaController {
 		koala.setStringBirthDate(stringBirthDate);
 		koala.setStringDeathDate(stringDeathDate);
 		model.addAttribute("detail", koala);
-		model.addAttribute("fileName","13.jpg");
 		return "detail";
 	}
 	
 	@GetMapping("/edit/{id}")
-	public String editKoala(@PathVariable Long id, Model model,@ModelAttribute KoalaInsertForm form) throws ParseException {
+	public String editKoala(@PathVariable int id, Model model,@ModelAttribute KoalaInsertForm form) throws ParseException {
 		model.addAttribute("title","コアラ編集画面");
 		model.addAttribute("sexItems",SEX_ITEMS);
 		model.addAttribute("isAliveItems",IS_ALIVE_ITEMS);
+		model.addAttribute("cloudinaryImageUrl",cloudinaryImageUrl);
 		Koala koala = koalaService.findById(id);
 		form.setKoala_id(koala.getKoala_id());
 		form.setName(koala.getName());
