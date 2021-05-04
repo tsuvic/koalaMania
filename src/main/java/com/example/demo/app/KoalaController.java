@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.demo.entity.Koala;
+
+import com.example.demo.entity.Zoo;
 import com.example.demo.entity.KoalaImage;
 import com.example.demo.service.KoalaService;
 
@@ -96,6 +98,8 @@ public class KoalaController {
 		}
 		model.addAttribute("sexItems",SEX_ITEMS);
 		model.addAttribute("isAliveItems",IS_ALIVE_ITEMS);
+    List<Zoo> zooList = koalaService.getZooList();
+		model.addAttribute("zooList", zooList);
 		return "insert";
 	}
 

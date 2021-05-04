@@ -6,12 +6,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.app.KoalaInsertForm;
 import com.example.demo.entity.Koala;
+import com.example.demo.entity.Zoo;
 import com.example.demo.entity.KoalaImage;
+
 
 
 public interface KoalaService {
 	
 	List<Koala> getAll();
+
+	List<Zoo> getZooList();
 	
 	void insert(KoalaInsertForm form);
 

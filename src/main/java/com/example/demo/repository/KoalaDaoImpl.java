@@ -1,5 +1,7 @@
 package com.example.demo.repository;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.Koala;
 import com.example.demo.entity.KoalaImage;
+import com.example.demo.entity.Zoo;
 
 @Repository
 public class KoalaDaoImpl implements KoalaDao {
@@ -36,24 +39,56 @@ public class KoalaDaoImpl implements KoalaDao {
 		// MAP型リストからMapを繰り返し出力し、MapのバリューObjectをKoalaインスタンスに詰め込む
 		for (Map<String, Object> result : resultList) {
 			Koala koala = new Koala();
-			koala.setKoala_id((int)result.get("koala_id"));
-			koala.setName((String)result.get("name"));
-			koala.setSex((int)result.get("sex"));
-			koala.setBirthdate((Date)result.get("birthdate"));
-			koala.setZoo((String)result.get("zoo_name"));
-			koala.setMother((String)result.get("mother"));
-			koala.setFather((String)result.get("father"));
+
+      // Koalaインスタンスをview返却用のリストに詰め込んでいく
+			koala.setName((String) result.get("name"));
+			koala.setSex((int) result.get("sex"));
+			koala.setBirthdate((Date) result.get("birthdate"));
+			koala.setZooName((String) result.get("zoo_name"));
+			koala.setMother((String) result.get("mother"));
+			koala.setFather((String) result.get("father"));
+			
 			list.add(koala);
 		}
 		return list;
 	}
 
 	@Override
-	public int insert(Koala koala){
-		Map<String, Object> insertId = jdbcTemplate.queryForMap("INSERT INTO koala(name, sex, birthdate, is_alive, deathdate,  mother, father, details, feature) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING koala_id",
-				koala.getName(),koala.getSex(),koala.getBirthdate(),koala.getIs_alive(),koala.getDeathdate(),koala.getMother(),koala.getFather(),koala.getDetails(),koala.getFeature());
+	public List<Zoo> getZooList() {
+		String sql = "SELECT zoo_id, zoo_name FROM zoo ORDER BY zoo_id ASC";
+		List<Map<String, Object>> resultZooList = jdbcTemplate.queryForList(sql);
+		List<Zoo> zooList = new ArrayList<Zoo>();
+		for (Map<String, Object> result : resultZooList) {
+			Zoo zoo = new Zoo();
+			zoo.setZoo_id((int) result.get("zoo_id"));
+			zoo.setZoo_name((String) result.get("zoo_name"));
+			zooList.add(zoo);
+		}
+		return zooList;
+	}
+
+	@Override
+	public int insert(Koala koala) {
+		Map<String, Object> insertId = jdbcTemplate.queryForMap(
+				"INSERT INTO koala(name, sex, birthdate, is_alive, deathdate, mother, father, details, feature) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING koala_id",
+				koala.getName(), koala.getSex(), koala.getBirthdate(), koala.getIs_alive(), koala.getDeathdate(),
+				koala.getMother(), koala.getFather(), koala.getDetails(), koala.getFeature());
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		try {
+			date = dateFormat.parse("9999-01-01");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		jdbcTemplate.update(
+				"INSERT INTO koala_zoo_history(koala_id, zoo_id, admission_date, exit_date) VALUES(?, ?, ?, ?)",
+				(int) insertId.get("koala_id"), koala.getZoo(), date, date);
+
 		// インサートしたコアラidを取得
 		return (int) insertId.get("koala_id");
+
 	}
 
 	@Override

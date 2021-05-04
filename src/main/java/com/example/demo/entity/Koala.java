@@ -19,7 +19,8 @@ public class Koala {
 	private Date birthdate;
 	private int is_alive;
 	private Date deathdate;
-	private String zoo;
+	private int zoo;
+	private String zooName;
 	private String mother;
 	private String father;
 	private String details;
@@ -29,7 +30,7 @@ public class Koala {
 	private List<KoalaImage> koalaImageList;
 	
 	public Koala(int koala_id,String name,int sex ,Date birthDate,
-			int is_alive,Date deathDate,String zoo,String mother,String father,
+			int is_alive,Date deathDate,int zoo,String mother,String father,
 			String details,String feature) {
 		this.koala_id = koala_id;
 		this.name = name;
