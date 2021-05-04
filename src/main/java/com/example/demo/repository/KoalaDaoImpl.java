@@ -54,6 +54,36 @@ public class KoalaDaoImpl implements KoalaDao {
 		return list;
 	}
 
+
+	@Override
+	public List<Koala> findByKeyword(String keyword){
+		String sql = "SELECT koala.koala_id, name, sex, birthdate, zoo_name, mother, father "
+				+ "FROM koala LEFT OUTER JOIN koala_zoo_history ON koala.koala_id = koala_zoo_history.koala_id "
+				+ "LEFT OUTER JOIN zoo ON koala_zoo_history.zoo_id = zoo.zoo_id "
+				+ "LEFT OUTER JOIN prefecture ON zoo.prefecture_id = prefecture.prefecture_id "
+				+ "WHERE koala_zoo_history.exit_date = '9999-01-01' AND name like ? OR zoo_name like ?";
+		// SQL実行結果をMap型リストへ代入
+		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, "%" + keyword + "%" , "%" + keyword + "%");
+		// view返却用のリストを生成
+		List<Koala> list = new ArrayList<Koala>();
+		// MAP型リストからMapを繰り返し出力し、MapのバリューObjectをKoalaインスタンスに詰め込む
+		for (Map<String, Object> result : resultList) {
+			Koala koala = new Koala();
+			koala.setKoala_id((int) result.get("koala_id"));
+
+      // Koalaインスタンスをview返却用のリストに詰め込んでいく
+			koala.setName((String) result.get("name"));
+			koala.setSex((int) result.get("sex"));
+			koala.setBirthdate((Date) result.get("birthdate"));
+			koala.setZooName((String) result.get("zoo_name"));
+			koala.setMother((String) result.get("mother"));
+			koala.setFather((String) result.get("father"));
+			
+			list.add(koala);
+		}
+		return list;
+	}
+	
 	@Override
 	public List<Zoo> getZooList() {
 		String sql = "SELECT zoo_id, zoo_name FROM zoo ORDER BY zoo_id ASC";

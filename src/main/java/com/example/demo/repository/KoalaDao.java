@@ -8,6 +8,8 @@ import com.example.demo.entity.Zoo;
 public interface KoalaDao {
 	
 	List<Koala> getAll();
+	
+	List<Koala> findByKeyword(String keyword);
 
 	List<Zoo> getZooList();
 	
