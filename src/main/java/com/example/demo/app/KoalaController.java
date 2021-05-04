@@ -108,7 +108,7 @@ public class KoalaController {
 	}
 	
 	@GetMapping("/detail/{id}")
-	public String displayDetailKoala(@PathVariable Long id, Model model){
+	public String displayDetailKoala(@PathVariable int id, Model model){
 		Koala koala = koalaService.findById(id);
 		model.addAttribute("title","コアラ情報詳細");
 		Date birthDate = (Date) koala.getBirthdate();
@@ -123,7 +123,7 @@ public class KoalaController {
 	}
 	
 	@GetMapping("/edit/{id}")
-	public String editKoala(@PathVariable Long id, Model model,@ModelAttribute KoalaInsertForm form) throws ParseException {
+	public String editKoala(@PathVariable int id, Model model,@ModelAttribute KoalaInsertForm form) throws ParseException {
 		model.addAttribute("title","コアラ編集画面");
 		model.addAttribute("sexItems",SEX_ITEMS);
 		model.addAttribute("isAliveItems",IS_ALIVE_ITEMS);

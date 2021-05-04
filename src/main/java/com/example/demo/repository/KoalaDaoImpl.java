@@ -27,11 +27,11 @@ public class KoalaDaoImpl implements KoalaDao {
 
 	@Override
 	public List<Koala> getAll() {
-		String sql = "SELECT name, sex, birthdate, zoo_name, mother, father "
+		String sql = "SELECT koala.koala_id, name, sex, birthdate, zoo_name, mother, father "
 				+ "FROM koala LEFT OUTER JOIN koala_zoo_history ON koala.koala_id = koala_zoo_history.koala_id "
 				+ "LEFT OUTER JOIN zoo ON koala_zoo_history.zoo_id = zoo.zoo_id "
 				+ "LEFT OUTER JOIN prefecture ON zoo.prefecture_id = prefecture.prefecture_id "
-				+ "WHERE koala_zoo_history.exit_date = '9999-01-01' ";
+				+ "WHERE koala_zoo_history.exit_date = '9999-01-01'";
 		// SQL実行結果をMap型リストへ代入
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql);
 		// view返却用のリストを生成
@@ -39,6 +39,7 @@ public class KoalaDaoImpl implements KoalaDao {
 		// MAP型リストからMapを繰り返し出力し、MapのバリューObjectをKoalaインスタンスに詰め込む
 		for (Map<String, Object> result : resultList) {
 			Koala koala = new Koala();
+			koala.setKoala_id((int) result.get("koala_id"));
 			koala.setName((String) result.get("name"));
 			koala.setSex((int) result.get("sex"));
 			koala.setBirthdate((Date) result.get("birthdate"));
@@ -90,8 +91,16 @@ public class KoalaDaoImpl implements KoalaDao {
 	}
 
 	@Override
-	public Koala findById(Long id) {
-		String sql = "SELECT koala.koala_id,name, sex,birthdate,is_alive,deathdate,zoo,mother,father,details,feature ,koalaimage_id ,filetype FROM koala LEFT OUTER JOIN koalaimage ON koala.koala_id = koalaimage.koala_id WHERE koala.koala_id = ?";
+	public Koala findById(int id) {
+		String sql = "SELECT koala.koala_id,name, sex,birthdate,is_alive,deathdate,zoo_name,mother,father,details,feature ,koalaimage_id ,filetype "
+				+ "FROM koala LEFT OUTER JOIN koalaimage ON koala.koala_id = koalaimage.koala_id "
+				
+				+ "LEFT OUTER JOIN koala_zoo_history ON koala.koala_id = koala_zoo_history.koala_id "
+				+ "LEFT OUTER JOIN zoo ON koala_zoo_history.zoo_id = zoo.zoo_id "
+				+ "LEFT OUTER JOIN prefecture ON zoo.prefecture_id = prefecture.prefecture_id "
+				+ "WHERE  koala_zoo_history.exit_date = '9999-01-01' AND koala.koala_id = ?";
+		
+		
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, id);
 
 		Koala koala = new Koala();
@@ -101,7 +110,7 @@ public class KoalaDaoImpl implements KoalaDao {
 		koala.setBirthdate((Date) resultList.get(0).get("birthdate"));
 		koala.setIs_alive((int) resultList.get(0).get("is_alive"));
 		koala.setDeathdate((Date) resultList.get(0).get("deathdate"));
-		koala.setZoo((int) resultList.get(0).get("zoo"));
+		koala.setZooName((String) resultList.get(0).get("zoo_name"));
 		koala.setMother((String) resultList.get(0).get("mother"));
 		koala.setFather((String) resultList.get(0).get("father"));
 		koala.setDetails((String) resultList.get(0).get("details"));

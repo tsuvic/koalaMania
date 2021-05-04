@@ -127,7 +127,7 @@ public class KoalaServiceImpl implements KoalaService{
 	}
 	
 	@Override
-	public Koala findById(Long id) {
+	public Koala findById(int id) {
 		return dao.findById(id);
 	}
 	

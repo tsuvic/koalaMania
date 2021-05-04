@@ -17,7 +17,7 @@ public interface KoalaService {
 	
 	void insert(KoalaInsertForm form);
 
-	Koala findById(Long id);
+	Koala findById(int id);
 	
 	void update(KoalaInsertForm form);
 	
