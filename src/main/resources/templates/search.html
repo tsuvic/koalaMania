@@ -71,8 +71,13 @@
 					<td th:unless="*{stringBirthDate.equals('9999年1月1日')}"
 						th:text="*{stringBirthDate}"></td>
 					<td th:text="*{zooName}" ></td>
-					<td th:text="*{mother}"></td>
-					<td th:text="*{father}"></td>
+
+					<td th:if="*{#strings.isEmpty(mother)}">不明</td>
+					<td th:unless="*{#strings.isEmpty(mother)}" th:text="*{mother}"></td>
+
+					<td th:if="*{#strings.isEmpty(father)}">不明</td>
+					<td th:unless="*{#strings.isEmpty(father)}" th:text="*{father}"></td>
+
 					<td><a class="btn btn-md btn-info"
 						th:href="@{/detail/{koala_id}(koala_id=*{koala_id})}">詳細情報</a></td>
 			</tbody>
