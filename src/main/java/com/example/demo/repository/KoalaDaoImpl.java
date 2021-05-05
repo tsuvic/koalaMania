@@ -67,10 +67,10 @@ public class KoalaDaoImpl implements KoalaDao {
 				+ "LEFT OUTER JOIN prefecture ON zoo.prefecture_id = prefecture.prefecture_id "
 				+ "LEFT OUTER JOIN koala AS mother on koalakoala.mother  = mother.koala_id "
 				+ "LEFT OUTER JOIN koala AS father on koalakoala.father  = father.koala_id "
-				+ "WHERE koala_zoo_history.exit_date = '9999-01-01' AND koalakoala.name like ? OR zoo_name like ?";
+				+ "WHERE koala_zoo_history.exit_date = '9999-01-01' AND koalakoala.name like ? OR zoo_name like ? OR mother.name like ? OR father.name like ?";
 		
 		// SQL実行結果をMap型リストへ代入
-		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, "%" + keyword + "%" , "%" + keyword + "%");
+		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, "%" + keyword + "%" , "%" + keyword + "%" , "%" + keyword + "%" , "%" + keyword + "%");
 		// view返却用のリストを生成
 		List<Koala> list = new ArrayList<Koala>();
 		// MAP型リストからMapを繰り返し出力し、MapのバリューObjectをKoalaインスタンスに詰め込む
