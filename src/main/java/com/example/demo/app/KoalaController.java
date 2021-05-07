@@ -199,8 +199,6 @@ public class KoalaController {
 		form.setDeathMonth(deathDate[1]);
 		form.setDeathDay(deathDate[2]);
 		form.setZoo(koala.getZoo());
-		form.setMother(koala.getMother());
-		form.setFather(koala.getFather());
 		form.setDetails(koala.getDetails());
 		form.setFeature(koala.getFeature());
 		form.setKoalaImageList(koala.getKoalaImageList());
@@ -208,6 +206,8 @@ public class KoalaController {
 		model.addAttribute("motherList", motherList);
 		List<Koala> fatherList = koalaService.getFatherList(form.getKoala_id(), form.getBirthYear(), form.getBirthMonth(), form.getBirthDay());
 		model.addAttribute("fatherList", fatherList);
+		form.setMother_id(koala.getMother_id());
+		form.setFather_id(koala.getFather_id());
 		return "insert";
 	}
 

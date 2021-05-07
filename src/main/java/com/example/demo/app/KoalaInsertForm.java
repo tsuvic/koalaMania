@@ -39,10 +39,10 @@ public class KoalaInsertForm {
 	private String deathDay= "0";
 	@Min(0)
 	private int zoo=-1;
-	@NotBlank
-	private String mother;
-	@NotBlank
-	private String father;
+	@Min(0)
+	private int mother_id;
+	@Min(0)
+	private int father_id;
 	@NotBlank
 	@Length(min = 1,max = 50)
 	private String details;

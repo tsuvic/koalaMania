@@ -146,7 +146,7 @@ public class KoalaDaoImpl implements KoalaDao {
 		Map<String, Object> insertId = jdbcTemplate.queryForMap(
 				"INSERT INTO koala(name, sex, birthdate, is_alive, deathdate, mother, father, details, feature) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING koala_id",
 				koala.getName(), koala.getSex(), koala.getBirthdate(), koala.getIs_alive(), koala.getDeathdate(),
-				koala.getMother(), koala.getFather(), koala.getDetails(), koala.getFeature());
+				koala.getMother_id(), koala.getFather_id(), koala.getDetails(), koala.getFeature());
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
@@ -228,7 +228,7 @@ public class KoalaDaoImpl implements KoalaDao {
 	@Override
 	public void update(Koala koala){
 		jdbcTemplate.update("UPDATE koala SET name=?, sex=?,birthdate=?,is_alive=?,deathdate=?,mother=?,father=?,details=?,feature=? WHERE koala_id = ?",
-				koala.getName(),koala.getSex(),koala.getBirthdate(),koala.getIs_alive(),koala.getDeathdate(),koala.getMother(),koala.getFather(),koala.getDetails(),koala.getFeature(),koala.getKoala_id());
+				koala.getName(),koala.getSex(),koala.getBirthdate(),koala.getIs_alive(),koala.getDeathdate(),koala.getMother_id(),koala.getFather_id(),koala.getDetails(),koala.getFeature(),koala.getKoala_id());
 
 		jdbcTemplate.update("UPDATE koala_zoo_history SET zoo_id=? WHERE koala_id = ?",
 				koala.getZoo(), koala.getKoala_id());
