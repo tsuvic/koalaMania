@@ -27,12 +27,12 @@ public class KoalaDaoImpl implements KoalaDao {
 
 	@Override
 	public List<Koala> getAll() {
-		String sql = "SELECT koalakoala.koala_id, koalakoala.name, koalakoala.sex, koalakoala.birthdate, zoo.zoo_name, mother.name as mother_name , father.name as father_name "
-				+ "FROM koala AS koalakoala LEFT OUTER JOIN koala_zoo_history ON koalakoala.koala_id = koala_zoo_history.koala_id "
+		String sql = "SELECT koala.koala_id, koala.name, koala.sex, koala.birthdate, zoo.zoo_name, mother.name, father.name "
+				+ "FROM koala LEFT OUTER JOIN koala_zoo_history ON koala.koala_id = koala_zoo_history.koala_id "
 				+ "LEFT OUTER JOIN zoo ON koala_zoo_history.zoo_id = zoo.zoo_id "
 				+ "LEFT OUTER JOIN prefecture ON zoo.prefecture_id = prefecture.prefecture_id "
-				+ "LEFT OUTER JOIN koala AS mother on koalakoala.mother  = mother.koala_id "
-				+ "LEFT OUTER JOIN koala AS father on koalakoala.father  = father.koala_id "
+				+ "LEFT OUTER JOIN koala AS mother on koala.mother  = mother.koala_id "
+				+ "LEFT OUTER JOIN koala AS father on koala.father  = father.koala_id "
 				+ "WHERE koala_zoo_history.exit_date = '9999-01-01'";
 		
 		// SQL実行結果をMap型リストへ代入
@@ -49,14 +49,41 @@ public class KoalaDaoImpl implements KoalaDao {
 			koala.setSex((int) result.get("sex"));
 			koala.setBirthdate((Date) result.get("birthdate"));
 			koala.setZooName((String) result.get("zoo_name"));
-			koala.setMother((String) result.get("mother_name"));
-			koala.setFather((String) result.get("father_name"));
+			koala.setMother((String) result.get("mother.name"));
+			koala.setFather((String) result.get("father.name"));
 			
 			list.add(koala);
 		}
 		return list;
 	}
 
+	@Override
+	public List<Koala>getMotherList(int koala_id, Date birthDay){
+		String sql = "SELECT koala_id, name FROM koala WHERE koala_id NOT IN (?) AND sex = 2  AND birthdate < ?";
+		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, koala_id, birthDay);
+		List<Koala> motherList = new ArrayList<Koala>();
+		for (Map<String, Object> result : resultList) {
+			Koala koala = new Koala();
+			koala.setKoala_id((int) result.get("koala_id"));
+			koala.setName((String) result.get("name"));
+			motherList.add(koala);
+		}
+		return motherList;
+	}
+	
+	@Override
+	public List<Koala>getFatherList(int koala_id, Date birthDay){
+		String sql = "SELECT koala_id, name FROM koala WHERE koala_id NOT IN (?) AND sex = 1 AND birthdate < ?";
+		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, koala_id, birthDay);
+		List<Koala> fatherList = new ArrayList<Koala>();
+		for (Map<String, Object> result : resultList) {
+			Koala koala = new Koala();
+			koala.setKoala_id((int) result.get("koala_id"));
+			koala.setName((String) result.get("name"));
+			fatherList.add(koala);
+		}
+		return fatherList;
+	}
 
 	@Override
 	public List<Koala> findByKeyword(String keyword){
