@@ -57,6 +57,33 @@ public class KoalaDaoImpl implements KoalaDao {
 		return list;
 	}
 
+	@Override
+	public List<Koala>getMotherList(int koala_id, Date birthDay){
+		String sql = "SELECT koala_id, name FROM koala WHERE koala_id NOT IN (?) AND sex = 2  AND birthdate < ?";
+		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, koala_id, birthDay);
+		List<Koala> motherList = new ArrayList<Koala>();
+		for (Map<String, Object> result : resultList) {
+			Koala koala = new Koala();
+			koala.setKoala_id((int) result.get("koala_id"));
+			koala.setName((String) result.get("name"));
+			motherList.add(koala);
+		}
+		return motherList;
+	}
+	
+	@Override
+	public List<Koala>getFatherList(int koala_id, Date birthDay){
+		String sql = "SELECT koala_id, name FROM koala WHERE koala_id NOT IN (?) AND sex = 1 AND birthdate < ?";
+		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, koala_id, birthDay);
+		List<Koala> fatherList = new ArrayList<Koala>();
+		for (Map<String, Object> result : resultList) {
+			Koala koala = new Koala();
+			koala.setKoala_id((int) result.get("koala_id"));
+			koala.setName((String) result.get("name"));
+			fatherList.add(koala);
+		}
+		return fatherList;
+	}
 
 	@Override
 	public List<Koala> findByKeyword(String keyword){
