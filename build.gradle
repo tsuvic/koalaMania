@@ -50,6 +50,8 @@ dependencies {
     implementation 'org.webjars:bootstrap:4.4.1-1'
     implementation 'org.webjars:webjars-locator:0.40'
     implementation('com.cloudinary:cloudinary-http44:1.29.0')
+    implementation('org.springframework.boot:spring-boot-starter-security')
+	implementation('org.twitter4j:twitter4j-core:4.0.7')
 }
 
 test {

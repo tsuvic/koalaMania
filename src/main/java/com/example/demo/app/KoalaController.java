@@ -21,9 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.entity.Koala;
-
-import com.example.demo.entity.Zoo;
 import com.example.demo.entity.KoalaImage;
+import com.example.demo.entity.Zoo;
 import com.example.demo.service.KoalaService;
 
 @Controller
