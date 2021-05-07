@@ -60,17 +60,27 @@ public class KoalaDaoImpl implements KoalaDao {
 
 	@Override
 	public List<Koala> findByKeyword(String keyword){
-
+		
+		String[] splitkeyWord = keyword.replaceAll(" ", "　").split("　",0);
+		
 		String sql = "SELECT koalakoala.koala_id, koalakoala.name, koalakoala.sex, koalakoala.birthdate, zoo.zoo_name, mother.name as mother_name , father.name as father_name "
 				+ "FROM koala AS koalakoala LEFT OUTER JOIN koala_zoo_history ON koalakoala.koala_id = koala_zoo_history.koala_id "
 				+ "LEFT OUTER JOIN zoo ON koala_zoo_history.zoo_id = zoo.zoo_id "
 				+ "LEFT OUTER JOIN prefecture ON zoo.prefecture_id = prefecture.prefecture_id "
 				+ "LEFT OUTER JOIN koala AS mother on koalakoala.mother  = mother.koala_id "
 				+ "LEFT OUTER JOIN koala AS father on koalakoala.father  = father.koala_id "
-				+ "WHERE koala_zoo_history.exit_date = '9999-01-01' AND koalakoala.name like ? OR zoo_name like ? OR mother.name like ? OR father.name like ?";
+				+ "WHERE koala_zoo_history.exit_date = '9999-01-01' AND ";
+		
+		for(int i=0 ;i< splitkeyWord.length; ++i) {
+			if (i != 0) {
+				sql += " AND ";
+			}
+			sql += "(koalakoala.name like '%" + splitkeyWord[i] +"%' OR zoo_name like '%" + splitkeyWord[i] + "%' OR mother.name like '%"+ splitkeyWord[i] +"%' OR father.name like '%" + splitkeyWord[i] +"%')";
+		}
+		
 		
 		// SQL実行結果をMap型リストへ代入
-		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, "%" + keyword + "%" , "%" + keyword + "%" , "%" + keyword + "%" , "%" + keyword + "%");
+		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql);
 		// view返却用のリストを生成
 		List<Koala> list = new ArrayList<Koala>();
 		// MAP型リストからMapを繰り返し出力し、MapのバリューObjectをKoalaインスタンスに詰め込む

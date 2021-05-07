@@ -47,7 +47,6 @@ public class TwitterLoginController {
 		
 		try {
 			twitter.setOAuthConsumer(twitterAppId, twitterAppsecret);
-			
 			requestToken = twitter.getOAuthRequestToken(twitterCallBackUrl);
 			session.setAttribute("requestToken", requestToken);
 		} catch (TwitterException e) {
