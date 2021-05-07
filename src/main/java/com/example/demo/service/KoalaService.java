@@ -14,6 +14,8 @@ import com.example.demo.entity.KoalaImage;
 public interface KoalaService {
 	
 	List<Koala> getAll();
+	
+	List<Koala> findByKeyword(String keyword);
 
 	List<Zoo> getZooList();
 	
