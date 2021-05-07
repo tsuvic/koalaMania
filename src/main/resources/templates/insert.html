@@ -253,12 +253,12 @@
 			</div> -->
 			
 			<div class="form-group">
-				母親：<input type="text" class="form-control" th:field="*{mother}"
-					th:errorclass="is-invalid" />
-				<div class="invalid-feedback" th:errors="*{mother}"></div>
-				父親：<input type="text" class="form-control" th:field="*{father}"
-					th:errorclass="is-invalid" />
-				<div class="invalid-feedback" th:errors="*{father}"></div>
+				母親：<select th:field ="*{mother}"  th:errorclass="is-invalid"> <!-- id とnameはform用 -->
+					<option th:each="mother : ${motherList}"  th:value="${mother.koala_id}"  th:text="${mother.name}" ></option>
+				</select>
+				父親：<select th:field ="*{father}" th:errorclass="is-invalid">
+					<option th:each="father : ${fatherList}"  th:value = "${father.koala_id}"  th:text="${father.name}"></option>
+				</select>
 			</div>
 			<div class="form-group">
 				詳細：

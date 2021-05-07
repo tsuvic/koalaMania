@@ -50,6 +50,27 @@ public class KoalaServiceImpl implements KoalaService{
 	}
 
 	@Override
+	public List<Koala> findByKeyword(String keyword) {
+		return dao.findByKeyword(keyword);
+	}
+	
+	@Override
+	public List<Koala> getMotherList(int koala_id, String birthYear, String birthMonth, String birthDay) {
+		Date birthDate = getDate(birthYear, birthMonth, birthDay);
+		List<Koala> motherList = dao.getMotherList(koala_id, birthDate);
+		
+		return motherList;
+	}
+
+	@Override
+	public List<Koala> getFatherList(int koala_id, String birthYear, String birthMonth, String birthDay) {
+		Date birthDate = getDate(birthYear, birthMonth, birthDay);
+		List<Koala> fatherList = dao.getFatherList(koala_id, birthDate);
+		
+		return fatherList;
+	}
+	
+	@Override
 	public List<Zoo> getZooList(){
 		List<Zoo> zooList = dao.getZooList();
 		
