@@ -17,19 +17,6 @@
 <link href="/css/starter-template.css" rel="stylesheet">
 
 
-<script type="text/javascript">
-	function deleteFunc(koala_id,thisButton) {
-		const deleteFalg = confirm('このコアラを削除してもよろしいですか？');
-		if(deleteFalg){
-			thisButton.disabled = true;
-			thisButton.previousElementSibling.disabled = true;
-			thisButton.nextElementSibling.disabled = true;
-			location.href = '/delete/'+ koala_id;
-		}else{
-			return;
-		}
-	}
-</script>
 <title th:text="${title}"></title>
 </head>
 
@@ -96,7 +83,6 @@
 		</table>
 		<div class="btn_area_center">
 			<button class="btn btn-primary btn-sm" type="button" th:onclick="'location.href = \'' +@{/edit/{koala_id}(koala_id=${detail.koala_id})} + '\''" >編集</button>
-			<button class="btn btn-danger btn-sm" type="button" th:onclick="'deleteFunc(' + ${detail.koala_id} + ',this);'">削除</button>
 			<button class="btn btn-warning btn-sm" type="button" onclick="location.href='/search'" >一覧に戻る</button>
 		</div>
 </body>

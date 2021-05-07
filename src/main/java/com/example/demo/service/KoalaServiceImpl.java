@@ -105,10 +105,10 @@ public class KoalaServiceImpl implements KoalaService{
 			koala.setDeathdate(deathDate);
 		}
 		koala.setZoo(form.getZoo());
-		koala.setMother(form.getMother());
-		koala.setFather(form.getFather());
 		koala.setDetails(form.getDetails());
 		koala.setFeature(form.getFeature());
+		koala.setMother_id(form.getMother_id());
+		koala.setFather_id(form.getFather_id());;
 		int insertKoala_id = dao.insert(koala);
 		//追加するコアラに画像が添付されているか確認
 		boolean koalaImageInsetFlag =false;
@@ -169,9 +169,9 @@ public class KoalaServiceImpl implements KoalaService{
 		if(deathDate != null) {
 			koala.setDeathdate(deathDate);
 		}
+		koala.setMother_id(form.getMother_id());
+		koala.setFather_id(form.getFather_id());;
 		koala.setZoo(form.getZoo());
-		koala.setMother(form.getMother());
-		koala.setFather(form.getFather());
 		koala.setDetails(form.getDetails());
 		koala.setFeature(form.getFeature());
 		dao.update(koala);
