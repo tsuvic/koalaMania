@@ -11,6 +11,7 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entity.KoalaImage;
+import com.example.demo.entity.KoalaProfileImage;
 
 import lombok.Data;
 
@@ -49,6 +50,8 @@ public class KoalaInsertForm {
 	@NotBlank
 	@Length(min = 1,max = 50)
 	private String feature;
+	
+	private MultipartFile koalaProfileImageUpload;
 	
 	private List<MultipartFile> koalaImage;
 	

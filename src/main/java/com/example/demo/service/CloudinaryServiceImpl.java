@@ -43,6 +43,22 @@ public class CloudinaryServiceImpl implements CloudinaryService{
 			return null;
 		}
     }
+    @Override
+    public Map uploadKoalaProfileImage(File uploadFile,int koala_id) {
+        String uploadCloudinaryFolderPath = getkoalaUploadDir(koala_id) +"/profile/" ;
+        Map optionMap = ObjectUtils.asMap("folder",uploadCloudinaryFolderPath);
+        optionMap.put("use_filename", true);
+        optionMap.put("unique_filename", false);
+        try {
+        	Cloudinary cloudinary = new Cloudinary("cloudinary://"+mApiKey+":"+mApiSecret+"@"+mCloudName);
+        	Map resultMap = cloudinary.uploader().upload(uploadFile, optionMap);
+			return resultMap;
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+			return null;
+		}
+    }
     
     @Override
 	public List<String> deleteKoalaImage(String[] koalaImageFiles,int koala_id) {

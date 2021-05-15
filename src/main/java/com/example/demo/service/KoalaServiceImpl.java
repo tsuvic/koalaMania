@@ -26,9 +26,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.app.KoalaInsertForm;
 import com.example.demo.entity.Koala;
 import com.example.demo.entity.KoalaImage;
+import com.example.demo.entity.KoalaProfileImage;
 import com.example.demo.entity.Zoo;
 import com.example.demo.repository.KoalaDao;
 import com.example.demo.repository.KoalaImageDao;
+import com.example.demo.repository.KoalaProfileImageDao;
 
 @Service
 public class KoalaServiceImpl implements KoalaService{
@@ -36,12 +38,14 @@ public class KoalaServiceImpl implements KoalaService{
 	private final KoalaDao dao;
 	private final KoalaImageDao koalaImageDao;
 	private final CloudinaryService cloudinaryService;
+	private final KoalaProfileImageDao koalaProfileImageDao;
 	
 	@Autowired
-	public KoalaServiceImpl(KoalaDao dao,KoalaImageDao koalaImageDao,CloudinaryService cloudinaryService) {
+	public KoalaServiceImpl(KoalaDao dao,KoalaImageDao koalaImageDao,CloudinaryService cloudinaryService,KoalaProfileImageDao koalaProfileImageDao) {
 		this.dao = dao;
 		this.koalaImageDao = koalaImageDao;
 		this.cloudinaryService = cloudinaryService;
+		this.koalaProfileImageDao = koalaProfileImageDao;
 	}
 
 	@Override
@@ -119,8 +123,16 @@ public class KoalaServiceImpl implements KoalaService{
 			}
 		}
 		if(koalaImageInsetFlag) {
-			inserKoalaImage(insertKoala_id,form.getKoalaImage());
+			insertKoalaImage(insertKoala_id,form.getKoalaImage());
 		}
+		boolean koalaProfileImageInsetFlag =false;
+		if (form.getKoalaProfileImageUpload() != null ) {
+			koalaProfileImageInsetFlag = true;
+		}
+		if(koalaProfileImageInsetFlag) {
+			insertKoalaProfileImage(insertKoala_id,form.getKoalaProfileImageUpload());
+		}
+		
 	}
 	
 	public Date getDate(String year , String month , String day){
@@ -176,7 +188,10 @@ public class KoalaServiceImpl implements KoalaService{
 		koala.setFeature(form.getFeature());
 		dao.update(koala);
 		if(form.getKoalaImage()	!= null) {
-			inserKoalaImage(form.getKoala_id(),form.getKoalaImage());
+			insertKoalaImage(form.getKoala_id(),form.getKoalaImage());
+		}
+		if(form.getKoalaProfileImageUpload()	!= null) {
+			insertKoalaProfileImage(form.getKoala_id(),form.getKoalaProfileImageUpload());
 		}
 		if(form.getDeleteKoalaImageFiles() != null) {
 			deleteKoalaImage(form.getDeleteKoalaImageFiles(),form.getKoala_id());
@@ -196,7 +211,46 @@ public class KoalaServiceImpl implements KoalaService{
 	}
 	
 	@Override
-	public void inserKoalaImage(int koala_id, List<MultipartFile> koalaImageLust) {
+	public void insertKoalaProfileImage(int koala_id, MultipartFile koalaProfileImageUpload) {
+		KoalaProfileImage koalaProfileImage = new KoalaProfileImage();
+		koalaProfileImage.setKoala_id(koala_id);
+		
+		String fileExtension = koalaProfileImageUpload.getOriginalFilename().substring(koalaProfileImageUpload.getOriginalFilename().lastIndexOf("."));
+		
+		koalaProfileImage.setFiletype(fileExtension);
+		
+		int koalaProfileImageId = koalaProfileImageDao.insert(koalaProfileImage);
+		
+		try {
+            // アップロードファイルを置く
+            File uploadFile = new File("images/" + koalaProfileImageId + fileExtension);
+            
+            byte[] bytes = fileResize(koalaProfileImageUpload.getBytes(),fileExtension.substring(1));
+            
+            if(bytes == null) {
+            	bytes = koalaProfileImageUpload.getBytes();
+            }
+            
+            BufferedOutputStream uploadFileStream =
+                    new BufferedOutputStream(new FileOutputStream(uploadFile));
+            uploadFileStream.write(bytes);
+            
+            uploadFileStream.close();
+            
+            //cloudinaryに写真をアップロードする
+            Map resultmap = cloudinaryService.uploadKoalaProfileImage(uploadFile, koala_id);
+            uploadFile.delete();
+        } catch (Exception e) {
+            // 異常終了時の処理
+        } catch (Throwable t) {
+            // 異常終了時の処理
+        }
+		
+		
+	}
+	
+	@Override
+	public void insertKoalaImage(int koala_id, List<MultipartFile> koalaImageLust) {
 		KoalaImage koalaImage = new KoalaImage();
 		koalaImage.setKoala_id(koala_id);
         

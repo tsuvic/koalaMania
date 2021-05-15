@@ -1,0 +1,32 @@
+header.masthead {
+	padding-bottom: calc(10rem - 4.5rem);
+	background: url("../images/background.jpg");
+	background-color: rgba(255, 255, 255, 0.2);
+	background-blend-mode: lighten;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: scroll;
+	background-size: cover;
+	background-blend-mode: lighten;
+	height: 100vh;
+	min-height: 40rem;
+	padding-top: 4rem;
+	padding-bottom: 0;
+}
+
+header.masthead p {
+	color: white;
+}
+
+.container-fluid.search {
+	position: relative;
+	height: 100%;
+}
+
+.container-fluid.search a {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+}
