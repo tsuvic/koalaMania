@@ -46,15 +46,15 @@
 			document.getElementById("deathDay").value = "1";
 		}
 	}
-	
+
 	let doubleClick = false;
 
 	function validateSubmit($this) {
-		
-		if(doubleClick){
+
+		if (doubleClick) {
 			return false;
 		}
-		
+
 		let nameFlag = true;
 		if (!$this.elements["name"].value) {
 			alert('名前を入力してください。');
@@ -172,18 +172,17 @@
 			$(this).parent('span').remove();
 		});
 	});
-
 </script>
 
 <script type="text/javascript">
-	function deleteFunc(koala_id,thisButton) {
+	function deleteFunc(koala_id, thisButton) {
 		const deleteFalg = confirm('このコアラを削除してもよろしいですか？');
-		if(deleteFalg){
+		if (deleteFalg) {
 			thisButton.disabled = true;
 			thisButton.previousElementSibling.disabled = true;
 			thisButton.nextElementSibling.disabled = true;
-			location.href = '/delete/'+ koala_id;
-		}else{
+			location.href = '/delete/' + koala_id;
+		} else {
 			return;
 		}
 	}
@@ -206,6 +205,26 @@
 			onsubmit="return validateSubmit(this);">
 			<input th:unless="*{koala_id}==0" type="hidden"
 				th:field="*{koala_id}">
+
+				<div>
+				プロフィール写真：<br> <span 
+					th:object="${koalaProfileImage}" th:id="*{koalaProfileImage_id} + *{filetype}" th:unless="${#strings.isEmpty(koalaProfileImage)}" style="display: inline-block">
+				<div>
+						<img
+							th:src="@{{cloudinaryImageUrl}{koala_id}/profile/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},koala_id=${koalaInsertForm.koala_id},fileName=*{koalaProfileImage_id} + *{filetype})}"
+							width="200" height="200">
+					</div>
+					<button class="btn btn-danger btn-sm deleteImageButton"
+						type="button">削除</button>
+				</span>
+				<div id="koalaProfileImageUpload">
+					<input type="file" accept="image/*" th:field="*{koalaProfileImageUpload}"
+						th:errorclass="is-invalid" class="form-control-file">
+					<button class="btn btn-outline-warning btn-sm"
+						id="cancelInputFileButton" type="button">取り消し</button>
+					<br>
+				</div>
+				
 			<div class="form-group">
 				名前：<input type="text" class="form-control" th:field="*{name}"
 					th:errorclass="is-invalid" />
@@ -253,26 +272,29 @@
 						th:text="${i}"></option>
 				</select>日
 			</div>
-			
-				<div class="form-group">
-				動物園：<select th:field="*{zoo}"  th:errorclass="is-invalid" >
-					<option th:each="zoo : ${zooList}"  th:value="${zoo.zoo_id}"  th:text="${zoo.zoo_name}" ></option>
-					<!--fieldは送信先のフォームクラスの変数、 each は繰り返し、valueはフォームで送信する実際の値、textはHTMLに表示される名前 --> 
+
+			<div class="form-group">
+				動物園：<select th:field="*{zoo}" th:errorclass="is-invalid">
+					<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}"
+						th:text="${zoo.zoo_name}"></option>
+					<!--fieldは送信先のフォームクラスの変数、 each は繰り返し、valueはフォームで送信する実際の値、textはHTMLに表示される名前 -->
 				</select>
 				<div class="invalid-feedback" th:errors="*{zoo}"></div>
 			</div>
-		<!-- 	<div class="form-group">
+			<!-- 	<div class="form-group">
 				動物園：<input type="text" class="form-control" th:field="*{zoo}"
 					th:errorclass="is-invalid" />
 				<div class="invalid-feedback" th:errors="*{zoo}"></div>
 			</div> -->
-			
+
 			<div class="form-group">
-				母親：<select th:field ="*{mother_id}"  th:errorclass="is-invalid"> <!-- id とnameはform用 -->
-					<option th:each="mother : ${motherList}"  th:value="${mother.koala_id}"  th:text="${mother.name}" ></option>
-				</select>
-				父親：<select th:field ="*{father_id}" th:errorclass="is-invalid">
-					<option th:each="father : ${fatherList}"  th:value = "${father.koala_id}"  th:text="${father.name}"></option>
+				母親：<select th:field="*{mother_id}" th:errorclass="is-invalid">
+					<!-- id とnameはform用 -->
+					<option th:each="mother : ${motherList}"
+						th:value="${mother.koala_id}" th:text="${mother.name}"></option>
+				</select> 父親：<select th:field="*{father_id}" th:errorclass="is-invalid">
+					<option th:each="father : ${fatherList}"
+						th:value="${father.koala_id}" th:text="${father.name}"></option>
 				</select>
 			</div>
 			<div class="form-group">
@@ -302,7 +324,8 @@
 				</span>
 				<div id="koalaImages">
 					<input type="file" accept="image/*" th:field="*{koalaImage}"
-						th:errorclass="is-invalid" class="form-control-file"><button class="btn btn-outline-warning btn-sm"
+						th:errorclass="is-invalid" class="form-control-file">
+					<button class="btn btn-outline-warning btn-sm"
 						id="cancelInputFileButton" type="button">取り消し</button>
 					<br>
 				</div>
@@ -314,8 +337,11 @@
 				type="submit">追加</button>
 			<button th:unless="*{koala_id}==0"
 				class="btn btn-outline-primary btn-sm" type="submit">保存</button>
-							<button class="btn btn-danger btn-sm" type="button" th:unless="*{koala_id}==0" th:onclick="'deleteFunc(' + *{koala_id} + ',this);'">削除</button>
-			<button class="btn btn-outline-danger btn-sm" type="button" onclick="location.href='/search'">一覧に戻る</button>
+			<button class="btn btn-danger btn-sm" type="button"
+				th:unless="*{koala_id}==0"
+				th:onclick="'deleteFunc(' + *{koala_id} + ',this);'">削除</button>
+			<button class="btn btn-outline-danger btn-sm" type="button"
+				onclick="location.href='/search'">一覧に戻る</button>
 		</form>
 	</div>
 
