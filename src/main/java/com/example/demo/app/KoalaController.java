@@ -3,6 +3,7 @@ package com.example.demo.app;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +71,12 @@ public class KoalaController {
 	@PostMapping("/search")
 	public String displaySearchedKoara(Model model, @RequestParam(required = false, name = "keyword") String keyword,
 			@ModelAttribute KoalaSearchForm koalaSearchForm, BindingResult bindingResult) {
-		List<Koala> list = koalaService.findByKeyword(keyword);
+		List<Koala> list = new ArrayList<Koala>();
+		if(keyword==null || keyword.replaceAll(" ", "　").split("　",0).length == 0) {
+			list = koalaService.getAll();
+		}else {
+			list = koalaService.findByKeyword(keyword);
+		}
 		model.addAttribute("koalaList", list);
 		model.addAttribute("searchResult", "検索結果");
 		for (Koala koala : list) {
