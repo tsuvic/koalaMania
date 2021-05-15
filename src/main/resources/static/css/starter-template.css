@@ -1,0 +1,18 @@
+body {
+	padding-top: 5rem;
+}
+
+.starter-template {
+	padding: 6rem 3rem;
+	text-align: center;
+}
+
+.table {
+	table-layout: fixed;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+}
+
+.table tr th {
+	width: 40%;
+}

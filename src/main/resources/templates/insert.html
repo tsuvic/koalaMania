@@ -1,0 +1,325 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author"
+	content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+<meta name="generator" content="Hugo 0.79.0">
+<title>koalaMania</title>
+
+<link rel="canonical"
+	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
+<!-- Bootstrap core CSS -->
+<link
+	href=https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css
+	rel="stylesheet"
+	integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+	crossorigin="anonymous">
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+<!-- Custom styles for this template -->
+<link href="/css/starter-template.css" rel="stylesheet">
+<title th:text="${title}">Insert title here</title>
+<script type="text/javascript">
+	function isAliveFlag($this) {
+		const isAliveFlag = $this.value;
+		if (isAliveFlag == 1) {
+			document.getElementById("deathYear").disabled = true;
+			document.getElementById("deathMonth").disabled = true;
+			document.getElementById("deathDay").disabled = true;
+			document.getElementById("deathYear").value = 0;
+			document.getElementById("deathMonth").value = 0;
+			document.getElementById("deathDay").value = 0;
+
+		} else {
+			document.getElementById("deathYear").disabled = false;
+			document.getElementById("deathMonth").disabled = false;
+			document.getElementById("deathDay").disabled = false;
+			document.getElementById("deathYear").value = "2000";
+			document.getElementById("deathMonth").value = "1";
+			document.getElementById("deathDay").value = "1";
+		}
+	}
+	
+	let doubleClick = false;
+
+	function validateSubmit($this) {
+		
+		if(doubleClick){
+			return false;
+		}
+		
+		let nameFlag = true;
+		if (!$this.elements["name"].value) {
+			alert('名前を入力してください。');
+			nameFlag = false;
+		}
+
+		const birthYear = $this.elements["birthYear"].value;
+		const birthMonth = $this.elements["birthMonth"].value;
+		const birthDay = $this.elements["birthDay"].value;
+		const deathYear = $this.elements["deathYear"].value;
+		const deathMonth = $this.elements["deathMonth"].value;
+		const deathDay = $this.elements["deathDay"].value;
+		const birth = [ birthYear, birthMonth, birthDay ];
+		const death = [ deathYear, deathMonth, deathDay ];
+
+		let birthZeroCount = 0;
+		for (let i = 0; i < birth.length; i++) {
+			if (birth[i] == 0) {
+				birthZeroCount++;
+			}
+		}
+
+		let deathZeroCount = 0;
+		for (let i = 0; i < death.length; i++) {
+			if (death[i] == 0) {
+				deathZeroCount++;
+			}
+		}
+
+		let birthFlag = true;
+		if (1 <= birthZeroCount && birthZeroCount <= 2) {
+			alert('生年月日が不正です。');
+			birthFlag = false;
+		}
+
+		const birthDate = zeroPadding(birthYear, birthMonth, birthDay);
+		let deathDate = zeroPadding(deathYear, deathMonth, deathDay);
+		if (deathDate == 00000000) {
+			deathDate = 99990101;
+		}
+
+		let deathFlag = true;
+		if ((1 <= deathZeroCount && deathZeroCount <= 2)
+				|| (birthDate > deathDate)) {
+			alert('死亡日が不正です。');
+			deathFlag = false;
+		}
+
+		let detailsFlag = true;
+		if (!$this.elements["details"].value) {
+			alert('詳細を入力してください。');
+			detailsFlag = false;
+		}
+
+		let featureFlag = true;
+		if (!$this.elements["feature"].value) {
+			alert('特徴を入力してください。');
+			featureFlag = false;
+		}
+
+		if (nameFlag && birthFlag && deathFlag && detailsFlag && featureFlag) {
+			doubleClick = true;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function zeroPadding(year, month, day) {
+		let intYear = ("0000" + parseInt(year)).slice(-4);
+		let intMonth = ("00" + parseInt(month)).slice(-2);
+		let intDay = ("00" + parseInt(day)).slice(-2);
+
+		return parseInt("" + intYear + intMonth + intDay);
+	}
+
+	$(function() {
+		$('.addInputFileButton').click(function(e) {
+			const input = $("#koalaImage").clone(true);
+			const cancelButton = $('#cancelInputFileButton').clone(true);
+			input.val("");
+			input.appendTo("#koalaImages");
+			cancelButton.appendTo("#koalaImages");
+			$("#koalaImages").append("<br>");
+		});
+	});
+
+	$(function() {
+		$('#cancelInputFileButton').click(function(e) {
+			const contents = $("#koalaImages > input").length;
+			if (contents > 1) {
+				$(this).prev().remove();
+				$(this).next().remove();
+				$(this).remove();
+			} else {
+				$(this).prev().val("");
+			}
+		});
+	});
+
+	$(function() {
+		$('.deleteImageButton').click(function(e) {
+			const deleteImageFalg = confirm('この写真を削除してもよろしいですか？');
+			if (!deleteImageFalg) {
+				return;
+			}
+			let koalaImageId = $(this).parent().attr("id");
+			let deleteIds = $('#deleteKoalaImageFiles').val();
+			if (!deleteIds) {
+				deleteIds = koalaImageId;
+			} else {
+				deleteIds += ',' + koalaImageId;
+			}
+			$('#deleteKoalaImageFiles').val(deleteIds);
+			$(this).parent('span').remove();
+		});
+	});
+
+</script>
+
+<script type="text/javascript">
+	function deleteFunc(koala_id,thisButton) {
+		const deleteFalg = confirm('このコアラを削除してもよろしいですか？');
+		if(deleteFalg){
+			thisButton.disabled = true;
+			thisButton.previousElementSibling.disabled = true;
+			thisButton.nextElementSibling.disabled = true;
+			location.href = '/delete/'+ koala_id;
+		}else{
+			return;
+		}
+	}
+</script>
+
+</head>
+
+<div th:replace="~{block/header_boot::headerA_boot}"></div>
+
+
+<body>
+
+	<div class="container">
+		<h1 th:text="${title}">タイトル</h1>
+		<!--タイトル名を 変数式でControllerから取得 -->
+
+
+		<form action="/insert" method="post" enctype="multipart/form-data"
+			th:object="${koalaInsertForm}"
+			onsubmit="return validateSubmit(this);">
+			<input th:unless="*{koala_id}==0" type="hidden"
+				th:field="*{koala_id}">
+			<div class="form-group">
+				名前：<input type="text" class="form-control" th:field="*{name}"
+					th:errorclass="is-invalid" />
+				<div class="invalid-feedback" th:errors="*{name}"></div>
+			</div>
+			<div class="form-group">
+				性別：<select th:field="*{sex}">
+					<option th:each="item : ${sexItems}" th:value="${item.key}"
+						th:text="${item.value}"></option>
+				</select>
+			</div>
+			<div class="form-group">
+				生死：<select th:field="*{is_alive}" onchange="isAliveFlag(this);">
+					<option th:each="item : ${isAliveItems}" th:value="${item.key}"
+						th:text="${item.value}"></option>
+				</select>
+			</div>
+			<div class="form-group">
+				生年月日：<select th:field="*{birthYear}">
+					<option value="0">--</option>
+					<option th:each="i : ${#numbers.sequence(1900, 2021)}"
+						th:value="${i}" th:text="${i}"></option>
+				</select>年 <select th:field="*{birthMonth}">
+					<option value="0">--</option>
+					<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}"
+						th:text="${i}"></option>
+				</select>月 <select th:field="*{birthDay}">
+					<option value="0">--</option>
+					<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}"
+						th:text="${i}"></option>
+				</select>日
+			</div>
+			<div class="form-group">
+				死亡日：<select th:field="*{deathYear}" th:disabled="*{is_alive} == 1">
+					<option value="0">--</option>
+					<option th:each="i : ${#numbers.sequence(1900, 2021)}"
+						th:value="${i}" th:text="${i}" th:selected="${i}==2000"></option>
+				</select>年 <select th:field="*{deathMonth}" th:disabled="*{is_alive} == 1">
+					<option value="0">--</option>
+					<option th:each="i : ${#numbers.sequence(01, 12)}" th:value="${i}"
+						th:text="${i}"></option>
+				</select>月 <select th:field="*{deathDay}" th:disabled="*{is_alive} == 1">
+					<option value="0">--</option>
+					<option th:each="i : ${#numbers.sequence(01, 31)}" th:value="${i}"
+						th:text="${i}"></option>
+				</select>日
+			</div>
+			
+				<div class="form-group">
+				動物園：<select th:field="*{zoo}"  th:errorclass="is-invalid" >
+					<option th:each="zoo : ${zooList}"  th:value="${zoo.zoo_id}"  th:text="${zoo.zoo_name}" ></option>
+					<!--fieldは送信先のフォームクラスの変数、 each は繰り返し、valueはフォームで送信する実際の値、textはHTMLに表示される名前 --> 
+				</select>
+				<div class="invalid-feedback" th:errors="*{zoo}"></div>
+			</div>
+		<!-- 	<div class="form-group">
+				動物園：<input type="text" class="form-control" th:field="*{zoo}"
+					th:errorclass="is-invalid" />
+				<div class="invalid-feedback" th:errors="*{zoo}"></div>
+			</div> -->
+			
+			<div class="form-group">
+				母親：<select th:field ="*{mother_id}"  th:errorclass="is-invalid"> <!-- id とnameはform用 -->
+					<option th:each="mother : ${motherList}"  th:value="${mother.koala_id}"  th:text="${mother.name}" ></option>
+				</select>
+				父親：<select th:field ="*{father_id}" th:errorclass="is-invalid">
+					<option th:each="father : ${fatherList}"  th:value = "${father.koala_id}"  th:text="${father.name}"></option>
+				</select>
+			</div>
+			<div class="form-group">
+				詳細：
+				<textarea class="form-control" th:field="*{details}"
+					th:errorclass="is-invalid"></textarea>
+				<div class="invalid-feedback" th:errors="*{details}"></div>
+			</div>
+			<div class="form-group">
+				特徴：
+				<textarea class="form-control" th:field="*{feature}"
+					th:errorclass="is-invalid"></textarea>
+				<div class="invalid-feedback" th:errors="*{feature}"></div>
+			</div>
+			<div class="form-group">
+				写真：<br> <span th:unless="*{koalaImageList.size} == 0"
+					th:each="koalaImage,index:*{koalaImageList}"
+					th:object="${koalaImage}" th:id="*{koalaimage_id} + *{filetype}"
+					style="display: inline-block">
+					<div>
+						<img
+							th:src="@{{cloudinaryImageUrl}{koala_id}/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},koala_id=${koalaInsertForm.koala_id},fileName=*{koalaimage_id} + *{filetype})}"
+							width="200" height="200">
+					</div>
+					<button class="btn btn-danger btn-sm deleteImageButton"
+						type="button">削除</button>
+				</span>
+				<div id="koalaImages">
+					<input type="file" accept="image/*" th:field="*{koalaImage}"
+						th:errorclass="is-invalid" class="form-control-file"><button class="btn btn-outline-warning btn-sm"
+						id="cancelInputFileButton" type="button">取り消し</button>
+					<br>
+				</div>
+				<button class="btn btn-outline-success btn-sm addInputFileButton"
+					type="button">入力欄追加追加</button>
+			</div>
+			<input type="hidden" th:field="*{deleteKoalaImageFiles}">
+			<button th:if="*{koala_id}==0" class="btn btn-outline-primary btn-sm"
+				type="submit">追加</button>
+			<button th:unless="*{koala_id}==0"
+				class="btn btn-outline-primary btn-sm" type="submit">保存</button>
+							<button class="btn btn-danger btn-sm" type="button" th:unless="*{koala_id}==0" th:onclick="'deleteFunc(' + *{koala_id} + ',this);'">削除</button>
+			<button class="btn btn-outline-danger btn-sm" type="button" onclick="location.href='/search'">一覧に戻る</button>
+		</form>
+	</div>
+
+</body>
+
+
+</html>

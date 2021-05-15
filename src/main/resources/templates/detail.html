@@ -1,0 +1,89 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+<meta charset="utf-8">
+<link rel="canonical"
+	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
+<!-- Bootstrap core CSS -->
+<link
+	href=https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css
+	rel="stylesheet"
+	integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+	crossorigin="anonymous">
+
+<!-- Custom styles for this template -->
+<link href="/css/starter-template.css" rel="stylesheet">
+
+
+<title th:text="${title}"></title>
+</head>
+
+<body>
+		<div th:replace="~{block/header_boot::headerA_boot}"></div>
+		<h2>コアラ情報詳細</h2>
+		<table th:object="${detail}" class="table table-hover table-responsive">	
+			<tr>
+				<th class="cell_title">名前</th>
+				<td th:text="*{name}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">性別</th>
+				<td th:if="*{sex == 0}">不明</td>
+				<td th:if="*{sex == 1}">男</td>
+				<td th:if="*{sex == 2}">女</td>
+				<td th:if="*{sex == 9}"> </td>
+			</tr>
+			<tr>
+				<th class="cell_title">生年月日</th>
+				<td th:if="*{stringBirthDate.equals('9999年1月1日')}">不明</td>
+				<td th:unless="*{stringBirthDate.toString().equals('9999年1月1日')}"
+						th:text="*{stringBirthDate}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">生死</th>
+				<td th:if="*{is_alive == 1}">生存</td>
+				<td th:if="*{is_alive == 0}">死亡</td>
+			</tr>
+			<tr>
+				<th class="cell_title">死亡日</th>
+				<td th:if="*{stringDeathDate.equals('9999年1月1日')}">-</td>
+				<td th:unless="*{stringDeathDate.equals('9999年1月1日')}"
+						th:text="*{stringDeathDate}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">動物園</th>
+				<td th:text="*{zooName}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">母親</th>
+				<td th:text="*{mother}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">父親</th>
+				<td th:text="*{father}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">詳細</th>
+				<td th:text="*{details}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">特徴</th>
+				<td th:text="*{feature}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">写真</th>
+				<td>
+					<span th:each="koalaImage,index:*{koalaImageList}" th:object="${koalaImage}">
+					<img th:src="@{{cloudinaryImageUrl}{koala_id}/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},koala_id=${detail.koala_id},fileName=*{koalaimage_id} + *{filetype})}" width="200" height="200">
+					</span>
+				</td>
+			</tr>
+		</table>
+		<div class="btn_area_center">
+			<button class="btn btn-primary btn-sm" type="button" th:onclick="'location.href = \'' +@{/edit/{koala_id}(koala_id=${detail.koala_id})} + '\''" >編集</button>
+			<button class="btn btn-warning btn-sm" type="button" onclick="location.href='/search'" >一覧に戻る</button>
+		</div>
+</body>
+</html>

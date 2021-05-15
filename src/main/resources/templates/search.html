@@ -1,0 +1,88 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+<meta charset="utf-8">
+
+<title>koalaMania</title>
+
+<link rel="canonical"
+	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
+<!-- Bootstrap core CSS -->
+<link
+	href=https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css
+	rel="stylesheet"
+	integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+	crossorigin="anonymous">
+
+<!-- Custom styles for this template -->
+<link href="/css/starter-template.css" rel="stylesheet">
+<title th:text="${title}">検索画面</title>
+</head>
+
+<body>
+
+	<div th:replace="~{block/header_boot::headerA_boot}"></div>
+
+
+	<div class="container">
+
+		<h2>検索</h2>
+				<form class="card-body row no-gutters align-items-center" method="post" action="#" th:action="@{/search}" th:object="${koalaSearchForm}">
+					<div class="col-auto">
+						<i class="fas fa-search h4 text-body"></i>
+					</div>
+					<div class="col">
+						<input
+							class="form-control form-control-lg form-control-borderless"
+							type="text"  name="keyword" th:field="*{keyword}" placeholder="コアラ名 or 動物園名" >
+					</div>
+					<div class="col-auto">
+						<button class="btn btn-lg btn-success" type="submit">検索</button>
+					</div>
+				</form>
+		<br> <br>
+
+
+		<h2 th:text="${searchResult}"></h2>
+		<!--タイトル名を 変数式でControllerから取得 -->
+		
+		<table class="table table-hover table-responsive" >
+			<thead class="thead-dark">
+				<tr>
+					<th style="width: 32%">名前</th>
+					<th style="width: 27%">性別</th>
+					<th style="width: 42%">生年月日</th>
+					<th style="width: 47%">動物園</th>
+					<th style="width: 32%">母親</th>
+					<th style="width: 35%">父親</th>
+					<th style="width: 30%" colspan="1"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr style="height: 85px;" th:each="koala : ${koalaList}"
+					th:object="${koala}">
+					<td width="20" th:text="*{name}"></td>
+					<td th:if="*{sex == 0}">不明</td>
+					<td th:if="*{sex == 1}">男</td>
+					<td th:if="*{sex == 2}">女</td>
+					<td th:if="*{sex == 9}"></td>
+					<td th:if="*{stringBirthDate.equals('9999年1月1日')}">不明</td>
+					<td th:unless="*{stringBirthDate.equals('9999年1月1日')}"
+						th:text="*{stringBirthDate}"></td>
+					<td th:text="*{zooName}" ></td>
+
+					<td th:if="*{#strings.isEmpty(mother)}">不明</td>
+					<td th:unless="*{#strings.isEmpty(mother)}" th:text="*{mother}"></td>
+
+					<td th:if="*{#strings.isEmpty(father)}">不明</td>
+					<td th:unless="*{#strings.isEmpty(father)}" th:text="*{father}"></td>
+
+					<td><a class="btn btn-md btn-info"
+						th:href="@{/detail/{koala_id}(koala_id=*{koala_id})}">詳細情報</a></td>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>
