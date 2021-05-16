@@ -203,17 +203,17 @@
 		<form action="/insert" method="post" enctype="multipart/form-data"
 			th:object="${koalaInsertForm}"
 			onsubmit="return validateSubmit(this);">
-			<input th:unless="*{koala_id}==0" type="hidden"
-				th:field="*{koala_id}">
+			<input th:unless="*{koala_id}==0" type="hidden" th:field="*{koala_id}">
 
-				<div>
+				<input type="hidden" th:field="*{fileExtension}">
+				
 				プロフィール写真：<br> <span 
-					th:object="${koalaProfileImage}" th:id="*{koalaProfileImage_id} + *{filetype}" th:unless="${#strings.isEmpty(koalaProfileImage)}" style="display: inline-block">
-				<div>
+					th:id="${koalaInsertForm.koala_id} + ${koalaInsertForm.fileExtension}" 
+					th:if="${koalaInsertForm.fileExtension}" style="display: inline-block">
 						<img
-							th:src="@{{cloudinaryImageUrl}{koala_id}/profile/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},koala_id=${koalaInsertForm.koala_id},fileName=*{koalaProfileImage_id} + *{filetype})}"
+							th:src="${koalaInsertForm.fileExtension}"
 							width="200" height="200">
-					</div>
+	
 					<button class="btn btn-danger btn-sm deleteImageButton"
 						type="button">削除</button>
 				</span>
@@ -311,7 +311,7 @@
 			</div>
 			<div class="form-group">
 				写真：<br> <span th:unless="*{koalaImageList.size} == 0"
-					th:each="koalaImage,index:*{koalaImageList}"
+					th:each="koalaImage:*{koalaImageList}"
 					th:object="${koalaImage}" th:id="*{koalaimage_id} + *{filetype}"
 					style="display: inline-block">
 					<div>

@@ -25,4 +25,6 @@ public interface KoalaDao {
 	void update(Koala koala);
 
 	void delete(int koala_id);
+	
+	void urlUpdate(int koala_id, String url);
 }
