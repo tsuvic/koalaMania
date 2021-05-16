@@ -311,7 +311,7 @@
 			</div>
 			<div class="form-group">
 				写真：<br> <span th:unless="*{koalaImageList.size} == 0"
-					th:each="koalaImage,index:*{koalaImageList}"
+					th:each="koalaImage:*{koalaImageList}"
 					th:object="${koalaImage}" th:id="*{koalaimage_id} + *{filetype}"
 					style="display: inline-block">
 					<div>

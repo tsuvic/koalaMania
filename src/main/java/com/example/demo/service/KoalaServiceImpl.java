@@ -195,14 +195,17 @@ public class KoalaServiceImpl implements KoalaService {
 		koala.setZoo(form.getZoo());
 		koala.setDetails(form.getDetails());
 		koala.setFeature(form.getFeature());
-		String fileExtension = form.getKoalaProfileImageUpload().getOriginalFilename()
-				.substring(form.getKoalaProfileImageUpload().getOriginalFilename().lastIndexOf("."));
-		koala.setProfileImageType(fileExtension);
+		String fileExtension =  null;
+		if( !form.getKoalaProfileImageUpload().isEmpty()) {
+			fileExtension = form.getKoalaProfileImageUpload().getOriginalFilename()
+					.substring(form.getKoalaProfileImageUpload().getOriginalFilename().lastIndexOf("."));
+			koala.setProfileImageType(fileExtension);
+		}
 		dao.update(koala);
 
 //		プロフィール画像登録 or 更新
 	
-		if (form.getKoalaProfileImageUpload() != null) {
+		if (fileExtension  != null) {
 			insertKoalaProfileImage(form.getKoala_id(), form.getKoalaProfileImageUpload(), fileExtension);
 		}
 
