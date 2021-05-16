@@ -53,6 +53,16 @@ public class KoalaController {
 	public String indexReload() {
 		return "index";
 	}
+	
+	@GetMapping("/login")
+	public String login() {
+		return "login";
+	}
+	
+	@GetMapping("/signup")
+	public String signup() {
+		return "signup";
+	}
 
 	@GetMapping("/search")
 	public String displayAllKoala(Model model, @ModelAttribute KoalaSearchForm koalaSearchForm,

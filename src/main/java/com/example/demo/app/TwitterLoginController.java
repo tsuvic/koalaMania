@@ -6,6 +6,10 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -72,7 +76,11 @@ public class TwitterLoginController {
 		oath.setOAuthAccessToken(accessToken);
 		String verifier = request.getParameter("oauth_verifier");
 		try {
-			accessToken = oath.getOAuthAccessToken(verifier);
+			if(verifier != null) {
+				accessToken = oath.getOAuthAccessToken(verifier);
+			}else {
+				return "redirect:/login";
+			}
 			Twitter twitter = new TwitterFactory().getInstance();
 			twitter.setOAuthConsumer(twitterAppId, twitterAppsecret);
 			twitter.setOAuthAccessToken(accessToken);
@@ -82,13 +90,11 @@ public class TwitterLoginController {
 			e.printStackTrace();
 		}
 
-		//User user = new User(accessToken.getScreenName(), new Long(accessToken.getUserId()).toString(),AuthorityUtils.createAuthorityList("ROLE_USER"));
+		User user = new User(accessToken.getScreenName(), new Long(accessToken.getUserId()).toString(),AuthorityUtils.createAuthorityList("ROLE_USER"));
 
-		/*UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user, null,
+		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user, null,
 				AuthorityUtils.createAuthorityList("ROLE_USER"));
-		SecurityContextHolder.getContext().setAuthentication(token);*/
-
-		session.setAttribute("accessToken", accessToken);
+		SecurityContextHolder.getContext().setAuthentication(token);
 
 		return "redirect:/";
 	}

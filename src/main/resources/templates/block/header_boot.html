@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
 
-<header th:fragment="headerA_boot">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"><header th:fragment="headerA_boot">
 
 	<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
 		<div class="container-fluid">
 
-			<a class="navbar-brand" href="#">コアラマニアとは？</a>
+			<a class="navbar-brand" href="/">コアラマニアとは？</a>
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarsExampleDefault"
 				aria-controls="navbarsExampleDefault" aria-expanded="false"
@@ -21,13 +21,17 @@
 					<li class="nav-item"><a class="nav-link" href="/insert">新しいコアラの登録</a></li>
 				</ul>
 
-				<div class="d-flex flex-row">
-					<a th:href="@{/oauth/twitter/auth}">
-						<button class="btn btn-info mx-2" type="submit">Twitterでログイン</button>
+				<div sec:authorize="!isAuthenticated()" class="d-flex flex-row">
+					<a th:href="@{/signup}">
+						<button class="btn btn-md btn-success mx-2" type="submit">アカウント登録</button>
+					</a> <a th:href="@{/login}">
+						<button class="btn btn-outline-success mx-2" type="submit">ログイン</button>
 					</a>
-
-					<button class="btn btn-md btn-success mx-2" type="submit">アカウント登録</button>
-					<button class="btn btn-outline-success mx-2" type="submit">ログイン</button>
+				</div>
+				<div sec:authorize="isAuthenticated()" class="d-flex flex-row">
+					<a th:href="@{/logout}">
+						<button class="btn btn-md btn-success mx-2" type="submit">ログアウト</button>
+					</a>
 				</div>
 			</div>
 		</div>
