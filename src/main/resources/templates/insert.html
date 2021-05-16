@@ -211,7 +211,7 @@
 					th:id="${koalaInsertForm.koala_id} + ${koalaInsertForm.fileExtension}" 
 					th:if="${koalaInsertForm.fileExtension}" style="display: inline-block">
 						<img
-							th:src="@{{cloudinaryImageUrl}{koala_id}/profile/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl}, koala_id=${koalaInsertForm.koala_id}, fileName=${koalaInsertForm.koala_id} + ${koalaInsertForm.fileExtension})}"
+							th:src="${koalaInsertForm.fileExtension}"
 							width="200" height="200">
 	
 					<button class="btn btn-danger btn-sm deleteImageButton"

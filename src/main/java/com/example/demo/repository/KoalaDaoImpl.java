@@ -34,7 +34,8 @@ public class KoalaDaoImpl implements KoalaDao {
 				+ "LEFT OUTER JOIN prefecture ON zoo.prefecture_id = prefecture.prefecture_id "
 				+ "LEFT OUTER JOIN koala AS mother on koalakoala.mother  = mother.koala_id "
 				+ "LEFT OUTER JOIN koala AS father on koalakoala.father  = father.koala_id "
-				+ "WHERE koala_zoo_history.exit_date = '9999-01-01'";
+				+ "WHERE koala_zoo_history.exit_date = '9999-01-01' "
+				+ "ORDER BY koalakoala.koala_id ASC";
 
 		// SQL実行結果をMap型リストへ代入
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql);
@@ -233,6 +234,13 @@ public class KoalaDaoImpl implements KoalaDao {
 				koala.getKoala_id());
 	}
 
+	
+	@Override
+	public void urlUpdate(int koala_id, String url) {
+		jdbcTemplate.update(
+				"UPDATE koala SET profile_image_type = ? WHERE koala_id = ?", url, koala_id);
+	}
+	
 	@Override
 	public void delete(int koala_id) {
 		jdbcTemplate.update("DELETE FROM koala WHERE koala_id = ?", koala_id);

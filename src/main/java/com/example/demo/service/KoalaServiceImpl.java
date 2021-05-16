@@ -217,6 +217,8 @@ public class KoalaServiceImpl implements KoalaService {
 		}
 	}
 
+	
+	
 	@Override
 	@Transactional
 	public void delete(int koala_id) {
@@ -248,6 +250,9 @@ public class KoalaServiceImpl implements KoalaService {
 
 			// cloudinaryに写真をアップロードする
 			Map resultmap = cloudinaryService.uploadKoalaProfileImage(uploadFile, koala_id);
+			String url = (String)resultmap.get("secure_url");
+			dao.urlUpdate(koala_id, url);
+			
 			uploadFile.delete();
 		} catch (Exception e) {
 			// 異常終了時の処理
