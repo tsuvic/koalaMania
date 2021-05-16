@@ -58,4 +58,6 @@ public class KoalaInsertForm {
 	private List<KoalaImage> koalaImageList;
 	
 	private String deleteKoalaImageFiles;
+	
+	private String fileExtension;
 }
