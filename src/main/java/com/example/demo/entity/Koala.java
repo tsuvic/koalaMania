@@ -31,6 +31,6 @@ public class Koala {
 	private String stringDeathDate;
 	private List<KoalaImage> koalaImageList;
 	private KoalaProfileImage koalaProfileImage;
-	private String profileImageType;
+	private String profileImagePath;
 	
 }

@@ -115,7 +115,7 @@ public class KoalaServiceImpl implements KoalaService {
 		koala.setFeature(form.getFeature());
 		koala.setMother_id(form.getMother_id());
 		koala.setFather_id(form.getFather_id());
-		koala.setProfileImageType((form.getKoalaProfileImageUpload().getOriginalFilename())
+		koala.setProfileImagePath((form.getKoalaProfileImageUpload().getOriginalFilename())
 				.substring(form.getKoalaProfileImageUpload().getOriginalFilename().lastIndexOf(".")));
 
 		int insertKoala_id = dao.insert(koala);
@@ -138,7 +138,7 @@ public class KoalaServiceImpl implements KoalaService {
 
 		}
 		if (koalaProfileImageInsetFlag) {
-			insertKoalaProfileImage(insertKoala_id, form.getKoalaProfileImageUpload(), koala.getProfileImageType());
+			insertKoalaProfileImage(insertKoala_id, form.getKoalaProfileImageUpload(), koala.getProfileImagePath());
 		}
 
 	}
@@ -195,18 +195,18 @@ public class KoalaServiceImpl implements KoalaService {
 		koala.setZoo(form.getZoo());
 		koala.setDetails(form.getDetails());
 		koala.setFeature(form.getFeature());
-		String fileExtension =  null;
+		String profileImagePath =  null;
 		if( !form.getKoalaProfileImageUpload().isEmpty()) {
-			fileExtension = form.getKoalaProfileImageUpload().getOriginalFilename()
+			profileImagePath = form.getKoalaProfileImageUpload().getOriginalFilename()
 					.substring(form.getKoalaProfileImageUpload().getOriginalFilename().lastIndexOf("."));
-			koala.setProfileImageType(fileExtension);
+			koala.setProfileImagePath(profileImagePath);
 		}
 		dao.update(koala);
 
 //		プロフィール画像登録 or 更新
 	
-		if (fileExtension  != null) {
-			insertKoalaProfileImage(form.getKoala_id(), form.getKoalaProfileImageUpload(), fileExtension);
+		if (profileImagePath  != null) {
+			insertKoalaProfileImage(form.getKoala_id(), form.getKoalaProfileImageUpload(), profileImagePath);
 		}
 
 		//		コアラ画像登録		
@@ -235,12 +235,12 @@ public class KoalaServiceImpl implements KoalaService {
 	}
 
 	@Override
-	public void insertKoalaProfileImage(int koala_id, MultipartFile koalaProfileImageUpload, String fileExtension) {
+	public void insertKoalaProfileImage(int koala_id, MultipartFile koalaProfileImageUpload, String profileImagePath) {
 		try {
 			//
-			File uploadFile = new File("images/" + koala_id + fileExtension);
+			File uploadFile = new File("images/" + koala_id + profileImagePath);
 
-			byte[] bytes = fileResize(koalaProfileImageUpload.getBytes(), fileExtension.substring(1));
+			byte[] bytes = fileResize(koalaProfileImageUpload.getBytes(), profileImagePath.substring(1));
 
 			if (bytes == null) {
 				bytes = koalaProfileImageUpload.getBytes();
@@ -273,17 +273,17 @@ public class KoalaServiceImpl implements KoalaService {
 		for (MultipartFile inputImage : koalaImageLust) {
 			if (inputImage.getSize() != 0) {
 				// ファイルの拡張子を取得する
-				String fileExtension = inputImage.getOriginalFilename()
+				String profileImagePath = inputImage.getOriginalFilename()
 						.substring(inputImage.getOriginalFilename().lastIndexOf("."));
 
-				koalaImage.setFiletype(fileExtension);
+				koalaImage.setFiletype(profileImagePath);
 
 				int koalaImageId = koalaImageDao.insert(koalaImage);
 				try {
 					// アップロードファイルを置く
-					File uploadFile = new File("images/" + koalaImageId + fileExtension);
+					File uploadFile = new File("images/" + koalaImageId + profileImagePath);
 
-					byte[] bytes = fileResize(inputImage.getBytes(), fileExtension.substring(1));
+					byte[] bytes = fileResize(inputImage.getBytes(), profileImagePath.substring(1));
 
 					if (bytes == null) {
 						bytes = inputImage.getBytes();

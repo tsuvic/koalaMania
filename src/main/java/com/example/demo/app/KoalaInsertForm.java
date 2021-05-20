@@ -59,5 +59,5 @@ public class KoalaInsertForm {
 	
 	private String deleteKoalaImageFiles;
 	
-	private String fileExtension;
+	private String profileImagePath;
 }
