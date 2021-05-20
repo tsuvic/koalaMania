@@ -205,13 +205,13 @@
 			onsubmit="return validateSubmit(this);">
 			<input th:unless="*{koala_id}==0" type="hidden" th:field="*{koala_id}">
 
-				<input type="hidden" th:field="*{fileExtension}">
+				<input type="hidden" th:field="*{profileImagePath}">
 				
 				プロフィール写真：<br> <span 
-					th:id="${koalaInsertForm.koala_id} + ${koalaInsertForm.fileExtension}" 
-					th:if="${koalaInsertForm.fileExtension}" style="display: inline-block">
+					th:id="${koalaInsertForm.koala_id} + ${koalaInsertForm.profileImagePath}" 
+					th:if="${koalaInsertForm.profileImagePath}" style="display: inline-block">
 						<img
-							th:src="${koalaInsertForm.fileExtension}"
+							th:src="${koalaInsertForm.profileImagePath}"
 							width="200" height="200">
 	
 					<button class="btn btn-danger btn-sm deleteImageButton"

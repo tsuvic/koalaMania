@@ -1,0 +1,33 @@
+com:
+  cloudinary:
+    api_key: ${CLOUD_API_KEY}
+    api_secret: ${CLOUD_API_SECRET}
+    cloud_name: ${CLOUD_NAME}
+    image:
+      url: https://res.cloudinary.com/honx7tf4c/image/upload/koala/
+
+server:
+  port: ${PORT:8080}
+
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 4
+      minimum-idle: 4
+    password: ${POSTGRES_PASS}
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_USER}
+
+  jpa:
+    show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 3MB
+      max-request-size: 3MB
+
+  social:
+    twitter:
+      app-id: ${TWITTER_API}
+      app-secret: ${TWITTER_SECRET}
+      callback-url: ${TWITTER_CALLBACK_URL}

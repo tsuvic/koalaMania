@@ -225,7 +225,7 @@ public class KoalaController {
 		model.addAttribute("fatherList", fatherList);
 		form.setMother_id(koala.getMother_id());
 		form.setFather_id(koala.getFather_id());
-		form.setFileExtension(koala.getProfileImageType());
+		form.setProfileImagePath(koala.getProfileImagePath());
 		return "insert";
 	}
 
