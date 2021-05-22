@@ -13,6 +13,8 @@
 	integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
 	crossorigin="anonymous">
 
+
+
 <!-- Custom styles for this template -->
 <link href="/css/starter-template.css" rel="stylesheet">
 
@@ -28,9 +30,8 @@
 	<br>
 	<h2>コアラ情報詳細</h2>
 	<div th:object="${detail}">
-<!-- 				<img th:src="${koalaInsertForm.profileImagePath}"
-			th:if="${koalaInsertForm.profileImagePath}"> -->
-		
+		<img th:src="@{{Path}(Path = *{profileImagePath})}"
+			th:if="*{profileImagePath}">
 		<table class="table table-hover table-responsive">
 			<tr>
 				<th class="cell_title">名前</th>

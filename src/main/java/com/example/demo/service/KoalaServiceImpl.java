@@ -195,6 +195,7 @@ public class KoalaServiceImpl implements KoalaService {
 		koala.setZoo(form.getZoo());
 		koala.setDetails(form.getDetails());
 		koala.setFeature(form.getFeature());
+		koala.setProfileImagePath(form.getProfileImagePath());
 		String profileImagePath =  null;
 		if( !form.getKoalaProfileImageUpload().isEmpty()) {
 			profileImagePath = form.getKoalaProfileImageUpload().getOriginalFilename()
