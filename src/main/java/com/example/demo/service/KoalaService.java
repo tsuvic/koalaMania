@@ -30,8 +30,10 @@ public interface KoalaService {
 	void delete(int koala_id);
 
 	List<KoalaImage> findKoalaImageById(int id);
+	
+	void insertKoalaProfileImage(int koala_id, MultipartFile koalaProfileImage, String profileImagePath);
 
-	void inserKoalaImage(int koala_id, List<MultipartFile> koalaImage);
+	void insertKoalaImage(int koala_id, List<MultipartFile> koalaImage);
 
 	void deleteKoalaImage(String KoalaImageIds, int koala_id);
 }

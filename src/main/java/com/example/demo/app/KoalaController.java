@@ -3,6 +3,7 @@ package com.example.demo.app;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,16 @@ public class KoalaController {
 	public String indexReload() {
 		return "index";
 	}
+	
+	@GetMapping("/login")
+	public String login() {
+		return "login";
+	}
+	
+	@GetMapping("/signup")
+	public String signup() {
+		return "signup";
+	}
 
 	@GetMapping("/search")
 	public String displayAllKoala(Model model, @ModelAttribute KoalaSearchForm koalaSearchForm,
@@ -70,7 +81,12 @@ public class KoalaController {
 	@PostMapping("/search")
 	public String displaySearchedKoara(Model model, @RequestParam(required = false, name = "keyword") String keyword,
 			@ModelAttribute KoalaSearchForm koalaSearchForm, BindingResult bindingResult) {
-		List<Koala> list = koalaService.findByKeyword(keyword);
+		List<Koala> list = new ArrayList<Koala>();
+		if(keyword==null || keyword.replaceAll(" ", "　").split("　",0).length == 0) {
+			list = koalaService.getAll();
+		}else {
+			list = koalaService.findByKeyword(keyword);
+		}
 		model.addAttribute("koalaList", list);
 		model.addAttribute("searchResult", "検索結果");
 		for (Koala koala : list) {
@@ -182,6 +198,7 @@ public class KoalaController {
 		List<Zoo> zooList = koalaService.getZooList();
 		model.addAttribute("zooList", zooList);
 		Koala koala = koalaService.findById(id);
+		model.addAttribute("koalaProfileImage", koala.getKoalaProfileImage());
 		form.setKoala_id(koala.getKoala_id());
 		form.setName(koala.getName());
 		form.setIs_alive(koala.getIs_alive());
@@ -208,6 +225,7 @@ public class KoalaController {
 		model.addAttribute("fatherList", fatherList);
 		form.setMother_id(koala.getMother_id());
 		form.setFather_id(koala.getFather_id());
+		form.setProfileImagePath(koala.getProfileImagePath());
 		return "insert";
 	}
 

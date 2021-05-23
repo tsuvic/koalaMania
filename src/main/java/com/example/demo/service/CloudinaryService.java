@@ -7,6 +7,8 @@ import java.util.Map;
 public interface CloudinaryService {
 	Map uploadKoalaImage(File uploadFile,int koala_id);
 	
+	Map uploadKoalaProfileImage(File uploadFile,int koala_id);
+	
 	List<String> deleteKoalaImage(String[] KoalaImageFiles,int koala_id);
 	
 	void  deleteDirs(int koala_id);

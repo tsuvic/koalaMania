@@ -30,5 +30,7 @@ public class Koala {
 	private String stringBirthDate;
 	private String stringDeathDate;
 	private List<KoalaImage> koalaImageList;
+	private KoalaProfileImage koalaProfileImage;
+	private String profileImagePath;
 	
 }

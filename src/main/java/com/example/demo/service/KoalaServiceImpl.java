@@ -26,22 +26,27 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.app.KoalaInsertForm;
 import com.example.demo.entity.Koala;
 import com.example.demo.entity.KoalaImage;
+import com.example.demo.entity.KoalaProfileImage;
 import com.example.demo.entity.Zoo;
 import com.example.demo.repository.KoalaDao;
 import com.example.demo.repository.KoalaImageDao;
+import com.example.demo.repository.KoalaProfileImageDao;
 
 @Service
-public class KoalaServiceImpl implements KoalaService{
+public class KoalaServiceImpl implements KoalaService {
 
 	private final KoalaDao dao;
 	private final KoalaImageDao koalaImageDao;
 	private final CloudinaryService cloudinaryService;
-	
+	private final KoalaProfileImageDao koalaProfileImageDao;
+
 	@Autowired
-	public KoalaServiceImpl(KoalaDao dao,KoalaImageDao koalaImageDao,CloudinaryService cloudinaryService) {
+	public KoalaServiceImpl(KoalaDao dao, KoalaImageDao koalaImageDao, CloudinaryService cloudinaryService,
+			KoalaProfileImageDao koalaProfileImageDao) {
 		this.dao = dao;
 		this.koalaImageDao = koalaImageDao;
 		this.cloudinaryService = cloudinaryService;
+		this.koalaProfileImageDao = koalaProfileImageDao;
 	}
 
 	@Override
@@ -53,12 +58,12 @@ public class KoalaServiceImpl implements KoalaService{
 	public List<Koala> findByKeyword(String keyword) {
 		return dao.findByKeyword(keyword);
 	}
-	
+
 	@Override
 	public List<Koala> getMotherList(int koala_id, String birthYear, String birthMonth, String birthDay) {
 		Date birthDate = getDate(birthYear, birthMonth, birthDay);
 		List<Koala> motherList = dao.getMotherList(koala_id, birthDate);
-		
+
 		return motherList;
 	}
 
@@ -66,68 +71,83 @@ public class KoalaServiceImpl implements KoalaService{
 	public List<Koala> getFatherList(int koala_id, String birthYear, String birthMonth, String birthDay) {
 		Date birthDate = getDate(birthYear, birthMonth, birthDay);
 		List<Koala> fatherList = dao.getFatherList(koala_id, birthDate);
-		
+
 		return fatherList;
 	}
-	
+
 	@Override
-	public List<Zoo> getZooList(){
+	public List<Zoo> getZooList() {
 		List<Zoo> zooList = dao.getZooList();
-		
+
 		Zoo other_zoo = new Zoo();
 		other_zoo = zooList.get(0);
 		zooList.remove(0);
 		zooList.add(other_zoo);
-		
+
 		Zoo zoo = new Zoo();
 		zoo.setZoo_id(-1);
 		zoo.setZoo_name("---");
-		zooList.add(0,zoo);
+		zooList.add(0, zoo);
 
 		return zooList;
-		
+
 	}
-	
+
 	Koala koala;
+
 	@Override
 	@Transactional
-	public void insert(KoalaInsertForm form){
+	public void insert(KoalaInsertForm form) {
 		Koala koala = new Koala();
 		koala.setName(form.getName());
 		koala.setSex(form.getSex());
-		Date birthDate = getDate(form.getBirthYear(),form.getBirthMonth(),form.getBirthDay());
-		if(birthDate != null) {
+		Date birthDate = getDate(form.getBirthYear(), form.getBirthMonth(), form.getBirthDay());
+		if (birthDate != null) {
 			koala.setBirthdate(birthDate);
 		}
 		koala.setIs_alive(form.getIs_alive());
-		Date deathDate = getDate(form.getDeathYear(),form.getDeathMonth(),form.getDeathDay());
-		if(deathDate != null) {
+		Date deathDate = getDate(form.getDeathYear(), form.getDeathMonth(), form.getDeathDay());
+		if (deathDate != null) {
 			koala.setDeathdate(deathDate);
 		}
 		koala.setZoo(form.getZoo());
 		koala.setDetails(form.getDetails());
 		koala.setFeature(form.getFeature());
 		koala.setMother_id(form.getMother_id());
-		koala.setFather_id(form.getFather_id());;
+		koala.setFather_id(form.getFather_id());
+		koala.setProfileImagePath((form.getKoalaProfileImageUpload().getOriginalFilename())
+				.substring(form.getKoalaProfileImageUpload().getOriginalFilename().lastIndexOf(".")));
+
 		int insertKoala_id = dao.insert(koala);
-		//追加するコアラに画像が添付されているか確認
-		boolean koalaImageInsetFlag =false;
+		// 追加するコアラに画像が添付されているか確認
+		boolean koalaImageInsetFlag = false;
 		for (MultipartFile koalaImgae : form.getKoalaImage()) {
-			if(koalaImgae.getSize() != 0){
+			if (koalaImgae.getSize() != 0) {
 				koalaImageInsetFlag = true;
 				break;
 			}
 		}
-		if(koalaImageInsetFlag) {
-			inserKoalaImage(insertKoala_id,form.getKoalaImage());
+		if (koalaImageInsetFlag) {
+			insertKoalaImage(insertKoala_id, form.getKoalaImage());
 		}
+
+//		プロフィール画像
+		boolean koalaProfileImageInsetFlag = false;
+		if (form.getKoalaProfileImageUpload() != null) {
+			koalaProfileImageInsetFlag = true;
+
+		}
+		if (koalaProfileImageInsetFlag) {
+			insertKoalaProfileImage(insertKoala_id, form.getKoalaProfileImageUpload(), koala.getProfileImagePath());
+		}
+
 	}
-	
-	public Date getDate(String year , String month , String day){
+
+	public Date getDate(String year, String month, String day) {
 		String hyphen = "-";
-		//年、月、日の中に"--"が含まれていたら、"9999-01-01"を返す。
+		// 年、月、日の中に"--"が含まれていたら、"9999-01-01"を返す。
 		String dummyValue = "0";
-		if(year.equals(dummyValue) || month.equals(dummyValue) || day.equals(dummyValue)) {
+		if (year.equals(dummyValue) || month.equals(dummyValue) || day.equals(dummyValue)) {
 			year = "9999";
 			month = "01";
 			day = "01";
@@ -148,40 +168,60 @@ public class KoalaServiceImpl implements KoalaService{
 			return null;
 		}
 	}
-	
+
 	@Override
 	public Koala findById(int id) {
 		return dao.findById(id);
 	}
-	
+
 	@Override
 	public void update(KoalaInsertForm form) {
 		Koala koala = new Koala();
 		koala.setKoala_id(form.getKoala_id());
 		koala.setName(form.getName());
 		koala.setSex(form.getSex());
-		Date birthDate = getDate(form.getBirthYear(),form.getBirthMonth(),form.getBirthDay());
-		if(birthDate != null) {
+		Date birthDate = getDate(form.getBirthYear(), form.getBirthMonth(), form.getBirthDay());
+		if (birthDate != null) {
 			koala.setBirthdate(birthDate);
 		}
 		koala.setIs_alive(form.getIs_alive());
-		Date deathDate = getDate(form.getDeathYear(),form.getDeathMonth(),form.getDeathDay());
-		if(deathDate != null) {
+		Date deathDate = getDate(form.getDeathYear(), form.getDeathMonth(), form.getDeathDay());
+		if (deathDate != null) {
 			koala.setDeathdate(deathDate);
 		}
 		koala.setMother_id(form.getMother_id());
-		koala.setFather_id(form.getFather_id());;
+		koala.setFather_id(form.getFather_id());
+		;
 		koala.setZoo(form.getZoo());
 		koala.setDetails(form.getDetails());
 		koala.setFeature(form.getFeature());
-		dao.update(koala);
-		if(form.getKoalaImage()	!= null) {
-			inserKoalaImage(form.getKoala_id(),form.getKoalaImage());
+		koala.setProfileImagePath(form.getProfileImagePath());
+		String profileImagePath =  null;
+		if( !form.getKoalaProfileImageUpload().isEmpty()) {
+			profileImagePath = form.getKoalaProfileImageUpload().getOriginalFilename()
+					.substring(form.getKoalaProfileImageUpload().getOriginalFilename().lastIndexOf("."));
+			koala.setProfileImagePath(profileImagePath);
 		}
-		if(form.getDeleteKoalaImageFiles() != null) {
-			deleteKoalaImage(form.getDeleteKoalaImageFiles(),form.getKoala_id());
+		dao.update(koala);
+
+//		プロフィール画像登録 or 更新
+	
+		if (profileImagePath  != null) {
+			insertKoalaProfileImage(form.getKoala_id(), form.getKoalaProfileImageUpload(), profileImagePath);
+		}
+
+		//		コアラ画像登録		
+		if (form.getKoalaImage() != null) {
+			insertKoalaImage(form.getKoala_id(), form.getKoalaImage());
+		}
+
+//		コアラ画像削除
+		if (form.getDeleteKoalaImageFiles() != null) {
+			deleteKoalaImage(form.getDeleteKoalaImageFiles(), form.getKoala_id());
 		}
 	}
+
+	
 	
 	@Override
 	@Transactional
@@ -189,92 +229,124 @@ public class KoalaServiceImpl implements KoalaService{
 		dao.delete(koala_id);
 		deleteDirs(koala_id);
 	}
-	
+
 	@Override
 	public List<KoalaImage> findKoalaImageById(int id) {
 		return koalaImageDao.findByKoala_id(id);
 	}
-	
+
 	@Override
-	public void inserKoalaImage(int koala_id, List<MultipartFile> koalaImageLust) {
+	public void insertKoalaProfileImage(int koala_id, MultipartFile koalaProfileImageUpload, String profileImagePath) {
+		try {
+			//
+			File uploadFile = new File("images/" + koala_id + profileImagePath);
+
+			byte[] bytes = fileResize(koalaProfileImageUpload.getBytes(), profileImagePath.substring(1));
+
+			if (bytes == null) {
+				bytes = koalaProfileImageUpload.getBytes();
+			}
+
+			BufferedOutputStream uploadFileStream = new BufferedOutputStream(new FileOutputStream(uploadFile));
+			uploadFileStream.write(bytes);
+
+			uploadFileStream.close();
+
+			// cloudinaryに写真をアップロードする
+			Map resultmap = cloudinaryService.uploadKoalaProfileImage(uploadFile, koala_id);
+			String url = (String)resultmap.get("secure_url");
+			dao.urlUpdate(koala_id, url);
+			
+			uploadFile.delete();
+		} catch (Exception e) {
+			// 異常終了時の処理
+		} catch (Throwable t) {
+			// 異常終了時の処理
+		}
+
+	}
+
+	@Override
+	public void insertKoalaImage(int koala_id, List<MultipartFile> koalaImageLust) {
 		KoalaImage koalaImage = new KoalaImage();
 		koalaImage.setKoala_id(koala_id);
-        
-		for(MultipartFile inputImage:koalaImageLust) {
-			if(inputImage.getSize() != 0) {
-				//ファイルの拡張子を取得する
-				String fileExtension = inputImage.getOriginalFilename().substring(inputImage.getOriginalFilename().lastIndexOf("."));
-				
-				koalaImage.setFiletype(fileExtension);
-				
+
+		for (MultipartFile inputImage : koalaImageLust) {
+			if (inputImage.getSize() != 0) {
+				// ファイルの拡張子を取得する
+				String profileImagePath = inputImage.getOriginalFilename()
+						.substring(inputImage.getOriginalFilename().lastIndexOf("."));
+
+				koalaImage.setFiletype(profileImagePath);
+
 				int koalaImageId = koalaImageDao.insert(koalaImage);
 				try {
-		            // アップロードファイルを置く
-		            File uploadFile = new File("images/" + koalaImageId + fileExtension);
-		            
-		            byte[] bytes = fileResize(inputImage.getBytes(),fileExtension.substring(1));
-		            
-		            if(bytes == null) {
-		            	bytes = inputImage.getBytes();
-		            }
-		            
-		            BufferedOutputStream uploadFileStream =
-		                    new BufferedOutputStream(new FileOutputStream(uploadFile));
-		           
-		            uploadFileStream.write(bytes);
-		            
-		            uploadFileStream.close();
-		            
-		            //cloudinaryに写真をアップロードする
-		            Map resultmap = cloudinaryService.uploadKoalaImage(uploadFile, koala_id);
-		            uploadFile.delete();
-		        } catch (Exception e) {
-		            // 異常終了時の処理
-		        	continue;
-		        } catch (Throwable t) {
-		            // 異常終了時の処理
-		        	continue;
-		        }
+					// アップロードファイルを置く
+					File uploadFile = new File("images/" + koalaImageId + profileImagePath);
+
+					byte[] bytes = fileResize(inputImage.getBytes(), profileImagePath.substring(1));
+
+					if (bytes == null) {
+						bytes = inputImage.getBytes();
+					}
+
+					BufferedOutputStream uploadFileStream = new BufferedOutputStream(new FileOutputStream(uploadFile));
+
+					uploadFileStream.write(bytes);
+
+					uploadFileStream.close();
+
+					// cloudinaryに写真をアップロードする
+					Map resultmap = cloudinaryService.uploadKoalaImage(uploadFile, koala_id);
+					uploadFile.delete();
+				} catch (Exception e) {
+					// 異常終了時の処理
+					continue;
+				} catch (Throwable t) {
+					// 異常終了時の処理
+					continue;
+				}
 			}
 		}
 	}
-	
+
 	@Override
-	public void deleteKoalaImage(String KoalaImageFilesString,int koala_id) {
+	public void deleteKoalaImage(String KoalaImageFilesString, int koala_id) {
 		String[] koalaImageFiles = KoalaImageFilesString.split(",");
 
-		//cloudinaryにあるファイルを削除
+		// cloudinaryにあるファイルを削除
 		List<String> koalaImageIds = cloudinaryService.deleteKoalaImage(koalaImageFiles, koala_id);
-		
+
 		koalaImageDao.delete(koalaImageIds);
 	}
-	
-	private void  deleteDirs(int koala_id) {
+
+	private void deleteDirs(int koala_id) {
 		cloudinaryService.deleteDirs(koala_id);
 	}
-	
-	private byte[] fileResize(byte[] originalImage ,String originalExtension) {
+
+	private byte[] fileResize(byte[] originalImage, String originalExtension) {
 		BufferedImage src = null;
 		BufferedImage dst = null;
 		AffineTransformOp xform = null;
-		
+
 		InputStream is = new ByteArrayInputStream(originalImage);
 		try {
-			src = ImageIO.read( is );
-			int width = src.getWidth();    //. オリジナル画像の幅
-			int height = src.getHeight();  //. オリジナル画像の高さ
-			
-			int w = 200; //. 幅をこの数値に合わせて調整する
-			
+			src = ImageIO.read(is);
+			int width = src.getWidth(); // . オリジナル画像の幅
+			int height = src.getHeight(); // . オリジナル画像の高さ
+
+			int w = 200; // . 幅をこの数値に合わせて調整する
+
 			int new_height = w * height / width;
 			int new_width = w;
-			
-			xform = new AffineTransformOp( AffineTransform.getScaleInstance( ( double )new_width / width,
-					( double )new_height / height ), AffineTransformOp.TYPE_BILINEAR );
-			dst = new BufferedImage( new_width, new_height, src.getType() );
-			xform.filter(src, dst );
-			
-			//. 変換後のバイナリイメージを byte 配列に再格納
+
+			xform = new AffineTransformOp(
+					AffineTransform.getScaleInstance((double) new_width / width, (double) new_height / height),
+					AffineTransformOp.TYPE_BILINEAR);
+			dst = new BufferedImage(new_width, new_height, src.getType());
+			xform.filter(src, dst);
+
+			// . 変換後のバイナリイメージを byte 配列に再格納
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ImageIO.write(dst, originalExtension, baos);
 			originalImage = baos.toByteArray();
@@ -285,5 +357,5 @@ public class KoalaServiceImpl implements KoalaService{
 			return null;
 		}
 	}
-		
+
 }
