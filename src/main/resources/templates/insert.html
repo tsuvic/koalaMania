@@ -208,12 +208,11 @@
 				<input type="hidden" th:field="*{profileImagePath}">
 				
 				プロフィール写真：<br> <span 
-					th:id="${koalaInsertForm.koala_id} + ${koalaInsertForm.profileImagePath}" 
-					th:if="${koalaInsertForm.profileImagePath}" style="display: inline-block">
+					th:id="*{profileImagePath}" 
+					th:if="*{profileImagePath}">
 						<img
-							th:src="${koalaInsertForm.profileImagePath}"
+							th:src="*{profileImagePath}"
 							width="200" height="200">
-	
 					<button class="btn btn-danger btn-sm deleteImageButton"
 						type="button">削除</button>
 				</span>
@@ -314,14 +313,13 @@
 					th:each="koalaImage:*{koalaImageList}"
 					th:object="${koalaImage}" th:id="*{koalaimage_id} + *{filetype}"
 					style="display: inline-block">
-					<div>
 						<img
 							th:src="@{{cloudinaryImageUrl}{koala_id}/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},koala_id=${koalaInsertForm.koala_id},fileName=*{koalaimage_id} + *{filetype})}"
 							width="200" height="200">
-					</div>
 					<button class="btn btn-danger btn-sm deleteImageButton"
 						type="button">削除</button>
 				</span>
+				
 				<div id="koalaImages">
 					<input type="file" accept="image/*" th:field="*{koalaImage}"
 						th:errorclass="is-invalid" class="form-control-file">
@@ -330,11 +328,13 @@
 					<br>
 				</div>
 				<button class="btn btn-outline-success btn-sm addInputFileButton"
-					type="button">入力欄追加追加</button>
+					type="button">入力欄追加</button>
 			</div>
 			<input type="hidden" th:field="*{deleteKoalaImageFiles}">
 			<button th:if="*{koala_id}==0" class="btn btn-outline-primary btn-sm"
 				type="submit">追加</button>
+				
+				
 			<button th:unless="*{koala_id}==0"
 				class="btn btn-outline-primary btn-sm" type="submit">保存</button>
 			<button class="btn btn-danger btn-sm" type="button"
