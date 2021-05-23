@@ -53,6 +53,16 @@ public class KoalaController {
 	public String indexReload() {
 		return "index";
 	}
+	
+	@GetMapping("/login")
+	public String login() {
+		return "login";
+	}
+	
+	@GetMapping("/signup")
+	public String signup() {
+		return "signup";
+	}
 
 	@GetMapping("/search")
 	public String displayAllKoala(Model model, @ModelAttribute KoalaSearchForm koalaSearchForm,
@@ -215,6 +225,7 @@ public class KoalaController {
 		model.addAttribute("fatherList", fatherList);
 		form.setMother_id(koala.getMother_id());
 		form.setFather_id(koala.getFather_id());
+		form.setProfileImagePath(koala.getProfileImagePath());
 		return "insert";
 	}
 

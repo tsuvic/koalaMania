@@ -31,7 +31,7 @@ public interface KoalaService {
 
 	List<KoalaImage> findKoalaImageById(int id);
 	
-	void insertKoalaProfileImage(int koala_id, MultipartFile koalaProfileImage);
+	void insertKoalaProfileImage(int koala_id, MultipartFile koalaProfileImage, String profileImagePath);
 
 	void insertKoalaImage(int koala_id, List<MultipartFile> koalaImage);
 

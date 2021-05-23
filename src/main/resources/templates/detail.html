@@ -13,6 +13,8 @@
 	integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
 	crossorigin="anonymous">
 
+
+
 <!-- Custom styles for this template -->
 <link href="/css/starter-template.css" rel="stylesheet">
 
@@ -21,9 +23,16 @@
 </head>
 
 <body>
-		<div th:replace="~{block/header_boot::headerA_boot}"></div>
-		<h2>コアラ情報詳細</h2>
-		<table th:object="${detail}" class="table table-hover table-responsive">	
+	<div th:replace="~{block/header_boot::headerA_boot}"></div>
+	<br>
+	<br>
+	<br>
+	<br>
+	<h2>コアラ情報詳細</h2>
+	<div th:object="${detail}">
+		<img th:src="@{{Path}(Path = *{profileImagePath})}"
+			th:if="*{profileImagePath}">
+		<table class="table table-hover table-responsive">
 			<tr>
 				<th class="cell_title">名前</th>
 				<td th:text="*{name}"></td>
@@ -33,13 +42,13 @@
 				<td th:if="*{sex == 0}">不明</td>
 				<td th:if="*{sex == 1}">男</td>
 				<td th:if="*{sex == 2}">女</td>
-				<td th:if="*{sex == 9}"> </td>
+				<td th:if="*{sex == 9}"></td>
 			</tr>
 			<tr>
 				<th class="cell_title">生年月日</th>
 				<td th:if="*{stringBirthDate.equals('9999年1月1日')}">不明</td>
 				<td th:unless="*{stringBirthDate.toString().equals('9999年1月1日')}"
-						th:text="*{stringBirthDate}"></td>
+					th:text="*{stringBirthDate}"></td>
 			</tr>
 			<tr>
 				<th class="cell_title">生死</th>
@@ -50,7 +59,7 @@
 				<th class="cell_title">死亡日</th>
 				<td th:if="*{stringDeathDate.equals('9999年1月1日')}">-</td>
 				<td th:unless="*{stringDeathDate.equals('9999年1月1日')}"
-						th:text="*{stringDeathDate}"></td>
+					th:text="*{stringDeathDate}"></td>
 			</tr>
 			<tr>
 				<th class="cell_title">動物園</th>
@@ -74,16 +83,19 @@
 			</tr>
 			<tr>
 				<th class="cell_title">写真</th>
-				<td>
-					<span th:each="koalaImage,index:*{koalaImageList}" th:object="${koalaImage}">
-					<img th:src="@{{cloudinaryImageUrl}{koala_id}/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},koala_id=${detail.koala_id},fileName=*{koalaimage_id} + *{filetype})}" width="200" height="200">
-					</span>
-				</td>
+				<td><span th:each="koalaImage,index:*{koalaImageList}"
+					th:object="${koalaImage}"> <img
+						th:src="@{{cloudinaryImageUrl}{koala_id}/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},koala_id=${detail.koala_id},fileName=*{koalaimage_id} + *{filetype})}"
+						width="200" height="200">
+				</span></td>
 			</tr>
 		</table>
-		<div class="btn_area_center">
-			<button class="btn btn-primary btn-sm" type="button" th:onclick="'location.href = \'' +@{/edit/{koala_id}(koala_id=${detail.koala_id})} + '\''" >編集</button>
-			<button class="btn btn-warning btn-sm" type="button" onclick="location.href='/search'" >一覧に戻る</button>
-		</div>
+	</div>
+	<div class="btn_area_center">
+		<button class="btn btn-primary btn-sm" type="button"
+			th:onclick="'location.href = \'' +@{/edit/{koala_id}(koala_id=${detail.koala_id})} + '\''">編集</button>
+		<button class="btn btn-warning btn-sm" type="button"
+			onclick="location.href='/search'">一覧に戻る</button>
+	</div>
 </body>
 </html>
