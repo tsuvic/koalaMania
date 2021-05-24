@@ -53,12 +53,12 @@ public class KoalaController {
 	public String indexReload() {
 		return "index";
 	}
-	
+
 	@GetMapping("/login")
 	public String login() {
 		return "login";
 	}
-	
+
 	@GetMapping("/signup")
 	public String signup() {
 		return "signup";
@@ -82,9 +82,9 @@ public class KoalaController {
 	public String displaySearchedKoara(Model model, @RequestParam(required = false, name = "keyword") String keyword,
 			@ModelAttribute KoalaSearchForm koalaSearchForm, BindingResult bindingResult) {
 		List<Koala> list = new ArrayList<Koala>();
-		if(keyword==null || keyword.replaceAll(" ", "　").split("　",0).length == 0) {
+		if (keyword == null || keyword.replaceAll(" ", "　").split("　", 0).length == 0) {
 			list = koalaService.getAll();
-		}else {
+		} else {
 			list = koalaService.findByKeyword(keyword);
 		}
 		model.addAttribute("koalaList", list);
@@ -132,11 +132,13 @@ public class KoalaController {
 		List<Zoo> zooList = koalaService.getZooList();
 		model.addAttribute("zooList", zooList);
 
-		List<Koala> motherList = koalaService.getMotherList(form.getKoala_id(), form.getBirthYear(), form.getBirthMonth(), form.getBirthDay());
+		List<Koala> motherList = koalaService.getMotherList(form.getKoala_id(), form.getBirthYear(),
+				form.getBirthMonth(), form.getBirthDay());
 		model.addAttribute("motherList", motherList);
-		List<Koala> fatherList = koalaService.getFatherList(form.getKoala_id(), form.getBirthYear(), form.getBirthMonth(), form.getBirthDay());
+		List<Koala> fatherList = koalaService.getFatherList(form.getKoala_id(), form.getBirthYear(),
+				form.getBirthMonth(), form.getBirthDay());
 		model.addAttribute("fatherList", fatherList);
-		
+
 		return "insert";
 	}
 
@@ -164,7 +166,7 @@ public class KoalaController {
 			form.setKoalaImageList(koalaImageList);
 			return getInsert(model, form, true);
 		}
-		
+
 		if (form.getKoala_id() == 0) {
 			koalaService.insert(form);
 		} else {
@@ -219,9 +221,11 @@ public class KoalaController {
 		form.setDetails(koala.getDetails());
 		form.setFeature(koala.getFeature());
 		form.setKoalaImageList(koala.getKoalaImageList());
-		List<Koala> motherList = koalaService.getMotherList(form.getKoala_id(), form.getBirthYear(), form.getBirthMonth(), form.getBirthDay());
+		List<Koala> motherList = koalaService.getMotherList(form.getKoala_id(), form.getBirthYear(),
+				form.getBirthMonth(), form.getBirthDay());
 		model.addAttribute("motherList", motherList);
-		List<Koala> fatherList = koalaService.getFatherList(form.getKoala_id(), form.getBirthYear(), form.getBirthMonth(), form.getBirthDay());
+		List<Koala> fatherList = koalaService.getFatherList(form.getKoala_id(), form.getBirthYear(),
+				form.getBirthMonth(), form.getBirthDay());
 		model.addAttribute("fatherList", fatherList);
 		form.setMother_id(koala.getMother_id());
 		form.setFather_id(koala.getFather_id());
