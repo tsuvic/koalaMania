@@ -28,7 +28,7 @@ public class KoalaDaoImpl implements KoalaDao {
 
 	@Override
 	public List<Koala> getAll() {
-		String sql = "SELECT koala.koala_id, koala.name, koala.sex, koala.birthdate, zoo.zoo_name, mother.name, father.name, koala.profile_image_path "
+		String sql = "SELECT koala.koala_id, koala.name, koala.sex, koala.birthdate, zoo.zoo_name, mother.name, father.name, koala.profile_image_type "
 				+ "FROM koala LEFT OUTER JOIN koala_zoo_history ON koala.koala_id = koala_zoo_history.koala_id "
 				+ "LEFT OUTER JOIN zoo ON koala_zoo_history.zoo_id = zoo.zoo_id "
 				+ "LEFT OUTER JOIN prefecture ON zoo.prefecture_id = prefecture.prefecture_id "
@@ -53,7 +53,7 @@ public class KoalaDaoImpl implements KoalaDao {
 			koala.setZooName((String) result.get("zoo_name"));
 			koala.setMother((String) result.get("mother_name"));
 			koala.setFather((String) result.get("father_name"));
-			koala.setProfileImagePath((String)result.get("profile_image_path"));
+			koala.setProfileImagePath((String)result.get("profile_image_type"));
 			list.add(koala);
 		}
 		return list;
@@ -92,7 +92,7 @@ public class KoalaDaoImpl implements KoalaDao {
 
 		String[] splitkeyWord = keyword.replaceAll(" ", "　").split("　", 0);
 
-		String sql = "SELECT koala.koala_id, koala.name, koala.sex, koala.birthdate, zoo.zoo_name, mother.name as mother_name , father.name as father_name, koala.profile_image_path "
+		String sql = "SELECT koala.koala_id, koala.name, koala.sex, koala.birthdate, zoo.zoo_name, mother.name as mother_name , father.name as father_name, koala.profile_image_type "
 				+ "FROM koala LEFT OUTER JOIN koala_zoo_history ON koala.koala_id = koala_zoo_history.koala_id "
 				+ "LEFT OUTER JOIN zoo ON koala_zoo_history.zoo_id = zoo.zoo_id "
 				+ "LEFT OUTER JOIN prefecture ON zoo.prefecture_id = prefecture.prefecture_id "
@@ -122,7 +122,7 @@ public class KoalaDaoImpl implements KoalaDao {
 			koala.setZooName((String) result.get("zoo_name"));
 			koala.setMother((String) result.get("mother_name"));
 			koala.setFather((String) result.get("father_name"));
-			koala.setProfileImagePath((String)result.get("profile_image_path"));
+			koala.setProfileImagePath((String)result.get("profile_image_type"));
 			list.add(koala);
 		}
 		return list;
@@ -145,7 +145,7 @@ public class KoalaDaoImpl implements KoalaDao {
 	@Override
 	public int insert(Koala koala) {
 		Map<String, Object> insertId = jdbcTemplate.queryForMap(
-				"INSERT INTO koala(name, sex, birthdate, is_alive, deathdate, mother, father, details, feature, profile_image_path) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING koala_id",
+				"INSERT INTO koala(name, sex, birthdate, is_alive, deathdate, mother, father, details, feature, profile_image_type) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING koala_id",
 				koala.getName(), koala.getSex(), koala.getBirthdate(), koala.getIs_alive(), koala.getDeathdate(),
 				koala.getMother_id(), koala.getFather_id(), koala.getDetails(), koala.getFeature(), koala.getProfileImagePath());
 
@@ -168,7 +168,7 @@ public class KoalaDaoImpl implements KoalaDao {
 
 	@Override
 	public Koala findById(int id) {
-		String sql = "SELECT koalakoala.profile_image_path, koalakoala.koala_id, koalakoala.name, koalakoala.sex, koalakoala.birthdate, koalakoala.is_alive, koalakoala.deathdate, "
+		String sql = "SELECT koalakoala.profile_image_type, koalakoala.koala_id, koalakoala.name, koalakoala.sex, koalakoala.birthdate, koalakoala.is_alive, koalakoala.deathdate, "
 				+ "koala_zoo_history.zoo_id, zoo_name, mother.name as mother_name, father.name as father_name, koalakoala.details, koalakoala.feature , koalaimage_id ,koalaImage.filetype, koalaProfileImage_id, koalaProfileImage.filetype as profilefiletype "
 				+ "FROM koala AS koalakoala LEFT OUTER JOIN koalaimage ON koalakoala.koala_id = koalaimage.koala_id "
 				+ "LEFT OUTER JOIN koala_zoo_history ON koalakoala.koala_id = koala_zoo_history.koala_id "
@@ -182,7 +182,7 @@ public class KoalaDaoImpl implements KoalaDao {
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, id);
 
 		Koala koala = new Koala();
-		koala.setProfileImagePath((String) resultList.get(0).get("profile_image_path"));
+		koala.setProfileImagePath((String) resultList.get(0).get("profile_image_type"));
 		koala.setKoala_id((int) resultList.get(0).get("koala_id"));
 		koala.setName((String) resultList.get(0).get("name"));
 		koala.setSex((int) resultList.get(0).get("sex"));
@@ -223,7 +223,7 @@ public class KoalaDaoImpl implements KoalaDao {
 	@Override
 	public void update(Koala koala) {
 		jdbcTemplate.update(
-				"UPDATE koala SET name=?, sex=?,birthdate=?,is_alive=?,deathdate=?,mother=?,father=?,details=?,feature=?, profile_image_path = ? WHERE koala_id = ?",
+				"UPDATE koala SET name=?, sex=?,birthdate=?,is_alive=?,deathdate=?,mother=?,father=?,details=?,feature=?, profile_image_type = ? WHERE koala_id = ?",
 				koala.getName(), koala.getSex(), koala.getBirthdate(), koala.getIs_alive(), koala.getDeathdate(),
 				koala.getMother_id(), koala.getFather_id(), koala.getDetails(), koala.getFeature(), koala.getProfileImagePath(),
 				koala.getKoala_id());
@@ -236,7 +236,7 @@ public class KoalaDaoImpl implements KoalaDao {
 	@Override
 	public void urlUpdate(int koala_id, String url) {
 		jdbcTemplate.update(
-				"UPDATE koala SET profile_image_path = ? WHERE koala_id = ?", url, koala_id);
+				"UPDATE koala SET profile_image_type = ? WHERE koala_id = ?", url, koala_id);
 	}
 	
 	@Override
