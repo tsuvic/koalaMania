@@ -28,7 +28,7 @@ public class KoalaDaoImpl implements KoalaDao {
 
 	@Override
 	public List<Koala> getAll() {
-		String sql = "SELECT koalakoala.koala_id, koalakoala.name, koalakoala.sex, koalakoala.birthdate, zoo.zoo_name, mother.name as mother_name , father.name as father_name, koalakoala.profile_image_type "
+		String sql = "SELECT koalakoala.koala_id, koalakoala.name, koalakoala.sex, koalakoala.birthdate, zoo.zoo_name, mother.name as mother_name , father.name as father_name "
 				+ "FROM koala AS koalakoala LEFT OUTER JOIN koala_zoo_history ON koalakoala.koala_id = koala_zoo_history.koala_id "
 				+ "LEFT OUTER JOIN zoo ON koala_zoo_history.zoo_id = zoo.zoo_id "
 				+ "LEFT OUTER JOIN prefecture ON zoo.prefecture_id = prefecture.prefecture_id "
@@ -53,7 +53,7 @@ public class KoalaDaoImpl implements KoalaDao {
 			koala.setZooName((String) result.get("zoo_name"));
 			koala.setMother((String) result.get("mother_name"));
 			koala.setFather((String) result.get("father_name"));
-			koala.setProfileImagePath((String)result.get("profile_image_type"));
+
 			list.add(koala);
 		}
 		return list;
@@ -92,7 +92,7 @@ public class KoalaDaoImpl implements KoalaDao {
 
 		String[] splitkeyWord = keyword.replaceAll(" ", "　").split("　", 0);
 
-		String sql = "SELECT koalakoala.koala_id, koalakoala.name, koalakoala.sex, koalakoala.birthdate, zoo.zoo_name, mother.name as mother_name , father.name as father_name, koalakoala.profile_image_type "
+		String sql = "SELECT koalakoala.koala_id, koalakoala.name, koalakoala.sex, koalakoala.birthdate, zoo.zoo_name, mother.name as mother_name , father.name as father_name "
 				+ "FROM koala AS koalakoala LEFT OUTER JOIN koala_zoo_history ON koalakoala.koala_id = koala_zoo_history.koala_id "
 				+ "LEFT OUTER JOIN zoo ON koala_zoo_history.zoo_id = zoo.zoo_id "
 				+ "LEFT OUTER JOIN prefecture ON zoo.prefecture_id = prefecture.prefecture_id "
@@ -125,7 +125,6 @@ public class KoalaDaoImpl implements KoalaDao {
 			koala.setZooName((String) result.get("zoo_name"));
 			koala.setMother((String) result.get("mother_name"));
 			koala.setFather((String) result.get("father_name"));
-			koala.setProfileImagePath((String)result.get("profile_image_type"));
 			list.add(koala);
 		}
 		return list;

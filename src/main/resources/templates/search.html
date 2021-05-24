@@ -27,33 +27,30 @@
 
 
 	<div class="container">
-		<br> <br> <br> <br>
+		<br> <br>		<br> <br>
 		<h2>検索</h2>
-		<form class="card-body row no-gutters align-items-center"
-			method="post" action="#" th:action="@{/search}"
-			th:object="${koalaSearchForm}">
-			<div class="col-auto">
-				<i class="fas fa-search h4 text-body"></i>
-			</div>
-			<div class="col">
-				<input class="form-control form-control-lg form-control-borderless"
-					type="text" name="keyword" th:field="*{keyword}"
-					placeholder="コアラ名 or 動物園名">
-			</div>
-			<div class="col-auto">
-				<button class="btn btn-lg btn-success" type="submit">検索</button>
-			</div>
-		</form>
+				<form class="card-body row no-gutters align-items-center" method="post" action="#" th:action="@{/search}" th:object="${koalaSearchForm}">
+					<div class="col-auto">
+						<i class="fas fa-search h4 text-body"></i>
+					</div>
+					<div class="col">
+						<input
+							class="form-control form-control-lg form-control-borderless"
+							type="text"  name="keyword" th:field="*{keyword}" placeholder="コアラ名 or 動物園名" >
+					</div>
+					<div class="col-auto">
+						<button class="btn btn-lg btn-success" type="submit">検索</button>
+					</div>
+				</form>
 		<br> <br>
 
 
 		<h2 th:text="${searchResult}"></h2>
 		<!--タイトル名を 変数式でControllerから取得 -->
-
-		<table class="table table-hover table-responsive">
+		
+		<table class="table table-hover table-responsive" >
 			<thead class="thead-dark">
 				<tr>
-					<th style="width: 32%">プロフィール画像</th>
 					<th style="width: 32%">名前</th>
 					<th style="width: 27%">性別</th>
 					<th style="width: 42%">生年月日</th>
@@ -66,8 +63,6 @@
 			<tbody>
 				<tr style="height: 85px;" th:each="koala : ${koalaList}"
 					th:object="${koala}">
-					<td><img th:src="@{{Path}(Path = *{profileImagePath})}"
-						th:if="*{profileImagePath}" width="100" height="100"></td>
 					<td width="20" th:text="*{name}"></td>
 					<td th:if="*{sex == 0}">不明</td>
 					<td th:if="*{sex == 1}">男</td>
@@ -76,7 +71,7 @@
 					<td th:if="*{stringBirthDate.equals('9999年1月1日')}">不明</td>
 					<td th:unless="*{stringBirthDate.equals('9999年1月1日')}"
 						th:text="*{stringBirthDate}"></td>
-					<td th:text="*{zooName}"></td>
+					<td th:text="*{zooName}" ></td>
 
 					<td th:if="*{#strings.isEmpty(mother)}">不明</td>
 					<td th:unless="*{#strings.isEmpty(mother)}" th:text="*{mother}"></td>
