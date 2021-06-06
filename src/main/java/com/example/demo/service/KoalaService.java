@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.app.KoalaInsertForm;
 import com.example.demo.entity.Koala;
+import com.example.demo.entity.KoalaForTree;
 import com.example.demo.entity.Zoo;
 import com.example.demo.entity.KoalaImage;
 
@@ -36,4 +37,7 @@ public interface KoalaService {
 	void insertKoalaImage(int koala_id, List<MultipartFile> koalaImage);
 
 	void deleteKoalaImage(String KoalaImageIds, int koala_id);
+	
+	List<KoalaForTree> getKoalaTree(int i);
+	
 }

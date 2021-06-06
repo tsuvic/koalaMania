@@ -53,6 +53,7 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-security')
     implementation('org.thymeleaf.extras:thymeleaf-extras-springsecurity5')
 	implementation('org.twitter4j:twitter4j-core:4.0.7')
+	compile ('com.fasterxml.jackson.core:jackson-databind:2.12.3')
 }
 
 test {

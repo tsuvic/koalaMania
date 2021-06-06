@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.app.KoalaInsertForm;
 import com.example.demo.entity.Koala;
+import com.example.demo.entity.KoalaForTree;
 import com.example.demo.entity.KoalaImage;
 import com.example.demo.entity.KoalaProfileImage;
 import com.example.demo.entity.Zoo;
@@ -173,7 +174,13 @@ public class KoalaServiceImpl implements KoalaService {
 	public Koala findById(int id) {
 		return dao.findById(id);
 	}
-
+	
+	@Override
+	public 	List<KoalaForTree> getKoalaTree(int i) {
+		
+		return null;
+	}
+	
 	@Override
 	public void update(KoalaInsertForm form) {
 		Koala koala = new Koala();
@@ -356,6 +363,7 @@ public class KoalaServiceImpl implements KoalaService {
 			e.printStackTrace();
 			return null;
 		}
+		
 	}
 
 }

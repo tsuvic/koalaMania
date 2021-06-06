@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.Koala;
+import com.example.demo.entity.KoalaForTree;
 import com.example.demo.entity.KoalaImage;
 import com.example.demo.entity.KoalaProfileImage;
 import com.example.demo.entity.Zoo;
@@ -243,4 +244,11 @@ public class KoalaDaoImpl implements KoalaDao {
 	public void delete(int koala_id) {
 		jdbcTemplate.update("DELETE FROM koala WHERE koala_id = ?", koala_id);
 	}
+	
+	@Override
+	public 	List<KoalaForTree> getKoalaTree(int id) {
+		
+		return null;
+	}
+	
 }
