@@ -247,6 +247,11 @@ public class KoalaDaoImpl implements KoalaDao {
 	
 	@Override
 	public 	List<KoalaForTree> getKoalaTree(int id) {
+		List<KoalaForTree> koalaForTree = new ArrayList<KoalaForTree>();
+
+		KoalaForTree rootKoala = new KoalaForTree();
+//		rootKoala =  findById(id);　途中
+		koalaForTree.add(rootKoala);
 		
 		return null;
 	}

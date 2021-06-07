@@ -13,54 +13,133 @@
 </head>
 
 <body>
+	<p id="p1">1</p>
+	<p id="p2">2</p>
+		<th class="cell_title">test</th>
+		<td th:text="${id}"></td>
+
+<script type="text/javascript" th:inline="javascript">
+
+		$("#p1").text("");
+		$("#p2").text("");
+		
+		var requestParam = /*[[${id}]]*/
+		
+		/* 
+		検証用
+		$(document).ready(function() {
+			   alert(requestParam);
+			});
+		 */
+		 
+		$.ajax({
+			url : "http://localhost:8080/familytreeJson",
+			type : "GET",
+			contentType : "application/json",
+			data : {id :requestParam},
+			dataType : "json",
+		}).done(function(data1, textStatus, jqXHR) {
+			$("#p1").text(jqXHR.status);
+			$("#p2").text(JSON.stringify(data1));
+		}).fail(function(jqXHR, textStatus, errorThrown) {
+			$("#p1").text(jqXHR.status);
+		}).always(function() {
+		});
+	</script>
+
 	<div id="graph">
 		<script type="text/javascript">
-			var margin = {top : 10, right : 10, bottom : 10, left : 10}, 
-				   width = 1200, 
-				   height = 600;
-			var kx = function(d) {return d.x - 20;};
-			var ky = function(d) {return d.y - 10;};
-			
+			var margin = {
+				top : 10,
+				right : 10,
+				bottom : 10,
+				left : 10
+			}, width = 1200, height = 600;
+			var kx = function(d) {
+				return d.x - 20;
+			};
+			var ky = function(d) {
+				return d.y - 10;
+			};
+
 			//thie place the text x axis adjust this to center align the text
-			var tx = function(d) {return d.x - 3;};
+			var tx = function(d) {
+				return d.x - 3;
+			};
 			//thie place the text y axis adjust this to center align the text
-			var ty = function(d) {return d.y + 3;};
-			
+			var ty = function(d) {
+				return d.y + 3;
+			};
+
 			//make an SVG
 			var svg = d3.select("#graph").append("svg").attr("width",
 					width + margin.left + margin.right).attr("height",
 					height + margin.top + margin.bottom).append("g").attr(
-					"transform", "translate(" + margin.left + "," + margin.top + ")");
+					"transform",
+					"translate(" + margin.left + "," + margin.top + ")");
 
 			//My JSON note the no_parent: true this ensures that the node will not be linked to its parent
 			//hidden: true ensures that the nodes is not visible.
-			var root = 
-					{name : "1", id : 1, hidden : true,no_parent : true,
-					children : [ {name : "2" ,id : 16,no_parent : true}, 
-										{name : "3", no_parent : true, hidden : true, children:[{name:"4"}]},
-										{name : "5",id : 10,no_parent : true}
-										]
-					}
+			var root = {
+				name : "1",
+				id : 1,
+				hidden : true,
+				no_parent : true,
+				children : [ {
+					name : "2",
+					id : 16,
+					no_parent : true
+				}, {
+					name : "3",
+					no_parent : true,
+					hidden : true,
+					children : [ {
+						name : "4"
+					} ]
+				}, {
+					name : "5",
+					id : 10,
+					no_parent : true
+				} ]
+			}
 
 			var allNodes = flatten(root);
 			//This maps the siblings together mapping uses the ID using the blue line
 			/* オブジェクト間のリンク */
-			var siblings = [ 
-				{source : {id : 16},target : {id : 10}} ];
+			var siblings = [ {
+				source : {
+					id : 16
+				},
+				target : {
+					id : 10
+				}
+			} ];
 
 			// Compute the layout.
-			var tree = d3.layout.tree().size([ width, height ]), nodes = tree.nodes(root), links = tree.links(nodes);
+			var tree = d3.layout.tree().size([ width, height ]), nodes = tree
+					.nodes(root), links = tree.links(nodes);
 
 			// Create the link lines.
-			svg.selectAll(".link").data(links).enter().append("path").attr("class", "link").attr("d", elbow);
+			svg.selectAll(".link").data(links).enter().append("path").attr(
+					"class", "link").attr("d", elbow);
 			var nodes = svg.selectAll(".node").data(nodes).enter();
 
 			//First draw sibling line with blue line
-			svg.selectAll(".sibling").data(siblings).enter().append("path").attr("class", "sibling").attr("d", sblingLine);
+			svg.selectAll(".sibling").data(siblings).enter().append("path")
+					.attr("class", "sibling").attr("d", sblingLine);
 
 			// Create the node rectangles.
-			nodes.append("rect").attr("class", "node").attr("height", 20).attr("width", 40).attr("id", function(d) {return d.id;}).attr("display", function(d) {
-				if (d.hidden) {return "none"} else {return ""};}).attr("x", kx).attr("y", ky);
+			nodes.append("rect").attr("class", "node").attr("height", 20).attr(
+					"width", 40).attr("id", function(d) {
+				return d.id;
+			}).attr("display", function(d) {
+				if (d.hidden) {
+					return "none"
+				} else {
+					return ""
+				}
+				;
+			}).attr("x", kx).attr("y", ky);
 			// Create the node text label.
 			nodes.append("text").text(function(d) {
 				return d.name;

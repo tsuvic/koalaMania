@@ -19,18 +19,9 @@ public class KoalaForTree {
 	private Date birthdate;
 	private int is_alive;
 	private Date deathdate;
-	private int zoo;
 	private String zooName;
-	private String mother;
-	private String father;
 	private int mother_id;
 	private int father_id;
-	private String details;
-	private String feature;
-	private String stringBirthDate;
-	private String stringDeathDate;
-	private List<KoalaImage> koalaImageList;
-	private KoalaProfileImage koalaProfileImage;
 	private String profileImagePath;
 	
 }

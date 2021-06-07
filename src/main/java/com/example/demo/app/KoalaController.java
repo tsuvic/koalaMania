@@ -270,18 +270,23 @@ public class KoalaController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日");
 		return sdf.format(date);
 	}
-	
-	@GetMapping("/familytree")
-	public String familytreeDisplay() {
-		return "familytree";
-	}
-	
-	@GetMapping("/familytreeTest/{id}")
+
+	@GetMapping("/familytreeJson")
 	@ResponseBody
+	public String familytreeJsonDisplay(@RequestParam("id") int id) throws Exception {
+		Koala koala = koalaService.findById(id);
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(koala);
+		return json;
+	}
+
+	@GetMapping("/familytreeTest/{id}")
 	public String familytreeTestDisplay(@PathVariable int id, Model model) throws Exception {
 		Koala koala = koalaService.findById(id);
 		ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(koala);
-		return json;
+		String json = mapper.writeValueAsString(koala);
+		model.addAttribute("id", id);
+//		return json;
+        return "familytreeTest";
 	}
 }

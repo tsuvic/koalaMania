@@ -176,8 +176,9 @@ public class KoalaServiceImpl implements KoalaService {
 	}
 	
 	@Override
-	public 	List<KoalaForTree> getKoalaTree(int i) {
-		
+	public 	List<KoalaForTree> getKoalaTree(int id) {
+		dao.getKoalaTree(id);
+//		途中
 		return null;
 	}
 	
