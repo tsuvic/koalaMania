@@ -10,14 +10,15 @@ header.masthead {
 	height: 90vh;
 	min-height: 40rem;
 	position: relative;
+	text-align: center;
 }
 
 
-.masthead img {
+.masthead_content img {
 	height: 6rem;
 }
 
-header.masthead p {
+.masthead_content p {
 	color: white;
 }
 
@@ -32,4 +33,14 @@ header.masthead p {
 	left: 0;
 	height: 100%;
 	width: 100%;
+}
+
+.masthead_content {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 100%;
+	-webkit-transform: translate(-50%,-50%);
+	transform: translate(-50%,-50%);
+	z-index: 10;
 }
