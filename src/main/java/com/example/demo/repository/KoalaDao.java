@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.example.demo.entity.Koala;
 import com.example.demo.entity.KoalaForTree;
+import com.example.demo.entity.RelationForTree;
 import com.example.demo.entity.Zoo;
 
 public interface KoalaDao {
@@ -29,6 +30,7 @@ public interface KoalaDao {
 	
 	void urlUpdate(int koala_id, String url);
 	
-	List<KoalaForTree> getKoalaTree(int id);
-	
+	KoalaForTree getKoalaForTree(int id);
+
+	List<KoalaForTree> getRelationForTree(int id);
 }

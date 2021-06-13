@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.entity.Koala;
+import com.example.demo.entity.KoalaForTree;
 import com.example.demo.entity.KoalaImage;
 import com.example.demo.entity.Zoo;
 import com.example.demo.service.KoalaService;
@@ -270,23 +271,29 @@ public class KoalaController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日");
 		return sdf.format(date);
 	}
-
-	@GetMapping("/familytreeJson")
+	
+	@GetMapping("/familytree")
+	public String familytreeDisplay(@RequestParam(required = false, name = "id") int id, Model model) throws Exception {
+		model.addAttribute("id", id);
+        return "familytree";
+	}
+	
+	@GetMapping("/familytreeKoala")
 	@ResponseBody
-	public String familytreeJsonDisplay(@RequestParam("id") int id) throws Exception {
-		Koala koala = koalaService.findById(id);
+	public String getKoalaForTree(@RequestParam(required = false, name = "id") int id) throws Exception {
+		Map<String, Object> koalaForTree = koalaService.getKoalaForTree(id);
 		ObjectMapper mapper = new ObjectMapper();
-		String json = mapper.writeValueAsString(koala);
+		String json = mapper.writeValueAsString(koalaForTree);
+		return json;
+	}
+	
+	@GetMapping("/familytreeRelation")
+	@ResponseBody
+	public String getRelationForTree(@RequestParam(required = false, name = "id") int id) throws Exception {
+		List<KoalaForTree> relationForTree = koalaService.getRelationForTree(id);
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(relationForTree);
 		return json;
 	}
 
-	@GetMapping("/familytreeTest/{id}")
-	public String familytreeTestDisplay(@PathVariable int id, Model model) throws Exception {
-		Koala koala = koalaService.findById(id);
-		ObjectMapper mapper = new ObjectMapper();
-		String json = mapper.writeValueAsString(koala);
-		model.addAttribute("id", id);
-//		return json;
-        return "familytreeTest";
-	}
 }

@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +29,7 @@ import com.example.demo.app.KoalaInsertForm;
 import com.example.demo.entity.Koala;
 import com.example.demo.entity.KoalaForTree;
 import com.example.demo.entity.KoalaImage;
-import com.example.demo.entity.KoalaProfileImage;
+import com.example.demo.entity.RelationForTree;
 import com.example.demo.entity.Zoo;
 import com.example.demo.repository.KoalaDao;
 import com.example.demo.repository.KoalaImageDao;
@@ -176,10 +178,55 @@ public class KoalaServiceImpl implements KoalaService {
 	}
 	
 	@Override
-	public 	List<KoalaForTree> getKoalaTree(int id) {
-		dao.getKoalaTree(id);
-//		途中
-		return null;
+	public 	Map<String, Object> getKoalaForTree(int id) {
+		
+		//コアラインスタンスの生成
+		KoalaForTree mainKoala = dao.getKoalaForTree(id);
+		KoalaForTree motherKoala = new KoalaForTree();
+		if (mainKoala.getMother_id() != 0) {
+			motherKoala = dao.getKoalaForTree(mainKoala.getMother_id());
+		}
+		KoalaForTree fatherKoala = new KoalaForTree();
+		if (mainKoala.getMother_id() != 0) {
+			fatherKoala = dao.getKoalaForTree(mainKoala.getFather_id());
+		}
+		KoalaForTree adjustment = new KoalaForTree();
+		KoalaForTree root = new KoalaForTree();
+		
+		//家系図向けにコアラのフィールドの整理　上記の検索用に取得した値を書き換える　後でJSで0は削る
+
+		mainKoala.setHidden(false);
+		fatherKoala.setHidden(false);
+		motherKoala.setHidden(false);
+		mainKoala.setNo_parent(false);
+		
+		//①コアラの親子関係の整理
+		List<KoalaForTree> koalaForTreeLayer2 = new ArrayList<KoalaForTree>();
+		koalaForTreeLayer2.add(mainKoala);
+		adjustment.setChildren(koalaForTreeLayer2);
+		
+		List<KoalaForTree> koalaForTreeLayer1 = new ArrayList<KoalaForTree>();
+		koalaForTreeLayer1.add(fatherKoala);
+		koalaForTreeLayer1.add(adjustment);
+		koalaForTreeLayer1.add(motherKoala);
+		root.setChildren(koalaForTreeLayer1);
+		
+		//②コアラの関係性のリストの作成、オブジェクトの詰め込み
+		RelationForTree relationForTree = new RelationForTree();
+		relationForTree.setSource(fatherKoala);
+		relationForTree.setTarget(motherKoala);
+		
+		//①と②をMapでフロントに返却
+		Map<String, Object> mapForTree = new HashMap<String, Object>();
+		mapForTree.put("koalaForTree", root);
+		mapForTree.put("relationForTree", relationForTree);
+		
+		return mapForTree;
+	}
+	
+	@Override
+	public 	List<KoalaForTree> getRelationForTree(int id) {
+		return dao.getRelationForTree(id);
 	}
 	
 	@Override
