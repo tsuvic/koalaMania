@@ -277,9 +277,4 @@ public class KoalaDaoImpl implements KoalaDao {
 		return koala;
 	}
 
-	@Override
-	public 	List<KoalaForTree> getRelationForTree(int id){
-		return null;
-	}
-
 }

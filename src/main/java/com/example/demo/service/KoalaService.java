@@ -41,7 +41,5 @@ public interface KoalaService {
 	void deleteKoalaImage(String KoalaImageIds, int koala_id);
 	
 	Map<String, Object> getKoalaForTree(int i);
-	
-	List<KoalaForTree> getRelationForTree(int i);
-	
+		
 }

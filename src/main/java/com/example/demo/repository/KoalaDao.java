@@ -32,5 +32,4 @@ public interface KoalaDao {
 	
 	KoalaForTree getKoalaForTree(int id);
 
-	List<KoalaForTree> getRelationForTree(int id);
 }

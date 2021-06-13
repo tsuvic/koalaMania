@@ -287,13 +287,4 @@ public class KoalaController {
 		return json;
 	}
 	
-	@GetMapping("/familytreeRelation")
-	@ResponseBody
-	public String getRelationForTree(@RequestParam(required = false, name = "id") int id) throws Exception {
-		List<KoalaForTree> relationForTree = koalaService.getRelationForTree(id);
-		ObjectMapper mapper = new ObjectMapper();
-		String json = mapper.writeValueAsString(relationForTree);
-		return json;
-	}
-
 }

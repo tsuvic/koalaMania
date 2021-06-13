@@ -225,11 +225,6 @@ public class KoalaServiceImpl implements KoalaService {
 	}
 	
 	@Override
-	public 	List<KoalaForTree> getRelationForTree(int id) {
-		return dao.getRelationForTree(id);
-	}
-	
-	@Override
 	public void update(KoalaInsertForm form) {
 		Koala koala = new Koala();
 		koala.setKoala_id(form.getKoala_id());
