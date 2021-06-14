@@ -1,0 +1,183 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<meta charset="utf-8">
+
+<head>
+<link href="/css/familytree.css" rel="stylesheet">
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+		var requestParam = /*[[${id}]]*/ null;
+		/*]]>*/	
+	
+	$.getJSON("http://localhost:8080/familytreeKoala", {id : requestParam}, function(json, textStatus, jqXHR){
+		
+/* 		$("#p1").text(json); */
+		$("#p2").text(JSON.stringify(json));/*  テスト用出力*/
+		$("#p3").text(JSON.stringify(json.koalaForTree, ["name", "id", "hidden", "no_parent", "children"],1));/*  テスト用出力*/
+		$("#p4").text(JSON.parse(JSON.stringify(json.koalaForTree, ["name", "id", "hidden", "no_parent", "children"],1))); /*  テスト用出力*/
+		$("#p5").text(JSON.stringify(json.relationForTree));/*  テスト用出力*/
+		$("#p6").text(JSON.stringify([JSON.parse(JSON.stringify(json.relationForTree, ["source","target","id"], 1))])); /*  テスト用出力*/
+
+			//オブジェクト全体の位置
+			//200 400 800 400 デフォルト値からオブジェクトが生成されるたびに引かれる数値
+			var margin = {top : 10,right : 10,bottom : 10,left : 10}, width = 1200, height = 400;	 
+			var kx = function(d) {return d.x - 40;};
+			var ky = function(d) {return d.y - 20;};  //四角
+			//thie place the text x axis adjust this to center align the text
+			var tx = function(d) {return d.x - 0;};
+			//thie place the text y axis adjust this to center align the text
+			var ty = function(d) {return d.y + 3;};
+
+			//make an SVG g要素を中央に寄せることができない。そもそもg要素いらないのでは。
+			var svg = d3.select("#graph").append("svg")
+			.attr("width",width + margin.left + margin.right)
+			.attr("height",height + margin.top + margin.bottom)
+		/* 	.append("g").attr("transform","translate(" + margin.left + "," + margin.top + ")"); */
+
+
+			//My JSON note the no_parent: true this ensures that the node will not be linked to its parent
+			//hidden: true ensures that the nodes is not visible.
+			var root =  JSON.parse(JSON.stringify(json.koalaForTree, ["name", "id", "hidden", "no_parent", "children"],10));
+			var allNodes = flatten(root); //配列
+			
+			//This maps the siblings together mapping uses the ID using the blue line
+			/* オブジェクト間のリンク 1つ  */
+			var siblings = [JSON.parse(JSON.stringify(json.relationForTree, ["source","target","id"], 1))];
+
+			// Compute the layout. ノード取り出し、ノードを描く 5-4
+			var tree = d3.layout.tree().size([ width, height ]), 
+			       nodes = tree.nodes(root),
+			       links = tree.links(nodes);
+			
+			// Create the link lines. 縦線 4
+			svg.selectAll(".link").data(links).enter().append("path").attr("class", "link").attr("d", elbow);
+
+			//First draw sibling line with blue line 横線 1つ
+			svg.selectAll(".sibling").data(siblings).enter().append("path").attr("class", "sibling").attr("d", sblingLine);
+	
+			//g要素
+			const test = svg.selectAll('.test').data(nodes).enter().append('g');
+			
+			// Create the node rectangles
+			test.append("rect")
+				.attr("class", "node")
+				.attr("height", 40)
+				.attr("width", 80)
+				.attr("id", function(d) {return d.id;})
+				.attr("display", function(d) {
+				if (d.hidden) {return "none"} else {return ""};})
+				.attr("x", kx).attr("y", ky);
+			
+			// Create the node text
+			test.append("text")
+			.text(function(d) {return d.name;})
+			.attr("x", tx)
+			.attr("y", ty)
+			.attr("text-anchor", "middle")
+			.attr("id", function(d) {return d.id;});
+			
+
+			//This defines line between siblings. ノードの中にリンクの対象が存在するか
+			//allNodes配列のfilterメソッド　trueのオブジェクトのみ返す
+			function sblingLine(d, i) {
+				//start point
+				var start = allNodes.filter(function(v) {
+					if (d.source.id == v.id) {
+						return true;
+					} else {
+						return false;
+					}
+				});
+				//end point
+				var end = allNodes.filter(function(v) {
+					if (d.target.id == v.id) {
+						return true;
+					} else {
+						return false;
+					}
+				});
+
+				//define teh start coordinate and end co-ordinate trueのオブジェクトの座標を取得
+				//200 400 800 400 デフォルト値？ 四角は
+				var linedata = [ {
+					x : start[0].x,
+					y : start[0].y
+				}, {
+					x : end[0].x,
+					y : end[0].y
+				} ];
+				var fun = d3.svg.line().x(function(d) {
+					return d.x;
+				}).y(function(d) {
+					return d.y;
+				}).interpolate("linear");
+				return fun(linedata);
+			}
+
+			/*To make the nodes in flat mode. This gets all teh nodes in same level*/
+			/* ノードを配列に詰めて返却 */
+			function flatten(root) {
+				var n = [], i = 0;
+
+				//定義
+				function recurse(node) {
+					if (node.children)
+						node.children.forEach(recurse);
+/* 					if (!node.id)
+						node.id = ++i; */
+					n.push(node);
+				}
+				
+				//実行
+				recurse(root);
+				return n;
+			}
+			
+			/**  This draws the lines between nodes.**/
+			function elbow(d, i) {if (d.target.no_parent) {return "M0,0L0,0";}
+				var diff = d.source.y - d.target.y;
+				
+				//0.40 defines the point from where you need the line to break out change is as per your choice.
+				var ny = d.target.y + diff * 0.40;
+
+				linedata = [ {
+					x : d.target.x,
+					y : d.target.y
+				}, {
+					x : d.target.x,
+					y : ny
+				}, {
+					x : d.source.x,
+					y : d.source.y
+				} ]
+
+				var fun = d3.svg.line()
+				.x(function(d) {return d.x;})
+				.y(function(d) {return d.y;})
+				.interpolate("step-after");
+				return fun(linedata);
+			}
+		});
+</script>
+
+
+
+</head>
+
+<body>
+<p id="p1">※テスト用データ表示※</p>
+<p id="p2"></p>
+<p id="p3"></p>
+<p id="p4"></p>
+<p id="p5"></p>
+<p id="p6"></p>
+<p id="p7"></p>
+
+<div id="graph" style="text-align:center">	
+
+	</div>
+</body>
