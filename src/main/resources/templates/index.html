@@ -54,7 +54,7 @@
 				<div class="copy">
 					<p>コアラのことがもっと好きになるデータベース</p>
 				</div>
-			<form class="searchform" action="">
+			<form class="searchform" method="post" th:action="@{/search}" th:object="${koalaSearchForm}">
             <div class="topsearch">
             <div class="container g-0">
             <div class="row g-0 topsearch_tabs">
