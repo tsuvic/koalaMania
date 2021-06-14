@@ -178,27 +178,76 @@ public class KoalaServiceImpl implements KoalaService {
 	@Override
 	public 	Map<String, Object> getKoalaForTree(int id) {
 		
-		//コアラインスタンスの生成
-		KoalaForTree mainKoala = dao.getKoalaForTree(id);
-		KoalaForTree motherKoala = new KoalaForTree();
-		if (mainKoala.getMother_id() != 0) {
-			motherKoala = dao.getKoalaForTree(mainKoala.getMother_id());
-		}
-		KoalaForTree fatherKoala = new KoalaForTree();
-		if (mainKoala.getMother_id() != 0) {
-			fatherKoala = dao.getKoalaForTree(mainKoala.getFather_id());
-		}
+		//オブジェクトルート、オブジェクト調整用のインスタンスの生成
 		KoalaForTree adjustment = new KoalaForTree();
 		KoalaForTree root = new KoalaForTree();
 		
+		//メインのコアラオブジェクトを生成
+		KoalaForTree mainKoala = dao.getKoalaForTree(id);
+		
+		KoalaForTree motherKoala = new KoalaForTree();
+		if (mainKoala.getMother_id() != 0) {
+			motherKoala = dao.getKoalaForTree(mainKoala.getMother_id());
+		} else {
+			motherKoala.setId(9990);
+			motherKoala.setName("不明");
+		}
+		
+		KoalaForTree fatherKoala = new KoalaForTree();
+		if (mainKoala.getMother_id() != 0) {
+			fatherKoala = dao.getKoalaForTree(mainKoala.getFather_id());
+		} else {
+			fatherKoala.setId(9998);
+			fatherKoala.setName("不明");
+		}
+		
+		//兄弟
+//		KoalaForTree brotherKoala = dao.getBrotherKoalaForTree(mainKoala.getMother_id(), mainKoala.getFather_id());
+		
+		//祖父母
+//		KoalaForTree paternalGrandFather = new KoalaForTree();
+//		if (fatherKoala.getFather_id() != 0) {
+//			paternalGrandFather = dao.getKoalaForTree(fatherKoala.getFather_id());
+//		} else {
+//			paternalGrandFather.setId(9997);
+//			paternalGrandFather.setName("不明");
+//		}
+//		
+//		KoalaForTree paternalGrandMother = new KoalaForTree();
+//		if (fatherKoala.getMother_id() != 0) {
+//			paternalGrandMother = dao.getKoalaForTree(fatherKoala.getMother_id());
+//		} else {
+//			paternalGrandMother.setId(9996);
+//			paternalGrandMother.setName("不明");
+//		}
+//		
+//		KoalaForTree maternalGrandFather = new KoalaForTree();
+//		if (motherKoala.getFather_id() != 0) {
+//			maternalGrandFather = dao.getKoalaForTree(motherKoala.getFather_id());
+//		} else {
+//			maternalGrandFather.setId(9995);
+//			maternalGrandFather.setName("不明");
+//		}
+//		
+//		KoalaForTree maternalGrandMother = new KoalaForTree();
+//		if (motherKoala.getMother_id() != 0) {
+//			maternalGrandFather = dao.getKoalaForTree(motherKoala.getMother_id());
+//		} else {
+//			maternalGrandMother.setId(9994);
+//			maternalGrandMother.setName("不明");
+//		}
+		
 		//家系図向けにコアラのフィールドの整理　上記の検索用に取得した値を書き換える　後でJSで0は削る
-
+		mainKoala.setNo_parent(false);
 		mainKoala.setHidden(false);
 		fatherKoala.setHidden(false);
 		motherKoala.setHidden(false);
-		mainKoala.setNo_parent(false);
+//		paternalGrandMother.setHidden(false);
+//		paternalGrandFather.setHidden(false);
+//		maternalGrandMother.setHidden(false);
+//		maternalGrandFather.setHidden(false);
 		
-		//①コアラの親子関係の整理
+		//①コアラの親子関係の整理		
 		List<KoalaForTree> koalaForTreeLayer2 = new ArrayList<KoalaForTree>();
 		koalaForTreeLayer2.add(mainKoala);
 		adjustment.setChildren(koalaForTreeLayer2);
@@ -208,6 +257,17 @@ public class KoalaServiceImpl implements KoalaService {
 		koalaForTreeLayer1.add(adjustment);
 		koalaForTreeLayer1.add(motherKoala);
 		root.setChildren(koalaForTreeLayer1);
+	
+//		一つでよかったadjustmentが複数必要なことに気が付く..
+//		List<KoalaForTree> koalaForTreeLayer3 = new ArrayList<KoalaForTree>();
+//		koalaForTreeLayer3.add(paternalGrandFather);
+//		koalaForTreeLayer3.add(adjustment);
+//		koalaForTreeLayer3.add(paternalGrandMother);
+//		koalaForTreeLayer3.add(adjustment);
+//		koalaForTreeLayer3.add(maternalGrandFather);
+//		koalaForTreeLayer3.add(adjustment);
+//		koalaForTreeLayer3.add(maternalGrandMother);
+//		root.setChildren(koalaForTreeLayer3);
 		
 		//②コアラの関係性のリストの作成、オブジェクトの詰め込み
 		RelationForTree relationForTree = new RelationForTree();

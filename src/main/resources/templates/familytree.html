@@ -15,7 +15,7 @@
 	
 	$.getJSON("http://localhost:8080/familytreeKoala", {id : requestParam}, function(json, textStatus, jqXHR){
 		
-		$("#p1").text(json);/*  テスト用出力*/
+/* 		$("#p1").text(json); */
 		$("#p2").text(JSON.stringify(json));/*  テスト用出力*/
 		$("#p3").text(JSON.stringify(json.koalaForTree, ["name", "id", "hidden", "no_parent", "children"],1));/*  テスト用出力*/
 		$("#p4").text(JSON.parse(JSON.stringify(json.koalaForTree, ["name", "id", "hidden", "no_parent", "children"],1))); /*  テスト用出力*/
@@ -24,7 +24,7 @@
 
 			//オブジェクト全体の位置
 			//200 400 800 400 デフォルト値からオブジェクトが生成されるたびに引かれる数値
-			var margin = {top : 10,right : 10,bottom : 10,left : 10}, width = 1200, height = 800;	 
+			var margin = {top : 10,right : 10,bottom : 10,left : 10}, width = 1200, height = 400;	 
 			var kx = function(d) {return d.x - 40;};
 			var ky = function(d) {return d.y - 20;};  //四角
 			//thie place the text x axis adjust this to center align the text
@@ -50,7 +50,7 @@
 
 			// Compute the layout. ノード取り出し、ノードを描く 5-4
 			var tree = d3.layout.tree().size([ width, height ]), 
-			       nodes = tree.nodes(root), 
+			       nodes = tree.nodes(root),
 			       links = tree.links(nodes);
 			
 			// Create the link lines. 縦線 4
@@ -169,7 +169,7 @@
 </head>
 
 <body>
-<p id="p1"></p>
+<p id="p1">※テスト用データ表示※</p>
 <p id="p2"></p>
 <p id="p3"></p>
 <p id="p4"></p>
