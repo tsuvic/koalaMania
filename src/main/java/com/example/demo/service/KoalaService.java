@@ -1,13 +1,16 @@
 package com.example.demo.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.app.KoalaInsertForm;
 import com.example.demo.entity.Koala;
-import com.example.demo.entity.Zoo;
+import com.example.demo.entity.KoalaForTree;
 import com.example.demo.entity.KoalaImage;
+import com.example.demo.entity.RelationForTree;
+import com.example.demo.entity.Zoo;
 
 public interface KoalaService {
 
@@ -36,4 +39,7 @@ public interface KoalaService {
 	void insertKoalaImage(int koala_id, List<MultipartFile> koalaImage);
 
 	void deleteKoalaImage(String KoalaImageIds, int koala_id);
+	
+	Map<String, Object> getKoalaForTree(int i);
+		
 }

@@ -30,7 +30,7 @@
 		<br> <br> <br> <br>
 		<h2>検索</h2>
 		<form class="card-body row no-gutters align-items-center"
-			method="post" action="#" th:action="@{/search}"
+			method="post" th:action="@{/search}"
 			th:object="${koalaSearchForm}">
 			<div class="col-auto">
 				<i class="fas fa-search h4 text-body"></i>
@@ -53,13 +53,14 @@
 		<table class="table table-hover table-responsive">
 			<thead class="thead-dark">
 				<tr>
-					<th style="width: 32%">プロフィール画像</th>
+					<th style="width: 35%">プロフィール画像</th>
 					<th style="width: 32%">名前</th>
 					<th style="width: 27%">性別</th>
 					<th style="width: 42%">生年月日</th>
 					<th style="width: 47%">動物園</th>
 					<th style="width: 32%">母親</th>
 					<th style="width: 35%">父親</th>
+					<th style="width: 30%" colspan="1"></th>
 					<th style="width: 30%" colspan="1"></th>
 				</tr>
 			</thead>
@@ -86,6 +87,9 @@
 
 					<td><a class="btn btn-md btn-info"
 						th:href="@{/detail/{koala_id}(koala_id=*{koala_id})}">詳細情報</a></td>
+
+					<td><a class="btn btn-md btn-primary"
+						th:href="@{/familytree(id=${koala.koala_id})}">家系図</a></td>
 			</tbody>
 		</table>
 	</div>

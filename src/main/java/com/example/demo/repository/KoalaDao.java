@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.example.demo.entity.Koala;
+import com.example.demo.entity.KoalaForTree;
+import com.example.demo.entity.RelationForTree;
 import com.example.demo.entity.Zoo;
 
 public interface KoalaDao {
@@ -27,4 +29,9 @@ public interface KoalaDao {
 	void delete(int koala_id);
 	
 	void urlUpdate(int koala_id, String url);
+	
+	KoalaForTree getKoalaForTree(int id);
+
+	KoalaForTree getBrotherKoalaForTree(int mother_id, int father_id);
+	
 }
