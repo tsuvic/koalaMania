@@ -41,15 +41,13 @@ public class KoalaServiceImpl implements KoalaService {
 	private final KoalaDao dao;
 	private final KoalaImageDao koalaImageDao;
 	private final CloudinaryService cloudinaryService;
-	private final KoalaProfileImageDao koalaProfileImageDao;
-
+	
 	@Autowired
 	public KoalaServiceImpl(KoalaDao dao, KoalaImageDao koalaImageDao, CloudinaryService cloudinaryService,
 			KoalaProfileImageDao koalaProfileImageDao) {
 		this.dao = dao;
 		this.koalaImageDao = koalaImageDao;
 		this.cloudinaryService = cloudinaryService;
-		this.koalaProfileImageDao = koalaProfileImageDao;
 	}
 
 	@Override
