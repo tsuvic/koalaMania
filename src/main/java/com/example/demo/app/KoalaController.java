@@ -20,11 +20,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.entity.Koala;
+import com.example.demo.entity.KoalaForTree;
 import com.example.demo.entity.KoalaImage;
 import com.example.demo.entity.Zoo;
 import com.example.demo.service.KoalaService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("/")
@@ -268,4 +271,20 @@ public class KoalaController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日");
 		return sdf.format(date);
 	}
+	
+	@GetMapping("/familytree")
+	public String familytreeDisplay(@RequestParam(required = false, name = "id") int id, Model model) throws Exception {
+		model.addAttribute("id", id);
+        return "familytree";
+	}
+	
+	@GetMapping("/familytreeKoala")
+	@ResponseBody
+	public String getKoalaForTree(@RequestParam(required = false, name = "id") int id) throws Exception {
+		Map<String, Object> koalaForTree = koalaService.getKoalaForTree(id);
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(koalaForTree);
+		return json;
+	}
+	
 }
