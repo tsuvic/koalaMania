@@ -26,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.app.KoalaInsertForm;
 import com.example.demo.entity.Koala;
 import com.example.demo.entity.KoalaImage;
-import com.example.demo.entity.KoalaProfileImage;
 import com.example.demo.entity.Zoo;
 import com.example.demo.repository.KoalaDao;
 import com.example.demo.repository.KoalaImageDao;

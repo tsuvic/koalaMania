@@ -53,6 +53,8 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-security')
     implementation('org.thymeleaf.extras:thymeleaf-extras-springsecurity5')
 	implementation('org.twitter4j:twitter4j-core:4.0.7')
+	implementation('org.springframework:spring-aop')
+	implementation('org.aspectj:aspectjweaver')
 }
 
 test {
