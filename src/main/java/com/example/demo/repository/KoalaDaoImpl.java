@@ -12,8 +12,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.Koala;
+import com.example.demo.entity.KoalaForTree;
 import com.example.demo.entity.KoalaImage;
 import com.example.demo.entity.KoalaProfileImage;
+import com.example.demo.entity.RelationForTree;
 import com.example.demo.entity.Zoo;
 
 @Repository
@@ -28,14 +30,14 @@ public class KoalaDaoImpl implements KoalaDao {
 
 	@Override
 	public List<Koala> getAll() {
-		String sql = "SELECT koala.koala_id, koala.name, koala.sex, koala.birthdate, zoo.zoo_name, mother.name, father.name, koala.profile_image_type "
-				+ "FROM koala LEFT OUTER JOIN koala_zoo_history ON koala.koala_id = koala_zoo_history.koala_id "
+		String sql = "SELECT koalakoala.koala_id, koalakoala.name, koalakoala.sex, koalakoala.birthdate, zoo.zoo_name, mother.name as mother_name , father.name as father_name, koalakoala.profile_image_type "
+				+ "FROM koala AS koalakoala LEFT OUTER JOIN koala_zoo_history ON koalakoala.koala_id = koala_zoo_history.koala_id "
 				+ "LEFT OUTER JOIN zoo ON koala_zoo_history.zoo_id = zoo.zoo_id "
 				+ "LEFT OUTER JOIN prefecture ON zoo.prefecture_id = prefecture.prefecture_id "
-				+ "LEFT OUTER JOIN koala AS mother on koala.mother  = mother.koala_id "
-				+ "LEFT OUTER JOIN koala AS father on koala.father  = father.koala_id "
+				+ "LEFT OUTER JOIN koala AS mother on koalakoala.mother  = mother.koala_id "
+				+ "LEFT OUTER JOIN koala AS father on koalakoala.father  = father.koala_id "
 				+ "WHERE koala_zoo_history.exit_date = '9999-01-01' "
-				+ "ORDER BY koala.koala_id ASC";
+				+ "ORDER BY koalakoala.koala_id ASC";
 
 		// SQL実行結果をMap型リストへ代入
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql);
@@ -122,7 +124,7 @@ public class KoalaDaoImpl implements KoalaDao {
 			koala.setZooName((String) result.get("zoo_name"));
 			koala.setMother((String) result.get("mother_name"));
 			koala.setFather((String) result.get("father_name"));
-			koala.setProfileImagePath((String)result.get("profile_image_type"));
+			koala.setProfileImagePath((String) result.get("profile_image_type"));
 			list.add(koala);
 		}
 		return list;
@@ -147,7 +149,8 @@ public class KoalaDaoImpl implements KoalaDao {
 		Map<String, Object> insertId = jdbcTemplate.queryForMap(
 				"INSERT INTO koala(name, sex, birthdate, is_alive, deathdate, mother, father, details, feature, profile_image_type) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING koala_id",
 				koala.getName(), koala.getSex(), koala.getBirthdate(), koala.getIs_alive(), koala.getDeathdate(),
-				koala.getMother_id(), koala.getFather_id(), koala.getDetails(), koala.getFeature(), koala.getProfileImagePath());
+				koala.getMother_id(), koala.getFather_id(), koala.getDetails(), koala.getFeature(),
+				koala.getProfileImagePath());
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
@@ -196,6 +199,7 @@ public class KoalaDaoImpl implements KoalaDao {
 		koala.setDetails((String) resultList.get(0).get("details"));
 		koala.setFeature((String) resultList.get(0).get("feature"));
 
+
 		if (resultList.get(0).get("koalaimage_id") != null) {
 
 			List<KoalaImage> koalaImageList = new ArrayList<KoalaImage>();
@@ -209,7 +213,7 @@ public class KoalaDaoImpl implements KoalaDao {
 			}
 			koala.setKoalaImageList(koalaImageList);
 		}
-		
+
 		if (resultList.get(0).get("koalaProfileImage_id") != null) {
 			KoalaProfileImage koalaProfileImage = new KoalaProfileImage();
 			koalaProfileImage.setKoala_id((int) resultList.get(0).get("koala_id"));
@@ -225,22 +229,84 @@ public class KoalaDaoImpl implements KoalaDao {
 		jdbcTemplate.update(
 				"UPDATE koala SET name=?, sex=?,birthdate=?,is_alive=?,deathdate=?,mother=?,father=?,details=?,feature=?, profile_image_type = ? WHERE koala_id = ?",
 				koala.getName(), koala.getSex(), koala.getBirthdate(), koala.getIs_alive(), koala.getDeathdate(),
-				koala.getMother_id(), koala.getFather_id(), koala.getDetails(), koala.getFeature(), koala.getProfileImagePath(),
-				koala.getKoala_id());
+				koala.getMother_id(), koala.getFather_id(), koala.getDetails(), koala.getFeature(),
+				koala.getProfileImagePath(), koala.getKoala_id());
 
 		jdbcTemplate.update("UPDATE koala_zoo_history SET zoo_id=? WHERE koala_id = ?", koala.getZoo(),
 				koala.getKoala_id());
 	}
 
-	
 	@Override
 	public void urlUpdate(int koala_id, String url) {
-		jdbcTemplate.update(
-				"UPDATE koala SET profile_image_type = ? WHERE koala_id = ?", url, koala_id);
+		jdbcTemplate.update("UPDATE koala SET profile_image_type = ? WHERE koala_id = ?", url, koala_id);
 	}
-	
+
 	@Override
 	public void delete(int koala_id) {
 		jdbcTemplate.update("DELETE FROM koala WHERE koala_id = ?", koala_id);
+	}
+
+	@Override
+	public KoalaForTree getKoalaForTree(int id) {
+		String sql = "SELECT koalakoala.profile_image_type, koalakoala.koala_id, koalakoala.name, koalakoala.sex, koalakoala.birthdate, koalakoala.is_alive, koalakoala.deathdate, koalakoala.mother, koalakoala.father, "
+				+ "koala_zoo_history.zoo_id, zoo_name, mother.name as mother_name, father.name as father_name, koalakoala.details, koalakoala.feature , koalaimage_id ,koalaImage.filetype, koalaProfileImage_id, koalaProfileImage.filetype as profilefiletype "
+				+ "FROM koala AS koalakoala LEFT OUTER JOIN koalaimage ON koalakoala.koala_id = koalaimage.koala_id "
+				+ "LEFT OUTER JOIN koala_zoo_history ON koalakoala.koala_id = koala_zoo_history.koala_id "
+				+ "LEFT OUTER JOIN zoo ON koala_zoo_history.zoo_id = zoo.zoo_id "
+				+ "LEFT OUTER JOIN prefecture ON zoo.prefecture_id = prefecture.prefecture_id "
+				+ "LEFT OUTER JOIN koala AS mother on koalakoala.mother  = mother.koala_id "
+				+ "LEFT OUTER JOIN koala AS father on koalakoala.father  = father.koala_id "
+				+ "LEFT OUTER JOIN koalaProfileImage on koalakoala.koala_id = koalaProfileImage.koala_id "
+				+ "WHERE  koala_zoo_history.exit_date = '9999-01-01' AND koalakoala.koala_id = ?" ;
+		
+		Map<String, Object> result = jdbcTemplate.queryForMap(sql, id);
+		KoalaForTree koala = new KoalaForTree();
+		koala.setName((String) result.get("name"));
+		koala.setId((int) result.get("koala_id"));
+
+//		mainKoala.setProfileImagePath((String) resultList.get("profile_image_type"));
+//		mainKoala.setKoala_id((int) resultList.get("koala_id"));
+//		mainKoala.setSex((int) result.get("sex"));
+//		mainKoala.setBirthdate((Date) result.get("birthdate"));
+//		mainKoala.setIs_alive((int) result.get("is_alive"));
+//		mainKoala.setDeathdate((Date) result.get("deathdate"));
+//		mainKoala.setZooName((String) result.get("zoo_name"));
+		koala.setMother_id((int)result.get("mother"));
+		koala.setFather_id((int)result.get("father"));
+
+		return koala;
+	}
+	@Override
+	public 	KoalaForTree getBrotherKoalaForTree(int mother_id, int father_id){
+		String sql = "SELECT koalakoala.profile_image_type, koalakoala.koala_id, koalakoala.name, koalakoala.sex, koalakoala.birthdate, koalakoala.is_alive, koalakoala.deathdate, koalakoala.mother, koalakoala.father, "
+				+ "koala_zoo_history.zoo_id, zoo_name, mother.name as mother_name, father.name as father_name, koalakoala.details, koalakoala.feature , koalaimage_id ,koalaImage.filetype, koalaProfileImage_id, koalaProfileImage.filetype as profilefiletype "
+				+ "FROM koala AS koalakoala LEFT OUTER JOIN koalaimage ON koalakoala.koala_id = koalaimage.koala_id "
+				+ "LEFT OUTER JOIN koala_zoo_history ON koalakoala.koala_id = koala_zoo_history.koala_id "
+				+ "LEFT OUTER JOIN zoo ON koala_zoo_history.zoo_id = zoo.zoo_id "
+				+ "LEFT OUTER JOIN prefecture ON zoo.prefecture_id = prefecture.prefecture_id "
+				+ "LEFT OUTER JOIN koala AS mother on koalakoala.mother  = mother.koala_id "
+				+ "LEFT OUTER JOIN koala AS father on koalakoala.father  = father.koala_id "
+				+ "LEFT OUTER JOIN koalaProfileImage on koalakoala.koala_id = koalaProfileImage.koala_id "
+				+ "WHERE  koala_zoo_history.exit_date = '9999-01-01' AND koalakoala.mother = ? AND koalakoala.father = ?" ;
+		
+		
+//		queryForListで実装予定
+		
+		Map<String, Object> result = jdbcTemplate.queryForMap(sql, mother_id, father_id );
+		KoalaForTree koala = new KoalaForTree();
+		koala.setName((String) result.get("name"));
+		koala.setId((int) result.get("koala_id"));
+
+//		mainKoala.setProfileImagePath((String) resultList.get("profile_image_type"));
+//		mainKoala.setKoala_id((int) resultList.get("koala_id"));
+//		mainKoala.setSex((int) result.get("sex"));
+//		mainKoala.setBirthdate((Date) result.get("birthdate"));
+//		mainKoala.setIs_alive((int) result.get("is_alive"));
+//		mainKoala.setDeathdate((Date) result.get("deathdate"));
+//		mainKoala.setZooName((String) result.get("zoo_name"));
+		koala.setMother_id((int)result.get("mother"));
+		koala.setFather_id((int)result.get("father"));
+
+		return koala;
 	}
 }

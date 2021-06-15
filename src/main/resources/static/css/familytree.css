@@ -1,0 +1,20 @@
+body {
+    font: 10px sans-serif;
+}
+.link {
+    fill: none;
+    stroke: #000;
+}
+.sibling {
+    fill: none;
+    stroke: blue;
+}
+.border {
+    fill: none;
+    shape-rendering: crispEdges;
+    stroke: #aaa;
+}
+.node {
+    stroke: red;
+    fill:white;
+}

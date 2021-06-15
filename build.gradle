@@ -55,6 +55,9 @@ dependencies {
 	implementation('org.twitter4j:twitter4j-core:4.0.7')
 	implementation('org.springframework:spring-aop')
 	implementation('org.aspectj:aspectjweaver')
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.12.3'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.3'
 }
 
 test {
