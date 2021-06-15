@@ -31,3 +31,4 @@ spring:
       app-id: ${TWITTER_API}
       app-secret: ${TWITTER_SECRET}
       callback-url: ${TWITTER_CALLBACK_URL}
+      autoLoginKey: ${AUTO_LOGIN_KEY}

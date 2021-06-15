@@ -30,4 +30,9 @@ public class TwitterConfig {
         return mEnv.getProperty("spring.social.twitter.callback-url");
     }
     
+    @Bean(name="spring.social.twitter.autoLoginKey")
+    public String getAutoLoginKey()
+    {
+        return mEnv.getProperty("spring.social.twitter.autoLoginKey");
+    }
 }

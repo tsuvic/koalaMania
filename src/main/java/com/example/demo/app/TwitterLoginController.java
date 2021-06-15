@@ -1,17 +1,18 @@
 package com.example.demo.app;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.example.demo.entity.LoginUser;
+import com.example.demo.service.TwitterLoginService;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -27,9 +28,9 @@ public class TwitterLoginController {
 
 	@Autowired
 	private HttpSession session;
-
+	
 	@Autowired
-	private HttpServletRequest request;
+	private TwitterLoginService service;
 	
 	@Autowired
     @Qualifier("spring.social.twitter.app-id")
@@ -60,7 +61,7 @@ public class TwitterLoginController {
 	}
 
 	@RequestMapping("/oauth/twitter/access")
-	String loginTwitterAccess() {
+	String loginTwitterAccess(HttpServletResponse response,HttpServletRequest request) {
 		
 		Configuration conf = ConfigurationContext.getInstance();
 		RequestToken requestToken = (RequestToken) session.getAttribute("requestToken");
@@ -84,18 +85,14 @@ public class TwitterLoginController {
 			Twitter twitter = new TwitterFactory().getInstance();
 			twitter.setOAuthConsumer(twitterAppId, twitterAppsecret);
 			twitter.setOAuthAccessToken(accessToken);
-			System.out.println(twitter.verifyCredentials());
-			
+			//ユーザーを認証する
+			service.userLogin(twitter.verifyCredentials(),response,request);
 		} catch (TwitterException e) {
 			e.printStackTrace();
 		}
-
-		User user = new User(accessToken.getScreenName(), new Long(accessToken.getUserId()).toString(),AuthorityUtils.createAuthorityList("ROLE_USER"));
-
-		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user, null,
-				AuthorityUtils.createAuthorityList("ROLE_USER"));
-		SecurityContextHolder.getContext().setAuthentication(token);
-
+		
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		System.out.println(((LoginUser) principal).getUser_id());
 		return "redirect:/";
 	}
 }
