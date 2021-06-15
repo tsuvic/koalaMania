@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"><header th:fragment="headerA_boot">
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<header th:fragment="headerA_boot">
 
 	<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
 		<div class="container-fluid">
@@ -29,9 +30,9 @@
 					</a>
 				</div>
 				<div sec:authorize="isAuthenticated()" class="d-flex flex-row">
-					<a th:href="@{/logout}">
+					<form method="post" th:action="@{/logout}">
 						<button class="btn btn-md btn-success mx-2" type="submit">ログアウト</button>
-					</a>
+					</form>
 				</div>
 			</div>
 		</div>
