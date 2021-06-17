@@ -85,10 +85,10 @@
 					<td th:if="*{#strings.isEmpty(father)}">不明</td>
 					<td th:unless="*{#strings.isEmpty(father)}" th:text="*{father}"></td>
 
-					<td><a class="btn btn-md btn-info"
+					<td><a class="btn btn-sm btn-info"
 						th:href="@{/detail/{koala_id}(koala_id=*{koala_id})}">詳細情報</a></td>
 
-					<td><a class="btn btn-md btn-primary"
+					<td><a class="btn btn-sm btn-primary"
 						th:href="@{/familytree(id=${koala.koala_id})}">家系図</a></td>
 			</tbody>
 		</table>
