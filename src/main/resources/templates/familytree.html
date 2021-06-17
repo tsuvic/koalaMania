@@ -13,7 +13,7 @@
 		var requestParam = /*[[${id}]]*/ null;
 		/*]]>*/	
 	
-	$.getJSON("http://localhost:8080/familytreeKoala", {id : requestParam}, function(json, textStatus, jqXHR){
+	$.getJSON("/familytreeKoala", {id : requestParam}, function(json, textStatus, jqXHR){
 		
 /* 		$("#p1").text(json); */
 		$("#p2").text(JSON.stringify(json));/*  テスト用出力*/
