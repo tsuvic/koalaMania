@@ -55,7 +55,7 @@ public class LoginUserDaoImple implements LoginUserDao {
 	@Override
 	public void insertUser(LoginUser insertUser) {
 		Map<String, Object> insertId = jdbcTemplate.queryForMap(
-				"INSERT INTO login_user(provider, provider_id, provider_adress, user_name, role, status, login_date, create_date, update_date) VALUES(?, ?, ?, ?, ? , ?, now(), now(), now()) RETURNING user_id",
+				"INSERT INTO login_user(provider, provider_id, provider_adress, user_name, role, status, login_date, created_date, updated_date) VALUES(?, ?, ?, ?, ? , ?, now(), now(), now()) RETURNING user_id",
 				PROVIDER_TWITTER, insertUser.getProvider_id(), insertUser.getProvider_adress(), insertUser.getUserName(),  insertUser.getRole(),insertUser.getStatus());
 				insertUser.setUser_id((int) insertId.get("user_id"));
 	};
@@ -72,7 +72,7 @@ public class LoginUserDaoImple implements LoginUserDao {
 	@Override
 	public void updateAutoLoginKey(String AutoLoginKey ,  LoginUser updateUser) {
 		jdbcTemplate.update(
-				"UPDATE login_user SET auto_login = ? , update_date=now() WHERE user_id = ?",
+				"UPDATE login_user SET auto_login = ? , updated_date=now() WHERE user_id = ?",
 				AutoLoginKey , updateUser.getUser_id());
 	}
 	
