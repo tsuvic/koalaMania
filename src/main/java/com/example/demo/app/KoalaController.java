@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.entity.Koala;
-import com.example.demo.entity.KoalaForTree;
 import com.example.demo.entity.KoalaImage;
 import com.example.demo.entity.Zoo;
 import com.example.demo.service.KoalaService;
@@ -67,31 +66,32 @@ public class KoalaController {
 		return "signup";
 	}
 
-	@GetMapping("/search")
+	/*@GetMapping("/search")
 	public String displayAllKoala(Model model, @ModelAttribute KoalaSearchForm koalaSearchForm,
 			BindingResult bindingResult) {
 		List<Koala> list = koalaService.getAll();
 		for (Koala koala : list) {
 			Date birthDate = (Date) koala.getBirthdate();
 			koala.setStringBirthDate(disPlayDate(birthDate));
-
+	
 		}
 		model.addAttribute("koalaList", list);
 		model.addAttribute("searchResult", "コアラ一覧");
 		return "search";
-	}
+	}*/
 
-	@PostMapping("/search")
+	@GetMapping("/search")
 	public String displaySearchedKoara(Model model, @RequestParam(required = false, name = "keyword") String keyword,
 			@ModelAttribute KoalaSearchForm koalaSearchForm, BindingResult bindingResult) {
 		List<Koala> list = new ArrayList<Koala>();
 		if (keyword == null || keyword.replaceAll(" ", "　").split("　", 0).length == 0) {
 			list = koalaService.getAll();
+			model.addAttribute("searchResult", "コアラ一覧");
 		} else {
 			list = koalaService.findByKeyword(keyword);
+			model.addAttribute("searchResult", "検索結果");
 		}
 		model.addAttribute("koalaList", list);
-		model.addAttribute("searchResult", "検索結果");
 		for (Koala koala : list) {
 			Date birthDate = (Date) koala.getBirthdate();
 			koala.setStringBirthDate(disPlayDate(birthDate));

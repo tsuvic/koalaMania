@@ -95,7 +95,7 @@
 		<button class="btn btn-primary btn-sm" type="button"
 			th:onclick="'location.href = \'' +@{/edit/{koala_id}(koala_id=${detail.koala_id})} + '\''">編集</button>
 		<button class="btn btn-warning btn-sm" type="button"
-			onclick="location.href='/search'">一覧に戻る</button>
+			onclick="window.history.back(); return false;">戻る</button>
 	</div>
 </body>
 </html>
