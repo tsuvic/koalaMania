@@ -95,6 +95,9 @@ public class KoalaController {
 		for (Koala koala : list) {
 			Date birthDate = (Date) koala.getBirthdate();
 			koala.setStringBirthDate(disPlayDate(birthDate));
+			if(koala.getProfileImagePath() == null) {
+				koala.setProfileImagePath("/images/defaultKoala.png");
+			}
 		}
 		return "search";
 
@@ -141,6 +144,9 @@ public class KoalaController {
 		List<Koala> fatherList = koalaService.getFatherList(form.getKoala_id(), form.getBirthYear(),
 				form.getBirthMonth(), form.getBirthDay());
 		model.addAttribute("fatherList", fatherList);
+		if (form.getProfileImagePath() == null) {
+			form.setProfileImagePath("/images/defaultKoala.png");
+		}
 
 		return "insert";
 	}
@@ -189,6 +195,7 @@ public class KoalaController {
 		String stringDeathDate = disPlayDate(deathDate);
 		koala.setStringBirthDate(stringBirthDate);
 		koala.setStringDeathDate(stringDeathDate);
+		setDefaultKoalaProfileImage(koala);
 		model.addAttribute("detail", koala);
 		return "detail";
 	}
@@ -232,6 +239,7 @@ public class KoalaController {
 		model.addAttribute("fatherList", fatherList);
 		form.setMother_id(koala.getMother_id());
 		form.setFather_id(koala.getFather_id());
+		setDefaultKoalaProfileImage(koala);
 		form.setProfileImagePath(koala.getProfileImagePath());
 		return "insert";
 	}
@@ -270,6 +278,17 @@ public class KoalaController {
 	private String disPlayDate(Date date) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日");
 		return sdf.format(date);
+	}
+
+	/**
+	 * コアラにプロフィール画像がセットされていない場合、デフォルトの画像をセットする
+	 * 
+	 * @param Koala koala
+	*/
+	private void setDefaultKoalaProfileImage(Koala koala) {
+		if (koala.getProfileImagePath() == null) {
+			koala.setProfileImagePath("/images/defaultKoala.png");
+		}
 	}
 	
 	@GetMapping("/familytree")
