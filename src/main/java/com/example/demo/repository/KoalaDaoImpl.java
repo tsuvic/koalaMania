@@ -249,15 +249,14 @@ public class KoalaDaoImpl implements KoalaDao {
 	@Override
 	public KoalaForTree getKoalaForTree(int id) {
 		String sql = "SELECT koalakoala.profile_image_type, koalakoala.koala_id, koalakoala.name, koalakoala.sex, koalakoala.birthdate, koalakoala.is_alive, koalakoala.deathdate, koalakoala.mother, koalakoala.father, "
-				+ "koala_zoo_history.zoo_id, zoo_name, mother.name as mother_name, father.name as father_name, koalakoala.details, koalakoala.feature , koalaimage_id ,koalaImage.filetype, koalaProfileImage_id, koalaProfileImage.filetype as profilefiletype "
-				+ "FROM koala AS koalakoala LEFT OUTER JOIN koalaimage ON koalakoala.koala_id = koalaimage.koala_id "
+				+ "koala_zoo_history.zoo_id, zoo_name, mother.name as mother_name, father.name as father_name, koalakoala.details, koalakoala.feature "
+				+ "FROM koala AS koalakoala "
 				+ "LEFT OUTER JOIN koala_zoo_history ON koalakoala.koala_id = koala_zoo_history.koala_id "
 				+ "LEFT OUTER JOIN zoo ON koala_zoo_history.zoo_id = zoo.zoo_id "
 				+ "LEFT OUTER JOIN prefecture ON zoo.prefecture_id = prefecture.prefecture_id "
 				+ "LEFT OUTER JOIN koala AS mother on koalakoala.mother  = mother.koala_id "
 				+ "LEFT OUTER JOIN koala AS father on koalakoala.father  = father.koala_id "
-				+ "LEFT OUTER JOIN koalaProfileImage on koalakoala.koala_id = koalaProfileImage.koala_id "
-				+ "WHERE  koala_zoo_history.exit_date = '9999-01-01' AND koalakoala.koala_id = ?" ;
+				+ "WHERE  koala_zoo_history.exit_date = '9999-01-01' AND koalakoala.koala_id = ?";
 		
 		Map<String, Object> result = jdbcTemplate.queryForMap(sql, id);
 		KoalaForTree koala = new KoalaForTree();
