@@ -210,7 +210,6 @@ public class KoalaController {
 		List<Zoo> zooList = koalaService.getZooList();
 		model.addAttribute("zooList", zooList);
 		Koala koala = koalaService.findById(id);
-		model.addAttribute("koalaProfileImage", koala.getKoalaProfileImage());
 		form.setKoala_id(koala.getKoala_id());
 		form.setName(koala.getName());
 		form.setIs_alive(koala.getIs_alive());

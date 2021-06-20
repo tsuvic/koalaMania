@@ -35,7 +35,6 @@ import com.example.demo.entity.RelationForTree;
 import com.example.demo.entity.Zoo;
 import com.example.demo.repository.KoalaDao;
 import com.example.demo.repository.KoalaImageDao;
-import com.example.demo.repository.KoalaProfileImageDao;
 
 @Service
 public class KoalaServiceImpl implements KoalaService {
@@ -45,8 +44,7 @@ public class KoalaServiceImpl implements KoalaService {
 	private final CloudinaryService cloudinaryService;
 	
 	@Autowired
-	public KoalaServiceImpl(KoalaDao dao, KoalaImageDao koalaImageDao, CloudinaryService cloudinaryService,
-			KoalaProfileImageDao koalaProfileImageDao) {
+	public KoalaServiceImpl(KoalaDao dao, KoalaImageDao koalaImageDao, CloudinaryService cloudinaryService) {
 		this.dao = dao;
 		this.koalaImageDao = koalaImageDao;
 		this.cloudinaryService = cloudinaryService;
