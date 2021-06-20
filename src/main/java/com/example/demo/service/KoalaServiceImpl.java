@@ -361,6 +361,17 @@ public class KoalaServiceImpl implements KoalaService {
 		relationForTree.add(relationForTree2);
 		relationForTree.add(relationForTree3);
 		
+		//mainコアラと配偶者の関係性
+		//祖父母、両親は確実に表示するが、配偶者は存在する場合に表示する
+		int r = 3;
+		for (Entry<Object, List<KoalaForTree>> entry : childrenMap.entrySet()) {
+			KoalaForTree spouseKoala = dao.getKoalaForTree((int)entry.getKey());
+			relationForTree.add(new RelationForTree());
+			relationForTree.get(r).setSource(mainKoala);
+			relationForTree.get(r).setTarget(spouseKoala);
+			r++;
+		}
+		
 		//①と②をMapでフロントに返却
 		Map<String, Object> mapForTree = new HashMap<String, Object>();
 		mapForTree.put("koalaForTree", root);
