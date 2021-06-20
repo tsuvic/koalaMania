@@ -14,16 +14,20 @@
 		/*]]>*/	
 	
 	$.getJSON("/familytreeKoala", {id : requestParam}, function(json, textStatus, jqXHR){
-
+		
 		//オブジェクト全体の位置
 			//200 400 800 400 デフォルト値からオブジェクトが生成されるたびに引かれる数値
-			var margin = {top : 10,right : 10,bottom : 40,left : 10}, width = 1200, height = 600;	
-			var kx = function(d) {return d.x - 70;};
-			var ky = function(d) {return d.y - 30;};  //四角
+			var margin = {top : 30,right : 30,bottom : 30,left : 30}, width = 1400, height = 700;	
+		
+			var kx = function(d) {return d.x - 90;};
+			var ky = function(d) {return d.y - 40;};  //四角
 			//thie place the text x axis adjust this to center align the text
-			var tx = function(d) {return d.x - 0;};
+			var tx = function(d) {return d.x + 20;};
 			//thie place the text y axis adjust this to center align the text
 			var ty = function(d) {return d.y + 3;};
+			
+			var ix = function(d) {return d.x - 90;};
+			var iy = function(d) {return d.y - 35;};
 
 			//make an SVG g要素を中央に寄せることができない。そもそもg要素いらないのでは。
 			var svg = d3.select("#graph").append("svg")
@@ -32,7 +36,7 @@
 
 			//My JSON note the no_parent: true this ensures that the node will not be linked to its parent
 			//hidden: true ensures that the nodes is not visible.
-			var root =  JSON.parse(JSON.stringify(json.koalaForTree, ["name", "id", "hidden", "no_parent", "children"],10));
+			var root =  JSON.parse(JSON.stringify(json.koalaForTree, ["name", "id", "hidden", "no_parent", "children","profileImagePath"],10));
 			var allNodes = flatten(root); //sbilinglineメソッド専用の配列を用意
 			
 			//This maps the siblings together mapping uses the ID using the blue line
@@ -57,8 +61,8 @@
 			// Create the node rectangles
 			test.append("rect")
 				.attr("class", "node")
-				.attr("height", 60)
-				.attr("width", 140)
+				.attr("height", 80)
+				.attr("width", 180)
 				.attr("id", function(d) {return d.id;})
 				.attr("display", function(d) {
 				if (d.hidden) {return "none"} else {return ""};})
@@ -72,6 +76,12 @@
 			.attr("text-anchor", "middle")
 			.attr("id", function(d) {return d.id;});
 			
+			test.append("image")
+			.attr("xlink:href", function(d) {return d.profileImagePath;})
+			.attr("width", 70)
+			.attr("height", 70)
+			.attr("x", ix)
+			.attr("y", iy);
 
 			//This defines line between siblings. ノードの中にリンクの対象が存在するか
 			//allNodes配列のfilterメソッド　trueのオブジェクトのみ返す

@@ -32,6 +32,8 @@ public interface KoalaDao {
 	
 	KoalaForTree getKoalaForTree(int id);
 
-	List<KoalaForTree> getBrotherKoalaForTree(int mother_id, int father_id);
+	List<KoalaForTree> getBrotherKoalaForTree(int koala_id, int mother_id, int father_id);
+	
+	List<KoalaForTree> getChildrenKoalaForTree(int koala_id, int sex);
 	
 }
