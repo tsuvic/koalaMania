@@ -276,7 +276,7 @@ public class KoalaDaoImpl implements KoalaDao {
 		return koala;
 	}
 	@Override
-	public 	List<KoalaForTree> getBrotherKoalaForTree(int mother_id, int father_id){
+	public 	List<KoalaForTree> getBrotherKoalaForTree(int koala_id, int mother_id, int father_id){
 		String sql = "SELECT koalakoala.profile_image_type, koalakoala.koala_id, koalakoala.name, koalakoala.sex, koalakoala.birthdate, koalakoala.is_alive, koalakoala.deathdate, koalakoala.mother, koalakoala.father, "
 				+ "koala_zoo_history.zoo_id, zoo_name, mother.name as mother_name, father.name as father_name, koalakoala.details, koalakoala.feature , koalaimage_id ,koalaImage.filetype, koalaProfileImage_id, koalaProfileImage.filetype as profilefiletype "
 				+ "FROM koala AS koalakoala LEFT OUTER JOIN koalaimage ON koalakoala.koala_id = koalaimage.koala_id "
@@ -286,12 +286,13 @@ public class KoalaDaoImpl implements KoalaDao {
 				+ "LEFT OUTER JOIN koala AS mother on koalakoala.mother  = mother.koala_id "
 				+ "LEFT OUTER JOIN koala AS father on koalakoala.father  = father.koala_id "
 				+ "LEFT OUTER JOIN koalaProfileImage on koalakoala.koala_id = koalaProfileImage.koala_id "
-				+ "WHERE  koala_zoo_history.exit_date = '9999-01-01' AND koalakoala.mother = ? AND koalakoala.father = ? "
+				+ "WHERE  koala_zoo_history.exit_date = '9999-01-01' "
+				+ "AND NOT koalakoala.mother = 0 AND NOT koalakoala.father = 0 AND NOT koalakoala.koala_id = ? AND koalakoala.mother = ? AND koalakoala.father = ? "
 				+ "ORDER BY koalakoala.birthdate ASC";
 		
 		
 //		queryForListで実装予定
-		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, mother_id, father_id );
+		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, koala_id, mother_id, father_id );
 		List<KoalaForTree> brotherList = new ArrayList<KoalaForTree>();
 		
 		for (Map<String, Object> result : resultList) {

@@ -234,8 +234,8 @@ public class KoalaServiceImpl implements KoalaService {
 		}
 		
 		//家系図向けにコアラのフィールドの整理　上記の検索用に取得した値を書き換える　後でJSで0は削る
-//		mainKoala.setNo_parent(false);
-//		mainKoala.setHidden(false);
+		mainKoala.setNo_parent(false);
+		mainKoala.setHidden(false);
 		fatherKoala.setHidden(false);
 		fatherKoala.setNo_parent(false);
 		motherKoala.setHidden(false);
@@ -257,18 +257,16 @@ public class KoalaServiceImpl implements KoalaService {
 		KoalaForTree adjustmentForMother = new KoalaForTree();
 		KoalaForTree adjustmentForMain2 = new KoalaForTree();
 		
-//		koalaForTreeLayerMain.add(mainKoala); Brotherに含まれるため不要
+		koalaForTreeLayerMain.add(mainKoala);
 		
 		//兄弟
-		List<KoalaForTree> brotherKoalaList = dao.getBrotherKoalaForTree(mainKoala.getMother_id(), mainKoala.getFather_id());
+		List<KoalaForTree> brotherKoalaList = dao.getBrotherKoalaForTree(mainKoala.getId(), mainKoala.getMother_id(), mainKoala.getFather_id());
 		for (KoalaForTree brotherKoala : brotherKoalaList) {
 			brotherKoala.setNo_parent(false);
 			brotherKoala.setHidden(false);
 			koalaForTreeLayerMain.add(brotherKoala);			
 		}
 		adjustmentForMain.setChildren(koalaForTreeLayerMain);
-		
-		
 		
 		koalaForTreeLayerAdjustmentForMain.add(adjustmentForMain);	
 		koalaForTreeLayerFather.add(fatherKoala);
