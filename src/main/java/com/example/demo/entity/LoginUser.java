@@ -13,6 +13,19 @@ import lombok.EqualsAndHashCode;
 @Data
 public class LoginUser extends org.springframework.security.core.userdetails.User {
 	
+	public final String TABLE_NAME = "login_user";
+	
+	public final String COLUMN_USER_ID = "user_id";
+	public final String COLUMN_PROVIDER = "provider";
+	public final String COLUMN_PROVIDER_ID = "provider_id";
+	public final String COLUMN_PROVIDER_ADRESS = "provider_adress";
+	public final String COLUMN_USER_NAME = "user_name";
+	public final String COLUMN_PROFILE = "profile";
+	public final String COLUMN_ROLE = "role";
+	public final String COLUMN_STATUS = "status";
+	public final String COLUMN_AUTO_LOGIN = "auto_login";
+	public final String COLUMN_LOGIN_DATE = "login_date";
+	
 	private int user_id;
 	private String provider;
 	private long provider_id;
