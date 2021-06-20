@@ -19,9 +19,9 @@ public class KoalaForTree {
 	private boolean hidden = true;
 	private boolean no_parent = true;
 
-//	private String profileImagePath;
+	private String profileImagePath;
 //	private int koala_id;
-//	private int sex;
+	private int sex;
 //	private Date birthdate;
 //	private int is_alive;
 //	private Date deathdate;
