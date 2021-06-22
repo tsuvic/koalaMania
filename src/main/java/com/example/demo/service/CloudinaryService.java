@@ -9,6 +9,8 @@ public interface CloudinaryService {
 	
 	Map uploadKoalaProfileImage(File uploadFile,int koala_id);
 	
+	Map uploadUserProfileImage(File uploadFile,int user_id);
+	
 	List<String> deleteKoalaImage(String[] KoalaImageFiles,int koala_id);
 	
 	void  deleteDirs(int koala_id);

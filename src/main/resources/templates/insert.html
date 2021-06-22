@@ -200,7 +200,7 @@
 		<!--タイトル名を 変数式でControllerから取得 -->
 
 
-		<form th:action="@{/insert}" action="/insert" method="post" enctype="multipart/form-data"
+		<form th:action="@{/insert}" method="post" enctype="multipart/form-data"
 			th:object="${koalaInsertForm}"
 			onsubmit="return validateSubmit(this);">
 			<input th:unless="*{koala_id}==0" type="hidden" th:field="*{koala_id}">

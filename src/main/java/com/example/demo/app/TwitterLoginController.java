@@ -92,7 +92,6 @@ public class TwitterLoginController {
 		}
 		
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		System.out.println(((LoginUser) principal).getUser_id());
-		return "redirect:/";
+		return "redirect:/user/mypage/" + ((LoginUser) principal).getUser_id();
 	}
 }
