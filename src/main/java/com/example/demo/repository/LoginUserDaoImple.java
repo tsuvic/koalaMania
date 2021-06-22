@@ -24,7 +24,7 @@ public class LoginUserDaoImple implements LoginUserDao {
 	@Autowired
 	private CommonSqlUtil commonSqlUtil;
 	
-	private final  LoginUser ENTITY_LOGIN_USER = new LoginUser(dummyPassword, dummyPassword, ROLE_USER, 0, null, 0, null, null, 0);
+	private final  LoginUser ENTITY_LOGIN_USER = new LoginUser(dummyPassword, dummyPassword, ROLE_USER, 0, null, 0, null, null, 0 ,null,true);
 	
 	@Autowired
 	public LoginUserDaoImple(JdbcTemplate jdbcTemplate) {
@@ -37,7 +37,7 @@ public class LoginUserDaoImple implements LoginUserDao {
 		String sql = "SELECT * FROM  " + ENTITY_LOGIN_USER.TABLE_NAME + " WHERE " + ENTITY_LOGIN_USER.COLUMN_PROVIDER + " = ? AND " + ENTITY_LOGIN_USER.COLUMN_PROVIDER_ID + " = ?";
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql,PROVIDER_TWITTER,twitterUser.getId());
 		if(resultList.size() < 1) {
-			LoginUser checkLoginUser = new LoginUser(twitterUser.getName(), dummyPassword, ROLE_USER, 0, null, 0, null, null, 0);
+			LoginUser checkLoginUser = new LoginUser(twitterUser.getName(), dummyPassword, ROLE_USER, 0, null, 0, null, null, 0 , null ,true);
 			checkLoginUser.setProvider(PROVIDER_TWITTER);
 			checkLoginUser.setProvider_id(twitterUser.getId());
 			checkLoginUser.setProfile(null);
@@ -49,8 +49,7 @@ public class LoginUserDaoImple implements LoginUserDao {
 			
 			return checkLoginUser;
 		} else {
-			Map<String, Object> getUserMap = resultList.get(0);
-			LoginUser checkLoginUser = new LoginUser((String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_USER_NAME), dummyPassword, (String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_ROLE), (int) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_USER_ID), (String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_PROVIDER), (long) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_PROVIDER_ID), twitterUser.getScreenName(), (String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_PROFILE), (int) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_USER_ID));
+			LoginUser checkLoginUser = getLoginUser(resultList.get(0));
 			updateProviderAdressAndLoginDate(checkLoginUser);
 			
 			return checkLoginUser;
@@ -91,8 +90,8 @@ public class LoginUserDaoImple implements LoginUserDao {
 			
 			return null;
 		} else {
-			Map<String, Object> getUserMap = resultList.get(0);
-			LoginUser loginUser = new LoginUser((String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_USER_NAME), dummyPassword, (String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_ROLE), (int) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_USER_ID), (String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_PROVIDER), (long) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_PROVIDER_ID), (String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_PROVIDER_ADRESS), (String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_PROFILE), (int) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_STATUS));
+			LoginUser loginUser = getLoginUser(resultList.get(0));
+			
 			setLoginDate(loginUser);
 			
 			return loginUser;
@@ -105,6 +104,41 @@ public class LoginUserDaoImple implements LoginUserDao {
 		Map<String, Object> resultMap = jdbcTemplate.queryForMap(sql,updateUser.getUser_id());
 		Date loginDate = (Date) resultMap.get(ENTITY_LOGIN_USER.COLUMN_LOGIN_DATE);
 		updateUser.setLoginDate(loginDate);
+	}
+	
+	@Override
+	public LoginUser findById(int user_id) {
+		String sql = "SELECT * FROM  " + ENTITY_LOGIN_USER.TABLE_NAME + " WHERE " +  ENTITY_LOGIN_USER.COLUMN_USER_ID + " = ?";
+		Map<String, Object> resultMap = jdbcTemplate.queryForMap(sql,user_id);
+		
+		return getLoginUser(resultMap);
+	}
+	
+	@Override
+	public LoginUser updateMyPage(LoginUser loginUser) {
+		jdbcTemplate.update(
+				"UPDATE " + ENTITY_LOGIN_USER.TABLE_NAME + " SET " +  ENTITY_LOGIN_USER.COLUMN_USER_NAME + "=?," +  ENTITY_LOGIN_USER.COLUMN_PROFILE + "=?," +  ENTITY_LOGIN_USER.COLUMN_PROFILE_IMAGE_PATH + "=? ," +  ENTITY_LOGIN_USER.COLUMN_TWITTER_LINK_FLAG + "=? WHERE " +  ENTITY_LOGIN_USER.COLUMN_USER_ID + " = ?",
+				loginUser.getUserName(), loginUser.getProfile(), loginUser.getProfileImagePath() , loginUser.isTwitterLinkFlag() ,loginUser.getUser_id());
+		
+		commonSqlUtil.updateOnlyUpdateCommonColumn(ENTITY_LOGIN_USER.TABLE_NAME , ENTITY_LOGIN_USER.COLUMN_USER_ID , loginUser.getUser_id(),loginUser.getUser_id());
+		
+		return findById(loginUser.getUser_id());
+	}
+	
+	public LoginUser getLoginUser(Map<String,Object>getUserMap) {
+		
+		LoginUser loginUser = new LoginUser((String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_USER_NAME), 
+				dummyPassword, (String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_ROLE), 
+				(int) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_USER_ID), 
+				(String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_PROVIDER), 
+				(long) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_PROVIDER_ID), 
+				(String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_PROVIDER_ADRESS), 
+				(String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_PROFILE), 
+				(int) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_STATUS),
+				(String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_PROFILE_IMAGE_PATH),
+				(boolean) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_TWITTER_LINK_FLAG));
+		
+		return loginUser;
 	}
 
 }

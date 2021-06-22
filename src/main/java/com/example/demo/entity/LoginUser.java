@@ -23,6 +23,8 @@ public class LoginUser extends org.springframework.security.core.userdetails.Use
 	public final String COLUMN_PROFILE = "profile";
 	public final String COLUMN_ROLE = "role";
 	public final String COLUMN_STATUS = "status";
+	public final String COLUMN_PROFILE_IMAGE_PATH = "profileimagepath";
+	public final String COLUMN_TWITTER_LINK_FLAG = "twitterlinkflag";
 	public final String COLUMN_AUTO_LOGIN = "auto_login";
 	public final String COLUMN_LOGIN_DATE = "login_date";
 	
@@ -33,10 +35,14 @@ public class LoginUser extends org.springframework.security.core.userdetails.Use
 	private String provider_adress;
 	private String profile;
 	private String role;
+	private String profileImagePath;
+	private boolean twitterLinkFlag;
 	private int status;
 	private Date loginDate;
 	
-	public LoginUser(String userName, String password, String authorities,int user_id,String provider,long provider_id,String provider_adress,String profile,int status) {
+	public LoginUser(String userName, String password, String authorities,int user_id,
+			String provider,long provider_id,String provider_adress,String profile,
+			int status,String profileImagePath, boolean twitterLinkFlag) {
 		super(userName, password, AuthorityUtils.createAuthorityList(authorities));
 		// TODO 自動生成されたコンストラクター・スタブ
 		this.user_id = user_id;
@@ -47,6 +53,8 @@ public class LoginUser extends org.springframework.security.core.userdetails.Use
 		this.profile = profile;
 		this.role = authorities;
 		this.status = status;
+		this.profileImagePath = profileImagePath;
+		this.twitterLinkFlag = twitterLinkFlag;
 	}
 
 	public LoginUser(String username, String password, boolean enabled, boolean accountNonExpired,
