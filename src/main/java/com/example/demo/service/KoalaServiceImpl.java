@@ -132,13 +132,8 @@ public class KoalaServiceImpl implements KoalaService {
 			insertKoalaImage(insertKoala_id, form.getKoalaImage());
 		}
 
-//		プロフィール画像
-		boolean koalaProfileImageInsetFlag = false;
-		if (form.getKoalaProfileImageUpload() != null) {
-			koalaProfileImageInsetFlag = true;
-
-		}
-		if (koalaProfileImageInsetFlag) {
+		//プロフィール画像
+		if (!form.getKoalaProfileImageUpload().isEmpty()) {
 			insertKoalaProfileImage(insertKoala_id, form.getKoalaProfileImageUpload(), koala.getProfileImagePath());
 		}
 

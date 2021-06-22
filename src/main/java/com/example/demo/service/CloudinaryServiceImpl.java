@@ -102,10 +102,36 @@ public class CloudinaryServiceImpl implements CloudinaryService{
 		}
     }
     
+    @Override
+	public	Map uploadUserProfileImage(File uploadFile,int user_id) {
+    	
+	    String uploadCloudinaryFolderPath = getUserUploadDir(user_id) +"/profile/" ;
+	    Map optionMap = ObjectUtils.asMap("folder",uploadCloudinaryFolderPath);
+	    optionMap.put("use_filename", true);
+	    optionMap.put("unique_filename", false);
+	    try {
+	    	Cloudinary cloudinary = new Cloudinary("cloudinary://"+mApiKey+":"+mApiSecret+"@"+mCloudName);
+	    	Map resultMap = cloudinary.uploader().upload(uploadFile, optionMap);
+			return resultMap;
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+			return null;
+		}
+	}
+    
     private String getkoalaUploadDir(int koala_id) {
 		// 写真を格納するファイルのパス
         StringBuffer dirPath = new StringBuffer("koala").append("/")
         								.append(String.valueOf(koala_id));
+        
+        return dirPath.toString();
+    }
+    
+    private String getUserUploadDir(int user_id) {
+		// 写真を格納するファイルのパス
+        StringBuffer dirPath = new StringBuffer("user").append("/")
+        								.append(String.valueOf(user_id));
         
         return dirPath.toString();
     }

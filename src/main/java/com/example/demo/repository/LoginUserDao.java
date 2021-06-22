@@ -14,4 +14,8 @@ public interface LoginUserDao {
 	LoginUser checkAutoLoginUser(String AutoLoginKey);
 	
 	void setLoginDate(LoginUser updateUser);
+	
+	LoginUser findById(int user_id);
+	
+	LoginUser updateMyPage(LoginUser loginUser);
 }
