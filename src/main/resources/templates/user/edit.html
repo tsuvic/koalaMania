@@ -13,13 +13,23 @@
 	integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
 	crossorigin="anonymous">
 
-
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 
 <!-- Custom styles for this template -->
 <link href="/css/starter-template.css" rel="stylesheet">
 
+<script type="text/javascript">
+$(function() {
+		$('#submitButton').click(function(e) {
+			$('form').submit();
+			$(this).prop("disabled", true);
+			$(this).text('保存中....');
+		});
+	})
+</script>
 
 <title th:text="${title}"></title>
+
 </head>
 
 <body>
@@ -58,7 +68,7 @@
 					th:errorclass="is-invalid"></textarea></td>
 		</tr>
 	</table>
-	<button class="btn btn-outline-primary btn-sm" type="submit">保存</button>
+	<button class="btn btn-outline-primary btn-sm" id = "submitButton" type="submit">保存</button>
 	<button class="btn btn-primary btn-sm" type="button"
 			th:onclick="'location.href = \'' + @{/user/mypage/{user_id}(user_id=*{user_id})} + '\''">マイページに戻る</button>
 	</form>
