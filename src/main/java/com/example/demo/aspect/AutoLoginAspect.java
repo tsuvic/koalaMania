@@ -33,7 +33,7 @@ public class AutoLoginAspect {
 		this.twitterLoginService = twitterLoginService;
 	}
 	
-	@Before("within(com.example.demo.app.KoalaController)")
+	@Before("within(com.example.demo.app.KoalaController) or within(com.example.demo.app.UserController)")
 	public void CheckAutoLoginAspect(){
 		javax.servlet.http.Cookie[] cookies =  request.getCookies();
 		String autoLogin = null;
@@ -46,7 +46,8 @@ public class AutoLoginAspect {
             }
 		}
 		
-		if((SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) && autoLogin != null) {
+		if((SecurityContextHolder.getContext().getAuthentication() 
+				instanceof AnonymousAuthenticationToken) && autoLogin != null) {
 			LoginUser loginUser  = loginUserDao.checkAutoLoginUser(DigestUtils.sha3_256Hex(autoLogin));
 			if(loginUser != null) {
 				twitterLoginService.setCookie(loginUser, response,request);
