@@ -1,6 +1,7 @@
 package com.example.demo.app;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +33,9 @@ public class UserController {
 			@ModelAttribute UserForm form) {
 		
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if(((LoginUser) principal).getUser_id() == user_id) {
+		if(!(SecurityContextHolder.getContext().getAuthentication() 
+				instanceof AnonymousAuthenticationToken) 
+				&& ((LoginUser) principal).getUser_id() == user_id) {
 			form.setUser_id(user_id);
 			form.setName(((LoginUser) principal).getUserName());
 			form.setProfile(((LoginUser) principal).getProfile());
@@ -60,7 +63,9 @@ public class UserController {
 			@ModelAttribute UserForm form) {
 		
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if(((LoginUser) principal).getUser_id() == user_id) {
+		if(!(SecurityContextHolder.getContext().getAuthentication() 
+				instanceof AnonymousAuthenticationToken) 
+				&& ((LoginUser) principal).getUser_id() == user_id) {
 			form.setUser_id(user_id);
 			form.setName(((LoginUser) principal).getUserName());
 			form.setProfile(((LoginUser) principal).getProfile());
