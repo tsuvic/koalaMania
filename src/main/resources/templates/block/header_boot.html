@@ -30,7 +30,12 @@
 					</a>
 				</div>
 				<div sec:authorize="isAuthenticated()" class="d-flex flex-row">
-					<a th:href="@{/user/mypage/{id}(id = ${#authentication.principal.user_id})}"><img th:src="${#authentication.principal.profileImagePath}" height="40" alt="マイページ"></a>
+					<a th:href="@{/user/mypage/{id}(id = ${#authentication.principal.user_id})}">
+						<img th:if="${#strings.isEmpty(#authentication.principal.user_id)}" 
+						th:src="${#authentication.principal.profileImagePath}" height="40" alt="マイページ">
+						<img th:unless="${#strings.isEmpty(#authentication.principal.user_id)}" 
+						th:src="@{/images/user/profile/defaultUser.png}" height="40" alt="マイページ">
+					</a>
 					<form method="post" th:action="@{/logout}">
 						<button class="btn btn-md btn-success mx-2" type="submit">ログアウト</button>
 					</form>
