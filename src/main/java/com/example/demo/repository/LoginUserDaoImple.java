@@ -20,6 +20,9 @@ public class LoginUserDaoImple implements LoginUserDao {
 	private final String dummyPassword = "password";
 	private final String ROLE_USER = "ROLE_USER";
 	private final String ROLE_ADMIN = "ROLE_ADMIN";
+	private final boolean DEFAULT_TWITTER_LINK_FLAG = true;
+	
+	
 	
 	@Autowired
 	private CommonSqlUtil commonSqlUtil;
@@ -59,8 +62,17 @@ public class LoginUserDaoImple implements LoginUserDao {
 	@Override
 	public void insertUser(LoginUser insertUser) {
 		Map<String, Object> insertId = jdbcTemplate.queryForMap(
-				"INSERT INTO " + ENTITY_LOGIN_USER.TABLE_NAME + "(" + ENTITY_LOGIN_USER.COLUMN_PROVIDER + "," + ENTITY_LOGIN_USER.COLUMN_PROVIDER_ID + "," +  ENTITY_LOGIN_USER.COLUMN_PROVIDER_ADRESS + ", " +  ENTITY_LOGIN_USER.COLUMN_USER_NAME + ", " +  ENTITY_LOGIN_USER.COLUMN_ROLE + ", " +  ENTITY_LOGIN_USER.COLUMN_STATUS + ", " +  ENTITY_LOGIN_USER.COLUMN_LOGIN_DATE + ") VALUES(?, ?, ?, ?, ? , ?, now()) RETURNING " +  ENTITY_LOGIN_USER.COLUMN_USER_ID,
-				PROVIDER_TWITTER, insertUser.getProvider_id(), insertUser.getProvider_adress(), insertUser.getUserName(),  insertUser.getRole(),insertUser.getStatus());
+				"INSERT INTO " + ENTITY_LOGIN_USER.TABLE_NAME + "(" + ENTITY_LOGIN_USER.COLUMN_PROVIDER 
+				+ "," + ENTITY_LOGIN_USER.COLUMN_PROVIDER_ID + "," 
+				+  ENTITY_LOGIN_USER.COLUMN_PROVIDER_ADRESS + ", " 
+				+  ENTITY_LOGIN_USER.COLUMN_USER_NAME + ", " 
+				+  ENTITY_LOGIN_USER.COLUMN_ROLE + ", " 
+				+  ENTITY_LOGIN_USER.COLUMN_STATUS + ", "
+				+  ENTITY_LOGIN_USER.COLUMN_TWITTER_LINK_FLAG + ", " 
+				+  ENTITY_LOGIN_USER.COLUMN_LOGIN_DATE + ") "
+						+ "VALUES(?, ?, ?, ?, ? , ?, ?,now()) RETURNING " +  ENTITY_LOGIN_USER.COLUMN_USER_ID,
+				PROVIDER_TWITTER, insertUser.getProvider_id(), insertUser.getProvider_adress(), 
+				insertUser.getUserName(),  insertUser.getRole(),insertUser.getStatus() ,DEFAULT_TWITTER_LINK_FLAG);
 				insertUser.setUser_id((int) insertId.get(ENTITY_LOGIN_USER.COLUMN_USER_ID));
 				commonSqlUtil.updateAllCommonColumn(ENTITY_LOGIN_USER.TABLE_NAME,ENTITY_LOGIN_USER.COLUMN_USER_ID ,(int) insertId.get(ENTITY_LOGIN_USER.COLUMN_USER_ID),(int) insertId.get(ENTITY_LOGIN_USER.COLUMN_USER_ID));
 	}
