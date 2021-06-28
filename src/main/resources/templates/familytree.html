@@ -22,13 +22,16 @@
 			var kx = function(d) {return d.x - 90;};
 			var ky = function(d) {return d.y - 40;};  //四角
 			//thie place the text x axis adjust this to center align the text
-			var tx = function(d) {return d.x + 20;};
+			var tx = function(d) {return d.x + 5;};
 			//thie place the text y axis adjust this to center align the text
 			var ty = function(d) {return d.y + 3;};
 			
 			var ix = function(d) {return d.x - 90;};
 			var iy = function(d) {return d.y - 35;};
 
+			var iix = function(d) {return d.x - 18;};
+			var iiy = function(d) {return d.y - 10;};
+			
 			//make an SVG g要素を中央に寄せることができない。そもそもg要素いらないのでは。
 			var svg = d3.select("#graph").append("svg")
 			.attr("width",width + margin.left + margin.right)
@@ -36,7 +39,7 @@
 
 			//My JSON note the no_parent: true this ensures that the node will not be linked to its parent
 			//hidden: true ensures that the nodes is not visible.
-			var root =  JSON.parse(JSON.stringify(json.koalaForTree, ["name", "id", "hidden", "no_parent", "children","profileImagePath"],10));
+			var root =  JSON.parse(JSON.stringify(json.koalaForTree, ["name", "id", "hidden", "no_parent", "children","profileImagePath","sex"],10));
 			var allNodes = flatten(root); //sbilinglineメソッド専用の配列を用意
 			
 			//This maps the siblings together mapping uses the ID using the blue line
@@ -73,7 +76,6 @@
 			.text(function(d) {return d.name;})
 			.attr("x", tx)
 			.attr("y", ty)
-			.attr("text-anchor", "middle")
 			.attr("id", function(d) {return d.id;});
 			
 			test.append("image")
@@ -82,6 +84,17 @@
 			.attr("height", 70)
 			.attr("x", ix)
 			.attr("y", iy);
+
+			test.append("image")
+			.attr("xlink:href", function(d){
+				if(d.sex === 1){return "../images/male.png"} 
+				else if (d.sex === 2){return "../images/female.png"}
+				else if (d.sex === 0 | d.sex === 9) {return  "../images/question.png"}
+				else{return ""};})
+			.attr("width", 20)
+			.attr("height", 20)
+			.attr("x", iix)
+			.attr("y", iiy);
 
 			//This defines line between siblings. ノードの中にリンクの対象が存在するか
 			//allNodes配列のfilterメソッド　trueのオブジェクトのみ返す

@@ -330,7 +330,7 @@ public class KoalaDaoImpl implements KoalaDao {
 
 		brother.setProfileImagePath((String) result.get(ENTITY_KOALA.COLUMN_PROFILE_IMAGE_TYPE));
 //		mainKoala.setKoala_id((int) resultList.get(""+ ENTITY_KOALA.COLUMN_KOALA_ID +""));
-//		mainKoala.setSex((int) result.get(ENTITY_KOALA.COLUMN_SEX));
+		brother.setSex((int) result.get(ENTITY_KOALA.COLUMN_SEX));
 //		mainKoala.setBirthdate((Date) result.get(ENTITY_KOALA.COLUMN_BIRTHDATE));
 //		mainKoala.setIs_alive((int) result.get(ENTITY_KOALA.COLUMN_IS_ALIVE));
 //		mainKoala.setDeathdate((Date) result.get(ENTITY_KOALA.COLUMN_DEATHDATE));
@@ -387,7 +387,7 @@ public class KoalaDaoImpl implements KoalaDao {
 
 			children.setProfileImagePath((String) result.get(ENTITY_KOALA.COLUMN_PROFILE_IMAGE_TYPE));
 //			mainKoala.setKoala_id((int) resultList.get(""+ ENTITY_KOALA.COLUMN_KOALA_ID +""));
-//			mainKoala.setSex((int) result.get(ENTITY_KOALA.COLUMN_SEX));
+			children.setSex((int) result.get(ENTITY_KOALA.COLUMN_SEX));
 //			mainKoala.setBirthdate((Date) result.get(ENTITY_KOALA.COLUMN_BIRTHDATE));
 //			mainKoala.setIs_alive((int) result.get(ENTITY_KOALA.COLUMN_IS_ALIVE));
 //			mainKoala.setDeathdate((Date) result.get(ENTITY_KOALA.COLUMN_DEATHDATE));

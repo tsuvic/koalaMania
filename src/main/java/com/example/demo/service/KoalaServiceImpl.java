@@ -242,6 +242,51 @@ public class KoalaServiceImpl implements KoalaService {
 		maternalGrandMother.setHidden(false);
 		maternalGrandFather.setHidden(false);
 		
+		//プロフィール画像の有無の確認（ベタ書き。今後共通化する）
+		if(mainKoala.getProfileImagePath() == null){
+				mainKoala.setProfileImagePath("/images/defaultKoala.png");
+			}
+		if(fatherKoala.getProfileImagePath() == null){
+			fatherKoala.setProfileImagePath("/images/defaultKoala.png");
+		}
+		if(motherKoala.getProfileImagePath() == null){
+			motherKoala.setProfileImagePath("/images/defaultKoala.png");
+		}
+		if(paternalGrandMother.getProfileImagePath() == null){
+			paternalGrandMother.setProfileImagePath("/images/defaultKoala.png");
+		}
+		if(paternalGrandFather.getProfileImagePath() == null){
+			paternalGrandFather.setProfileImagePath("/images/defaultKoala.png");
+		}
+		if(maternalGrandMother.getProfileImagePath() == null){
+			maternalGrandMother.setProfileImagePath("/images/defaultKoala.png");
+		}
+		if(maternalGrandFather.getProfileImagePath() == null){
+			maternalGrandFather.setProfileImagePath("/images/defaultKoala.png");
+		}
+		//性別の確認（ベタ書き。今後共通化する）
+		if(mainKoala.getSex() == 99){
+			mainKoala.setSex(0);
+		}
+	if(fatherKoala.getSex() == 99){
+		fatherKoala.setSex(1);
+	}
+	if(motherKoala.getSex() == 99){
+		motherKoala.setSex(2);
+	}
+	if(paternalGrandMother.getSex() == 99){
+		paternalGrandMother.setSex(2);
+	}
+	if(paternalGrandFather.getSex() == 99){
+		paternalGrandFather.setSex(1);
+	}
+	if(maternalGrandMother.getSex() == 99){
+		maternalGrandMother.setSex(2);
+	}
+	if(maternalGrandFather.getSex() == 99){
+		maternalGrandFather.setSex(1);
+	}
+		
 		//①コアラの親子関係の整理
 		List<KoalaForTree> koalaForTreeLayerMain = new ArrayList<KoalaForTree>();
 		List<KoalaForTree> koalaForTreeLayerFather = new ArrayList<KoalaForTree>();
@@ -257,61 +302,54 @@ public class KoalaServiceImpl implements KoalaService {
 		
 		koalaForTreeLayerMain.add(mainKoala);
 		
-		//配偶者
-		//子供
+		//メインコアラの配偶者（複数の可能性あり）とその子供達
 		int sex = mainKoala.getSex(); //メインのコアラが父親か母親か
-		List<KoalaForTree> childrenList = new ArrayList<KoalaForTree>();
-		List<KoalaForTree> spouseList = new ArrayList<KoalaForTree>();
-		Map<Integer,  KoalaForTree> spouseMap = new HashMap<Integer,  KoalaForTree>();
-		List<KoalaForTree> childrenListRaw = dao.getChildrenKoalaForTree(mainKoala.getId(), sex);
+		List<KoalaForTree> childrenList = dao.getChildrenKoalaForTree(mainKoala.getId(), sex); 
+//		List<KoalaForTree> spouseList = new ArrayList<KoalaForTree>();
+//		Map<Integer,  KoalaForTree> spouseMap = new HashMap<Integer,  KoalaForTree>();
 		Map<Object, List<KoalaForTree>> childrenMap;
 		
-		for (KoalaForTree child : childrenListRaw ) {
+		for (KoalaForTree child : childrenList) {
 			child.setNo_parent(false);
 			child.setHidden(false);
-			childrenList.add(child);
+			if(child.getProfileImagePath() == null){
+				child.setProfileImagePath("/images/defaultKoala.png");
+			}
 		}
 		
+		//メインのコアラの配偶者の性別のIDを用いてリストからグループ化した子供マップに変換
 		if (sex == 1) {
 			childrenMap = childrenList.stream().collect(Collectors.groupingBy(i -> i.getMother_id()));
 		} else {
 			childrenMap = childrenList.stream().collect(Collectors.groupingBy(i -> i.getFather_id()));
 		}
 		
-//		配偶者の取得
+//		子供マップから配偶者（複数の可能性あり）を取得 & 両親のレイヤーに詰め込身を行う
 		int h = 1;
 		for (Entry<Object, List<KoalaForTree>> entry : childrenMap.entrySet()) {
 			KoalaForTree spouseKoala = dao.getKoalaForTree((int)entry.getKey());
 			spouseKoala.setHidden(false);
-//			spouseList.add(new KoalaForTree());
-//			spouseList.add(spouseKoala);
+			if(spouseKoala.getProfileImagePath() == null){
+				mainKoala.setProfileImagePath("/images/defaultKoala.png");
+			}
 			koalaForTreeLayerMain.add(	new KoalaForTree());
-			koalaForTreeLayerMain.get(h).setChildren(childrenMap.get((int)entry.getKey()));
+			if(maternalGrandFather.getProfileImagePath() == null){
+				mainKoala.setProfileImagePath("/images/defaultKoala.png");
+			}
+			koalaForTreeLayerMain.get(h).setChildren(childrenMap.get((int)entry.getKey())); //調整用のnewしたKoalaForTreeに子供リストをセット
 			koalaForTreeLayerMain.add(spouseKoala);
-			h++;
-			h++;
-		}
-		System.out.println(koalaForTreeLayerMain);
-		
-		
-		
-		//ゴミ
-		
-		//リスト型をマップ型へ変換 keyはid
-		if (sex == 1) {
-			spouseMap = spouseList.stream().collect(Collectors.toMap(KoalaForTree::getMother_id, i -> i));
-		} else {
-			spouseMap = spouseList.stream().collect(Collectors.toMap(KoalaForTree::getFather_id, i -> i));
+			h += 2;
 		}
 
-		System.out.println(spouseList);
-		System.out.println(spouseMap);
-		//配偶者取得完了 Map
+//ゴミ。テスト用。リスト型をマップ型へ変換 keyはid
+//		if (sex == 1) {
+//			spouseMap = spouseList.stream().collect(Collectors.toMap(KoalaForTree::getMother_id, i -> i));
+//		} else {
+//			spouseMap = spouseList.stream().collect(Collectors.toMap(KoalaForTree::getFather_id, i -> i));
+//		}
+
 		
-		
-//			koalaForTreeLayerChildren.add();
-		
-		//兄弟
+		//メインコアラの兄弟達
 		List<KoalaForTree> brotherKoalaList = dao.getBrotherKoalaForTree(mainKoala.getId(), mainKoala.getMother_id(), mainKoala.getFather_id());
 		for (KoalaForTree brotherKoala : brotherKoalaList) {
 			brotherKoala.setNo_parent(false);
