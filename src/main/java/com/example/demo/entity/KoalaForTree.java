@@ -21,7 +21,7 @@ public class KoalaForTree {
 
 	private String profileImagePath;
 //	private int koala_id;
-	private int sex;
+	private int sex = 99;
 //	private Date birthdate;
 //	private int is_alive;
 //	private Date deathdate;
