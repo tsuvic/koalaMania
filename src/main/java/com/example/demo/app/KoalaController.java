@@ -209,6 +209,7 @@ public class KoalaController {
 		model.addAttribute("cloudinaryImageUrl", cloudinaryImageUrl);
 		List<Zoo> zooList = koalaService.getZooList();
 		model.addAttribute("zooList", zooList);
+		
 		Koala koala = koalaService.findById(id);
 		form.setKoala_id(koala.getKoala_id());
 		form.setName(koala.getName());

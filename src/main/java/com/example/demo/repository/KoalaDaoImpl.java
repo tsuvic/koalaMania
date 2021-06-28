@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.SystemPropertyUtils;
 
 import com.example.demo.entity.Koala;
 import com.example.demo.entity.KoalaForTree;
@@ -53,6 +54,8 @@ public class KoalaDaoImpl implements KoalaDao {
 	String AsFatherKoala = "fatherKoala";
 	String AsMotherName = "mother_name";
 	String AsFatherName = "father_name";
+	String AsMotherId = "mother_id";
+	String AsFatherId = "father_id";
 	String dummyDate = "9999-01-01";
 	String man = "1";
 	String woman = "2";
@@ -206,7 +209,8 @@ public class KoalaDaoImpl implements KoalaDao {
 	@Override
 	public Koala findById(int id) {
 		String sql = "SELECT "+ AsMainKoala +"."+ ENTITY_KOALA.COLUMN_PROFILE_IMAGE_TYPE +", "+ AsMainKoala +"."+ ENTITY_KOALA.COLUMN_KOALA_ID +", "+ AsMainKoala +"."+ ENTITY_KOALA.COLUMN_NAME +", "+ AsMainKoala +"."+ ENTITY_KOALA.COLUMN_SEX +", "+ AsMainKoala +"."+ ENTITY_KOALA.COLUMN_BIRTHDATE +", "+ AsMainKoala +"."+ ENTITY_KOALA.COLUMN_IS_ALIVE +", "+ AsMainKoala +"."+ ENTITY_KOALA.COLUMN_DEATHDATE +", "
-				+ ""+ ENTITY_KOALA_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_KOALA_ZOO_HISTORY.COLUMN_ZOO_ID +", "+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "+ AsMotherKoala +"."+ ENTITY_KOALA.COLUMN_NAME +" as "+ AsMotherName +", "+ AsFatherKoala +"."+ ENTITY_KOALA.COLUMN_NAME +" as "+ AsFatherName +", "+ AsMainKoala +"."+ ENTITY_KOALA.COLUMN_DETAILS +", "+ AsMainKoala +"."+ ENTITY_KOALA.COLUMN_FEATURE +" , "+ ENTITY_KOALA_IMAGE.COLUMN_KOALA_IMAGE_ID +" ,"+ ENTITY_KOALA_IMAGE.COLUMN_FILETYPE +" "
+				+ ""+ ENTITY_KOALA_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_KOALA_ZOO_HISTORY.COLUMN_ZOO_ID +", "+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "+ AsMotherKoala +"."+ ENTITY_KOALA.COLUMN_NAME +" as "+ AsMotherName +", "+ AsFatherKoala +"."+ ENTITY_KOALA.COLUMN_NAME +" as "+ AsFatherName +", "+ AsMainKoala +"."+ ENTITY_KOALA.COLUMN_DETAILS +", "+ AsMainKoala +"."+ ENTITY_KOALA.COLUMN_FEATURE +" , "+ ENTITY_KOALA_IMAGE.COLUMN_KOALA_IMAGE_ID +" ,"+ ENTITY_KOALA_IMAGE.COLUMN_FILETYPE +", "
+				+ ""+ AsMainKoala +"."+ ENTITY_KOALA.COLUMN_MOTHER +", "+ AsMainKoala +"."+ ENTITY_KOALA.COLUMN_FATHER +" "
 				+ "FROM "+ ENTITY_KOALA.TABLE_NAME +" AS "+ AsMainKoala +" LEFT OUTER JOIN "+ ENTITY_KOALA_IMAGE.TABLE_NAME +" ON "+ AsMainKoala +"."+ ENTITY_KOALA.COLUMN_KOALA_ID +" = "+ ENTITY_KOALA_IMAGE.TABLE_NAME +"."+ ENTITY_KOALA.COLUMN_KOALA_ID +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_KOALA_ZOO_HISTORY.TABLE_NAME  +" ON "+ AsMainKoala +"."+ ENTITY_KOALA.COLUMN_KOALA_ID +" = "+ ENTITY_KOALA_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_KOALA.COLUMN_KOALA_ID +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME +" ON "+ ENTITY_KOALA_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_KOALA_ZOO_HISTORY.COLUMN_ZOO_ID +" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
@@ -231,8 +235,9 @@ public class KoalaDaoImpl implements KoalaDao {
 		koala.setFather((String) resultList.get(0).get(AsFatherName));
 		koala.setDetails((String) resultList.get(0).get(ENTITY_KOALA.COLUMN_DETAILS));
 		koala.setFeature((String) resultList.get(0).get(ENTITY_KOALA.COLUMN_FEATURE));
-
-
+		koala.setMother_id((int) resultList.get(0).get(ENTITY_KOALA.COLUMN_MOTHER ));
+		koala.setFather_id((int) resultList.get(0).get(ENTITY_KOALA.COLUMN_FATHER ));
+		
 		if (resultList.get(0).get(ENTITY_KOALA_IMAGE.COLUMN_KOALA_IMAGE_ID) != null) {
 
 			List<KoalaImage> koalaImageList = new ArrayList<KoalaImage>();
