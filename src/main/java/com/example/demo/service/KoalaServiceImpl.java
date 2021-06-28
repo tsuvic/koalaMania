@@ -64,7 +64,10 @@ public class KoalaServiceImpl implements KoalaService {
 	public List<Koala> getMotherList(int koala_id, String birthYear, String birthMonth, String birthDay) {
 		Date birthDate = getDate(birthYear, birthMonth, birthDay);
 		List<Koala> motherList = dao.getMotherList(koala_id, birthDate);
-
+		Koala unknownForInsertForm = new Koala();
+		unknownForInsertForm.setName("不明");
+		unknownForInsertForm.setKoala_id(0);
+		motherList.add(unknownForInsertForm);
 		return motherList;
 	}
 
@@ -72,7 +75,10 @@ public class KoalaServiceImpl implements KoalaService {
 	public List<Koala> getFatherList(int koala_id, String birthYear, String birthMonth, String birthDay) {
 		Date birthDate = getDate(birthYear, birthMonth, birthDay);
 		List<Koala> fatherList = dao.getFatherList(koala_id, birthDate);
-
+		Koala unknownForInsertForm = new Koala();
+		unknownForInsertForm.setName("不明");
+		unknownForInsertForm.setKoala_id(0);
+		fatherList.add(unknownForInsertForm);
 		return fatherList;
 	}
 
