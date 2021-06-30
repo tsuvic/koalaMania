@@ -22,7 +22,7 @@
 			var kx = function(d) {return d.x - 90;};
 			var ky = function(d) {return d.y - 40;};  //四角
 			//thie place the text x axis adjust this to center align the text
-			var tx = function(d) {return d.x + 5;};
+			var tx = function(d) {return d.x + 10;};
 			//thie place the text y axis adjust this to center align the text
 			var ty = function(d) {return d.y + 3;};
 			
@@ -72,7 +72,9 @@
 				.attr("x", kx).attr("y", ky);
 			
 			// Create the node text
-			test.append("text")
+			const a = test.append("a").attr("href", function(d) {return "/familytree?id=" + d.id;});
+			
+			a.append("text")
 			.text(function(d) {return d.name;})
 			.attr("x", tx)
 			.attr("y", ty)
