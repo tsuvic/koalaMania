@@ -356,11 +356,14 @@ public class KoalaServiceImpl implements KoalaService {
 
 		
 		//メインコアラの兄弟達
+		
+		if (mainKoala.getMother_id() != 0 || mainKoala.getFather_id() != 0) {
 		List<KoalaForTree> brotherKoalaList = dao.getBrotherKoalaForTree(mainKoala.getId(), mainKoala.getMother_id(), mainKoala.getFather_id());
 		for (KoalaForTree brotherKoala : brotherKoalaList) {
 			brotherKoala.setNo_parent(false);
 			brotherKoala.setHidden(false);
 			koalaForTreeLayerMain.add(brotherKoala);			
+		}
 		}
 		
 		adjustmentForMain.setChildren(koalaForTreeLayerMain);
