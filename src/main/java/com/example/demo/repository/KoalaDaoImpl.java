@@ -135,7 +135,7 @@ public class KoalaDaoImpl implements KoalaDao {
 
 		for (int i = 0; i < splitkeyWord.length; ++i) {
 			sql += "AND ("+ ENTITY_KOALA.TABLE_NAME + "."+ ENTITY_KOALA.COLUMN_NAME +" like '%" + splitkeyWord[i] + "%' OR "+ ENTITY_ZOO.COLUMN_ZOO_NAME +" like '%" + splitkeyWord[i]
-					+ "%' OR "+ ENTITY_KOALA.COLUMN_MOTHER +"."+ ENTITY_KOALA.COLUMN_NAME +" like '%" + splitkeyWord[i] + "%' OR "+ AsFatherKoala +"."+ ENTITY_KOALA.COLUMN_NAME +" like '%" + splitkeyWord[i]
+					+ "%' OR "+ AsMotherKoala +"."+ ENTITY_KOALA.COLUMN_NAME +" like '%" + splitkeyWord[i] + "%' OR "+ AsFatherKoala +"."+ ENTITY_KOALA.COLUMN_NAME +" like '%" + splitkeyWord[i]
 					+ "%')";
 		}
 
