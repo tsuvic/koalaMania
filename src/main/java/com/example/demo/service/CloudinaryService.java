@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 public interface CloudinaryService {
-	Map uploadKoalaImage(File uploadFile,int koala_id);
+	Map uploadAnimalImage(File uploadFile,int animal_id);
 	
-	Map uploadKoalaProfileImage(File uploadFile,int koala_id);
+	Map uploadAnimalProfileImage(File uploadFile,int animal_id);
 	
 	Map uploadUserProfileImage(File uploadFile,int user_id);
 	
-	List<String> deleteKoalaImage(String[] KoalaImageFiles,int koala_id);
+	List<String> deleteAnimalImage(String[] AnimalImageFiles,int animal_id);
 	
-	void  deleteDirs(int koala_id);
+	void  deleteDirs(int animal_id);
 }

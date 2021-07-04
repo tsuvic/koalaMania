@@ -4,7 +4,7 @@ com:
     api_secret: ${CLOUD_API_SECRET}
     cloud_name: ${CLOUD_NAME}
     image:
-      url: https://res.cloudinary.com/honx7tf4c/image/upload/koala/
+      url: https://res.cloudinary.com/honx7tf4c/image/upload/animal/
 
 server:
   port: ${PORT:8080}

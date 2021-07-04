@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class KoalaSearchForm {
+public class AnimalSearchForm {
 
 	@NotBlank
 	private String keyword;

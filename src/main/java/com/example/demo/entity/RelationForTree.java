@@ -10,7 +10,7 @@ public class RelationForTree {
 		// TODO Auto-generated constructor stub
 	}
 	
-	private KoalaForTree source;
-	private KoalaForTree target;
+	private AnimalForTree source;
+	private AnimalForTree target;
 	
 }

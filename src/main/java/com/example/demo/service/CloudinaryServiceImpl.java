@@ -28,8 +28,8 @@ public class CloudinaryServiceImpl implements CloudinaryService{
     String mApiSecret;
     
     @Override
-    public Map uploadKoalaImage(File uploadFile,int koala_id) {
-        String uploadCloudinaryFolderPath = getkoalaUploadDir(koala_id) +"/";
+    public Map uploadAnimalImage(File uploadFile,int animal_id) {
+        String uploadCloudinaryFolderPath = getanimalUploadDir(animal_id) +"/";
         Map optionMap = ObjectUtils.asMap("folder",uploadCloudinaryFolderPath);
         optionMap.put("use_filename", true);
         optionMap.put("unique_filename", false);
@@ -44,8 +44,8 @@ public class CloudinaryServiceImpl implements CloudinaryService{
 		}
     }
     @Override
-    public Map uploadKoalaProfileImage(File uploadFile,int koala_id) {
-        String uploadCloudinaryFolderPath = getkoalaUploadDir(koala_id) +"/profile/" ;
+    public Map uploadAnimalProfileImage(File uploadFile,int animal_id) {
+        String uploadCloudinaryFolderPath = getanimalUploadDir(animal_id) +"/profile/" ;
         Map optionMap = ObjectUtils.asMap("folder",uploadCloudinaryFolderPath);
         optionMap.put("use_filename", true);
         optionMap.put("unique_filename", false);
@@ -61,22 +61,22 @@ public class CloudinaryServiceImpl implements CloudinaryService{
     }
     
     @Override
-	public List<String> deleteKoalaImage(String[] koalaImageFiles,int koala_id) {
-    	List<String> koalaImageIds = new ArrayList<String>();
+	public List<String> deleteAnimalImage(String[] animalImageFiles,int animal_id) {
+    	List<String> animalImageIds = new ArrayList<String>();
 		List<String> publicIds = new ArrayList<String>();
-		for(String koalaImageFile:koalaImageFiles) {
-			int dot = koalaImageFile.lastIndexOf('.');
-			String stringKoalaImageId = (dot == -1) ? koalaImageFile : koalaImageFile.substring(0, dot);
-			String koalaImageId = stringKoalaImageId;
-			koalaImageIds.add(koalaImageId);
-			String publicId = getkoalaUploadDir(koala_id) +  "/" + koalaImageId;
+		for(String animalImageFile:animalImageFiles) {
+			int dot = animalImageFile.lastIndexOf('.');
+			String stringAnimalImageId = (dot == -1) ? animalImageFile : animalImageFile.substring(0, dot);
+			String animalImageId = stringAnimalImageId;
+			animalImageIds.add(animalImageId);
+			String publicId = getanimalUploadDir(animal_id) +  "/" + animalImageId;
 			publicIds.add(publicId);
 		}
 		
 		try {
         	Cloudinary cloudinary = new Cloudinary("cloudinary://"+mApiKey+":"+mApiSecret+"@"+mCloudName);
 			cloudinary.api().deleteResources(publicIds, ObjectUtils.emptyMap());
-			return koalaImageIds;
+			return animalImageIds;
 		} catch (Exception e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
@@ -85,17 +85,17 @@ public class CloudinaryServiceImpl implements CloudinaryService{
     }
     
     @Override
-	public void  deleteDirs(int koala_id) {
+	public void  deleteDirs(int animal_id) {
 		try {
 			Cloudinary cloudinary = new Cloudinary("cloudinary://"+mApiKey+":"+mApiSecret+"@"+mCloudName);
-			Map resultmap = cloudinary.search().expression("folder:" + getkoalaUploadDir(koala_id)).execute();
+			Map resultmap = cloudinary.search().expression("folder:" + getanimalUploadDir(animal_id)).execute();
 			List<Map> resultList = (List<Map>) resultmap.get("resources");
 			List<String> publicIds = new ArrayList<String>();
 			for(Map result:resultList) {
 				 publicIds.add((String)result.get("public_id"));
 			}
 			cloudinary.api().deleteResources(publicIds, ObjectUtils.emptyMap())	;
-			cloudinary.api().deleteFolder(getkoalaUploadDir(koala_id), ObjectUtils.emptyMap());
+			cloudinary.api().deleteFolder(getanimalUploadDir(animal_id), ObjectUtils.emptyMap());
 		} catch (Exception e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
@@ -120,10 +120,10 @@ public class CloudinaryServiceImpl implements CloudinaryService{
 		}
 	}
     
-    private String getkoalaUploadDir(int koala_id) {
+    private String getanimalUploadDir(int animal_id) {
 		// 写真を格納するファイルのパス
-        StringBuffer dirPath = new StringBuffer("koala").append("/")
-        								.append(String.valueOf(koala_id));
+        StringBuffer dirPath = new StringBuffer("animal").append("/")
+        								.append(String.valueOf(animal_id));
         
         return dirPath.toString();
     }

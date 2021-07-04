@@ -1,6 +1,6 @@
-CREATE TABLE koala
+CREATE TABLE animal
 (
-   koala_id INT NOT NULL AUTO_INCREMENT,
+   animal_id INT NOT NULL AUTO_INCREMENT,
    name VARCHAR(100) NOT NULL,
    sex INT(1) NOT NULL,
    birthdate DATE,
@@ -11,11 +11,11 @@ CREATE TABLE koala
    father VARCHAR(50) NOT NULL,
    details VARCHAR(300) NOT NULL,
    feature VARCHAR(50) NOT NULL,
-   PRIMARY KEY(koala_id)
+   PRIMARY KEY(animal_id)
 );
-CREATE TABLE koalaimage
+CREATE TABLE animalimage
 (
-   koalaimage_id INT NOT NULL AUTO_INCREMENT,
-   koala_id INT NOT NULL,
-   PRIMARY KEY(koalaImage_id)
+   animalimage_id INT NOT NULL AUTO_INCREMENT,
+   animal_id INT NOT NULL,
+   PRIMARY KEY(animalImage_id)
 );
