@@ -156,6 +156,28 @@
 	});
 
 	$(function() {
+		$('.addHistoryButton').click(function(e) {
+			const input = $("#zooHistoryDiv").clone(true);
+			input.val("");
+			input.appendTo("#zooHistory");
+		});
+	});
+
+	$(function() {
+		$('.cancelHistoryButton').click(function(e) {
+			const contents = $("#zooHistory > #zooHistoryDiv").length;
+			if (contents > 1) {
+				$(this).prev().remove();
+				$(this).prev().remove();
+				$(this).prev().remove();
+				$(this).remove();
+			} else {
+				$(this).prev().val("");
+			}
+		});
+	});
+
+	$(function() {
 		$('.deleteImageButton').click(function(e) {
 			const deleteImageFalg = confirm('この写真を削除してもよろしいですか？');
 			if (!deleteImageFalg) {
@@ -200,30 +222,26 @@
 		<!--タイトル名を 変数式でControllerから取得 -->
 
 
-		<form th:action="@{/insert}" method="post" enctype="multipart/form-data"
-			th:object="${koalaInsertForm}"
+		<form th:action="@{/insert}" method="post"
+			enctype="multipart/form-data" th:object="${koalaInsertForm}"
 			onsubmit="return validateSubmit(this);">
-			<input th:unless="*{koala_id}==0" type="hidden" th:field="*{koala_id}">
+			<input th:unless="*{koala_id}==0" type="hidden"
+				th:field="*{koala_id}"> <input type="hidden"
+				th:field="*{profileImagePath}"> プロフィール写真：<br> <span
+				th:id="*{profileImagePath}" th:if="*{profileImagePath}"> <img
+				th:src="*{profileImagePath}" width="200" height="200">
+				<button class="btn btn-danger btn-sm deleteImageButton"
+					type="button">削除</button>
+			</span>
+			<div id="koalaProfileImageUpload">
+				<input type="file" accept="image/*"
+					th:field="*{koalaProfileImageUpload}" th:errorclass="is-invalid"
+					class="form-control-file">
+				<button class="btn btn-outline-warning btn-sm"
+					id="cancelInputFileButton" type="button">写真取消</button>
+				<br>
+			</div>
 
-				<input type="hidden" th:field="*{profileImagePath}">
-				
-				プロフィール写真：<br> <span 
-					th:id="*{profileImagePath}" 
-					th:if="*{profileImagePath}">
-						<img
-							th:src="*{profileImagePath}"
-							width="200" height="200">
-					<button class="btn btn-danger btn-sm deleteImageButton"
-						type="button">削除</button>
-				</span>
-				<div id="koalaProfileImageUpload">
-					<input type="file" accept="image/*" th:field="*{koalaProfileImageUpload}"
-						th:errorclass="is-invalid" class="form-control-file">
-					<button class="btn btn-outline-warning btn-sm"
-						id="cancelInputFileButton" type="button">取り消し</button>
-					<br>
-				</div>
-				
 			<div class="form-group">
 				名前：<input type="text" class="form-control" th:field="*{name}"
 					th:errorclass="is-invalid" />
@@ -236,15 +254,9 @@
 				</select>
 			</div>
 			<div class="form-group">
-				生死：<select th:field="*{is_alive}" onchange="isAliveFlag(this);">
-					<option th:each="item : ${isAliveItems}" th:value="${item.key}"
-						th:text="${item.value}"></option>
-				</select>
-			</div>
-			<div class="form-group">
 				生年月日：<select th:field="*{birthYear}">
 					<option value="0">--</option>
-					<option th:each="i : ${#numbers.sequence(1900, 2021)}"
+					<option th:each="i : ${#numbers.sequence(1990, 2021)}"
 						th:value="${i}" th:text="${i}"></option>
 				</select>年 <select th:field="*{birthMonth}">
 					<option value="0">--</option>
@@ -257,9 +269,76 @@
 				</select>日
 			</div>
 			<div class="form-group">
+				母親：<select th:field="*{mother_id}" th:errorclass="is-invalid">
+					<!-- id とnameはform用 -->
+					<option th:each="mother : ${motherList}"
+						th:value="${mother.koala_id}" th:text="${mother.name}"></option>
+				</select> 父親：<select th:field="*{father_id}" th:errorclass="is-invalid">
+					<option th:each="father : ${fatherList}"
+						th:value="${father.koala_id}" th:text="${father.name}"></option>
+				</select>
+			</div>
+			<div th:id="zooHistory">			
+			<div th:id="zooHistoryDiv">
+				<div class="form-group" th:id="zooForm">
+					動物園：<select th:field="*{zoo}" th:errorclass="is-invalid">
+						<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}"
+							th:text="${zoo.zoo_name}"></option>
+						<!--fieldは送信先のフォームクラスの変数、 each は繰り返し、valueはフォームで送信する実際の値、textはHTMLに表示される名前 -->
+					</select>
+					<div class="invalid-feedback" th:errors="*{zoo}"></div>
+				</div>
+
+				<div class="form-group" th:id="admissionForm">
+					入園日：<select th:field="*{admissionYear}">
+						<option value="0">--</option>
+						<option th:each="i : ${#numbers.sequence(1990, 2021)}"
+							th:value="${i}" th:text="${i}"></option>
+					</select>年 <select th:field="*{admissionMonth}">
+						<option value="0">--</option>
+						<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}"
+							th:text="${i}"></option>
+					</select>月 <select th:field="*{admissionDay}">
+						<option value="0">--</option>
+						<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}"
+							th:text="${i}"></option>
+					</select>日
+				</div>
+
+				<div class="form-group" th:id="exitForm">
+					退園日：<select th:field="*{exitYear}">
+						<option value="0">--</option>
+						<option th:each="i : ${#numbers.sequence(1990, 2021)}"
+							th:value="${i}" th:text="${i}"></option>
+					</select>年 <select th:field="*{exitMonth}">
+						<option value="0">--</option>
+						<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}"
+							th:text="${i}"></option>
+					</select>月 <select th:field="*{exitDay}">
+						<option value="0">--</option>
+						<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}"
+							th:text="${i}"></option>
+					</select>日
+				</div>
+				<button class="btn btn-outline-warning btn-sm cancelHistoryButton" type="button">動物園削除</button>
+			</div>
+			</div>
+			<button class="btn btn-outline-success btn-sm addHistoryButton"
+				type="button">動物園追加</button>
+
+
+
+			<div class="form-group">
+				生死：<select th:field="*{is_alive}" onchange="isAliveFlag(this);">
+					<option th:each="item : ${isAliveItems}" th:value="${item.key}"
+						th:text="${item.value}"></option>
+				</select>
+			</div>
+
+			<div class="form-group">
 				死亡日：<select th:field="*{deathYear}" th:disabled="*{is_alive} == 1">
 					<option value="0">--</option>
-					<option th:each="i : ${#numbers.sequence(1900, 2021)}"
+					<option th:each="i : ${#numbers.sequence(1990, 2021)}"
 						th:value="${i}" th:text="${i}" th:selected="${i}==2000"></option>
 				</select>年 <select th:field="*{deathMonth}" th:disabled="*{is_alive} == 1">
 					<option value="0">--</option>
@@ -272,30 +351,7 @@
 				</select>日
 			</div>
 
-			<div class="form-group">
-				動物園：<select th:field="*{zoo}" th:errorclass="is-invalid">
-					<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}"
-						th:text="${zoo.zoo_name}"></option>
-					<!--fieldは送信先のフォームクラスの変数、 each は繰り返し、valueはフォームで送信する実際の値、textはHTMLに表示される名前 -->
-				</select>
-				<div class="invalid-feedback" th:errors="*{zoo}"></div>
-			</div>
-			<!-- 	<div class="form-group">
-				動物園：<input type="text" class="form-control" th:field="*{zoo}"
-					th:errorclass="is-invalid" />
-				<div class="invalid-feedback" th:errors="*{zoo}"></div>
-			</div> -->
 
-			<div class="form-group">
-				母親：<select th:field="*{mother_id}" th:errorclass="is-invalid">
-					<!-- id とnameはform用 -->
-					<option th:each="mother : ${motherList}"
-						th:value="${mother.koala_id}" th:text="${mother.name}"></option>
-				</select> 父親：<select th:field="*{father_id}" th:errorclass="is-invalid">
-					<option th:each="father : ${fatherList}"
-						th:value="${father.koala_id}" th:text="${father.name}"></option>
-				</select>
-			</div>
 			<div class="form-group">
 				詳細：
 				<textarea class="form-control" th:field="*{details}"
@@ -308,33 +364,32 @@
 					th:errorclass="is-invalid"></textarea>
 				<div class="invalid-feedback" th:errors="*{feature}"></div>
 			</div>
+
 			<div class="form-group">
-				写真：<br> <span th:unless="*{koalaImageList.size} == 0"
-					th:each="koalaImage:*{koalaImageList}"
-					th:object="${koalaImage}" th:id="*{koalaimage_id} + *{filetype}"
-					style="display: inline-block">
-						<img
-							th:src="@{{cloudinaryImageUrl}{koala_id}/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},koala_id=${koalaInsertForm.koala_id},fileName=*{koalaimage_id} + *{filetype})}"
-							width="200" height="200">
+				写真： <span th:unless="*{koalaImageList.size} == 0"
+					th:each="koalaImage:*{koalaImageList}" th:object="${koalaImage}"
+					th:id="*{koalaimage_id} + *{filetype}"
+					style="display: inline-block"> <img
+					th:src="@{{cloudinaryImageUrl}{koala_id}/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},koala_id=${koalaInsertForm.koala_id},fileName=*{koalaimage_id} + *{filetype})}"
+					width="200" height="200">
 					<button class="btn btn-danger btn-sm deleteImageButton"
 						type="button">削除</button>
 				</span>
-				
+
 				<div id="koalaImages">
 					<input type="file" accept="image/*" th:field="*{koalaImage}"
 						th:errorclass="is-invalid" class="form-control-file">
 					<button class="btn btn-outline-warning btn-sm"
-						id="cancelInputFileButton" type="button">取り消し</button>
-					<br>
+						id="cancelInputFileButton" type="button">写真取消</button>
 				</div>
 				<button class="btn btn-outline-success btn-sm addInputFileButton"
-					type="button">入力欄追加</button>
+					type="button">写真追加</button>
 			</div>
 			<input type="hidden" th:field="*{deleteKoalaImageFiles}">
 			<button th:if="*{koala_id}==0" class="btn btn-outline-primary btn-sm"
-				type="submit">追加</button>
-				
-				
+				type="submit">コアラ情報登録</button>
+
+
 			<button th:unless="*{koala_id}==0"
 				class="btn btn-outline-primary btn-sm" type="submit">保存</button>
 			<button class="btn btn-danger btn-sm" type="button"

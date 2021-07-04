@@ -25,6 +25,20 @@ public class KoalaInsertForm {
 	private int sex = 2;
 
 	@NotBlank
+	private String admissionYear = "2021";
+	@NotBlank
+	private String admissionMonth = "1";
+	@NotBlank
+	private String admissionDay = "1";
+	
+	@NotBlank
+	private String exitYear = "2021";
+	@NotBlank
+	private String exitMonth = "1";
+	@NotBlank
+	private String exitDay = "1";
+	
+	@NotBlank
 	private String birthYear = "2021";
 	@NotBlank
 	private String birthMonth = "1";
