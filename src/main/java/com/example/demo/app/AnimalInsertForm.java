@@ -9,14 +9,14 @@ import javax.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.entity.KoalaImage;
+import com.example.demo.entity.AnimalImage;
 
 import lombok.Data;
 
 @Data
-public class KoalaInsertForm {
+public class AnimalInsertForm {
 	
-	private int koala_id;
+	private int animal_id;
 	@NotBlank
 	private String name;
 	@Max(1)
@@ -63,13 +63,13 @@ public class KoalaInsertForm {
 	@Length(min = 1,max = 50)
 	private String feature;
 	
-	private MultipartFile koalaProfileImageUpload;
+	private MultipartFile animalProfileImageUpload;
 	
-	private List<MultipartFile> koalaImage;
+	private List<MultipartFile> animalImage;
 	
-	private List<KoalaImage> koalaImageList;
+	private List<AnimalImage> animalImageList;
 	
-	private String deleteKoalaImageFiles;
+	private String deleteAnimalImageFiles;
 	
 	private String profileImagePath;
 }

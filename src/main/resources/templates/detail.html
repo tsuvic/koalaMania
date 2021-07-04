@@ -85,9 +85,9 @@
 			</tr>
 			<tr>
 				<th class="cell_title">写真</th>
-				<td><span th:each="koalaImage,index:*{koalaImageList}"
-					th:object="${koalaImage}"> <img
-						th:src="@{{cloudinaryImageUrl}{koala_id}/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},koala_id=${detail.koala_id},fileName=*{koalaimage_id} + *{filetype})}"
+				<td><span th:each="animalImage,index:*{animalImageList}"
+					th:object="${animalImage}"> <img
+						th:src="@{{cloudinaryImageUrl}{animal_id}/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},animal_id=${detail.animal_id},fileName=*{animalimage_id} + *{filetype})}"
 						width="200" height="200">
 				</span></td>
 			</tr>
@@ -95,7 +95,7 @@
 	</div>
 	<div class="btn_area_center">
 		<button class="btn btn-primary btn-sm" type="button"
-			th:onclick="'location.href = \'' +@{/edit/{koala_id}(koala_id=${detail.koala_id})} + '\''">編集</button>
+			th:onclick="'location.href = \'' +@{/edit/{animal_id}(animal_id=${detail.animal_id})} + '\''">編集</button>
 		<button class="btn btn-warning btn-sm" type="button"
 			onclick="window.history.back(); return false;">戻る</button>
 	</div>

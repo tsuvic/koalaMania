@@ -30,7 +30,7 @@
 		<br> <br> <br> <br>
 		<h2>検索</h2>
 		<form class="card-body row no-gutters align-items-center"
-			method="get" th:action="@{/search}" th:object="${koalaSearchForm}">
+			method="get" th:action="@{/search}" th:object="${animalSearchForm}">
 			<div class="col-auto">
 				<i class="fas fa-search h4 text-body"></i>
 			</div>
@@ -64,8 +64,8 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr style="height: 85px;" th:each="koala : ${koalaList}"
-					th:object="${koala}">
+				<tr style="height: 85px;" th:each="animal : ${animalList}"
+					th:object="${animal}">
 					<td><img th:src="@{{Path}(Path = *{profileImagePath})}"
 						th:if="*{profileImagePath}" width="85" height="85"></td>
 					<td width="20" th:text="*{name}"></td>
@@ -85,10 +85,10 @@
 					<td th:unless="*{#strings.isEmpty(father)}" th:text="*{father}"></td>
 
 					<td><a class="btn btn-sm btn-info"
-						th:href="@{/detail/{koala_id}(koala_id=*{koala_id})}">詳細情報</a></td>
+						th:href="@{/detail/{animal_id}(animal_id=*{animal_id})}">詳細情報</a></td>
 
 					<td><a class="btn btn-sm btn-primary"
-						th:href="@{/familytree(id=${koala.koala_id})}">家系図</a></td>
+						th:href="@{/familytree(id=${animal.animal_id})}">家系図</a></td>
 			</tbody>
 		</table>
 	</div>

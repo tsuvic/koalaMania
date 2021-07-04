@@ -16,5 +16,5 @@ public class Zoo {
 
 	private int zoo_id;
 	private String zoo_name;
-	
+	private Prefecture prefecture;
 }
