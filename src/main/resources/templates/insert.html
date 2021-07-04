@@ -133,18 +133,18 @@
 
 	$(function() {
 		$('.addInputFileButton').click(function(e) {
-			const input = $("#koalaImage").clone(true);
+			const input = $("#animalImage").clone(true);
 			const cancelButton = $('#cancelInputFileButton').clone(true);
 			input.val("");
-			input.appendTo("#koalaImages");
-			cancelButton.appendTo("#koalaImages");
-			$("#koalaImages").append("<br>");
+			input.appendTo("#animalImages");
+			cancelButton.appendTo("#animalImages");
+			$("#animalImages").append("<br>");
 		});
 	});
 
 	$(function() {
 		$('#cancelInputFileButton').click(function(e) {
-			const contents = $("#koalaImages > input").length;
+			const contents = $("#animalImages > input").length;
 			if (contents > 1) {
 				$(this).prev().remove();
 				$(this).next().remove();
@@ -161,27 +161,27 @@
 			if (!deleteImageFalg) {
 				return;
 			}
-			let koalaImageId = $(this).parent().attr("id");
-			let deleteIds = $('#deleteKoalaImageFiles').val();
+			let animalImageId = $(this).parent().attr("id");
+			let deleteIds = $('#deleteAnimalImageFiles').val();
 			if (!deleteIds) {
-				deleteIds = koalaImageId;
+				deleteIds = animalImageId;
 			} else {
-				deleteIds += ',' + koalaImageId;
+				deleteIds += ',' + animalImageId;
 			}
-			$('#deleteKoalaImageFiles').val(deleteIds);
+			$('#deleteAnimalImageFiles').val(deleteIds);
 			$(this).parent('span').remove();
 		});
 	});
 </script>
 
 <script type="text/javascript">
-	function deleteFunc(koala_id, thisButton) {
+	function deleteFunc(animal_id, thisButton) {
 		const deleteFalg = confirm('このコアラを削除してもよろしいですか？');
 		if (deleteFalg) {
 			thisButton.disabled = true;
 			thisButton.previousElementSibling.disabled = true;
 			thisButton.nextElementSibling.disabled = true;
-			location.href = '/delete/' + koala_id;
+			location.href = '/delete/' + animal_id;
 		} else {
 			return;
 		}
@@ -201,9 +201,9 @@
 
 
 		<form th:action="@{/insert}" method="post" enctype="multipart/form-data"
-			th:object="${koalaInsertForm}"
+			th:object="${animalInsertForm}"
 			onsubmit="return validateSubmit(this);">
-			<input th:unless="*{koala_id}==0" type="hidden" th:field="*{koala_id}">
+			<input th:unless="*{animal_id}==0" type="hidden" th:field="*{animal_id}">
 
 				<input type="hidden" th:field="*{profileImagePath}">
 				
@@ -216,8 +216,8 @@
 					<button class="btn btn-danger btn-sm deleteImageButton"
 						type="button">削除</button>
 				</span>
-				<div id="koalaProfileImageUpload">
-					<input type="file" accept="image/*" th:field="*{koalaProfileImageUpload}"
+				<div id="animalProfileImageUpload">
+					<input type="file" accept="image/*" th:field="*{animalProfileImageUpload}"
 						th:errorclass="is-invalid" class="form-control-file">
 					<button class="btn btn-outline-warning btn-sm"
 						id="cancelInputFileButton" type="button">取り消し</button>
@@ -290,10 +290,10 @@
 				母親：<select th:field="*{mother_id}" th:errorclass="is-invalid">
 					<!-- id とnameはform用 -->
 					<option th:each="mother : ${motherList}"
-						th:value="${mother.koala_id}" th:text="${mother.name}"></option>
+						th:value="${mother.animal_id}" th:text="${mother.name}"></option>
 				</select> 父親：<select th:field="*{father_id}" th:errorclass="is-invalid">
 					<option th:each="father : ${fatherList}"
-						th:value="${father.koala_id}" th:text="${father.name}"></option>
+						th:value="${father.animal_id}" th:text="${father.name}"></option>
 				</select>
 			</div>
 			<div class="form-group">
@@ -309,19 +309,19 @@
 				<div class="invalid-feedback" th:errors="*{feature}"></div>
 			</div>
 			<div class="form-group">
-				写真：<br> <span th:unless="*{koalaImageList.size} == 0"
-					th:each="koalaImage:*{koalaImageList}"
-					th:object="${koalaImage}" th:id="*{koalaimage_id} + *{filetype}"
+				写真：<br> <span th:unless="*{animalImageList.size} == 0"
+					th:each="animalImage:*{animalImageList}"
+					th:object="${animalImage}" th:id="*{animalimage_id} + *{filetype}"
 					style="display: inline-block">
 						<img
-							th:src="@{{cloudinaryImageUrl}{koala_id}/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},koala_id=${koalaInsertForm.koala_id},fileName=*{koalaimage_id} + *{filetype})}"
+							th:src="@{{cloudinaryImageUrl}{animal_id}/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},animal_id=${animalInsertForm.animal_id},fileName=*{animalimage_id} + *{filetype})}"
 							width="200" height="200">
 					<button class="btn btn-danger btn-sm deleteImageButton"
 						type="button">削除</button>
 				</span>
 				
-				<div id="koalaImages">
-					<input type="file" accept="image/*" th:field="*{koalaImage}"
+				<div id="animalImages">
+					<input type="file" accept="image/*" th:field="*{animalImage}"
 						th:errorclass="is-invalid" class="form-control-file">
 					<button class="btn btn-outline-warning btn-sm"
 						id="cancelInputFileButton" type="button">取り消し</button>
@@ -330,16 +330,16 @@
 				<button class="btn btn-outline-success btn-sm addInputFileButton"
 					type="button">入力欄追加</button>
 			</div>
-			<input type="hidden" th:field="*{deleteKoalaImageFiles}">
-			<button th:if="*{koala_id}==0" class="btn btn-outline-primary btn-sm"
+			<input type="hidden" th:field="*{deleteAnimalImageFiles}">
+			<button th:if="*{animal_id}==0" class="btn btn-outline-primary btn-sm"
 				type="submit">追加</button>
 				
 				
-			<button th:unless="*{koala_id}==0"
+			<button th:unless="*{animal_id}==0"
 				class="btn btn-outline-primary btn-sm" type="submit">保存</button>
 			<button class="btn btn-danger btn-sm" type="button"
-				th:unless="*{koala_id}==0"
-				th:onclick="'deleteFunc(' + *{koala_id} + ',this);'">削除</button>
+				th:unless="*{animal_id}==0"
+				th:onclick="'deleteFunc(' + *{animal_id} + ',this);'">削除</button>
 			<button class="btn btn-outline-danger btn-sm" type="button"
 				onclick="location.href='/search'">一覧に戻る</button>
 		</form>

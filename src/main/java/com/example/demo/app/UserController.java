@@ -20,7 +20,7 @@ import com.example.demo.service.UserService;
 @RequestMapping("/user")
 public class UserController {
 	
-//	下記のリクエストで使用するために、KoalaService型のフィールド用意 & @AutowiredでDIを実施する。	
+//	下記のリクエストで使用するために、AnimalService型のフィールド用意 & @AutowiredでDIを実施する。	
 	private final UserService userService;
 
 	@Autowired
@@ -83,7 +83,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/edit")
-	public String insertKoala(Model model, @Validated UserForm form, BindingResult bindingResult) {
+	public String insertAnimal(Model model, @Validated UserForm form, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return getEditMypage(form.getUser_id(), model, form);
 		}

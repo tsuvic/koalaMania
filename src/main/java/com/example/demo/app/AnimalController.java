@@ -22,22 +22,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.demo.entity.Koala;
-import com.example.demo.entity.KoalaImage;
+import com.example.demo.entity.Animal;
+import com.example.demo.entity.AnimalImage;
 import com.example.demo.entity.Zoo;
-import com.example.demo.service.KoalaService;
+import com.example.demo.service.AnimalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("/")
-public class KoalaController {
+public class AnimalController {
 
-//	下記のリクエストで使用するために、KoalaService型のフィールド用意 & @AutowiredでDIを実施する。	
-	private final KoalaService koalaService;
+//	下記のリクエストで使用するために、AnimalService型のフィールド用意 & @AutowiredでDIを実施する。	
+	private final AnimalService animalService;
 
 	@Autowired
-	public KoalaController(KoalaService koalaService) {
-		this.koalaService = koalaService;
+	public AnimalController(AnimalService animalService) {
+		this.animalService = animalService;
 	}
 
 	@Autowired
@@ -67,36 +67,36 @@ public class KoalaController {
 	}
 
 	/*@GetMapping("/search")
-	public String displayAllKoala(Model model, @ModelAttribute KoalaSearchForm koalaSearchForm,
+	public String displayAllAnimal(Model model, @ModelAttribute AnimalSearchForm animalSearchForm,
 			BindingResult bindingResult) {
-		List<Koala> list = koalaService.getAll();
-		for (Koala koala : list) {
-			Date birthDate = (Date) koala.getBirthdate();
-			koala.setStringBirthDate(disPlayDate(birthDate));
+		List<Animal> list = animalService.getAll();
+		for (Animal animal : list) {
+			Date birthDate = (Date) animal.getBirthdate();
+			animal.setStringBirthDate(disPlayDate(birthDate));
 	
 		}
-		model.addAttribute("koalaList", list);
+		model.addAttribute("animalList", list);
 		model.addAttribute("searchResult", "コアラ一覧");
 		return "search";
 	}*/
 
 	@GetMapping("/search")
 	public String displaySearchedKoara(Model model, @RequestParam(required = false, name = "keyword") String keyword,
-			@ModelAttribute KoalaSearchForm koalaSearchForm, BindingResult bindingResult) {
-		List<Koala> list = new ArrayList<Koala>();
+			@ModelAttribute AnimalSearchForm animalSearchForm, BindingResult bindingResult) {
+		List<Animal> list = new ArrayList<Animal>();
 		if (keyword == null || keyword.replaceAll(" ", "　").split("　", 0).length == 0) {
-			list = koalaService.getAll();
+			list = animalService.getAll();
 			model.addAttribute("searchResult", "コアラ一覧");
 		} else {
-			list = koalaService.findByKeyword(keyword);
+			list = animalService.findByKeyword(keyword);
 			model.addAttribute("searchResult", "検索結果");
 		}
-		model.addAttribute("koalaList", list);
-		for (Koala koala : list) {
-			Date birthDate = (Date) koala.getBirthdate();
-			koala.setStringBirthDate(disPlayDate(birthDate));
-			if(koala.getProfileImagePath() == null) {
-				koala.setProfileImagePath("/images/defaultKoala.png");
+		model.addAttribute("animalList", list);
+		for (Animal animal : list) {
+			Date birthDate = (Date) animal.getBirthdate();
+			animal.setStringBirthDate(disPlayDate(birthDate));
+			if(animal.getProfileImagePath() == null) {
+				animal.setProfileImagePath("/images/defaultAnimal.png");
 			}
 		}
 		return "search";
@@ -125,7 +125,7 @@ public class KoalaController {
 	};
 
 	@GetMapping("/insert")
-	public String getInsert(Model model, @ModelAttribute KoalaInsertForm form, boolean updateFlag) {
+	public String getInsert(Model model, @ModelAttribute AnimalInsertForm form, boolean updateFlag) {
 		// 新しいコアラ登録画面からか、編集画面のバリデーションでエラーが出て戻ってきたか判定
 		if (updateFlag) {
 			model.addAttribute("title", "コアラ編集画面");
@@ -135,117 +135,117 @@ public class KoalaController {
 		}
 		model.addAttribute("sexItems", SEX_ITEMS);
 		model.addAttribute("isAliveItems", IS_ALIVE_ITEMS);
-		List<Zoo> zooList = koalaService.getZooList();
+		List<Zoo> zooList = animalService.getZooList();
 		model.addAttribute("zooList", zooList);
 
-		List<Koala> motherList = koalaService.getMotherList(form.getKoala_id(), form.getBirthYear(),
+		List<Animal> motherList = animalService.getMotherList(form.getAnimal_id(), form.getBirthYear(),
 				form.getBirthMonth(), form.getBirthDay());
 		model.addAttribute("motherList", motherList);
-		List<Koala> fatherList = koalaService.getFatherList(form.getKoala_id(), form.getBirthYear(),
+		List<Animal> fatherList = animalService.getFatherList(form.getAnimal_id(), form.getBirthYear(),
 				form.getBirthMonth(), form.getBirthDay());
 		model.addAttribute("fatherList", fatherList);
 		if (form.getProfileImagePath() == null) {
-			form.setProfileImagePath("/images/defaultKoala.png");
+			form.setProfileImagePath("/images/defaultAnimal.png");
 		}
 
 		return "insert";
 	}
 
 	@PostMapping("/insert")
-	public String insertKoala(Model model, @Validated KoalaInsertForm form, BindingResult bindingResult) {
+	public String insertAnimal(Model model, @Validated AnimalInsertForm form, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			// エラーになった場合、コアラの写真情報を引き継ぐための処理
-			List<KoalaImage> koalaImageList = koalaService.findKoalaImageById(form.getKoala_id());
+			List<AnimalImage> animalImageList = animalService.findAnimalImageById(form.getAnimal_id());
 			// 削除したい写真がある場合、表示しない
-			if (form.getDeleteKoalaImageFiles() != null) {
-				// 拡張子の前のkoalaImageIdを取得
-				String[] koalaImageFiles = form.getDeleteKoalaImageFiles().split(",");
-				// 削除したいkoalaImageIdと表示しようとしているkoalaImageIdが一致していたら表示させない
-				for (int i = 0; i < koalaImageFiles.length; ++i) {
-					String koalaImageId = koalaImageFiles[i].split("\\.")[0];
-					for (int index = 0; index < koalaImageList.size(); ++index) {
-						KoalaImage koalaImage = koalaImageList.get(index);
-						if (koalaImage.getKoalaimage_id() == Integer.parseInt(koalaImageId)) {
-							koalaImageList.remove(index);
+			if (form.getDeleteAnimalImageFiles() != null) {
+				// 拡張子の前のanimalImageIdを取得
+				String[] animalImageFiles = form.getDeleteAnimalImageFiles().split(",");
+				// 削除したいanimalImageIdと表示しようとしているanimalImageIdが一致していたら表示させない
+				for (int i = 0; i < animalImageFiles.length; ++i) {
+					String animalImageId = animalImageFiles[i].split("\\.")[0];
+					for (int index = 0; index < animalImageList.size(); ++index) {
+						AnimalImage animalImage = animalImageList.get(index);
+						if (animalImage.getAnimalimage_id() == Integer.parseInt(animalImageId)) {
+							animalImageList.remove(index);
 							break;
 						}
 					}
 				}
 			}
-			form.setKoalaImageList(koalaImageList);
+			form.setAnimalImageList(animalImageList);
 			return getInsert(model, form, true);
 		}
 
-		if (form.getKoala_id() == 0) {
-			koalaService.insert(form);
+		if (form.getAnimal_id() == 0) {
+			animalService.insert(form);
 		} else {
-			koalaService.update(form);
+			animalService.update(form);
 		}
 		return "redirect:/search";
 	}
 
 	@GetMapping("/detail/{id}")
-	public String displayDetailKoala(@PathVariable int id, Model model) {
-		Koala koala = koalaService.findById(id);
+	public String displayDetailAnimal(@PathVariable int id, Model model) {
+		Animal animal = animalService.findById(id);
 		model.addAttribute("title", "コアラ情報詳細");
 		model.addAttribute("cloudinaryImageUrl", cloudinaryImageUrl);
-		Date birthDate = (Date) koala.getBirthdate();
-		Date deathDate = (Date) koala.getDeathdate();
+		Date birthDate = (Date) animal.getBirthdate();
+		Date deathDate = (Date) animal.getDeathdate();
 		String stringBirthDate = disPlayDate(birthDate);
 		String stringDeathDate = disPlayDate(deathDate);
-		koala.setStringBirthDate(stringBirthDate);
-		koala.setStringDeathDate(stringDeathDate);
-		setDefaultKoalaProfileImage(koala);
-		model.addAttribute("detail", koala);
+		animal.setStringBirthDate(stringBirthDate);
+		animal.setStringDeathDate(stringDeathDate);
+		setDefaultAnimalProfileImage(animal);
+		model.addAttribute("detail", animal);
 		return "detail";
 	}
 
 	@GetMapping("/edit/{id}")
-	public String editKoala(@PathVariable int id, Model model, @ModelAttribute KoalaInsertForm form)
+	public String editAnimal(@PathVariable int id, Model model, @ModelAttribute AnimalInsertForm form)
 			throws ParseException {
 		model.addAttribute("title", "コアラ編集画面");
 		model.addAttribute("sexItems", SEX_ITEMS);
 		model.addAttribute("isAliveItems", IS_ALIVE_ITEMS);
 		model.addAttribute("cloudinaryImageUrl", cloudinaryImageUrl);
-		List<Zoo> zooList = koalaService.getZooList();
+		List<Zoo> zooList = animalService.getZooList();
 		model.addAttribute("zooList", zooList);
-		Koala koala = koalaService.findById(id);
-		form.setKoala_id(koala.getKoala_id());
-		form.setName(koala.getName());
-		form.setIs_alive(koala.getIs_alive());
-		form.setSex(koala.getSex());
-		String[] birthDate = koala.getBirthdate().toString().split("-");
+		Animal animal = animalService.findById(id);
+		form.setAnimal_id(animal.getAnimal_id());
+		form.setName(animal.getName());
+		form.setIs_alive(animal.getIs_alive());
+		form.setSex(animal.getSex());
+		String[] birthDate = animal.getBirthdate().toString().split("-");
 		form.setBirthYear(birthDate[0]);
 		birthDate[1] = zeroCut(birthDate[1], birthDate[0]);
 		birthDate[2] = zeroCut(birthDate[2], birthDate[0]);
 		form.setBirthMonth(birthDate[1]);
 		form.setBirthDay(birthDate[2]);
-		String[] deathDate = koala.getDeathdate().toString().split("-");
+		String[] deathDate = animal.getDeathdate().toString().split("-");
 		form.setDeathYear(deathDate[0]);
 		deathDate[1] = zeroCut(deathDate[1], deathDate[0]);
 		deathDate[2] = zeroCut(deathDate[2], deathDate[0]);
 		form.setDeathMonth(deathDate[1]);
 		form.setDeathDay(deathDate[2]);
-		form.setZoo(koala.getZoo());
-		form.setDetails(koala.getDetails());
-		form.setFeature(koala.getFeature());
-		form.setKoalaImageList(koala.getKoalaImageList());
-		List<Koala> motherList = koalaService.getMotherList(form.getKoala_id(), form.getBirthYear(),
+		form.setZoo(animal.getZoo());
+		form.setDetails(animal.getDetails());
+		form.setFeature(animal.getFeature());
+		form.setAnimalImageList(animal.getAnimalImageList());
+		List<Animal> motherList = animalService.getMotherList(form.getAnimal_id(), form.getBirthYear(),
 				form.getBirthMonth(), form.getBirthDay());
 		model.addAttribute("motherList", motherList);
-		List<Koala> fatherList = koalaService.getFatherList(form.getKoala_id(), form.getBirthYear(),
+		List<Animal> fatherList = animalService.getFatherList(form.getAnimal_id(), form.getBirthYear(),
 				form.getBirthMonth(), form.getBirthDay());
 		model.addAttribute("fatherList", fatherList);
-		form.setMother_id(koala.getMother_id());
-		form.setFather_id(koala.getFather_id());
-		setDefaultKoalaProfileImage(koala);
-		form.setProfileImagePath(koala.getProfileImagePath());
+		form.setMother_id(animal.getMother_id());
+		form.setFather_id(animal.getFather_id());
+		setDefaultAnimalProfileImage(animal);
+		form.setProfileImagePath(animal.getProfileImagePath());
 		return "insert";
 	}
 
-	@GetMapping("/delete/{koala_id}")
-	public String getDelete(@PathVariable int koala_id) {
-		koalaService.delete(koala_id);
+	@GetMapping("/delete/{animal_id}")
+	public String getDelete(@PathVariable int animal_id) {
+		animalService.delete(animal_id);
 		return "redirect:/search";
 	}
 
@@ -282,11 +282,11 @@ public class KoalaController {
 	/**
 	 * コアラにプロフィール画像がセットされていない場合、デフォルトの画像をセットする
 	 * 
-	 * @param Koala koala
+	 * @param Animal animal
 	*/
-	private void setDefaultKoalaProfileImage(Koala koala) {
-		if (koala.getProfileImagePath() == null) {
-			koala.setProfileImagePath("/images/defaultKoala.png");
+	private void setDefaultAnimalProfileImage(Animal animal) {
+		if (animal.getProfileImagePath() == null) {
+			animal.setProfileImagePath("/images/defaultAnimal.png");
 		}
 	}
 	
@@ -296,12 +296,12 @@ public class KoalaController {
         return "familytree";
 	}
 	
-	@GetMapping("/familytreeKoala")
+	@GetMapping("/familytreeAnimal")
 	@ResponseBody
-	public String getKoalaForTree(@RequestParam(required = false, name = "id") int id) throws Exception {
-		Map<String, Object> koalaForTree = koalaService.getKoalaForTree(id);
+	public String getAnimalForTree(@RequestParam(required = false, name = "id") int id) throws Exception {
+		Map<String, Object> animalForTree = animalService.getAnimalForTree(id);
 		ObjectMapper mapper = new ObjectMapper();
-		String json = mapper.writeValueAsString(koalaForTree);
+		String json = mapper.writeValueAsString(animalForTree);
 		return json;
 	}
 	
