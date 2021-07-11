@@ -154,7 +154,8 @@ public class AnimalServiceImpl implements AnimalService {
 			exitDateList.add(exitDate);
 		}
 		
-		dao.insertZooHistory(insertAnimal_id, form.getZooList(),admissionDateList, exitDateList);
+		
+		dao.insertZooHistory(insertAnimal_id, form.getInsertZoo(),admissionDateList, exitDateList);
 
 	}
 
