@@ -484,6 +484,25 @@ public class AnimalServiceImpl implements AnimalService {
 		if (form.getDeleteAnimalImageFiles() != null) {
 			deleteAnimalImage(form.getDeleteAnimalImageFiles(), form.getAnimal_id());
 		}
+		
+		
+		//入退園履歴
+		List<Date> admissionDateList = new ArrayList<Date>();
+		for (int i = 0; i < form.getAdmissionYear().size(); i++) {
+			Date admissionDate = getDate(form.getAdmissionYear().get(i),form.getAdmissionMonth().get(i), form.getAdmissionDay().get(i));
+			admissionDateList.add(admissionDate);
+		}
+		
+		List<Date> exitDateList = new ArrayList<Date>();
+		for (int i = 0; i < form.getExitYear().size(); i++) {
+			Date exitDate = getDate(form.getExitYear().get(i),form.getExitMonth().get(i), form.getExitDay().get(i));
+			exitDateList.add(exitDate);
+		}
+		
+		dao.delete(form.getAnimal_id());
+		dao.insertZooHistory(form.getAnimal_id(), form.getZooList(),admissionDateList, exitDateList);
+
+		
 	}
 
 	
