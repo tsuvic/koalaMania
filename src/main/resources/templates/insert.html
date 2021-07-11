@@ -378,11 +378,7 @@
 					type="button">写真追加</button>
 			</div>
 			<input type="hidden" th:field="*{deleteAnimalImageFiles}">
-			<button th:if="*{animal_id}==0"
-				class="btn btn-outline-primary btn-sm" type="submit">コアラ情報登録</button>
-
-			<button th:unless="*{animal_id}==0"
-				class="btn btn-outline-primary btn-sm" id = "submitButton" type="submit">保存</button>
+			<button class="btn btn-outline-primary btn-sm" id = "submitButton" type="submit">保存</button>
 			<button class="btn btn-danger btn-sm" type="button"
 				th:unless="*{animal_id}==0"
 				th:onclick="'deleteFunc(' + *{animal_id} + ',this);'">削除</button>
