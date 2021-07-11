@@ -273,8 +273,8 @@
 			<div th:id="zooHistory">
 				<div th:id="zooHistoryDiv" th:each="animalZoo : *{animalZooHistory}" th:object="${animalZoo}">
 					<div class="form-group" id="zooForm">
-						動物園：<select th:field ="${animalInsertForm.animalZooHistory[__${animalZooStat.index}__].zoo_id}"  th:errorclass="is-invalid">
-							<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}" th:text="${zoo.zoo_name}" ></option>
+						動物園：<select th:name="insertZoo" >
+							<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}" th:text="${zoo.zoo_name}" th:selected="${animalInsertForm.animalZooHistory[__${animalZooStat.index}__].zoo_id} == ${zoo.zoo_id}"></option>
 							<!--fieldは送信先のフォームクラスの変数、 each は繰り返し、valueはフォームで送信する実際の値、textはHTMLに表示される名前 -->
 						</select>
 						<!-- <div class="invalid-feedback" th:errors="*{zooList}"></div> -->
@@ -286,11 +286,14 @@
 							<option th:each="i : ${#numbers.sequence(1990, 2021)}" th:value="${i}" th:text="${i}"  th:selected="*{#dates.year(admission_date)} == ${i}"></option></select>年 
 						<select th:if = "*{#dates.year(admission_date)} == '9999'" th:name="admissionMonth">
 							<option value="0">--</option>
-							<option th:unless = "*{#dates.year(admission_date)} == '9999'" th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}" th:text="${i}" ></option></select>月 
+							<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}" th:text="${i}" ></option></select>
 						<select th:unless = "*{#dates.year(admission_date)} == '9999'" th:name="admissionMonth">
 							<option value="0">--</option>
-							<option th:unless = "*{#dates.year(admission_date)} == '9999'" th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}" th:text="${i}" th:selected="*{#dates.month(admission_date)} == ${i}"></option></select>月 
-						<select th:name="admissionDay">
+							<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}" th:text="${i}" th:selected="*{#dates.month(admission_date)} == ${i}"></option></select>月 
+						<select th:if = "*{#dates.year(admission_date)} == '9999'" th:name="admissionDay">
+							<option value="0">--</option>
+							<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}" th:text="${i}"></option></select>
+						<select th:unless = "*{#dates.year(admission_date)} == '9999'" th:name="admissionDay">
 							<option value="0">--</option>
 							<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}" th:text="${i}" th:selected="*{#dates.day(admission_date)} == ${i}"></option></select>日
 					</div>

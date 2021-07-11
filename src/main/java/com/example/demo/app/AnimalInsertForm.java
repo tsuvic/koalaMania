@@ -1,7 +1,5 @@
 package com.example.demo.app;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.validation.constraints.Max;
@@ -30,13 +28,13 @@ public class AnimalInsertForm {
 
 	private List<AnimalZooHistory> animalZooHistory;
 	//不要？
-	private List<Integer> zooList  = Arrays.asList(-1);
 	private List<String> admissionYear;
 	private List<String> admissionMonth;
 	private List<String> admissionDay;
 	private List<String> exitYear;
 	private List<String> exitMonth;
 	private List<String> exitDay;
+	private List<Integer> insertZoo;
 	
 	@NotBlank
 	private String birthYear = "2021";
@@ -70,5 +68,4 @@ public class AnimalInsertForm {
 	private String deleteAnimalImageFiles;
 	
 	private String profileImagePath;
-	
 }

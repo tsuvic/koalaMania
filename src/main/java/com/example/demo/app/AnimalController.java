@@ -138,6 +138,7 @@ public class AnimalController {
 			if(form.getAnimalZooHistory() == null) {
 				Date dummyDate =  animalService.getDate("9999", "01", "01");
 				AnimalZooHistory dummyHistory = new AnimalZooHistory();
+				dummyHistory.setZoo_id(0);
 				dummyHistory.setAdmission_date(dummyDate);
 				dummyHistory.setExit_date(dummyDate);
 				form.setAnimalZooHistory(Arrays.asList(dummyHistory));		}
@@ -181,6 +182,7 @@ public class AnimalController {
 					}
 				}
 			}
+			
 			form.setAnimalImageList(animalImageList);
 			return getInsert(model, form, true);
 		}
