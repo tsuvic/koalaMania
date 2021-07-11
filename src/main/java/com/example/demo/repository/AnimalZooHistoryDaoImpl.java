@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.AnimalZooHistory;
 
+
 @Repository
 public class AnimalZooHistoryDaoImpl implements AnimalZooHistoryDao {
 
@@ -26,9 +27,17 @@ public class AnimalZooHistoryDaoImpl implements AnimalZooHistoryDao {
 	}
 	
 	@Override
+	public void deleteAllAnimalZooHistory(int id) {
+		String sql = "DELETE" + " " + "*" + " " + "FROM" + " " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + " "
+				+ "WHERE" + " " + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID + " " + "=" + "?" ;
+		jdbcTemplate.execute(sql);
+	}
+
+	
+	@Override
 	public Animal addAnimalZooHistory(int id, Animal animal) {
 		
-		String sql2 = "SELECT"+ " " + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID + ", "
+		String sql = "SELECT"+ " " + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID + ", "
 		+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID + ", "
 		+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID + ", "
 		+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ADMISSION_DATE + ", "
@@ -36,9 +45,9 @@ public class AnimalZooHistoryDaoImpl implements AnimalZooHistoryDao {
 		+ "FROM" +" "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + " "
 		+ "WHERE" + " " + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID + " " + "=" + "?" ;
 		
-		List<Map<String, Object>> resultList2 = jdbcTemplate.queryForList(sql2, id);
+		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, id);
 		List<AnimalZooHistory> animalZooHistoryList = new ArrayList<AnimalZooHistory>();
-		for (Map<String, Object> result : resultList2) {
+		for (Map<String, Object> result : resultList) {
 			AnimalZooHistory animalZooHistory = new AnimalZooHistory();
 			animalZooHistory.setAnimal_zoo_history_id((int)result.get(ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID));
 			animalZooHistory.setAnimal_id((int)result.get(ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID));

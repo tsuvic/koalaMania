@@ -71,5 +71,4 @@ public class AnimalInsertForm {
 	
 	private String profileImagePath;
 	
-	private String z;
 }
