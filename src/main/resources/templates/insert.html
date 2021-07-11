@@ -116,6 +116,7 @@
 		}
 
 		if (nameFlag && birthFlag && deathFlag && detailsFlag && featureFlag) {
+			document.getElementById('submitButton').textContent = "保存中....";
 			doubleClick = true;
 			return true;
 		} else {
@@ -130,6 +131,18 @@
 
 		return parseInt("" + intYear + intMonth + intDay);
 	}
+	
+	function deleteFunc(animal_id, thisButton) {
+		const deleteFalg = confirm('このコアラを削除してもよろしいですか？');
+		if (deleteFalg) {
+			thisButton.disabled = true;
+			thisButton.previousElementSibling.disabled = true;
+			thisButton.nextElementSibling.disabled = true;
+			location.href = '/delete/' + animal_id;
+		} else {
+			return;
+		}
+	}
 
 	$(function() {
 		$('.addInputFileButton').click(function(e) {
@@ -140,10 +153,8 @@
 			cancelButton.appendTo("#animalImages");
 			$("#animalImages").append("<br>");
 		});
-	});
-
-	$(function() {
-		$('#cancelInputFileButton').click(function(e) {
+	
+		$('#cancelInputFileButton').click(function() {
 			const contents = $("#animalImages > input").length;
 			if (contents > 1) {
 				$(this).prev().remove();
@@ -153,9 +164,7 @@
 				$(this).prev().val("");
 			}
 		});
-	});
 
-	$(function() {
 		$('.deleteImageButton').click(function(e) {
 			const deleteImageFalg = confirm('この写真を削除してもよろしいですか？');
 			if (!deleteImageFalg) {
@@ -171,21 +180,7 @@
 			$('#deleteAnimalImageFiles').val(deleteIds);
 			$(this).parent('span').remove();
 		});
-	});
-</script>
-
-<script type="text/javascript">
-	function deleteFunc(animal_id, thisButton) {
-		const deleteFalg = confirm('このコアラを削除してもよろしいですか？');
-		if (deleteFalg) {
-			thisButton.disabled = true;
-			thisButton.previousElementSibling.disabled = true;
-			thisButton.nextElementSibling.disabled = true;
-			location.href = '/delete/' + animal_id;
-		} else {
-			return;
-		}
-	}
+	})
 </script>
 
 </head>
@@ -336,7 +331,7 @@
 				
 				
 			<button th:unless="*{animal_id}==0"
-				class="btn btn-outline-primary btn-sm" type="submit">保存</button>
+				class="btn btn-outline-primary btn-sm" id = "submitButton" type="submit">保存</button>
 			<button class="btn btn-danger btn-sm" type="button"
 				th:unless="*{animal_id}==0"
 				th:onclick="'deleteFunc(' + *{animal_id} + ',this);'">削除</button>

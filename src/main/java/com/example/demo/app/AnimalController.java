@@ -32,7 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RequestMapping("/")
 public class AnimalController {
 
-//	下記のリクエストで使用するために、AnimalService型のフィールド用意 & @AutowiredでDIを実施する。	
+	//下記のリクエストで使用するために、AnimalService型のフィールド用意 & @AutowiredでDIを実施する。	
 	private final AnimalService animalService;
 
 	@Autowired
@@ -44,7 +44,7 @@ public class AnimalController {
 	@Qualifier("com.cloudinary.image.url")
 	String cloudinaryImageUrl;
 
-//ドメインに対してリクエストが来た際には/indexを返す
+	//ドメインに対してリクエストが来た際には/indexを返す
 	@GetMapping
 	public String index() {
 		return "index";

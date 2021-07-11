@@ -122,8 +122,6 @@ public class AnimalServiceImpl implements AnimalService {
 		animal.setFeature(form.getFeature());
 		animal.setMother_id(form.getMother_id());
 		animal.setFather_id(form.getFather_id());
-		animal.setProfileImagePath((form.getAnimalProfileImageUpload().getOriginalFilename())
-				.substring(form.getAnimalProfileImageUpload().getOriginalFilename().lastIndexOf(".")));
 
 		int insertAnimal_id = dao.insert(animal);
 		// 追加するコアラに画像が添付されているか確認
