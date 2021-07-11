@@ -7,10 +7,12 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.AnimalZooHistory;
+import com.example.demo.entity.LoginUser;
 
 
 @Repository
@@ -20,6 +22,9 @@ public class AnimalZooHistoryDaoImpl implements AnimalZooHistoryDao {
 	
 	@Autowired
 	private AnimalZooHistory ENTITY_ANIMAL_ZOO_HISTORY;
+	
+	@Autowired
+	private CommonSqlUtil commonSqlUtil;
 
 	@Autowired
 	public AnimalZooHistoryDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -28,9 +33,9 @@ public class AnimalZooHistoryDaoImpl implements AnimalZooHistoryDao {
 	
 	@Override
 	public void deleteAllAnimalZooHistory(int id) {
-		String sql = "DELETE" + " " + "*" + " " + "FROM" + " " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + " "
+		String sql = "DELETE" + " " + "FROM" + " " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + " "
 				+ "WHERE" + " " + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID + " " + "=" + "?" ;
-		jdbcTemplate.execute(sql);
+		jdbcTemplate.update(sql,id);
 	}
 
 	
@@ -60,5 +65,22 @@ public class AnimalZooHistoryDaoImpl implements AnimalZooHistoryDao {
 		
 		return animal;
 		
+	}
+	
+	@Override
+	public void insertZooHistory(int animal_id, List<Integer> zooList, List<Date> admissionDateList, List<Date> exitDateList) {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		for (int i = 0; i < zooList.size(); i++) {
+			Map<String, Object> insertedAnimalZooHistory = jdbcTemplate.queryForMap(
+					"INSERT INTO " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "(" 
+					+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID + ", "
+					+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID + ", "
+					+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ADMISSION_DATE + ", "
+					+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE + ") VALUES(?, ?, ?, ?) RETURNING " 
+					+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID, 
+					animal_id, zooList.get(i), admissionDateList.get(i), exitDateList.get(i));
+			commonSqlUtil.updateAllCommonColumn(ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME, ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID , (int) ((LoginUser) principal).getUser_id(),(int) insertedAnimalZooHistory.get(ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID));
+
+		}
 	}
 }
