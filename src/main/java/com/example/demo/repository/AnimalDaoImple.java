@@ -103,7 +103,6 @@ public class AnimalDaoImple implements AnimalDao {
 			animal.setName((String) result.get(ENTITY_ANIMAL.COLUMN_NAME));
 			animal.setSex((int) result.get(ENTITY_ANIMAL.COLUMN_SEX));
 			animal.setBirthdate((Date) result.get(ENTITY_ANIMAL.COLUMN_BIRTHDATE));
-			animal.setZoo((int) result.get(ENTITY_ZOO.COLUMN_ZOO_ID));
 			animal.setZooName((String) result.get(ENTITY_ZOO.COLUMN_ZOO_NAME));
 			animal.setMother((String) result.get(AsMotherName));
 			animal.setFather((String) result.get(AsFatherName));

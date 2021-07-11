@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -39,5 +40,7 @@ public interface AnimalService {
 	void deleteAnimalImage(String AnimalImageIds, int animal_id);
 	
 	Map<String, Object> getAnimalForTree(int i);
+	
+	Date getDate(String year, String month, String day);
 		
 }

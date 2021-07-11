@@ -1,9 +1,11 @@
 package com.example.demo.app;
 
-import java.sql.Date;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.AnimalImage;
+import com.example.demo.entity.AnimalZooHistory;
 import com.example.demo.entity.Zoo;
 import com.example.demo.service.AnimalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -132,6 +135,12 @@ public class AnimalController {
 			model.addAttribute("cloudinaryImageUrl", cloudinaryImageUrl);
 		} else {
 			model.addAttribute("title", "コアラの登録");
+			if(form.getAnimalZooHistory() == null) {
+				Date dummyDate =  animalService.getDate("9999", "01", "01");
+				AnimalZooHistory dummyHistory = new AnimalZooHistory();
+				dummyHistory.setAdmission_date(dummyDate);
+				dummyHistory.setExit_date(dummyDate);
+				form.setAnimalZooHistory(Arrays.asList(dummyHistory));		}
 		}
 		model.addAttribute("sexItems", SEX_ITEMS);
 		model.addAttribute("isAliveItems", IS_ALIVE_ITEMS);
