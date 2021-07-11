@@ -31,10 +31,12 @@ import com.example.demo.app.AnimalInsertForm;
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.AnimalForTree;
 import com.example.demo.entity.AnimalImage;
+import com.example.demo.entity.AnimalZooHistory;
 import com.example.demo.entity.RelationForTree;
 import com.example.demo.entity.Zoo;
 import com.example.demo.repository.AnimalDao;
 import com.example.demo.repository.AnimalImageDao;
+import com.example.demo.repository.AnimalZooHistoryDao;
 
 @Service
 public class AnimalServiceImpl implements AnimalService {
@@ -42,12 +44,14 @@ public class AnimalServiceImpl implements AnimalService {
 	private final AnimalDao dao;
 	private final AnimalImageDao animalImageDao;
 	private final CloudinaryService cloudinaryService;
+	private final AnimalZooHistoryDao animalZooHistoryDao;
 	
 	@Autowired
-	public AnimalServiceImpl(AnimalDao dao, AnimalImageDao animalImageDao, CloudinaryService cloudinaryService) {
+	public AnimalServiceImpl(AnimalDao dao, AnimalImageDao animalImageDao, CloudinaryService cloudinaryService, AnimalZooHistoryDao animalZooHistoryDao) {
 		this.dao = dao;
 		this.animalImageDao = animalImageDao;
 		this.cloudinaryService = cloudinaryService;
+		this.animalZooHistoryDao = animalZooHistoryDao;
 	}
 
 	@Override
@@ -100,7 +104,6 @@ public class AnimalServiceImpl implements AnimalService {
 
 	}
 
-	Animal animal;
 
 	@Override
 	@Transactional
@@ -117,14 +120,13 @@ public class AnimalServiceImpl implements AnimalService {
 		if (deathDate != null) {
 			animal.setDeathdate(deathDate);
 		}
-		animal.setZoo(form.getZoo());
 		animal.setDetails(form.getDetails());
 		animal.setFeature(form.getFeature());
 		animal.setMother_id(form.getMother_id());
 		animal.setFather_id(form.getFather_id());
 		animal.setProfileImagePath((form.getAnimalProfileImageUpload().getOriginalFilename())
 				.substring(form.getAnimalProfileImageUpload().getOriginalFilename().lastIndexOf(".")));
-
+		
 		int insertAnimal_id = dao.insert(animal);
 		// 追加するコアラに画像が添付されているか確認
 		boolean animalImageInsetFlag = false;
@@ -138,10 +140,25 @@ public class AnimalServiceImpl implements AnimalService {
 			insertAnimalImage(insertAnimal_id, form.getAnimalImage());
 		}
 
-		//プロフィール画像
+		//プロフィール画像登録
 		if (!form.getAnimalProfileImageUpload().isEmpty()) {
 			insertAnimalProfileImage(insertAnimal_id, form.getAnimalProfileImageUpload(), animal.getProfileImagePath());
 		}
+		
+		//入園退園の経歴登録
+		List<Date> admissionDateList = new ArrayList<Date>();
+		for (int i = 0; i < form.getAdmissionYear().size(); i++) {
+			Date admissionDate = getDate(form.getAdmissionYear().get(i),form.getAdmissionMonth().get(i), form.getAdmissionDay().get(i));
+			admissionDateList.add(admissionDate);
+		}
+		
+		List<Date> exitDateList = new ArrayList<Date>();
+		for (int i = 0; i < form.getExitYear().size(); i++) {
+			Date exitDate = getDate(form.getExitYear().get(i),form.getExitMonth().get(i), form.getExitDay().get(i));
+			exitDateList.add(exitDate);
+		}
+		
+		dao.insertZooHistory(insertAnimal_id, form.getZooList(),admissionDateList, exitDateList);
 
 	}
 
@@ -173,7 +190,8 @@ public class AnimalServiceImpl implements AnimalService {
 
 	@Override
 	public Animal findById(int id) {
-		return dao.findById(id);
+		Animal animal =  dao.findById(id);
+		return animalZooHistoryDao.addAnimalZooHistory(id, animal);
 	}
 	
 	@Override
@@ -439,8 +457,7 @@ public class AnimalServiceImpl implements AnimalService {
 		}
 		animal.setMother_id(form.getMother_id());
 		animal.setFather_id(form.getFather_id());
-		;
-		animal.setZoo(form.getZoo());
+//		animal.setZoo(form.getZoo());
 		animal.setDetails(form.getDetails());
 		animal.setFeature(form.getFeature());
 		animal.setProfileImagePath(form.getProfileImagePath());

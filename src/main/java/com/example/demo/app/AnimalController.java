@@ -226,7 +226,7 @@ public class AnimalController {
 		deathDate[2] = zeroCut(deathDate[2], deathDate[0]);
 		form.setDeathMonth(deathDate[1]);
 		form.setDeathDay(deathDate[2]);
-		form.setZoo(animal.getZoo());
+//		form.setZoo(animal.getZoo());
 		form.setDetails(animal.getDetails());
 		form.setFeature(animal.getFeature());
 		form.setAnimalImageList(animal.getAnimalImageList());
@@ -240,6 +240,7 @@ public class AnimalController {
 		form.setFather_id(animal.getFather_id());
 		setDefaultAnimalProfileImage(animal);
 		form.setProfileImagePath(animal.getProfileImagePath());
+		form.setAnimalZooHistory(animal.getAnimalZooHistory());
 		return "insert";
 	}
 

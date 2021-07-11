@@ -33,4 +33,7 @@ public interface AnimalDao {
 	List<AnimalForTree> getBrotherAnimalForTree(int animal_id, int mother_id, int father_id);
 	
 	List<AnimalForTree> getChildrenAnimalForTree(int animal_id, int sex);
+	
+	void insertZooHistory(int animal_id, List<Integer> zooList, List<Date> admissionDateList, List<Date> exitDateList);
+	
 }

@@ -50,4 +50,5 @@ public class Animal {
 	private String profileImagePath;
 	private AnimalType animalType;
 	private List<AnimalImage> animalImageList;
+	private List<AnimalZooHistory> animalZooHistory;
 }

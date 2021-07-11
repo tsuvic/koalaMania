@@ -61,13 +61,33 @@ private final JdbcTemplate jdbcTemplate;
 
 	@Override
 	public List<Animal> getAll() {
-		String sql = "SELECT "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_SEX +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +" , "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +" "
-				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal +" LEFT OUTER JOIN "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +" ON "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME +" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_PREFECTURE.TABLE_NAME +" ON "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" = "+ ENTITY_PREFECTURE.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMotherAnimal +" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +"  = "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsFatherAnimal +" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +"  = "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "WHERE "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE +" = '"+ dummyDate +"' "
+		String sql = "SELECT "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_SEX +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "
+				+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "
+				+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +" , "
+				+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +" "
+				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal 
+				+" LEFT OUTER JOIN "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  
+				+" ON "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID 
+				+" = "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME 
+				+" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID 
+				+" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_PREFECTURE.TABLE_NAME 
+				+" ON "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID 
+				+" = "+ ENTITY_PREFECTURE.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMotherAnimal 
+				+" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER 
+				+"  = "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsFatherAnimal 
+				+" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER 
+				+"  = "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
+				+ "WHERE "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE 
+				+" = '"+ dummyDate +"' "
 				+ "ORDER BY "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" ASC";
 
 		// SQL実行結果をMap型リストへ代入
@@ -183,6 +203,7 @@ private final JdbcTemplate jdbcTemplate;
 				animal.getMother_id(), animal.getFather_id(), animal.getDetails(), animal.getFeature(),
 				animal.getProfileImagePath());
 
+		//削除対象？？
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
 		try {
@@ -194,16 +215,26 @@ private final JdbcTemplate jdbcTemplate;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		commonSqlUtil.updateAllCommonColumn(ENTITY_ANIMAL.TABLE_NAME,ENTITY_ANIMAL.COLUMN_ANIMAL_ID ,(int) ((LoginUser) principal).getUser_id() ,(int) insertId.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));
 
-		Map<String, Object> insertAnimal_zoo_Id = jdbcTemplate.queryForMap(
-				"INSERT INTO "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"("+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +", "+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ADMISSION_DATE +", "+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE +") VALUES(?, ?, ?, ?) RETURNING "+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID + "",
-				(int) insertId.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID), animal.getZoo(), date, date);
-		
-		commonSqlUtil.updateAllCommonColumn(ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME,ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID ,(int) ((LoginUser) principal).getUser_id(),(int) insertAnimal_zoo_Id.get(ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID));
-
-		// インサートしたコアラidを取得
 		return (int) insertId.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID);
-
 	}
+	
+	@Override
+	public void insertZooHistory(int animal_id, List<Integer> zooList, List<Date> admissionDateList, List<Date> exitDateList) {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		for (int i = 0; i < zooList.size(); i++) {
+			Map<String, Object> insertedAnimalZooHistory = jdbcTemplate.queryForMap(
+					"INSERT INTO " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "(" 
+					+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID + ", "
+					+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID + ", "
+					+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ADMISSION_DATE + ", "
+					+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE + ") VALUES(?, ?, ?, ?) RETURNING " 
+					+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID, 
+					animal_id, zooList.get(i), admissionDateList.get(i), exitDateList.get(i));
+			commonSqlUtil.updateAllCommonColumn(ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME, ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID , (int) ((LoginUser) principal).getUser_id(),(int) insertedAnimalZooHistory.get(ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID));
+
+		}
+	}
+	
 
 	@Override
 	public Animal findById(int id) {
@@ -237,7 +268,7 @@ private final JdbcTemplate jdbcTemplate;
 		animal.setMother_id((int) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_MOTHER ));
 		animal.setFather_id((int) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_FATHER ));
 
-
+		//アニマル写真（いずれ不要になる）
 		if (resultList.get(0).get(ENTITY_ANIMAL_IMAGE.COLUMN_ANIMAL_IMAGE_ID) != null) {
 
 			List<AnimalImage> animalImageList = new ArrayList<AnimalImage>();
@@ -250,8 +281,7 @@ private final JdbcTemplate jdbcTemplate;
 				animalImage = null;
 			}
 			animal.setAnimalImageList(animalImageList);
-		}
-		
+		}		
 		return animal;
 	}
 
@@ -403,5 +433,4 @@ private final JdbcTemplate jdbcTemplate;
 		}
 		return childrenList;
 	}
-
 }
