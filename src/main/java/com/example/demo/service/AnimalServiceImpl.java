@@ -31,7 +31,6 @@ import com.example.demo.app.AnimalInsertForm;
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.AnimalForTree;
 import com.example.demo.entity.AnimalImage;
-import com.example.demo.entity.AnimalZooHistory;
 import com.example.demo.entity.RelationForTree;
 import com.example.demo.entity.Zoo;
 import com.example.demo.repository.AnimalDao;
@@ -124,9 +123,6 @@ public class AnimalServiceImpl implements AnimalService {
 		animal.setFeature(form.getFeature());
 		animal.setMother_id(form.getMother_id());
 		animal.setFather_id(form.getFather_id());
-		animal.setProfileImagePath((form.getAnimalProfileImageUpload().getOriginalFilename())
-				.substring(form.getAnimalProfileImageUpload().getOriginalFilename().lastIndexOf(".")));
-		
 		int insertAnimal_id = dao.insert(animal);
 		// 追加するコアラに画像が添付されているか確認
 		boolean animalImageInsetFlag = false;

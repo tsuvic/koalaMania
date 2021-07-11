@@ -29,19 +29,16 @@
 	<br>
 	<br>
 	<div th:object="${zoo}">
-	<div class="btn_area_center" th:if="${postFlag}">
-	
 		<button class="btn btn-primary btn-sm" type="button"
 			th:onclick="'location.href = \'' +@{/post/{zoo_id}(zoo_id=*{zoo_id})} + '\''">投稿する</button>
-	</div>
 		<table class="table table-hover table-responsive">
 			<tr>
 				<th class="cell_title">名前</th>
-				<td th:text="*{name}"></td>
+				<td th:text="*{zoo_name}"></td>
 			</tr>
 			<tr>
 				<th class="cell_title">所在地</th>
-				<td th:text="${prefecture.name}"></td>
+				<td th:text="*{prefecture.name}"></td>
 			</tr>
 		</table>
 	</div>
