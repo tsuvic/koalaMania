@@ -1,5 +1,6 @@
 package com.example.demo.app;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.validation.constraints.Max;
@@ -25,9 +26,10 @@ public class AnimalInsertForm {
 	
 	private int sex = 2;
 	
-
+	//動物園履歴表示用
 	private List<AnimalZooHistory> animalZooHistory;
-	//不要？
+	
+	//動物園履歴送信用
 	private List<String> admissionYear;
 	private List<String> admissionMonth;
 	private List<String> admissionDay;

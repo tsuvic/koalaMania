@@ -138,7 +138,7 @@ public class AnimalController {
 			if(form.getAnimalZooHistory() == null) {
 				Date dummyDate =  animalService.getDate("9999", "01", "01");
 				AnimalZooHistory dummyHistory = new AnimalZooHistory();
-				dummyHistory.setZoo_id(0);
+				dummyHistory.setZoo_id(-1);
 				dummyHistory.setAdmission_date(dummyDate);
 				dummyHistory.setExit_date(dummyDate);
 				form.setAnimalZooHistory(Arrays.asList(dummyHistory));		}
