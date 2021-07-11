@@ -497,13 +497,10 @@ public class AnimalServiceImpl implements AnimalService {
 		}
 		
 		dao.delete(form.getAnimal_id());
-		dao.insertZooHistory(form.getAnimal_id(), form.getZooList(),admissionDateList, exitDateList);
-
+		dao.insertZooHistory(form.getAnimal_id(), form.getInsertZoo(),admissionDateList, exitDateList);
 		
 	}
 
-	
-	
 	@Override
 	@Transactional
 	public void delete(int animal_id) {

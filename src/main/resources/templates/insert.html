@@ -176,7 +176,6 @@
 		$('.cancelHistoryButton').click(function(e) {
 			const contents = $("#zooHistory > #zooHistoryDiv").length;
 			if (contents > 1) {
-				$(this).parent().prev().remove();
 				$(this).parent().remove();
 			} else {
 				$(this).prev().val("");
