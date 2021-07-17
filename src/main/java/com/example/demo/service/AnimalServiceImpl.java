@@ -35,35 +35,38 @@ import com.example.demo.entity.RelationForTree;
 import com.example.demo.entity.Zoo;
 import com.example.demo.repository.AnimalDao;
 import com.example.demo.repository.AnimalImageDao;
+import com.example.demo.repository.AnimalZooHistoryDao;
 
 @Service
 public class AnimalServiceImpl implements AnimalService {
 
-	private final AnimalDao dao;
+	private final AnimalDao animalDao;
 	private final AnimalImageDao animalImageDao;
 	private final CloudinaryService cloudinaryService;
+	private final AnimalZooHistoryDao animalZooHistoryDao;
 	
 	@Autowired
-	public AnimalServiceImpl(AnimalDao dao, AnimalImageDao animalImageDao, CloudinaryService cloudinaryService) {
-		this.dao = dao;
+	public AnimalServiceImpl(AnimalDao animalDao, AnimalImageDao animalImageDao, CloudinaryService cloudinaryService, AnimalZooHistoryDao animalZooHistoryDao) {
+		this.animalDao = animalDao;
 		this.animalImageDao = animalImageDao;
 		this.cloudinaryService = cloudinaryService;
+		this.animalZooHistoryDao = animalZooHistoryDao;
 	}
 
 	@Override
 	public List<Animal> getAll() {
-		return dao.getAll();
+		return animalDao.getAll();
 	}
 
 	@Override
 	public List<Animal> findByKeyword(String keyword) {
-		return dao.findByKeyword(keyword);
+		return animalDao.findByKeyword(keyword);
 	}
 
 	@Override
 	public List<Animal> getMotherList(int animal_id, String birthYear, String birthMonth, String birthDay) {
 		Date birthDate = getDate(birthYear, birthMonth, birthDay);
-		List<Animal> motherList = dao.getMotherList(animal_id, birthDate);
+		List<Animal> motherList = animalDao.getMotherList(animal_id, birthDate);
 		Animal unknownForInsertForm = new Animal();
 		unknownForInsertForm.setName("不明");
 		unknownForInsertForm.setAnimal_id(0);
@@ -74,7 +77,7 @@ public class AnimalServiceImpl implements AnimalService {
 	@Override
 	public List<Animal> getFatherList(int animal_id, String birthYear, String birthMonth, String birthDay) {
 		Date birthDate = getDate(birthYear, birthMonth, birthDay);
-		List<Animal> fatherList = dao.getFatherList(animal_id, birthDate);
+		List<Animal> fatherList = animalDao.getFatherList(animal_id, birthDate);
 		Animal unknownForInsertForm = new Animal();
 		unknownForInsertForm.setName("不明");
 		unknownForInsertForm.setAnimal_id(0);
@@ -84,13 +87,15 @@ public class AnimalServiceImpl implements AnimalService {
 
 	@Override
 	public List<Zoo> getZooList() {
-		List<Zoo> zooList = dao.getZooList();
+		List<Zoo> zooList = animalDao.getZooList();
 
+		//その他をリストの最下部へ
 		Zoo other_zoo = new Zoo();
 		other_zoo = zooList.get(0);
 		zooList.remove(0);
 		zooList.add(other_zoo);
-
+		
+		//選択なし
 		Zoo zoo = new Zoo();
 		zoo.setZoo_id(-1);
 		zoo.setZoo_name("---");
@@ -100,7 +105,6 @@ public class AnimalServiceImpl implements AnimalService {
 
 	}
 
-	Animal animal;
 
 	@Override
 	@Transactional
@@ -117,15 +121,11 @@ public class AnimalServiceImpl implements AnimalService {
 		if (deathDate != null) {
 			animal.setDeathdate(deathDate);
 		}
-		animal.setZoo(form.getZoo());
 		animal.setDetails(form.getDetails());
 		animal.setFeature(form.getFeature());
 		animal.setMother_id(form.getMother_id());
 		animal.setFather_id(form.getFather_id());
-		animal.setProfileImagePath((form.getAnimalProfileImageUpload().getOriginalFilename())
-				.substring(form.getAnimalProfileImageUpload().getOriginalFilename().lastIndexOf(".")));
-
-		int insertAnimal_id = dao.insert(animal);
+		int insertAnimal_id = animalDao.insert(animal);
 		// 追加するコアラに画像が添付されているか確認
 		boolean animalImageInsetFlag = false;
 		for (MultipartFile animalImgae : form.getAnimalImage()) {
@@ -138,10 +138,26 @@ public class AnimalServiceImpl implements AnimalService {
 			insertAnimalImage(insertAnimal_id, form.getAnimalImage());
 		}
 
-		//プロフィール画像
+		//プロフィール画像登録
 		if (!form.getAnimalProfileImageUpload().isEmpty()) {
 			insertAnimalProfileImage(insertAnimal_id, form.getAnimalProfileImageUpload(), animal.getProfileImagePath());
 		}
+		
+		//入園退園の経歴登録
+		List<Date> admissionDateList = new ArrayList<Date>();
+		for (int i = 0; i < form.getAdmissionYear().size(); i++) {
+			Date admissionDate = getDate(form.getAdmissionYear().get(i),form.getAdmissionMonth().get(i), form.getAdmissionDay().get(i));
+			admissionDateList.add(admissionDate);
+		}
+		
+		List<Date> exitDateList = new ArrayList<Date>();
+		for (int i = 0; i < form.getExitYear().size(); i++) {
+			Date exitDate = getDate(form.getExitYear().get(i),form.getExitMonth().get(i), form.getExitDay().get(i));
+			exitDateList.add(exitDate);
+		}
+		
+		
+		animalZooHistoryDao.insertZooHistory(insertAnimal_id, form.getInsertZoo(),admissionDateList, exitDateList);
 
 	}
 
@@ -173,7 +189,8 @@ public class AnimalServiceImpl implements AnimalService {
 
 	@Override
 	public Animal findById(int id) {
-		return dao.findById(id);
+		Animal animal =  animalDao.findById(id);
+		return animalZooHistoryDao.addAnimalZooHistory(id, animal);
 	}
 	
 	@Override
@@ -183,11 +200,11 @@ public class AnimalServiceImpl implements AnimalService {
 		AnimalForTree root = new AnimalForTree();
 		
 		//メインのコアラオブジェクトを生成
-		AnimalForTree mainAnimal = dao.getAnimalForTree(id);
+		AnimalForTree mainAnimal = animalDao.getAnimalForTree(id);
 		
 		AnimalForTree motherAnimal = new AnimalForTree();
 		if (mainAnimal.getMother_id() != 0) {
-			motherAnimal = dao.getAnimalForTree(mainAnimal.getMother_id());
+			motherAnimal = animalDao.getAnimalForTree(mainAnimal.getMother_id());
 		} else {
 			motherAnimal.setId(9990);
 			motherAnimal.setName("不明");
@@ -195,7 +212,7 @@ public class AnimalServiceImpl implements AnimalService {
 		
 		AnimalForTree fatherAnimal = new AnimalForTree();
 		if (mainAnimal.getMother_id() != 0) {
-			fatherAnimal = dao.getAnimalForTree(mainAnimal.getFather_id());
+			fatherAnimal = animalDao.getAnimalForTree(mainAnimal.getFather_id());
 		} else {
 			fatherAnimal.setId(9998);
 			fatherAnimal.setName("不明");
@@ -204,7 +221,7 @@ public class AnimalServiceImpl implements AnimalService {
 		//祖父母
 		AnimalForTree paternalGrandFather = new AnimalForTree();
 		if (fatherAnimal.getFather_id() != 0) {
-			paternalGrandFather = dao.getAnimalForTree(fatherAnimal.getFather_id());
+			paternalGrandFather = animalDao.getAnimalForTree(fatherAnimal.getFather_id());
 		} else {
 			paternalGrandFather.setId(9997);
 			paternalGrandFather.setName("不明");
@@ -212,7 +229,7 @@ public class AnimalServiceImpl implements AnimalService {
 		
 		AnimalForTree paternalGrandMother = new AnimalForTree();
 		if (fatherAnimal.getMother_id() != 0) {
-			paternalGrandMother = dao.getAnimalForTree(fatherAnimal.getMother_id());
+			paternalGrandMother = animalDao.getAnimalForTree(fatherAnimal.getMother_id());
 		} else {
 			paternalGrandMother.setId(9996);
 			paternalGrandMother.setName("不明");
@@ -220,7 +237,7 @@ public class AnimalServiceImpl implements AnimalService {
 		
 		AnimalForTree maternalGrandFather = new AnimalForTree();
 		if (motherAnimal.getFather_id() != 0) {
-			maternalGrandFather = dao.getAnimalForTree(motherAnimal.getFather_id());
+			maternalGrandFather = animalDao.getAnimalForTree(motherAnimal.getFather_id());
 		} else {
 			maternalGrandFather.setId(9995);
 			maternalGrandFather.setName("不明");
@@ -228,7 +245,7 @@ public class AnimalServiceImpl implements AnimalService {
 		
 		AnimalForTree maternalGrandMother = new AnimalForTree();
 		if (motherAnimal.getMother_id() != 0) {
-			maternalGrandMother = dao.getAnimalForTree(motherAnimal.getMother_id());
+			maternalGrandMother = animalDao.getAnimalForTree(motherAnimal.getMother_id());
 		} else {
 			maternalGrandMother.setId(9994);
 			maternalGrandMother.setName("不明");
@@ -310,7 +327,7 @@ public class AnimalServiceImpl implements AnimalService {
 		
 		//メインコアラの配偶者（複数の可能性あり）とその子供達
 		int sex = mainAnimal.getSex(); //メインのコアラが父親か母親か
-		List<AnimalForTree> childrenList = dao.getChildrenAnimalForTree(mainAnimal.getId(), sex); 
+		List<AnimalForTree> childrenList = animalDao.getChildrenAnimalForTree(mainAnimal.getId(), sex); 
 //		List<AnimalForTree> spouseList = new ArrayList<AnimalForTree>();
 //		Map<Integer,  AnimalForTree> spouseMap = new HashMap<Integer,  AnimalForTree>();
 		Map<Object, List<AnimalForTree>> childrenMap;
@@ -333,7 +350,7 @@ public class AnimalServiceImpl implements AnimalService {
 //		子供マップから配偶者（複数の可能性あり）を取得 & 両親のレイヤーに詰め込身を行う
 		int h = 1;
 		for (Entry<Object, List<AnimalForTree>> entry : childrenMap.entrySet()) {
-			AnimalForTree spouseAnimal = dao.getAnimalForTree((int)entry.getKey());
+			AnimalForTree spouseAnimal = animalDao.getAnimalForTree((int)entry.getKey());
 			spouseAnimal.setHidden(false);
 			if(spouseAnimal.getProfileImagePath() == null){
 				mainAnimal.setProfileImagePath("/images/defaultAnimal.png");
@@ -358,7 +375,7 @@ public class AnimalServiceImpl implements AnimalService {
 		//メインコアラの兄弟達
 		
 		if (mainAnimal.getMother_id() != 0 || mainAnimal.getFather_id() != 0) {
-		List<AnimalForTree> brotherAnimalList = dao.getBrotherAnimalForTree(mainAnimal.getId(), mainAnimal.getMother_id(), mainAnimal.getFather_id());
+		List<AnimalForTree> brotherAnimalList = animalDao.getBrotherAnimalForTree(mainAnimal.getId(), mainAnimal.getMother_id(), mainAnimal.getFather_id());
 		for (AnimalForTree brotherAnimal : brotherAnimalList) {
 			brotherAnimal.setNo_parent(false);
 			brotherAnimal.setHidden(false);
@@ -407,7 +424,7 @@ public class AnimalServiceImpl implements AnimalService {
 		//祖父母、両親は確実に表示するが、配偶者は存在する場合に表示する
 		int r = 3;
 		for (Entry<Object, List<AnimalForTree>> entry : childrenMap.entrySet()) {
-			AnimalForTree spouseAnimal = dao.getAnimalForTree((int)entry.getKey());
+			AnimalForTree spouseAnimal = animalDao.getAnimalForTree((int)entry.getKey());
 			relationForTree.add(new RelationForTree());
 			relationForTree.get(r).setSource(mainAnimal);
 			relationForTree.get(r).setTarget(spouseAnimal);
@@ -439,8 +456,7 @@ public class AnimalServiceImpl implements AnimalService {
 		}
 		animal.setMother_id(form.getMother_id());
 		animal.setFather_id(form.getFather_id());
-		;
-		animal.setZoo(form.getZoo());
+//		animal.setZoo(form.getZoo());
 		animal.setDetails(form.getDetails());
 		animal.setFeature(form.getFeature());
 		animal.setProfileImagePath(form.getProfileImagePath());
@@ -450,7 +466,7 @@ public class AnimalServiceImpl implements AnimalService {
 					.substring(form.getAnimalProfileImageUpload().getOriginalFilename().lastIndexOf("."));
 			animal.setProfileImagePath(profileImagePath);
 		}
-		dao.update(animal);
+		animalDao.update(animal);
 
 //		プロフィール画像登録 or 更新
 	
@@ -467,14 +483,30 @@ public class AnimalServiceImpl implements AnimalService {
 		if (form.getDeleteAnimalImageFiles() != null) {
 			deleteAnimalImage(form.getDeleteAnimalImageFiles(), form.getAnimal_id());
 		}
+		
+		
+		//入退園履歴
+		List<Date> admissionDateList = new ArrayList<Date>();
+		for (int i = 0; i < form.getAdmissionYear().size(); i++) {
+			Date admissionDate = getDate(form.getAdmissionYear().get(i),form.getAdmissionMonth().get(i), form.getAdmissionDay().get(i));
+			admissionDateList.add(admissionDate);
+		}
+		
+		List<Date> exitDateList = new ArrayList<Date>();
+		for (int i = 0; i < form.getExitYear().size(); i++) {
+			Date exitDate = getDate(form.getExitYear().get(i),form.getExitMonth().get(i), form.getExitDay().get(i));
+			exitDateList.add(exitDate);
+		}
+		
+		animalZooHistoryDao.deleteAllAnimalZooHistory(form.getAnimal_id());
+		animalZooHistoryDao.insertZooHistory(form.getAnimal_id(), form.getInsertZoo(),admissionDateList, exitDateList);
+		
 	}
 
-	
-	
 	@Override
 	@Transactional
 	public void delete(int animal_id) {
-		dao.delete(animal_id);
+		animalDao.delete(animal_id);
 		deleteDirs(animal_id);
 	}
 
@@ -503,7 +535,7 @@ public class AnimalServiceImpl implements AnimalService {
 			// cloudinaryに写真をアップロードする
 			Map resultmap = cloudinaryService.uploadAnimalProfileImage(uploadFile, animal_id);
 			String url = (String)resultmap.get("secure_url");
-			dao.urlUpdate(animal_id, url);
+			animalDao.urlUpdate(animal_id, url);
 			
 			uploadFile.delete();
 		} catch (Exception e) {

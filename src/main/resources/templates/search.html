@@ -22,10 +22,7 @@
 </head>
 
 <body>
-
 	<div th:replace="~{block/header_boot::headerA_boot}"></div>
-
-
 	<div class="container">
 		<br> <br> <br> <br>
 		<h2>検索</h2>
@@ -76,8 +73,10 @@
 					<td th:if="*{stringBirthDate.equals('9999年1月1日')}">不明</td>
 					<td th:unless="*{stringBirthDate.equals('9999年1月1日')}"
 						th:text="*{stringBirthDate}"></td>
-					<td th:text="*{zooName}"></td>
-
+					<td>
+					<a th:href="@{/zoo/detail/{zoo_id}(zoo_id=*{zoo})}" th:text="*{zooName}">
+					</a>
+					</td>
 					<td th:if="*{#strings.isEmpty(mother)}">不明</td>
 					<td th:unless="*{#strings.isEmpty(mother)}" th:text="*{mother}"></td>
 

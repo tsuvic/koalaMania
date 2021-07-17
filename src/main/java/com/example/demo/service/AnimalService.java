@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -7,9 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.app.AnimalInsertForm;
 import com.example.demo.entity.Animal;
-import com.example.demo.entity.AnimalForTree;
 import com.example.demo.entity.AnimalImage;
-import com.example.demo.entity.RelationForTree;
 import com.example.demo.entity.Zoo;
 
 public interface AnimalService {
@@ -26,7 +25,7 @@ public interface AnimalService {
 
 	void insert(AnimalInsertForm form);
 
-	Animal findById(int i);
+	Animal findById(int id);
 
 	void update(AnimalInsertForm form);
 
@@ -41,5 +40,7 @@ public interface AnimalService {
 	void deleteAnimalImage(String AnimalImageIds, int animal_id);
 	
 	Map<String, Object> getAnimalForTree(int i);
+	
+	Date getDate(String year, String month, String day);
 		
 }

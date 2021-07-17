@@ -33,4 +33,5 @@ public interface AnimalDao {
 	List<AnimalForTree> getBrotherAnimalForTree(int animal_id, int mother_id, int father_id);
 	
 	List<AnimalForTree> getChildrenAnimalForTree(int animal_id, int sex);
+	
 }

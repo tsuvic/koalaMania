@@ -1,5 +1,6 @@
 package com.example.demo.app;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.validation.constraints.Max;
@@ -10,6 +11,7 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entity.AnimalImage;
+import com.example.demo.entity.AnimalZooHistory;
 
 import lombok.Data;
 
@@ -23,7 +25,19 @@ public class AnimalInsertForm {
 	private int is_alive = 1;
 	
 	private int sex = 2;
-
+	
+	//動物園履歴表示用
+	private List<AnimalZooHistory> animalZooHistory;
+	
+	//動物園履歴送信用
+	private List<String> admissionYear;
+	private List<String> admissionMonth;
+	private List<String> admissionDay;
+	private List<String> exitYear;
+	private List<String> exitMonth;
+	private List<String> exitDay;
+	private List<Integer> insertZoo;
+	
 	@NotBlank
 	private String birthYear = "2021";
 	@NotBlank
@@ -36,8 +50,6 @@ public class AnimalInsertForm {
 	private String deathMonth = "0";
 	@NotBlank
 	private String deathDay= "0";
-	@Min(0)
-	private int zoo=-1;
 	@Min(0)
 	private int mother_id;
 	@Min(0)

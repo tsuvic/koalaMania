@@ -116,6 +116,7 @@
 		}
 
 		if (nameFlag && birthFlag && deathFlag && detailsFlag && featureFlag) {
+			document.getElementById('submitButton').textContent = "保存中....";
 			doubleClick = true;
 			return true;
 		} else {
@@ -130,6 +131,18 @@
 
 		return parseInt("" + intYear + intMonth + intDay);
 	}
+	
+	function deleteFunc(animal_id, thisButton) {
+		const deleteFalg = confirm('このコアラを削除してもよろしいですか？');
+		if (deleteFalg) {
+			thisButton.disabled = true;
+			thisButton.previousElementSibling.disabled = true;
+			thisButton.nextElementSibling.disabled = true;
+			location.href = '/delete/' + animal_id;
+		} else {
+			return;
+		}
+	}
 
 	$(function() {
 		$('.addInputFileButton').click(function(e) {
@@ -140,22 +153,35 @@
 			cancelButton.appendTo("#animalImages");
 			$("#animalImages").append("<br>");
 		});
-	});
-
-	$(function() {
-		$('#cancelInputFileButton').click(function(e) {
+	
+		$('#cancelInputFileButton').click(function() {
 			const contents = $("#animalImages > input").length;
 			if (contents > 1) {
 				$(this).prev().remove();
 				$(this).next().remove();
 				$(this).remove();
-			} else {
-				$(this).prev().val("");
-			}
+			} 
 		});
 	});
 
 	$(function() {
+		$('.addHistoryButton').click(function(e) {
+			const input = $("#zooHistoryDiv").clone(true);
+			input.val("");
+			input.appendTo("#zooHistory");
+		});
+	});
+
+	$(function() {
+		$('.cancelHistoryButton').click(function(e) {
+			const contents = $("#zooHistory > #zooHistoryDiv").length;
+			if (contents > 1) {
+				$(this).parent().remove();
+			} else {
+				$(this).prev().val("");
+			}
+		});
+
 		$('.deleteImageButton').click(function(e) {
 			const deleteImageFalg = confirm('この写真を削除してもよろしいですか？');
 			if (!deleteImageFalg) {
@@ -171,21 +197,7 @@
 			$('#deleteAnimalImageFiles').val(deleteIds);
 			$(this).parent('span').remove();
 		});
-	});
-</script>
-
-<script type="text/javascript">
-	function deleteFunc(animal_id, thisButton) {
-		const deleteFalg = confirm('このコアラを削除してもよろしいですか？');
-		if (deleteFalg) {
-			thisButton.disabled = true;
-			thisButton.previousElementSibling.disabled = true;
-			thisButton.nextElementSibling.disabled = true;
-			location.href = '/delete/' + animal_id;
-		} else {
-			return;
-		}
-	}
+	})
 </script>
 
 </head>
@@ -200,30 +212,26 @@
 		<!--タイトル名を 変数式でControllerから取得 -->
 
 
-		<form th:action="@{/insert}" method="post" enctype="multipart/form-data"
-			th:object="${animalInsertForm}"
+		<form th:action="@{/insert}" method="post"
+			enctype="multipart/form-data" th:object="${animalInsertForm}"
 			onsubmit="return validateSubmit(this);">
-			<input th:unless="*{animal_id}==0" type="hidden" th:field="*{animal_id}">
+			<input th:unless="*{animal_id}==0" type="hidden"
+				th:field="*{animal_id}"> <input type="hidden"
+				th:field="*{profileImagePath}"> プロフィール写真：<br> <span
+				th:id="*{profileImagePath}" th:if="*{profileImagePath}"> <img
+				th:src="*{profileImagePath}" width="200" height="200">
+				<button class="btn btn-danger btn-sm deleteImageButton"
+					type="button">削除</button>
+			</span>
+			<div id="animalProfileImageUpload">
+				<input type="file" accept="image/*"
+					th:field="*{animalProfileImageUpload}" th:errorclass="is-invalid"
+					class="form-control-file">
+				<button class="btn btn-outline-warning btn-sm"
+					id="cancelInputFileButton" type="button">写真取消</button>
+				<br>
+			</div>
 
-				<input type="hidden" th:field="*{profileImagePath}">
-				
-				プロフィール写真：<br> <span 
-					th:id="*{profileImagePath}" 
-					th:if="*{profileImagePath}">
-						<img
-							th:src="*{profileImagePath}"
-							width="200" height="200">
-					<button class="btn btn-danger btn-sm deleteImageButton"
-						type="button">削除</button>
-				</span>
-				<div id="animalProfileImageUpload">
-					<input type="file" accept="image/*" th:field="*{animalProfileImageUpload}"
-						th:errorclass="is-invalid" class="form-control-file">
-					<button class="btn btn-outline-warning btn-sm"
-						id="cancelInputFileButton" type="button">取り消し</button>
-					<br>
-				</div>
-				
 			<div class="form-group">
 				名前：<input type="text" class="form-control" th:field="*{name}"
 					th:errorclass="is-invalid" />
@@ -235,16 +243,11 @@
 						th:text="${item.value}"></option>
 				</select>
 			</div>
-			<div class="form-group">
-				生死：<select th:field="*{is_alive}" onchange="isAliveFlag(this);">
-					<option th:each="item : ${isAliveItems}" th:value="${item.key}"
-						th:text="${item.value}"></option>
-				</select>
-			</div>
+
 			<div class="form-group">
 				生年月日：<select th:field="*{birthYear}">
 					<option value="0">--</option>
-					<option th:each="i : ${#numbers.sequence(1900, 2021)}"
+					<option th:each="i : ${#numbers.sequence(1990, 2021)}"
 						th:value="${i}" th:text="${i}"></option>
 				</select>年 <select th:field="*{birthMonth}">
 					<option value="0">--</option>
@@ -257,9 +260,78 @@
 				</select>日
 			</div>
 			<div class="form-group">
+				母親：<select th:field="*{mother_id}" th:errorclass="is-invalid">
+					<!-- id とnameはform用 -->
+					<option th:each="mother : ${motherList}"
+						th:value="${mother.animal_id}" th:text="${mother.name}"></option>
+				</select> 父親：<select th:field="*{father_id}" th:errorclass="is-invalid">
+					<option th:each="father : ${fatherList}"
+						th:value="${father.animal_id}" th:text="${father.name}"></option>
+				</select>
+			</div>
+			<div th:id="zooHistory">
+				<div th:id="zooHistoryDiv" th:each="animalZoo : *{animalZooHistory}" th:object="${animalZoo}">
+					<div class="form-group" id="zooForm">
+						動物園：<select th:name="insertZoo" >
+							<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}" th:text="${zoo.zoo_name}" th:selected="${animalInsertForm.animalZooHistory[__${animalZooStat.index}__].zoo_id} == ${zoo.zoo_id}"></option>
+							<!--fieldは送信先のフォームクラスの変数、 each は繰り返し、valueはフォームで送信する実際の値、textはHTMLに表示される名前 -->
+						</select>
+						<!-- <div class="invalid-feedback" th:errors="*{zooList}"></div> -->
+					</div>
+
+					<div class="form-group" th:id="admissionForm">入園日：
+						<select  th:name="admissionYear">
+							<option value="0">--</option>
+							<option th:each="i : ${#numbers.sequence(1990, 2021)}" th:value="${i}" th:text="${i}"  th:selected="*{#dates.year(admission_date)} == ${i}"></option></select>年 
+						<select th:if = "*{#dates.year(admission_date)} == '9999'" th:name="admissionMonth">
+							<option value="0">--</option>
+							<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}" th:text="${i}" ></option></select>
+						<select th:unless = "*{#dates.year(admission_date)} == '9999'" th:name="admissionMonth">
+							<option value="0">--</option>
+							<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}" th:text="${i}" th:selected="*{#dates.month(admission_date)} == ${i}"></option></select>月 
+						<select th:if = "*{#dates.year(admission_date)} == '9999'" th:name="admissionDay">
+							<option value="0">--</option>
+							<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}" th:text="${i}"></option></select>
+						<select th:unless = "*{#dates.year(admission_date)} == '9999'" th:name="admissionDay">
+							<option value="0">--</option>
+							<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}" th:text="${i}" th:selected="*{#dates.day(admission_date)} == ${i}"></option></select>日
+					</div>
+
+					<div class="form-group" th:id="exitForm">退園日：
+						<select th:name="exitYear">
+							<option value="0">--</option>
+							<option th:each="i : ${#numbers.sequence(1990, 2021)}" th:value="${i}" th:text="${i}" th:selected="*{#dates.year(exit_date)} == ${i}"></option></select>年
+						<select th:name="exitMonth" th:if = "*{#dates.year(exit_date)} == '9999'">
+							<option value="0">--</option>
+							<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}" th:text="${i}" ></option></select>
+							<select th:name="exitMonth" th:unless = "*{#dates.year(exit_date)} == '9999'">
+							<option value="0">--</option>
+							<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}" th:text="${i}" th:selected="*{#dates.month(exit_date)} == ${i}"></option></select>月
+						<select th:name="exitDay" th:if = "*{#dates.year(exit_date)} == '9999'">
+							<option value="0">--</option>
+							<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}" th:text="${i}" ></option></select>
+							<select th:name="exitDay" th:unless = "*{#dates.year(exit_date)} == '9999'">
+							<option value="0">--</option>
+							<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}" th:text="${i}" th:selected="*{#dates.day(exit_date)} == ${i}"></option></select>日
+					</div>
+					
+					<button class="btn btn-outline-warning btn-sm cancelHistoryButton"
+						type="button">動物園削除</button>
+				</div>
+			</div>
+			<button class="btn btn-outline-success btn-sm addHistoryButton"
+				type="button">動物園追加</button>
+
+			<div class="form-group">
+				生死：<select th:field="*{is_alive}" onchange="isAliveFlag(this);">
+					<option th:each="item : ${isAliveItems}" th:value="${item.key}"
+						th:text="${item.value}"></option>
+				</select>
+			</div>
+			<div class="form-group">
 				死亡日：<select th:field="*{deathYear}" th:disabled="*{is_alive} == 1">
 					<option value="0">--</option>
-					<option th:each="i : ${#numbers.sequence(1900, 2021)}"
+					<option th:each="i : ${#numbers.sequence(1990, 2021)}"
 						th:value="${i}" th:text="${i}" th:selected="${i}==2000"></option>
 				</select>年 <select th:field="*{deathMonth}" th:disabled="*{is_alive} == 1">
 					<option value="0">--</option>
@@ -270,31 +342,6 @@
 					<option th:each="i : ${#numbers.sequence(01, 31)}" th:value="${i}"
 						th:text="${i}"></option>
 				</select>日
-			</div>
-
-			<div class="form-group">
-				動物園：<select th:field="*{zoo}" th:errorclass="is-invalid">
-					<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}"
-						th:text="${zoo.zoo_name}"></option>
-					<!--fieldは送信先のフォームクラスの変数、 each は繰り返し、valueはフォームで送信する実際の値、textはHTMLに表示される名前 -->
-				</select>
-				<div class="invalid-feedback" th:errors="*{zoo}"></div>
-			</div>
-			<!-- 	<div class="form-group">
-				動物園：<input type="text" class="form-control" th:field="*{zoo}"
-					th:errorclass="is-invalid" />
-				<div class="invalid-feedback" th:errors="*{zoo}"></div>
-			</div> -->
-
-			<div class="form-group">
-				母親：<select th:field="*{mother_id}" th:errorclass="is-invalid">
-					<!-- id とnameはform用 -->
-					<option th:each="mother : ${motherList}"
-						th:value="${mother.animal_id}" th:text="${mother.name}"></option>
-				</select> 父親：<select th:field="*{father_id}" th:errorclass="is-invalid">
-					<option th:each="father : ${fatherList}"
-						th:value="${father.animal_id}" th:text="${father.name}"></option>
-				</select>
 			</div>
 			<div class="form-group">
 				詳細：
@@ -310,33 +357,27 @@
 			</div>
 			<div class="form-group">
 				写真：<br> <span th:unless="*{animalImageList.size} == 0"
-					th:each="animalImage:*{animalImageList}"
-					th:object="${animalImage}" th:id="*{animalimage_id} + *{filetype}"
-					style="display: inline-block">
-						<img
-							th:src="@{{cloudinaryImageUrl}{animal_id}/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},animal_id=${animalInsertForm.animal_id},fileName=*{animalimage_id} + *{filetype})}"
-							width="200" height="200">
+					th:each="animalImage:*{animalImageList}" th:object="${animalImage}"
+					th:id="*{animalimage_id} + *{filetype}"
+					style="display: inline-block"> <img
+					th:src="@{{cloudinaryImageUrl}{animal_id}/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},animal_id=${animalInsertForm.animal_id},fileName=*{animalimage_id} + *{filetype})}"
+					width="200" height="200">
 					<button class="btn btn-danger btn-sm deleteImageButton"
 						type="button">削除</button>
 				</span>
-				
+
 				<div id="animalImages">
 					<input type="file" accept="image/*" th:field="*{animalImage}"
 						th:errorclass="is-invalid" class="form-control-file">
 					<button class="btn btn-outline-warning btn-sm"
-						id="cancelInputFileButton" type="button">取り消し</button>
+						id="cancelInputFileButton" type="button">写真取消</button>
 					<br>
 				</div>
 				<button class="btn btn-outline-success btn-sm addInputFileButton"
-					type="button">入力欄追加</button>
+					type="button">写真追加</button>
 			</div>
 			<input type="hidden" th:field="*{deleteAnimalImageFiles}">
-			<button th:if="*{animal_id}==0" class="btn btn-outline-primary btn-sm"
-				type="submit">追加</button>
-				
-				
-			<button th:unless="*{animal_id}==0"
-				class="btn btn-outline-primary btn-sm" type="submit">保存</button>
+			<button class="btn btn-outline-primary btn-sm" id = "submitButton" type="submit">保存</button>
 			<button class="btn btn-danger btn-sm" type="button"
 				th:unless="*{animal_id}==0"
 				th:onclick="'deleteFunc(' + *{animal_id} + ',this);'">削除</button>

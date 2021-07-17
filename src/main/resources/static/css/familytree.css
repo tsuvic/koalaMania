@@ -1,6 +1,3 @@
-body {
-    font: 12px sans-serif;
-}
 .link {
     fill: none;
     stroke: #000;
@@ -15,6 +12,18 @@ body {
     stroke: #aaa;
 }
 .node {
-    stroke: red;
+    stroke:  white;
     fill:white;
+}
+
+.image {
+  clip-path: circle(50%);
+}
+
+text {
+	font-size: 30px;
+}
+
+.btn {
+	font-size: 30px;
 }
