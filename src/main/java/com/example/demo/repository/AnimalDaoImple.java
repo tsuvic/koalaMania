@@ -69,6 +69,8 @@ public class AnimalDaoImple implements AnimalDao {
 				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "
 				+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +", "
 				+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "
+				+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsMotherId +" , "
+				+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsFatherId +", "
 				+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +" , "
 				+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "
 				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +" "
@@ -105,8 +107,18 @@ public class AnimalDaoImple implements AnimalDao {
 			animal.setName((String) result.get(ENTITY_ANIMAL.COLUMN_NAME));
 			animal.setSex((int) result.get(ENTITY_ANIMAL.COLUMN_SEX));
 			animal.setBirthdate((Date) result.get(ENTITY_ANIMAL.COLUMN_BIRTHDATE));
-			animal.setMother((String) result.get(AsMotherName));
-			animal.setFather((String) result.get(AsFatherName));
+			Animal motherAnimal = new Animal();
+			Animal fatherAnimal = new Animal();
+			if(result.get(AsMotherId) != null) {
+				motherAnimal.setAnimal_id((int) result.get(AsMotherId));
+			}
+			if(result.get(AsFatherId) != null) {
+				fatherAnimal.setAnimal_id((int) result.get(AsFatherId));
+			}
+			motherAnimal.setName((String) result.get(AsMotherName));
+			fatherAnimal.setName((String) result.get(AsFatherName));
+			animal.setMotherAnimal(motherAnimal);
+			animal.setFatherAnimal(fatherAnimal);
 			animal.setProfileImagePath((String)result.get(ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE));
 			AnimalZooHistory animalZooHistory = new AnimalZooHistory();
 			Zoo zoo = new Zoo();
@@ -153,7 +165,17 @@ public class AnimalDaoImple implements AnimalDao {
 
 		String[] splitkeyWord = keyword.replaceAll(" ", "　").split("　", 0);
 
-		String sql = "SELECT "+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_NAME +", "+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_SEX +","+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID + "," + ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +" , "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +" "
+		String sql = "SELECT "+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "
+				+ ""+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_NAME +", "
+				+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_SEX +","+ 
+				ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "+ 
+				ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID + "," + 
+				ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "+
+				AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsMotherId +" , " +
+				AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsFatherId +", " +
+				AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +" , "+ 
+				AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "+ 
+				ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +" "
 				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" LEFT OUTER JOIN "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +" ON "+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME +" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_PREFECTURE.TABLE_NAME +" ON "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" = "+ ENTITY_PREFECTURE.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" "
@@ -180,8 +202,18 @@ public class AnimalDaoImple implements AnimalDao {
 			animal.setName((String) result.get(ENTITY_ANIMAL.COLUMN_NAME));
 			animal.setSex((int) result.get(ENTITY_ANIMAL.COLUMN_SEX));
 			animal.setBirthdate((Date) result.get(ENTITY_ANIMAL.COLUMN_BIRTHDATE));
-			animal.setMother((String) result.get(AsMotherName));
-			animal.setFather((String) result.get(AsFatherName));
+			Animal motherAnimal = new Animal();
+			Animal fatherAnimal = new Animal();
+			if(result.get(AsMotherId) != null) {
+				motherAnimal.setAnimal_id((int) result.get(AsMotherId));
+			}
+			if(result.get(AsFatherId) != null) {
+				fatherAnimal.setAnimal_id((int) result.get(AsFatherId));
+			}
+			motherAnimal.setName((String) result.get(AsMotherName));
+			fatherAnimal.setName((String) result.get(AsFatherName));
+			animal.setMotherAnimal(motherAnimal);
+			animal.setFatherAnimal(fatherAnimal);
 			animal.setProfileImagePath((String) result.get(ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE));
 			AnimalZooHistory animalZooHistory = new AnimalZooHistory();
 			Zoo zoo = new Zoo();
@@ -201,7 +233,7 @@ public class AnimalDaoImple implements AnimalDao {
 		Map<String, Object> insertId = jdbcTemplate.queryForMap(
 				"INSERT INTO "+ ENTITY_ANIMAL.TABLE_NAME +"("+ ENTITY_ANIMAL.COLUMN_NAME +", "+ ENTITY_ANIMAL.COLUMN_SEX +", "+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "+ ENTITY_ANIMAL.COLUMN_IS_ALIVE +", "+ ENTITY_ANIMAL.COLUMN_DEATHDATE +", "+ ENTITY_ANIMAL.COLUMN_MOTHER +", "+ ENTITY_ANIMAL.COLUMN_FATHER +", "+ ENTITY_ANIMAL.COLUMN_DETAILS +", "+ ENTITY_ANIMAL.COLUMN_FEATURE +", "+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +"",
 				animal.getName(), animal.getSex(), animal.getBirthdate(), animal.getIs_alive(), animal.getDeathdate(),
-				animal.getMother_id(), animal.getFather_id(), animal.getDetails(), animal.getFeature(),
+				animal.getMotherAnimal().getAnimal_id(), animal.getFatherAnimal().getAnimal_id(), animal.getDetails(), animal.getFeature(),
 				animal.getProfileImagePath());
 
 		//削除対象？？
@@ -222,9 +254,18 @@ public class AnimalDaoImple implements AnimalDao {
 
 	@Override
 	public Animal findById(int id) {
-		String sql = "SELECT "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_SEX +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_IS_ALIVE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DEATHDATE +", "
-				+ ""+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +", "+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +", "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DETAILS +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FEATURE +" , "+ ENTITY_ANIMAL_IMAGE.COLUMN_ANIMAL_IMAGE_ID +" ,"+ ENTITY_ANIMAL_IMAGE.COLUMN_FILETYPE +", "
-				+ ""+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +" "
+		String sql = "SELECT "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +", "+ 
+						AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "+ AsMainAnimal +"."+ 
+						ENTITY_ANIMAL.COLUMN_NAME +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_SEX +", "+ 
+						AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "+ AsMainAnimal +"."+ 
+						ENTITY_ANIMAL.COLUMN_IS_ALIVE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DEATHDATE +", "
+						+ ""+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +", "+ 
+						ENTITY_ZOO.COLUMN_ZOO_NAME +", "+ 
+						AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsMotherId +" , " +
+						AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsFatherId +", " +
+						AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +", "+ 
+						AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "+ 
+						AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DETAILS +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FEATURE +" , "+ ENTITY_ANIMAL_IMAGE.COLUMN_ANIMAL_IMAGE_ID +" ,"+ ENTITY_ANIMAL_IMAGE.COLUMN_FILETYPE +" "
 				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal +" LEFT OUTER JOIN "+ ENTITY_ANIMAL_IMAGE.TABLE_NAME +" ON "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = "+ ENTITY_ANIMAL_IMAGE.TABLE_NAME +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +" ON "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME +" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
@@ -243,12 +284,20 @@ public class AnimalDaoImple implements AnimalDao {
 		animal.setBirthdate((Date) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_BIRTHDATE));
 		animal.setIs_alive((int) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_IS_ALIVE));
 		animal.setDeathdate((Date) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_DEATHDATE));
-		animal.setMother((String) resultList.get(0).get(AsMotherName));
-		animal.setFather((String) resultList.get(0).get(AsFatherName));
+		Animal motherAnimal = new Animal();
+		Animal fatherAnimal = new Animal();
+		if(resultList.get(0).get(AsMotherId) != null) {
+			motherAnimal.setAnimal_id((int) resultList.get(0).get(AsMotherId));
+		}
+		if(resultList.get(0).get(AsFatherId) != null) {
+			fatherAnimal.setAnimal_id((int) resultList.get(0).get(AsFatherId));
+		}
+		motherAnimal.setName((String) resultList.get(0).get(AsMotherName));
+		fatherAnimal.setName((String) resultList.get(0).get(AsFatherName));
+		animal.setMotherAnimal(motherAnimal);
+		animal.setFatherAnimal(fatherAnimal);
 		animal.setDetails((String) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_DETAILS));
 		animal.setFeature((String) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_FEATURE));
-		animal.setMother_id((int) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_MOTHER ));
-		animal.setFather_id((int) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_FATHER ));
 		AnimalZooHistory animalZooHistory = new AnimalZooHistory();
 		Zoo zoo = new Zoo();
 		zoo.setZoo_id((int) resultList.get(0).get(ENTITY_ZOO.COLUMN_ZOO_ID));
@@ -280,7 +329,7 @@ public class AnimalDaoImple implements AnimalDao {
 		jdbcTemplate.update(
 				"UPDATE "+ ENTITY_ANIMAL.TABLE_NAME +" SET "+ ENTITY_ANIMAL.COLUMN_NAME +"=?, "+ ENTITY_ANIMAL.COLUMN_SEX +"=?,"+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +"=?,"+ ENTITY_ANIMAL.COLUMN_IS_ALIVE +"=?,"+ ENTITY_ANIMAL.COLUMN_DEATHDATE +"=?,"+ ENTITY_ANIMAL.COLUMN_MOTHER +"=?,"+ ENTITY_ANIMAL.COLUMN_FATHER +"=?,"+ ENTITY_ANIMAL.COLUMN_DETAILS +"=?,"+ ENTITY_ANIMAL.COLUMN_FEATURE +"=?, "+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +" = ? WHERE "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = ?",
 				animal.getName(), animal.getSex(), animal.getBirthdate(), animal.getIs_alive(), animal.getDeathdate(),
-				animal.getMother_id(), animal.getFather_id(), animal.getDetails(), animal.getFeature(),
+				animal.getMotherAnimal().getAnimal_id(), animal.getFatherAnimal().getAnimal_id(), animal.getDetails(), animal.getFeature(),
 				animal.getProfileImagePath(), animal.getAnimal_id());
 		
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

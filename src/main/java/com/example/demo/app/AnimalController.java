@@ -210,7 +210,8 @@ public class AnimalController {
 		animal.setStringDeathDate(stringDeathDate);
 		setDefaultAnimalProfileImage(animal);
 		model.addAttribute("detail", animal);
-		return "detail";
+		System.out.println(animal.getMotherAnimal())	;	
+				return "detail";
 	}
 
 	@GetMapping("/edit/{id}")
@@ -249,8 +250,8 @@ public class AnimalController {
 		List<Animal> fatherList = animalService.getFatherList(form.getAnimal_id(), form.getBirthYear(),
 				form.getBirthMonth(), form.getBirthDay());
 		model.addAttribute("fatherList", fatherList);
-		form.setMother_id(animal.getMother_id());
-		form.setFather_id(animal.getFather_id());
+		form.setMother_id(animal.getMotherAnimal().getAnimal_id());
+		form.setFather_id(animal.getFatherAnimal().getAnimal_id());
 		setDefaultAnimalProfileImage(animal);
 		form.setProfileImagePath(animal.getProfileImagePath());
 		form.setAnimalZooHistory(animal.getAnimalZooHistoryList());
