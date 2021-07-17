@@ -138,7 +138,9 @@ public class AnimalController {
 			if(form.getAnimalZooHistory() == null) {
 				Date dummyDate =  animalService.getDate("9999", "01", "01");
 				AnimalZooHistory dummyHistory = new AnimalZooHistory();
-				dummyHistory.setZoo_id(0);
+				Zoo zoo = new Zoo();
+				zoo.setZoo_id(0);
+				dummyHistory.setZoo(zoo);
 				dummyHistory.setAdmission_date(dummyDate);
 				dummyHistory.setExit_date(dummyDate);
 				form.setAnimalZooHistory(Arrays.asList(dummyHistory));		}
@@ -197,7 +199,7 @@ public class AnimalController {
 
 	@GetMapping("/detail/{id}")
 	public String displayDetailAnimal(@PathVariable int id, Model model) {
-		Animal animal = animalService.findById(id);
+		Animal animal = animalService.findById(id , true);
 		model.addAttribute("title", "コアラ情報詳細");
 		model.addAttribute("cloudinaryImageUrl", cloudinaryImageUrl);
 		Date birthDate = (Date) animal.getBirthdate();
@@ -220,7 +222,7 @@ public class AnimalController {
 		model.addAttribute("cloudinaryImageUrl", cloudinaryImageUrl);
 		List<Zoo> zooList = animalService.getZooList();
 		model.addAttribute("zooList", zooList);
-		Animal animal = animalService.findById(id);
+		Animal animal = animalService.findById(id,false);
 		form.setAnimal_id(animal.getAnimal_id());
 		form.setName(animal.getName());
 		form.setIs_alive(animal.getIs_alive());
@@ -251,7 +253,7 @@ public class AnimalController {
 		form.setFather_id(animal.getFather_id());
 		setDefaultAnimalProfileImage(animal);
 		form.setProfileImagePath(animal.getProfileImagePath());
-		form.setAnimalZooHistory(animal.getAnimalZooHistory());
+		form.setAnimalZooHistory(animal.getAnimalZooHistoryList());
 		return "insert";
 	}
 

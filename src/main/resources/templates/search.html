@@ -77,7 +77,7 @@
 					<td th:unless="*{stringBirthDate.equals('9999年1月1日')}"
 						th:text="*{stringBirthDate}"></td>
 					<td>
-					<a th:href="@{/zoo/detail/{zoo_id}(zoo_id=*{zoo})}" th:text="*{zooName}">
+					<a th:href="@{/zoo/detail/{zoo_id}(zoo_id=*{animalZooHistoryList[0].zoo.zoo_id})}" th:text="*{animalZooHistoryList[0].zoo.zoo_name}">
 					</a>
 					</td>
 					<td th:if="*{#strings.isEmpty(mother)}">不明</td>

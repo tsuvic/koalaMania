@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.AnimalZooHistory;
 import com.example.demo.entity.LoginUser;
+import com.example.demo.entity.Zoo;
 
 
 @Repository
@@ -56,12 +57,14 @@ public class AnimalZooHistoryDaoImpl implements AnimalZooHistoryDao {
 			AnimalZooHistory animalZooHistory = new AnimalZooHistory();
 			animalZooHistory.setAnimal_zoo_history_id((int)result.get(ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID));
 			animalZooHistory.setAnimal_id((int)result.get(ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID));
-			animalZooHistory.setZoo_id((int)result.get(ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID));
 			animalZooHistory.setAdmission_date((Date)result.get(ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ADMISSION_DATE));
 			animalZooHistory.setExit_date((Date)result.get(ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE));
 			animalZooHistoryList.add(animalZooHistory);
+			Zoo zoo = new Zoo();
+			zoo.setZoo_id((int)result.get(ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID));
+			animalZooHistory.setZoo(zoo);
 		}
-		animal.setAnimalZooHistory(animalZooHistoryList);
+		animal.setAnimalZooHistoryList(animalZooHistoryList);
 		
 		return animal;
 		

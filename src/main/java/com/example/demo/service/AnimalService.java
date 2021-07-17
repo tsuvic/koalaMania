@@ -25,7 +25,7 @@ public interface AnimalService {
 
 	void insert(AnimalInsertForm form);
 
-	Animal findById(int id);
+	Animal findById(int id , boolean detailFlag);
 
 	void update(AnimalInsertForm form);
 

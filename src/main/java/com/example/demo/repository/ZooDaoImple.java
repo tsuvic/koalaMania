@@ -1,5 +1,7 @@
 package com.example.demo.repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,20 @@ private final JdbcTemplate jdbcTemplate;
 			zoo.setPrefecture(prefecture);
 		
 			return zoo;
+	}
+	
+	@Override
+	public List<Zoo> getZooList() {
+		String sql = "SELECT "+ ENTITY_ZOO.COLUMN_ZOO_ID +", "+ ENTITY_ZOO.COLUMN_ZOO_NAME +" FROM "+ ENTITY_ZOO.TABLE_NAME +" ORDER BY "+ ENTITY_ZOO.COLUMN_ZOO_ID +" ASC";
+		List<Map<String, Object>> resultZooList = jdbcTemplate.queryForList(sql);
+		List<Zoo> zooList = new ArrayList<Zoo>();
+		for (Map<String, Object> result : resultZooList) {
+			Zoo zoo = new Zoo();
+			zoo.setZoo_id((int) result.get(ENTITY_ZOO.COLUMN_ZOO_ID));
+			zoo.setZoo_name((String) result.get(ENTITY_ZOO.COLUMN_ZOO_NAME));
+			zooList.add(zoo);
+		}
+		return zooList;
 	}
 
 }
