@@ -37,16 +37,18 @@ public class Animal {
 	private Date birthdate;
 	private int is_alive;
 	private Date deathdate;
-	private String mother;
+	/*private String mother;
 	private String father;
 	private int mother_id;
-	private int father_id;
+	private int father_id;*/
 	private String details;
 	private String feature;
 	private String stringBirthDate;
 	private String stringDeathDate;
 	private String profileImagePath;
 	private AnimalType animalType;
+	private Animal motherAnimal;
+	private Animal fatherAnimal;
 	private List<AnimalImage> animalImageList;
 	private List<AnimalZooHistory> animalZooHistoryList;
 }

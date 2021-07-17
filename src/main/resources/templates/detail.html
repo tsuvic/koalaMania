@@ -65,7 +65,10 @@
 			</tr>
 			<tr>
 				<th class="cell_title">動物園</th>
-				<td>
+				<td th:if="*{animalZooHistoryList[0].zoo.zoo_id} == 0" 
+				th:text="*{animalZooHistoryList[0].zoo.zoo_name}">
+				</td>
+				<td th:unless="*{animalZooHistoryList[0].zoo.zoo_id} == 0">
 				<a th:href="@{/zoo/detail/{zoo_id}(zoo_id=*{animalZooHistoryList[0].zoo.zoo_id})}" 
 				th:text="*{animalZooHistoryList[0].zoo.zoo_name}">
 				</a>
@@ -73,13 +76,19 @@
 			</tr>
 			<tr>
 				<th class="cell_title">母親</th>
-				<td th:if="*{#strings.isEmpty(mother)}">不明</td>
-				<td th:unless="*{#strings.isEmpty(mother)}" th:text="*{mother}"></td>
+				<td th:if="*{#strings.isEmpty(motherAnimal.name)}">不明</td>
+				<td th:unless="*{#strings.isEmpty(motherAnimal.name)}">
+				<a th:href="@{/detail/{animal_id}(animal_id=*{motherAnimal.animal_id})}" th:text="*{motherAnimal.name}">
+				</a>
+				</td>
 			</tr>
 			<tr>
 				<th class="cell_title">父親</th>
-				<td th:if="*{#strings.isEmpty(father)}">不明</td>
-				<td th:unless="*{#strings.isEmpty(father)}" th:text="*{father}"></td>
+				<td th:if="*{#strings.isEmpty(fatherAnimal.name)}">不明</td>
+				<td th:unless="*{#strings.isEmpty(fatherAnimal.name)}">
+				<a th:href="@{/detail/{animal_id}(animal_id=*{fatherAnimal.animal_id})}" th:text="*{fatherAnimal.name}">
+				</a>
+				</td>
 			</tr>
 			<tr>
 				<th class="cell_title">詳細</th>

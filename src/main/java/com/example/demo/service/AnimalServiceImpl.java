@@ -128,8 +128,12 @@ public class AnimalServiceImpl implements AnimalService {
 		}
 		animal.setDetails(form.getDetails());
 		animal.setFeature(form.getFeature());
-		animal.setMother_id(form.getMother_id());
-		animal.setFather_id(form.getFather_id());
+		Animal motherAnimal = new Animal();
+		Animal fatherAnimal = new Animal();
+		motherAnimal.setAnimal_id(form.getMother_id());
+		fatherAnimal.setAnimal_id(form.getFather_id());
+		animal.setMotherAnimal(motherAnimal);
+		animal.setFatherAnimal(fatherAnimal);
 		int insertAnimal_id = animalDao.insert(animal);
 		// 追加するコアラに画像が添付されているか確認
 		boolean animalImageInsetFlag = false;
@@ -463,8 +467,12 @@ public class AnimalServiceImpl implements AnimalService {
 		if (deathDate != null) {
 			animal.setDeathdate(deathDate);
 		}
-		animal.setMother_id(form.getMother_id());
-		animal.setFather_id(form.getFather_id());
+		Animal motherAnimal = new Animal();
+		Animal fatherAnimal = new Animal();
+		motherAnimal.setAnimal_id(form.getMother_id());
+		fatherAnimal.setAnimal_id(form.getFather_id());
+		animal.setMotherAnimal(motherAnimal);
+		animal.setFatherAnimal(fatherAnimal);
 		animal.setDetails(form.getDetails());
 		animal.setFeature(form.getFeature());
 		animal.setProfileImagePath(form.getProfileImagePath());
