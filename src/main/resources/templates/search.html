@@ -63,8 +63,12 @@
 			<tbody>
 				<tr style="height: 85px;" th:each="animal : ${animalList}"
 					th:object="${animal}">
-					<td><img th:src="@{{Path}(Path = *{profileImagePath})}"
-						th:if="*{profileImagePath}" width="85" height="85"></td>
+					<td><a 
+						th:href="@{/detail/{animal_id}(animal_id=*{animal_id})}">
+						<img th:src="@{{Path}(Path = *{profileImagePath})}"
+						th:if="*{profileImagePath}" width="85" height="85">
+						</a>
+					</td>
 					<td width="20" th:text="*{name}"></td>
 					<td th:if="*{sex == 0}">不明</td>
 					<td th:if="*{sex == 1}"><img th:src="@{../images/male.png}" width="20" height="20"></td>
