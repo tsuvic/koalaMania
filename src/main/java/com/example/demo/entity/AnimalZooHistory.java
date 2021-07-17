@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.stereotype.Component;
 
@@ -25,7 +24,7 @@ public class AnimalZooHistory {
 
 	private int animal_zoo_history_id;
 	private int animal_id;
-	private int zoo_id;
 	private Date admission_date;
 	private Date exit_date;
+	private Zoo zoo;
 }

@@ -3,6 +3,7 @@ package com.example.demo.repository;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +67,7 @@ public class AnimalDaoImple implements AnimalDao {
 				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +", "
 				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_SEX +", "
 				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "
+				+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +", "
 				+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "
 				+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +" , "
 				+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "
@@ -103,10 +105,16 @@ public class AnimalDaoImple implements AnimalDao {
 			animal.setName((String) result.get(ENTITY_ANIMAL.COLUMN_NAME));
 			animal.setSex((int) result.get(ENTITY_ANIMAL.COLUMN_SEX));
 			animal.setBirthdate((Date) result.get(ENTITY_ANIMAL.COLUMN_BIRTHDATE));
-			animal.setZooName((String) result.get(ENTITY_ZOO.COLUMN_ZOO_NAME));
 			animal.setMother((String) result.get(AsMotherName));
 			animal.setFather((String) result.get(AsFatherName));
 			animal.setProfileImagePath((String)result.get(ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE));
+			AnimalZooHistory animalZooHistory = new AnimalZooHistory();
+			Zoo zoo = new Zoo();
+			zoo.setZoo_id((int) result.get(ENTITY_ZOO.COLUMN_ZOO_ID));
+			zoo.setZoo_name((String) result.get(ENTITY_ZOO.COLUMN_ZOO_NAME));
+			animalZooHistory.setZoo(zoo);
+			List<AnimalZooHistory> animalZooHistoryList = Arrays.asList(animalZooHistory);
+			animal.setAnimalZooHistoryList(animalZooHistoryList);
 			list.add(animal);
 		}
 		return list;
@@ -172,28 +180,20 @@ public class AnimalDaoImple implements AnimalDao {
 			animal.setName((String) result.get(ENTITY_ANIMAL.COLUMN_NAME));
 			animal.setSex((int) result.get(ENTITY_ANIMAL.COLUMN_SEX));
 			animal.setBirthdate((Date) result.get(ENTITY_ANIMAL.COLUMN_BIRTHDATE));
-			animal.setZoo((int) result.get(ENTITY_ZOO.COLUMN_ZOO_ID));
-			animal.setZooName((String) result.get(ENTITY_ZOO.COLUMN_ZOO_NAME));
 			animal.setMother((String) result.get(AsMotherName));
 			animal.setFather((String) result.get(AsFatherName));
 			animal.setProfileImagePath((String) result.get(ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE));
-			list.add(animal);
-		}
-		return list;
-	}
-
-	@Override
-	public List<Zoo> getZooList() {
-		String sql = "SELECT "+ ENTITY_ZOO.COLUMN_ZOO_ID +", "+ ENTITY_ZOO.COLUMN_ZOO_NAME +" FROM "+ ENTITY_ZOO.TABLE_NAME +" ORDER BY "+ ENTITY_ZOO.COLUMN_ZOO_ID +" ASC";
-		List<Map<String, Object>> resultZooList = jdbcTemplate.queryForList(sql);
-		List<Zoo> zooList = new ArrayList<Zoo>();
-		for (Map<String, Object> result : resultZooList) {
+			AnimalZooHistory animalZooHistory = new AnimalZooHistory();
 			Zoo zoo = new Zoo();
 			zoo.setZoo_id((int) result.get(ENTITY_ZOO.COLUMN_ZOO_ID));
 			zoo.setZoo_name((String) result.get(ENTITY_ZOO.COLUMN_ZOO_NAME));
-			zooList.add(zoo);
+			animalZooHistory.setZoo(zoo);
+			List<AnimalZooHistory> animalZooHistoryList = Arrays.asList(animalZooHistory);
+			animal.setAnimalZooHistoryList(animalZooHistoryList);
+			
+			list.add(animal);
 		}
-		return zooList;
+		return list;
 	}
 
 	@Override
@@ -243,14 +243,19 @@ public class AnimalDaoImple implements AnimalDao {
 		animal.setBirthdate((Date) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_BIRTHDATE));
 		animal.setIs_alive((int) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_IS_ALIVE));
 		animal.setDeathdate((Date) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_DEATHDATE));
-		animal.setZoo((int) resultList.get(0).get(ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID));
-		animal.setZooName((String) resultList.get(0).get(ENTITY_ZOO.COLUMN_ZOO_NAME));
 		animal.setMother((String) resultList.get(0).get(AsMotherName));
 		animal.setFather((String) resultList.get(0).get(AsFatherName));
 		animal.setDetails((String) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_DETAILS));
 		animal.setFeature((String) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_FEATURE));
 		animal.setMother_id((int) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_MOTHER ));
 		animal.setFather_id((int) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_FATHER ));
+		AnimalZooHistory animalZooHistory = new AnimalZooHistory();
+		Zoo zoo = new Zoo();
+		zoo.setZoo_id((int) resultList.get(0).get(ENTITY_ZOO.COLUMN_ZOO_ID));
+		zoo.setZoo_name((String) resultList.get(0).get(ENTITY_ZOO.COLUMN_ZOO_NAME));
+		animalZooHistory.setZoo(zoo);
+		List<AnimalZooHistory> animalZooHistoryList = Arrays.asList(animalZooHistory);
+		animal.setAnimalZooHistoryList(animalZooHistoryList);
 
 		//アニマル写真（いずれ不要になる）
 		if (resultList.get(0).get(ENTITY_ANIMAL_IMAGE.COLUMN_ANIMAL_IMAGE_ID) != null) {
@@ -265,7 +270,8 @@ public class AnimalDaoImple implements AnimalDao {
 				animalImage = null;
 			}
 			animal.setAnimalImageList(animalImageList);
-		}		
+		}
+		
 		return animal;
 	}
 
@@ -280,8 +286,9 @@ public class AnimalDaoImple implements AnimalDao {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		commonSqlUtil.updateOnlyUpdateCommonColumn(ENTITY_ANIMAL.TABLE_NAME,ENTITY_ANIMAL.COLUMN_ANIMAL_ID ,(int) ((LoginUser) principal).getUser_id(),animal.getAnimal_id());
 
-		jdbcTemplate.update("UPDATE "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +" SET "+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +"=? WHERE "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = ?", animal.getZoo(),
+		/*jdbcTemplate.update("UPDATE "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +" SET "+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +"=? WHERE "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = ?", animal.getZoo(),
 				animal.getAnimal_id());
+		commonSqlUtil.updateOnlyUpdateCommonColumn( ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME,ENTITY_ANIMAL.COLUMN_ANIMAL_ID ,(int) ((LoginUser) principal).getUser_id(),animal.getAnimal_id());*/
 	}
 
 	@Override

@@ -37,8 +37,6 @@ public class Animal {
 	private Date birthdate;
 	private int is_alive;
 	private Date deathdate;
-	private int zoo;
-	private String zooName;
 	private String mother;
 	private String father;
 	private int mother_id;
@@ -50,5 +48,5 @@ public class Animal {
 	private String profileImagePath;
 	private AnimalType animalType;
 	private List<AnimalImage> animalImageList;
-	private List<AnimalZooHistory> animalZooHistory;
+	private List<AnimalZooHistory> animalZooHistoryList;
 }
