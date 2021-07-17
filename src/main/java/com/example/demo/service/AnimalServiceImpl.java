@@ -89,11 +89,13 @@ public class AnimalServiceImpl implements AnimalService {
 	public List<Zoo> getZooList() {
 		List<Zoo> zooList = animalDao.getZooList();
 
+		//その他をリストの最下部へ
 		Zoo other_zoo = new Zoo();
 		other_zoo = zooList.get(0);
 		zooList.remove(0);
 		zooList.add(other_zoo);
-
+		
+		//選択なし
 		Zoo zoo = new Zoo();
 		zoo.setZoo_id(-1);
 		zoo.setZoo_name("---");
