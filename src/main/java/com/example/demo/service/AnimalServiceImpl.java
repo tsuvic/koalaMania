@@ -36,6 +36,7 @@ import com.example.demo.entity.Zoo;
 import com.example.demo.repository.AnimalDao;
 import com.example.demo.repository.AnimalImageDao;
 import com.example.demo.repository.AnimalZooHistoryDao;
+import com.example.demo.repository.ZooDao;
 
 @Service
 public class AnimalServiceImpl implements AnimalService {
@@ -44,13 +45,17 @@ public class AnimalServiceImpl implements AnimalService {
 	private final AnimalImageDao animalImageDao;
 	private final CloudinaryService cloudinaryService;
 	private final AnimalZooHistoryDao animalZooHistoryDao;
+	private final ZooDao zooDao;
 	
 	@Autowired
-	public AnimalServiceImpl(AnimalDao animalDao, AnimalImageDao animalImageDao, CloudinaryService cloudinaryService, AnimalZooHistoryDao animalZooHistoryDao) {
+	public AnimalServiceImpl(AnimalDao animalDao, AnimalImageDao animalImageDao, 
+			CloudinaryService cloudinaryService, AnimalZooHistoryDao animalZooHistoryDao,
+			ZooDao zooDao) {
 		this.animalDao = animalDao;
 		this.animalImageDao = animalImageDao;
 		this.cloudinaryService = cloudinaryService;
 		this.animalZooHistoryDao = animalZooHistoryDao;
+		this.zooDao = zooDao;
 	}
 
 	@Override
@@ -87,7 +92,7 @@ public class AnimalServiceImpl implements AnimalService {
 
 	@Override
 	public List<Zoo> getZooList() {
-		List<Zoo> zooList = animalDao.getZooList();
+		List<Zoo> zooList = zooDao.getZooList();
 
 		//その他をリストの最下部へ
 		Zoo other_zoo = new Zoo();
@@ -188,9 +193,13 @@ public class AnimalServiceImpl implements AnimalService {
 	}
 
 	@Override
-	public Animal findById(int id) {
+	public Animal findById(int id ,boolean detailFlag) {
 		Animal animal =  animalDao.findById(id);
-		return animalZooHistoryDao.addAnimalZooHistory(id, animal);
+		if(detailFlag) {
+			return animal;
+		}else {
+			return animalZooHistoryDao.addAnimalZooHistory(id, animal);
+		}
 	}
 	
 	@Override
@@ -456,7 +465,6 @@ public class AnimalServiceImpl implements AnimalService {
 		}
 		animal.setMother_id(form.getMother_id());
 		animal.setFather_id(form.getFather_id());
-//		animal.setZoo(form.getZoo());
 		animal.setDetails(form.getDetails());
 		animal.setFeature(form.getFeature());
 		animal.setProfileImagePath(form.getProfileImagePath());

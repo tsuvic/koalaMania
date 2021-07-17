@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.AnimalForTree;
-import com.example.demo.entity.Zoo;
 
 public interface AnimalDao {
 	List<Animal> getAll();
@@ -15,8 +14,6 @@ public interface AnimalDao {
 	List<Animal> getFatherList(int animal_id, Date birthDay);
 
 	List<Animal> findByKeyword(String keyword);
-
-	List<Zoo> getZooList();
 
 	int insert(Animal animal);
 

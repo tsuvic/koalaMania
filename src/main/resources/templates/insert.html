@@ -145,6 +145,14 @@
 	}
 
 	$(function() {
+		$(document).ready(function() { 
+			const contents = $("#zooHistory > #zooHistoryDiv").length;
+			if (contents <= 1) {
+				$('.cancelHistoryButton').hide();
+			} 
+		});
+		
+		
 		$('.addInputFileButton').click(function(e) {
 			const input = $("#animalImage").clone(true);
 			const cancelButton = $('#cancelInputFileButton').clone(true);
@@ -162,23 +170,35 @@
 				$(this).remove();
 			} 
 		});
-	});
 
-	$(function() {
 		$('.addHistoryButton').click(function(e) {
 			const input = $("#zooHistoryDiv").clone(true);
-			input.val("");
+			input.find('select[name="insertZoo"]').val(-1);
+			
+			const other = 0;
+			
+			input.find('select[name="admissionYear"]').val(other);
+			
+			input.find('select[name="admissionMonth"]').val(other);
+			
+			input.find('select[name="admissionDay"]').val(other);
+			
+			input.find('select[name="exitYear"]').val(other);
+			
+			input.find('select[name="exitMonth"]').val(other);
+			
+			input.find('select[name="exitDay"]').val(other);
+			
 			input.appendTo("#zooHistory");
+			
+			$('.cancelHistoryButton').show();
 		});
-	});
 
-	$(function() {
 		$('.cancelHistoryButton').click(function(e) {
+			$(this).parent().remove();
 			const contents = $("#zooHistory > #zooHistoryDiv").length;
-			if (contents > 1) {
-				$(this).parent().remove();
-			} else {
-				$(this).prev().val("");
+			if (contents <= 1) {
+				$('.cancelHistoryButton').hide();
 			}
 		});
 
@@ -273,7 +293,7 @@
 				<div th:id="zooHistoryDiv" th:each="animalZoo : *{animalZooHistory}" th:object="${animalZoo}">
 					<div class="form-group" id="zooForm">
 						動物園：<select th:name="insertZoo" >
-							<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}" th:text="${zoo.zoo_name}" th:selected="${animalInsertForm.animalZooHistory[__${animalZooStat.index}__].zoo_id} == ${zoo.zoo_id}"></option>
+							<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}" th:text="${zoo.zoo_name}" th:selected="${animalInsertForm.animalZooHistory[__${animalZooStat.index}__].zoo.zoo_id} == ${zoo.zoo_id}"></option>
 							<!--fieldは送信先のフォームクラスの変数、 each は繰り返し、valueはフォームで送信する実際の値、textはHTMLに表示される名前 -->
 						</select>
 						<!-- <div class="invalid-feedback" th:errors="*{zooList}"></div> -->

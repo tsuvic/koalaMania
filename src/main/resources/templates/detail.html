@@ -65,15 +65,21 @@
 			</tr>
 			<tr>
 				<th class="cell_title">動物園</th>
-				<td th:text="*{zooName}"></td>
+				<td>
+				<a th:href="@{/zoo/detail/{zoo_id}(zoo_id=*{animalZooHistoryList[0].zoo.zoo_id})}" 
+				th:text="*{animalZooHistoryList[0].zoo.zoo_name}">
+				</a>
+				</td>
 			</tr>
 			<tr>
 				<th class="cell_title">母親</th>
-				<td th:text="*{mother}"></td>
+				<td th:if="*{#strings.isEmpty(mother)}">不明</td>
+				<td th:unless="*{#strings.isEmpty(mother)}" th:text="*{mother}"></td>
 			</tr>
 			<tr>
 				<th class="cell_title">父親</th>
-				<td th:text="*{father}"></td>
+				<td th:if="*{#strings.isEmpty(father)}">不明</td>
+				<td th:unless="*{#strings.isEmpty(father)}" th:text="*{father}"></td>
 			</tr>
 			<tr>
 				<th class="cell_title">詳細</th>
