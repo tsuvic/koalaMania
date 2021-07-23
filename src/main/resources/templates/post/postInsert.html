@@ -1,0 +1,188 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+<meta charset="utf-8">
+<link rel="canonical"
+	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
+<!-- Bootstrap core CSS -->
+
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script src="/js/jquery-ui.min.js"></script>
+<script src="/js/datepicker-ja.js"></script>
+<link href="/css/jquery-ui.min.css" rel="stylesheet">
+<link href="/css/calender.css" rel="stylesheet">
+<link href="/css/postForm.css" rel="stylesheet">
+<link
+	href=https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css
+	rel="stylesheet"
+	integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+	crossorigin="anonymous">
+
+<!-- Custom styles for this template -->
+<link href="/css/starter-template.css" rel="stylesheet">
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+<script type="text/javascript">
+	$(function() {
+
+		$(".datepicker").datepicker();
+
+		let i = 1;
+
+		$('.addInputFileButton').click(function(e) {
+
+			if (!$('.imageDisplay_' + i).length) {
+				var span = $("<span>", {
+					style : "display:inline-block",
+					addClass : "imageDisplay_" + i
+				});
+
+				$(span).appendTo("#input-file-zone");
+
+			}
+
+			var inputFile;
+			if (!$('#image_' + i).length) {
+				inputFile = $("<input>", {
+					type : "file",
+					accept : "image/*",
+					name : "imageList",
+					addClass : "hidden-input-file",
+					id : "image_" + i
+				});
+
+				$(inputFile).appendTo(".imageDisplay_" + i);
+			} else {
+				inputFile = $("#image_" + i);
+			}
+
+			$(inputFile).trigger('click');
+		});
+
+		$(document).on('change', '.hidden-input-file', function(e) {
+			//ファイルオブジェクトを取得する
+			var file = e.target.files[0];
+			var reader = new FileReader();
+
+			//画像でない場合は処理終了
+			if (file.type.indexOf("image") < 0) {
+				alert("画像ファイルを指定してください。");
+				$(this).remove();
+				return false;
+			}
+
+			//アップロードした画像を設定する
+			reader.onloadend = (function(file) {
+				return function(e) {
+					var img = $("<img>", {
+						src : reader.result,
+						title : file.name,
+						style : "width:200px;height:200px;"
+					});
+
+					$(img).appendTo(".imageDisplay_" + i);
+					$('</br>').appendTo(".imageDisplay_" + i);
+					
+					var modalButton = $("<buttonn>", {
+						type : "button",
+						addClass : "btn btn-primary btn-sm",
+						text : "コアラをタグ付け"
+					});
+					
+					 modalButton.attr('data-toggle', 'modal');
+					 modalButton.attr('data-target', '#exampleModalCenter');
+					 $(modalButton).appendTo(".imageDisplay_" + i);
+					
+					$(button).appendTo(".imageDisplay_" + i);
+					var button = $("<buttonn>", {
+						type : "button",
+						addClass : "btn btn-danger btn-sm deleteImageButton",
+						id : "deleteImage_" + i,
+						text : "写真削除"
+					});
+					$(button).appendTo(".imageDisplay_" + i);
+
+					i++;
+				};
+			})(file);
+
+			reader.readAsDataURL(file);
+			
+			const contents = $("#input-file-zone > span").length;
+			
+			if (contents >= 5) {
+				$('.addInputFileButton').hide();
+			}
+
+		});
+
+		$(document).on('click', '.deleteImageButton', function() {
+			$(this).parent().remove();
+			$('.addInputFileButton').show();
+		});
+		
+		$('#exampleModalCenter').on('shown.bs.modal', function () {
+			 // $('#myInput').trigger('focus');
+		});
+	});
+</script>
+
+<title th:text="${title}"></title>
+</head>
+
+<body>
+	<div th:replace="~{block/header_boot::headerA_boot}"></div>
+	<br>
+	<br>
+	<br>
+	<br>
+	
+	
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	       
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary">Save changes</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<div class="container">
+		<h2 th:text="${zoo.zoo_name} + へ投稿"></h2>
+		<form th:action="@{/insert}" method="post"
+			enctype="multipart/form-data">
+			<div th:id="visitDate">
+				訪問日: <input type="text" class="datepicker" name="visitdate" value=""
+					placeholder="クリックして日付を入力" readonly></input>
+			</div>
+			<div th:id="content">
+				<div>投稿内容</div>
+				<textarea name="content" class="form-control postTextarea"></textarea>
+			</div>
+			<div th:id="image">
+				<div>
+					写真(5枚まで)
+					  <button class="btn btn-outline-success btn-sm addInputFileButton"
+						type="button">写真追加</button>
+				</div>
+				<span id="input-file-zone"></span>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

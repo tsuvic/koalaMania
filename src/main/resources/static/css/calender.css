@@ -1,0 +1,6 @@
+.ui-datepicker-calendar .date-holiday-text > a{
+  background: #ffc0c0;
+}
+.ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current {
+    display:none;
+}
