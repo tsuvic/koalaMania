@@ -74,8 +74,7 @@
 						<div class="koalaItem_content">
 							<div class="koalaItem_image">
 								<a th:href="@{/detail/{animal_id}(animal_id=*{animal_id})}">
-									<img th:src="@{{Path}(Path = *{profileImagePath})}"
-									th:if="*{profileImagePath}">
+									<img th:src="@{{Path}(Path = *{profileImagePath})}">
 								</a>
 							</div>
 							<div class="koalaItemData">
@@ -113,64 +112,6 @@
 				</div>
 			</div>
 		</div>
-		<!--
-			<table class="table table-hover table-responsive">
-			<thead class="thead-dark">
-				<tr>
-					<th style="width: 35%">プロフィール画像</th>
-					<th style="width: 32%">名前</th>
-					<th style="width: 27%">性別</th>
-					<th style="width: 42%">生年月日</th>
-					<th style="width: 47%">動物園</th>
-					<th style="width: 32%">母親</th>
-					<th style="width: 35%">父親</th>
-					<th style="width: 30%" colspan="1"></th>
-					<th style="width: 30%" colspan="1"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr style="height: 85px;" th:each="animal : ${animalList}"
-					th:object="${animal}">
-					<td><a 
-						th:href="@{/detail/{animal_id}(animal_id=*{animal_id})}">
-						<img th:src="@{{Path}(Path = *{profileImagePath})}"
-						th:if="*{profileImagePath}" width="85" height="85">
-						</a>
-					</td>
-					<td width="20" th:text="*{name}"></td>
-					<td th:if="*{sex == 0}">不明</td>
-					<td th:if="*{sex == 1}"><img th:src="@{../images/male.png}" width="20" height="20"></td>
-					<td th:if="*{sex == 2}"><img th:src="@{../images/female.png}" width="20" height="20"></td>
-					<td th:if="*{sex == 9}"></td>
-					<td th:if="*{stringBirthDate.equals('9999年1月1日')}">不明</td>
-					<td th:unless="*{stringBirthDate.equals('9999年1月1日')}"
-						th:text="*{stringBirthDate}"></td>
-					<td th:if="*{animalZooHistoryList[0].zoo.zoo_id} == 0" 
-						th:text="*{animalZooHistoryList[0].zoo.zoo_name}">
-					<td th:unless="*{animalZooHistoryList[0].zoo.zoo_id} == 0" >
-					<a th:href="@{/zoo/detail/{zoo_id}(zoo_id=*{animalZooHistoryList[0].zoo.zoo_id})}" th:text="*{animalZooHistoryList[0].zoo.zoo_name}">
-					</a>
-					</td>
-					<td th:if="*{#strings.isEmpty(motherAnimal.name)}">不明</td>
-					<td th:unless="*{#strings.isEmpty(motherAnimal.name)}">
-					<a th:href="@{/detail/{animal_id}(animal_id=*{motherAnimal.animal_id})}" th:text="*{motherAnimal.name}">
-					</a>
-					</td>
-
-					<td th:if="*{#strings.isEmpty(fatherAnimal.name)}">不明</td>
-					<td th:unless="*{#strings.isEmpty(fatherAnimal.name)}">
-					<a th:href="@{/detail/{animal_id}(animal_id=*{fatherAnimal.animal_id})}" th:text="*{fatherAnimal.name}">
-					</a>
-					</td>
-
-					<td><a class="btn btn-sm btn-info"
-						th:href="@{/detail/{animal_id}(animal_id=*{animal_id})}">詳細情報</a></td>
-
-					<td><a class="btn btn-sm btn-primary"
-						th:href="@{/familytree(id=${animal.animal_id})}">家系図</a></td>
-			</tbody>
-		</table>
-		-->
 	</div>
 </body>
 </html>
