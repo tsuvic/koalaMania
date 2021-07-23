@@ -4,6 +4,7 @@
 
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 
 <title>koalaMania</title>
 
@@ -17,7 +18,7 @@
 	crossorigin="anonymous">
 
 <!-- Custom styles for this template -->
-<link href="/css/starter-template.css" rel="stylesheet">
+<link href="/css/searchResult.css" rel="stylesheet">
 <title th:text="${title}">検索画面</title>
 </head>
 
@@ -26,7 +27,7 @@
 	<div th:replace="~{block/header_boot::headerA_boot}"></div>
 
 
-	<div class="container">
+	<div class="searchResult-container">
 		<br> <br> <br> <br>
 		<h2>検索</h2>
 		<form class="card-body row no-gutters align-items-center"
@@ -48,8 +49,51 @@
 
 		<h2 th:text="${searchResult}"></h2>
 		<!--タイトル名を 変数式でControllerから取得 -->
-
-		<table class="table table-hover table-responsive">
+<div class="searchResult_content">
+			<div class="results">
+				<div class="koalaList">
+					<div class="koalaItem" th:each="animal : ${animalList}"
+					th:object="${animal}">
+						<div class="koalaItem_header">
+							<div class="koalaItemName">
+									<p th:if="*{sex == 0}">不明</p>
+									<img th:if="*{sex == 1}" th:src="@{../images/male.png}">
+									<img th:if="*{sex == 2}" th:src="@{../images/female.png}">
+									<p th:text="*{name}"></p>
+							</div>
+							<div class="koalaItemInfo">
+									<p th:text="*{zooName}"></p>
+							</div>
+						</div>
+						<div class="koalaItem_content">
+							<div class="koalaItem_image">
+								<img th:src="@{{Path}(Path = *{profileImagePath})}"
+						th:if="*{profileImagePath}">
+							</div>
+							<div class="koalaItemData">
+								<div class="koalaItemDataList">
+									<ul>
+										<li><span class="koalaItemDataList_icon birth">生年月日</span><p th:unless="*{stringBirthDate.equals('9999年1月1日')}"
+							th:text="*{stringBirthDate}"></p></li>
+										<li><span class="koalaItemDataList_icon mother">母親</span><p th:if="*{#strings.isEmpty(mother)}">不明</p>
+					<p th:unless="*{#strings.isEmpty(mother)}" th:text="*{mother}"></p></li>
+										<li><span class="koalaItemDataList_icon father">父親</span><p th:if="*{#strings.isEmpty(father)}">不明</p>
+					<p th:unless="*{#strings.isEmpty(father)}" th:text="*{father}"></p></li>
+									</ul>
+								</div>
+								
+								<div class="links">
+									<a class="btn btn-sm btn-info">詳細情報</a>
+									<a class="btn btn-sm btn-primary">家系図</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	</div>
+		<!--
+			<table class="table table-hover table-responsive">
 			<thead class="thead-dark">
 				<tr>
 					<th style="width: 35%">プロフィール画像</th>
@@ -91,6 +135,7 @@
 						th:href="@{/familytree(id=${animal.animal_id})}">家系図</a></td>
 			</tbody>
 		</table>
+		-->
 	</div>
 </body>
 </html>
