@@ -4,6 +4,8 @@
 
 <head>
 <meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,maximum-scale=1">
 
 <title>koalaMania</title>
 
@@ -17,17 +19,19 @@
 	crossorigin="anonymous">
 
 <!-- Custom styles for this template -->
-<link href="/css/starter-template.css" rel="stylesheet">
+<link href="/css/searchResult.css" rel="stylesheet">
 <title th:text="${title}">検索画面</title>
 </head>
 
 <body>
 	<div th:replace="~{block/header_boot::headerA_boot}"></div>
-	<div class="container">
+
+	<div class="searchResult-container">
+
 		<br> <br> <br> <br>
 		<h2>検索</h2>
-		<form class="card-body row no-gutters align-items-center"
-			method="get" th:action="@{/search}" th:object="${animalSearchForm}">
+		<form class="card-body row no-gutters align-items-center" method="get"
+			th:action="@{/search}" th:object="${animalSearchForm}">
 			<div class="col-auto">
 				<i class="fas fa-search h4 text-body"></i>
 			</div>
@@ -45,8 +49,72 @@
 
 		<h2 th:text="${searchResult}"></h2>
 		<!--タイトル名を 変数式でControllerから取得 -->
+		<div class="searchResult_content">
+			<div class="results">
+				<div class="koalaList">
+					<div class="koalaItem" th:each="animal : ${animalList}"
+						th:object="${animal}">
+						<div class="koalaItem_header">
+							<div class="koalaItemName">
+								<p th:if="*{sex == 0}">不明</p>
+								<img th:if="*{sex == 1}" th:src="@{../images/male.png}"> <img
+									th:if="*{sex == 2}" th:src="@{../images/female.png}">
+								<p th:text="*{name}"></p>
+							</div>
+							<div class="koalaItemInfo">
+								<p th:text="*{animalZooHistoryList[0].zoo.zoo_name}"
+									th:if="*{animalZooHistoryList[0].zoo.zoo_id} == 0"></p>
+								<p th:unless="*{animalZooHistoryList[0].zoo.zoo_id} == 0">
+									<a
+										th:href="@{/zoo/detail/{zoo_id}(zoo_id=*{animalZooHistoryList[0].zoo.zoo_id})}"
+										th:text="*{animalZooHistoryList[0].zoo.zoo_name}"> </a>
+								</p>
+							</div>
+						</div>
+						<div class="koalaItem_content">
+							<div class="koalaItem_image">
+								<a th:href="@{/detail/{animal_id}(animal_id=*{animal_id})}">
+									<img th:src="@{{Path}(Path = *{profileImagePath})}"
+									th:if="*{profileImagePath}">
+								</a>
+							</div>
+							<div class="koalaItemData">
+								<div class="koalaItemDataList">
+									<ul>
+										<li><span class="koalaItemDataList_icon birth">生年月日</span>
+											<p th:unless="*{stringBirthDate.equals('9999年1月1日')}"
+												th:text="*{stringBirthDate}"></p></li>
+										<li><span class="koalaItemDataList_icon mother">母親</span>
+											<p th:if="*{#strings.isEmpty(motherAnimal.name)}">不明</p>
+											<p th:unless="*{#strings.isEmpty(motherAnimal.name)}">
+												<a
+													th:href="@{/detail/{animal_id}(animal_id=*{motherAnimal.animal_id})}"
+													th:text="*{motherAnimal.name}"> </a>
+											</p></li>
+										<li><span class="koalaItemDataList_icon father">父親</span>
+											<p th:if="*{#strings.isEmpty(fatherAnimal.name)}">不明</p>
+											<p th:unless="*{#strings.isEmpty(fatherAnimal.name)}">
+												<a
+													th:href="@{/detail/{animal_id}(animal_id=*{fatherAnimal.animal_id})}"
+													th:text="*{fatherAnimal.name}"> </a>
+											</p></li>
+									</ul>
+								</div>
 
-		<table class="table table-hover table-responsive">
+								<div class="links">
+									<a class="btn btn-sm btn-info"
+										th:href="@{/detail/{animal_id}(animal_id=*{animal_id})}">詳細情報</a>
+									<a class="btn btn-sm btn-primary"
+										th:href="@{/familytree(id=${animal.animal_id})}">家系図</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--
+			<table class="table table-hover table-responsive">
 			<thead class="thead-dark">
 				<tr>
 					<th style="width: 35%">プロフィール画像</th>
@@ -102,6 +170,7 @@
 						th:href="@{/familytree(id=${animal.animal_id})}">家系図</a></td>
 			</tbody>
 		</table>
+		-->
 	</div>
 </body>
 </html>

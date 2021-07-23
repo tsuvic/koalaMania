@@ -1,0 +1,253 @@
+*,
+p,
+ul  {
+	margin:0;
+	padding:0;
+}
+
+img {
+	max-width: 100%;
+	height: auto;	
+}
+
+html {
+	-webkit-text-size-adjust :100% ;
+}
+
+body {
+	background: #f3f3f3;
+}
+
+@media only screen and (max-width: 799px){
+h2{
+	padding-left: 20px;
+}
+}
+
+.searchResult-container{
+	width: 1100px;
+	margin-right: auto;
+	margin-left: auto;
+	box-sizing: border-box;
+}
+
+@media only screen and (max-width: 799px){
+.searchResult-container{
+	width: 100vw;
+	overflow: hidden;
+}
+}
+
+.searchResult_content{
+	margin-bottom :30px;
+	padding: 40px;
+	border-radius: 16px;
+	box-sizing: border-box;
+	background: #fff;
+	line-height: 1;
+}
+
+@media only screen and (max-width: 799px){
+.searchResult_content{
+	width: 100%;
+	padding: 20px;
+}
+}
+
+.results .koalaList{
+	margin-top:-20px;
+	box-sizing: border-box;
+	}
+
+.results{
+	position: relative;
+	margin-bottom: 40px;
+}
+
+
+.koalaList{
+	border-bottom: 1px solid #eee;
+	margin-bottom: 35px;
+}
+
+@media only screen and (max-width: 799px){
+.koalaList{
+	width: calc(100% + 40px);
+	margin-left: -20px;
+}
+}
+
+.koalaItem{
+	position: relative;
+	border-bottom: 1px solid #eee;
+	background:  #fff;
+	z-index: 1;	
+	padding: 20px;
+}
+
+.koalaItem_header{
+	position: relative;
+	left: 22%;
+	/*width: 80%;*/
+}
+
+@media only screen and (max-width: 799px){
+	.koalaItem_header{
+	left: 0;
+    display: flex;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+	}
+}
+
+
+.koalaItem_header img{
+	height: 24px;
+	width: 24px;
+	margin-right: 10px;
+}
+
+.koalaItemName{
+	font-size: 18px;
+	display: flex;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-bottom: 10px;
+}
+
+.koalaItemName>p{
+	margin-top: auto;
+}
+
+.koalaItemInfo{
+    font-size: 16px;
+    font-style: normal;
+    color: #B9B9B9;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.koalaItemInfo>p>a{
+	font-size: 16px;
+    font-style: normal;
+    color:  #B9B9B9;
+    text-decoration:none;
+}
+
+@media only screen and (max-width: 799px){
+	.koalaItemInfo{
+	margin: auto 0 10px 10px;
+	}
+}
+	
+
+.koalaItem_content{
+	display: flex;
+    width: 100%;
+}
+
+.koalaItem_image{
+	position: relative;
+    top: -70px;
+    width: 20%;
+    margin-right: 30px;
+    margin-bottom: -70px
+}
+@media only screen and (max-width: 799px){
+.koalaItem_image{	
+	top: 0;
+    width: 40%;
+    margin: 0 15px 0 0;
+}
+}
+
+.koalaItem_image:before {
+    display: block;
+    content: "";
+    padding-top: 100%;
+}
+
+.koalaItem_image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@media only screen and (max-width: 799px){
+.koalaItem_image img {
+	object-fit: contain;
+	object-position: top;
+}
+}
+
+.koalaItemData{
+	position: relative;
+    width: 80%;
+}
+
+.koalaItemDataList{
+    margin: 0 0 5px;
+    display: inline-block;
+    margin-bottom: 20px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+
+.koalaItemDataList li{
+    display: inline-block;
+    font-size: 14px;
+    margin: 0 15px 5px 0;
+    list-style: none;
+}
+
+@media only screen and (max-width: 799px){
+.koalaItemDataList li{
+	display: block;
+}
+}
+
+.koalaItemDataList p {
+    display: inline-block;
+    line-height: 1;
+    vertical-align: bottom;
+}
+
+.koalaItemDataList_icon {
+    border-radius: 6px;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 18px;
+    color: #fff;
+    height: 18px;
+    margin: 0 10px 0 0;
+    padding: 0 14px;
+}
+
+
+.birth {
+    background:#B3B2B5;
+}
+.mother {
+    background: #E9006A;
+}
+
+.father {
+    background: #0433FF;
+}
+
+@media only screen and (max-width: 799px){
+.mother,
+.father {
+	margin-right: 27px;
+}
+}
