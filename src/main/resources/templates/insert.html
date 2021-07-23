@@ -155,6 +155,7 @@
 		
 		$('.addInputFileButton').click(function(e) {
 			const input = $("#animalImage").clone(true);
+			console.log(input);
 			const cancelButton = $('#cancelInputFileButton').clone(true);
 			input.val("");
 			input.appendTo("#animalImages");
@@ -293,7 +294,8 @@
 				<div th:id="zooHistoryDiv" th:each="animalZoo : *{animalZooHistory}" th:object="${animalZoo}">
 					<div class="form-group" id="zooForm">
 						動物園：<select th:name="insertZoo" >
-							<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}" th:text="${zoo.zoo_name}" th:selected="${animalInsertForm.animalZooHistory[__${animalZooStat.index}__].zoo.zoo_id} == ${zoo.zoo_id}"></option>
+							<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}" th:text="${zoo.zoo_name}" 
+							th:selected="${animalInsertForm.animalZooHistory[__${animalZooStat.index}__].zoo.zoo_id} == ${zoo.zoo_id}"></option>
 							<!--fieldは送信先のフォームクラスの変数、 each は繰り返し、valueはフォームで送信する実際の値、textはHTMLに表示される名前 -->
 						</select>
 						<!-- <div class="invalid-feedback" th:errors="*{zooList}"></div> -->
