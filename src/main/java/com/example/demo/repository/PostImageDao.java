@@ -1,5 +1,8 @@
 package com.example.demo.repository;
 
-public interface PostImageDao {
+import java.util.List;
 
+public interface PostImageDao {
+	
+	void insertNewPostImage(int post_id,List<Integer> animalIdList,List<String> imageAddressList);
 }

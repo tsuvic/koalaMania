@@ -4,25 +4,18 @@
 
 <head>
 <meta charset="utf-8">
-<link rel="canonical"
-	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
 <!-- Bootstrap core CSS -->
-
-
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script src="/js/jquery-ui.min.js"></script>
 <script src="/js/datepicker-ja.js"></script>
 <link href="/css/jquery-ui.min.css" rel="stylesheet">
-<link href="/css/calender.css" rel="stylesheet">
-<link href="/css/postForm.css" rel="stylesheet">
 <link
 	href=https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css
 	rel="stylesheet"
 	integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
 	crossorigin="anonymous">
-
-<!-- Custom styles for this template -->
-<link href="/css/starter-template.css" rel="stylesheet">
+<link href="/css/calender.css" rel="stylesheet">
+<link href="/css/postForm.css" rel="stylesheet">
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 
 <script type="text/javascript">
@@ -86,17 +79,23 @@
 					$(img).appendTo(".imageDisplay_" + i);
 					$('</br>').appendTo(".imageDisplay_" + i);
 					
+					var inputHiddenTag = $("<input>", {
+						type : "hidden",
+						addClass : "input-hidden-tag",
+						name : "tagList",
+						value: 0
+					});
+					$(inputHiddenTag).appendTo(".imageDisplay_" + i);
+					
 					var modalButton = $("<buttonn>", {
 						type : "button",
-						addClass : "btn btn-primary btn-sm",
+						addClass : "btn btn-primary btn-sm modal-open-button",
 						text : "コアラをタグ付け"
 					});
-					
 					 modalButton.attr('data-toggle', 'modal');
 					 modalButton.attr('data-target', '#exampleModalCenter');
 					 $(modalButton).appendTo(".imageDisplay_" + i);
 					
-					$(button).appendTo(".imageDisplay_" + i);
 					var button = $("<buttonn>", {
 						type : "button",
 						addClass : "btn btn-danger btn-sm deleteImageButton",
@@ -124,8 +123,96 @@
 			$('.addInputFileButton').show();
 		});
 		
-		$('#exampleModalCenter').on('shown.bs.modal', function () {
+		/* $('#exampleModalCenter').on('shown.bs.modal', function () {
 			 // $('#myInput').trigger('focus');
+		}); */
+		
+		$('.animal-tag').click(function(e) {
+			$('.modal-body').find('.animal-tag').each(function(index, element) {
+				$(element).removeClass('btn-primary');
+				$(element).addClass('btn-outline-primary');
+			});
+			
+			$(this).removeClass('btn-outline-primary');
+			$(this).addClass('btn-primary');
+			
+		});
+		
+		$(document).on('click', '.modal-open-button', function(e) {
+			let tagId = $(this).prev().val();
+			$('.modal-body').find('.animal-tag').each(function(index, element) {
+				$(element).removeClass('btn-primary');
+				$(element).addClass('btn-outline-primary');
+				
+				if($(element).prev().val() == tagId){
+					$(element).removeClass('btn-outline-primary');
+					$(element).addClass('btn-primary');
+				}
+			});
+			
+			$('input[name="image_tag_class"]').val($(this).parent().attr('class'));
+		});
+		
+		$('#addTagButton').click(function(e) {
+			let targetImageClass = $('#input-file-zone').find('.' + $('input[name="image_tag_class"]').val());		
+			let targetInput = targetImageClass.find('.input-hidden-tag');
+			if(!targetImageClass.find('.deleteTagButton').lenght){
+				targetImageClass.find('.deleteTagButton').trigger('click');
+			}
+			$('.modal-body').find('.animal-tag').each(function(index, element) {
+				if($(element).hasClass('btn-primary')){
+					targetInput.val($(element).prev().val());
+					let addTag = $(element).clone(false);
+					addTag.removeClass('btn-primary');
+					addTag.addClass('btn-outline-primary');
+					addTag.prependTo(targetImageClass);
+					var button = $("<buttonn>", {
+						type : "button",
+						addClass : "btn btn-danger btn-sm deleteTagButton",
+						text : "タグ削除"
+					});
+					addTag.after(button);
+					button.after('<br>');
+				}
+			});
+			$('#closeModalButton').trigger('click');
+		});
+		
+		$(document).on('click', '.deleteTagButton', function(e) {
+			$(this).prev().remove();
+			$(this).next().remove();
+			$(this).parent().find('.input-hidden-tag').val(0);
+			$(this).remove();
+			
+		});
+		
+		$('#dateCancel').click(function(e) {
+			$(".datepicker").val(null);
+			$(this).hide();
+		});
+		
+		$(".datepicker").change(function(e) {
+			let val = $(this).val();
+			console.log(val);
+			if(val){
+				$('#dateCancel').show();
+			}else{
+				$('#dateCancel').hide();
+			}
+		});
+		
+		$("#submitButton").click(function(e) {
+			$(this).prop('disabled',true);
+			let val = $.trim($('textarea[name="contents"]').val());
+			console.log(val);
+			if(val){
+				$(this).text('保存中...');
+				$('form').submit();
+			}else{
+				alert('投稿内容が空欄です。');
+				$(this).prop('disabled',false);
+				return false;
+			}
 		});
 	});
 </script>
@@ -146,17 +233,22 @@
 	  <div class="modal-dialog modal-dialog-centered" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+	        <h5 class="modal-title" id="exampleModalCenterTitle">コアラをタグ付け</h5>
+	        <input type = "hidden" name="image_tag_class">
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
 	      <div class="modal-body">
-	       
+		       <span th:each="animal : ${animalList}"
+							th:object="${animal}">
+					<input type = "hidden" name="animal_tag_id" th:value = "*{animal_id}">
+					<button class="btn btn-outline-primary btn-sm animal-tag" type="button" th:text = "'&#035;' + *{name}"></button>
+		      </span>
 	      </div>
 	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	        <button type="button" class="btn btn-primary">Save changes</button>
+	      	<button type="button" class="btn btn-primary" id="addTagButton">タグ付けする</button>
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModalButton">キャンセル</button>
 	      </div>
 	    </div>
 	  </div>
@@ -164,15 +256,17 @@
 	
 	<div class="container">
 		<h2 th:text="${zoo.zoo_name} + へ投稿"></h2>
-		<form th:action="@{/insert}" method="post"
-			enctype="multipart/form-data">
+		<form th:action="@{/post/insert}" method="post"
+			enctype="multipart/form-data" th:object="${postInsertForm}">
+			<input type="hidden" th:field="*{zoo_id}">
 			<div th:id="visitDate">
 				訪問日: <input type="text" class="datepicker" name="visitdate" value=""
 					placeholder="クリックして日付を入力" readonly></input>
+					<button type="button" class="btn btn-secondary btn-sm" id="dateCancel" style = "display:none">指定しない</button>
 			</div>
 			<div th:id="content">
 				<div>投稿内容</div>
-				<textarea name="content" class="form-control postTextarea"></textarea>
+				<textarea name="contents" class="form-control postTextarea" th:errorclass="is-invalid"></textarea>
 			</div>
 			<div th:id="image">
 				<div>
@@ -180,7 +274,15 @@
 					  <button class="btn btn-outline-success btn-sm addInputFileButton"
 						type="button">写真追加</button>
 				</div>
-				<span id="input-file-zone"></span>
+				<div id="input-file-zone"></div>
+				<input type="hidden" th:field="*{deletePostImageIds}">
+				<input type="hidden" th:field="*{parent_id}">
+				<div id="send-zone">
+				<button class="btn btn-outline-primary btn-sm" id = "submitButton" type="submit">保存</button>
+				<button class="btn btn-warning btn-sm" type="button"
+			onclick="window.history.back(); return false;">戻る</button>
+				</div>
+				
 			</div>
 		</form>
 	</div>

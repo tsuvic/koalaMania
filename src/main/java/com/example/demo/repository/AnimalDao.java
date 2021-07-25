@@ -18,6 +18,8 @@ public interface AnimalDao {
 	int insert(Animal animal);
 
 	Animal findById(int id);
+	
+	List<Animal> getAnimalListByZooId(int zoo_id);
 
 	void update(Animal animal);
 
