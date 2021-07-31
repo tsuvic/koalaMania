@@ -1,6 +1,5 @@
 package com.example.demo.repository;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +25,24 @@ public class PostImageDaoImple implements PostImageDao {
 	@Autowired
 	private PostImage ENTITY_POST_IMAGE;
 	
-	public void insertNewPostImage(int post_id,List<Integer> animalIdList,
-			List<String> imageAddressList) {
+	@Override
+	public int insertNewPostImage(int post_id,int animalId) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		int user_id = ((LoginUser) principal).getUser_id();
 		
-		for(int i=0; i < imageAddressList.size() ; ++i) {
 			String sql = "INSERT INTO "+ ENTITY_POST_IMAGE.TABLE_NAME +"("+ ENTITY_POST_IMAGE.COLUMN_POST_ID +", "
 					+ ENTITY_POST_IMAGE.COLUMN_ANIMAL_ID +", " + ENTITY_POST_IMAGE.COLUMN_IMAGE_ADDRESS  + ")" 
 					+ "VALUES(?, ?, ?)RETURNING "+ ENTITY_POST_IMAGE.COLUMN_POSTIMAGE_ID +"";
-			Map<String, Object> result = jdbcTemplate.queryForMap(sql, post_id,animalIdList.get(i),imageAddressList.get(i));
-			commonSqlUtil.updateAllCommonColumn( ENTITY_POST_IMAGE.TABLE_NAME, ENTITY_POST_IMAGE.COLUMN_POSTIMAGE_ID, user_id, (int) result.get(ENTITY_POST_IMAGE.COLUMN_POSTIMAGE_ID));
-		}
+			Map<String, Object> result = jdbcTemplate.queryForMap(sql, post_id,animalId,null);
+			commonSqlUtil.updateAllCommonColumn( ENTITY_POST_IMAGE.TABLE_NAME, ENTITY_POST_IMAGE.COLUMN_POSTIMAGE_ID, user_id, 
+					(int) result.get(ENTITY_POST_IMAGE.COLUMN_POSTIMAGE_ID));
 		
+		return (int) result.get(ENTITY_POST_IMAGE.COLUMN_POSTIMAGE_ID);
 	}
-
+	
+	@Override
+	public void updateUrl(int postImageId,String url) {
+		jdbcTemplate.update("UPDATE "+ ENTITY_POST_IMAGE.TABLE_NAME +" SET "+ ENTITY_POST_IMAGE.COLUMN_IMAGE_ADDRESS +" = ? WHERE "+ 
+				ENTITY_POST_IMAGE.COLUMN_POSTIMAGE_ID +" = ?", url, postImageId);
+	}
 }

@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -72,34 +71,32 @@ public class PostServiceImpl implements PostService {
 		post.setVisitDate(getDate(form.getVisitdate()));
 		post.setParent(parent);
 		
-		int insert_id = postDao.isertNewPost(post);
+		int insert_id = postDao.insertNewPost(post);
 		
-		List<String> imageAdressList = insertPostImage(insert_id, form.getImageList());
-		
-		postImageDao.insertNewPostImage(insert_id , form.getTagList(),imageAdressList);
+		if(form.getImageList() != null) {
+			for(int i=0 ; i < form.getImageList().size() ; ++i){
+				if(form.getImageList().get(i).getSize() > 0 ) {
+					int insert_image_id = postImageDao.insertNewPostImage(insert_id , form.getTagList().get(i));
+					String url = insertPostImage(insert_id, form.getImageList().get(i),insert_image_id);
+					postImageDao.updateUrl(insert_image_id , url);
+				}
+			}
+		}
 	}
 	
 	@Override
-	public List<String> insertPostImage(int post_id, List<MultipartFile> postImageUploadList) {
-		List<String> imageAdressList = new ArrayList<String>();
-		try {
-			for(int i = 0; i < postImageUploadList.size(); ++i) {
-				
-				if(postImageUploadList.get(i).getSize() <= 0) {
-					imageAdressList.add(null);
-					continue;
-				}
-				
+	public String insertPostImage(int post_id, MultipartFile postImageUpload ,int post_image_id ){
+		try {	
 				// ファイルの拡張子を取得する
-				String profileImagePath = postImageUploadList.get(i).getOriginalFilename()
-						.substring(postImageUploadList.get(i).getOriginalFilename().lastIndexOf("."));
+				String profileImagePath = postImageUpload.getOriginalFilename()
+						.substring( postImageUpload.getOriginalFilename().lastIndexOf("."));
 			
-				File uploadFile = new File("images/" + "post/" + post_id + "_" + + i +profileImagePath);
+				File uploadFile = new File("images/" + "post/" + post_image_id + profileImagePath);
 	
-				byte[] bytes = fileResize(postImageUploadList.get(i).getBytes(), profileImagePath.substring(1));
+				byte[] bytes = fileResize(postImageUpload.getBytes(), profileImagePath.substring(1));
 	
 				if (bytes == null) {
-					bytes = postImageUploadList.get(i).getBytes();
+					bytes = postImageUpload.getBytes();
 				}
 	
 				BufferedOutputStream uploadFileStream = new BufferedOutputStream(new FileOutputStream(uploadFile));
@@ -112,11 +109,9 @@ public class PostServiceImpl implements PostService {
 				String url = (String)resultmap.get("secure_url");
 				
 				uploadFile.delete();
-				
-				imageAdressList.add(url);
-			}
 			
-			return imageAdressList;
+				return url;
+				
 		} catch (Exception e) {
 				// 異常終了時の処理
 			return null;

@@ -1,8 +1,6 @@
 package com.example.demo.app;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,22 +18,26 @@ import com.example.demo.service.UserService;
 @RequestMapping("/user")
 public class UserController {
 	
-//	下記のリクエストで使用するために、AnimalService型のフィールド用意 & @AutowiredでDIを実施する。	
 	private final UserService userService;
+	
+	private UserAuthenticationUtil userAuthenticationUtil;
 
 	@Autowired
-	public UserController(UserService userService) {
+	public UserController(UserService userService,UserAuthenticationUtil userAuthenticationUtil) {
 		this.userService = userService;
+		this.userAuthenticationUtil = userAuthenticationUtil; 
 	}
+	
+	
+	
 
 	@GetMapping("/mypage/{user_id}")
 	public String getMyPage(@PathVariable int user_id, Model model, 
 			@ModelAttribute UserForm form) {
 		
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if(!(SecurityContextHolder.getContext().getAuthentication() 
-				instanceof AnonymousAuthenticationToken) 
-				&& ((LoginUser) principal).getUser_id() == user_id) {
+		LoginUser principal = userAuthenticationUtil.isUserAuthenticated();
+		if( principal != null
+				&& principal.getUser_id() == user_id) {
 			form.setUser_id(user_id);
 			form.setName(((LoginUser) principal).getUserName());
 			form.setProfile(((LoginUser) principal).getProfile());
@@ -62,10 +64,9 @@ public class UserController {
 	public String getEditMypage(@PathVariable int user_id, Model model, 
 			@ModelAttribute UserForm form) {
 		
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if(!(SecurityContextHolder.getContext().getAuthentication() 
-				instanceof AnonymousAuthenticationToken) 
-				&& ((LoginUser) principal).getUser_id() == user_id) {
+		LoginUser principal = userAuthenticationUtil.isUserAuthenticated();
+		if( principal != null
+				&& principal.getUser_id() == user_id) {
 			form.setUser_id(user_id);
 			form.setName(((LoginUser) principal).getUserName());
 			form.setProfile(((LoginUser) principal).getProfile());

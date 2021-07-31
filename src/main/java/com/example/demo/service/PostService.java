@@ -15,5 +15,5 @@ public interface PostService {
 	
 	void insertNewPost(PostInsertForm postInsertForm);
 	
-	List<String> insertPostImage(int post_id, List<MultipartFile> postImageUpload);
+	String insertPostImage(int post_id, MultipartFile postImageUpload ,int post_image_id);
 }

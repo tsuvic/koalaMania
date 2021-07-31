@@ -40,6 +40,32 @@
 				<th class="cell_title">所在地</th>
 				<td th:text="*{prefecture.name}"></td>
 			</tr>
+			<tr>
+				<th class="cell_title">投稿</th>
+				<td><div th:each="post : ${postList}"
+						th:object="${post}">
+						<div>
+							<img th:src="*{loginUser.profileImagePath}" width="40px"
+								height="40px"> <a
+								th:href="@{/user/mypage/{user_id}(user_id=*{loginUser.user_id})}"
+								th:text="*{loginUser.userName}"> </a>
+							<span th:text = "*{displayDiffTime}"></span>
+						</div>
+						<div th:text="'訪問日:  ' + *{#dates.format(visitDate,'yyyy年M月d日')}"></div>
+						<div th:text="*{contents}"
+							style="white-space: pre-wrap;"></div>
+						<div>
+							<span th:each="postImage : *{postImageList}"
+									th:object="${postImage}"  style = "display:inline-block;">
+								<a th:unless = "*{animal} == null"
+								th:href="@{/detail/{animal_id}(animal_id=*{animal.animal_id})}"
+								th:text="'#' + *{animal.name}"></a><br th:unless = "*{animal} == null">
+								<img th:src="*{imageAddress}" width="100px"
+								height="100px">
+							</span>
+						</div>
+					</div></td>
+			</tr>
 		</table>
 	</div>
 </body>

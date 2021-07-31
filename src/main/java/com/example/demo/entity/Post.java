@@ -25,8 +25,10 @@ public class Post {
 	private String contents;
 	private List<PostImage> postImageList;
 	private Date visitDate;
-	private LoginUser user;
+	private Date createdDate;
+	private LoginUser loginUser;
 	private Post parent;
 	private Zoo zoo;
+	private String displayDiffTime;
 	
 }

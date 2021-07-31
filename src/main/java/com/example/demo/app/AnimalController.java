@@ -59,15 +59,6 @@ public class AnimalController {
 		return "index";
 	}
 
-	@GetMapping("/login")
-	public String login() {
-		return "login";
-	}
-
-	@GetMapping("/signup")
-	public String signup() {
-		return "signup";
-	}
 
 	/*@GetMapping("/search")
 	public String displayAllAnimal(Model model, @ModelAttribute AnimalSearchForm animalSearchForm,
@@ -209,9 +200,8 @@ public class AnimalController {
 		animal.setStringBirthDate(stringBirthDate);
 		animal.setStringDeathDate(stringDeathDate);
 		setDefaultAnimalProfileImage(animal);
-		model.addAttribute("detail", animal);
-		System.out.println(animal.getMotherAnimal())	;	
-				return "detail";
+		model.addAttribute("detail", animal);	
+		return "detail";
 	}
 
 	@GetMapping("/edit/{id}")
