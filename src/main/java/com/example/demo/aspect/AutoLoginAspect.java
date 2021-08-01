@@ -7,10 +7,9 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.app.UserAuthenticationUtil;
 import com.example.demo.entity.LoginUser;
 import com.example.demo.repository.LoginUserDao;
 import com.example.demo.service.TwitterLoginService;
@@ -25,7 +24,10 @@ public class AutoLoginAspect {
 	private HttpServletResponse response;
 	
 	@Autowired
-	HttpServletRequest request;
+	private HttpServletRequest request;
+	
+	@Autowired
+	private UserAuthenticationUtil userAuthenticationUtil;
 	
 	public AutoLoginAspect(LoginUserDao userDao , TwitterLoginService twitterLoginService) {
 		// TODO 自動生成されたコンストラクター・スタブ
@@ -33,7 +35,7 @@ public class AutoLoginAspect {
 		this.twitterLoginService = twitterLoginService;
 	}
 	
-	@Before("within(com.example.demo.app.AnimalController) or within(com.example.demo.app.UserController)")
+	@Before("execution(* com.example.demo.app.*Controller.*(..))")
 	public void CheckAutoLoginAspect(){
 		javax.servlet.http.Cookie[] cookies =  request.getCookies();
 		String autoLogin = null;
@@ -46,8 +48,7 @@ public class AutoLoginAspect {
             }
 		}
 		
-		if((SecurityContextHolder.getContext().getAuthentication() 
-				instanceof AnonymousAuthenticationToken) && autoLogin != null) {
+		if(userAuthenticationUtil.isUserAuthenticated() == null && autoLogin != null) {
 			LoginUser loginUser  = loginUserDao.checkAutoLoginUser(DigestUtils.sha3_256Hex(autoLogin));
 			if(loginUser != null) {
 				twitterLoginService.setCookie(loginUser, response,request);

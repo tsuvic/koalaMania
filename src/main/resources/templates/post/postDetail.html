@@ -1,0 +1,109 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+<meta charset="utf-8">
+<link rel="canonical"
+	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
+<!-- Bootstrap core CSS -->
+<link
+	href=https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css
+	rel="stylesheet"
+	integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+	crossorigin="anonymous">
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+
+<!-- Custom styles for this template -->
+<link href="/css/starter-template.css" rel="stylesheet">
+
+
+<title th:text="${title}"></title>
+<script type="text/javascript">
+	$(function() {
+		$("#submitButton").click(function(e) {
+			$(this).prop('disabled', true);
+			let val = $.trim($('textarea[name="contents"]').val());
+			console.log(val);
+			if (val) {
+				$(this).text('送信中...');
+				$('form').submit();
+			} else {
+				alert('投稿内容が空欄です。');
+				$(this).prop('disabled', false);
+				return false;
+			}
+		});
+	});
+</script>
+</head>
+
+<body>
+	<div th:replace="~{block/header_boot::headerA_boot}"></div>
+	<div class="container">
+		<div th:object="${post.zoo}">
+			<h1 th:text="*{zoo_name}"></h1>
+			<h3 th:text="*{prefecture.name}"></h3>
+		</div>
+		<div th:object="${post}" style="margin: 10px; border: solid;">
+			<div style="margin: 10px;">
+				<a th:href="@{/user/mypage/{user_id}(user_id=*{loginUser.user_id})}"><img
+					th:src="*{loginUser.profileImagePath}" width="40px" height="40px"></a>
+				<a th:href="@{/user/mypage/{user_id}(user_id=*{loginUser.user_id})}"
+					th:text="*{loginUser.userName}"> </a> <span
+					th:text="*{displayDiffTime}"></span>
+			</div>
+			<div
+				th:unless="*{#dates.format(visitDate,'yyyy年M月d日')} == '9999年1月1日'"
+				th:text="'訪問日:  ' + *{#dates.format(visitDate,'yyyy年M月d日')}"
+				style="margin: 10px;"></div>
+			<div th:if="*{#dates.format(visitDate,'yyyy年M月d日')} == '9999年1月1日'"
+				th:text="'訪問日:  指定なし'" style="margin: 10px;"></div>
+			<div th:text="*{contents}"
+				style="white-space: pre-wrap; margin: 10px;"></div>
+			<div style="margin: 10px;">
+				<span th:each="postImage : *{postImageList}"
+					th:object="${postImage}"
+					style="display: inline-block; margin: 10px;"> <a
+					th:unless="*{animal} == null"
+					th:href="@{/detail/{animal_id}(animal_id=*{animal.animal_id})}"
+					th:text="'#' + *{animal.name}"></a><br
+					th:unless="*{animal} == null"> <img th:src="*{imageAddress}"
+					width="200px" height="200px" style="border: solid;">
+				</span>
+			</div>
+		</div>
+		<div class="container" style="margin: 10px;">
+			<form th:action="@{/post/insertChildPost}" method="post"
+				th:object="${postInsertForm}">
+				<input type="hidden" th:field="*{parent_id}"> <input
+					type="hidden" th:field="*{parent_id}">
+				<div th:id="content">
+					<textarea name="contents" class="form-control postTextarea"
+						placeholder="この投稿へコメントする" th:errorclass="is-invalid"
+						style="height: 120px;"></textarea>
+				</div>
+				<div id="send-zone" style="margin: 10px;">
+					<button class="btn btn-outline-primary btn-sm" id="submitButton"
+						type="submit">コメントを送信</button>
+					<button class="btn btn-warning btn-sm" type="button"
+						onclick="window.history.back(); return false;">戻る</button>
+				</div>
+			</form>
+		</div>
+		<div th:each="childPost : ${post.childrenPost}"
+			th:object="${childPost}" style="margin: 10px; border: solid;">
+			<div style="margin: 10px;">
+				<a th:href="@{/user/mypage/{user_id}(user_id=*{loginUser.user_id})}"><img
+					th:src="*{loginUser.profileImagePath}" width="40px" height="40px"></a>
+				<a th:href="@{/user/mypage/{user_id}(user_id=*{loginUser.user_id})}"
+					th:text="*{loginUser.userName}"> </a> <span
+					th:text="*{displayDiffTime}"></span>
+			</div>
+			<div th:text="*{contents}"
+				style="white-space: pre-wrap; margin: 10px;"></div>
+		</div>
+	</div>
+</body>
+</html>

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.demo.entity.LoginUser;
@@ -33,6 +34,9 @@ public class TwitterLoginController {
 	private TwitterLoginService service;
 	
 	@Autowired
+	private UserAuthenticationUtil userAuthenticationUtil;
+	
+	@Autowired
     @Qualifier("spring.social.twitter.app-id")
     String twitterAppId;
 
@@ -43,6 +47,26 @@ public class TwitterLoginController {
     @Autowired
     @Qualifier("spring.social.twitter.callback-url")
     String twitterCallBackUrl;
+    
+    @GetMapping("/login")
+	public String login() {
+    	LoginUser principal = userAuthenticationUtil.isUserAuthenticated();
+		if( principal != null) {
+			return "redirect:/user/mypage/" + ((LoginUser) principal).getUser_id();
+		}else {
+			return "login";
+		}
+	}
+
+	@GetMapping("/signup")
+	public String signup() {
+		LoginUser principal = userAuthenticationUtil.isUserAuthenticated();
+		if( principal != null) {
+			return "redirect:/user/mypage/" + ((LoginUser) principal).getUser_id();
+		}else {
+			return "signup";
+		}
+	}
 
 	@RequestMapping("/oauth/twitter/auth")
 	String loginTwitter() {

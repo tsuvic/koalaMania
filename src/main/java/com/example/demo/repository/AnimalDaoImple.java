@@ -227,6 +227,28 @@ public class AnimalDaoImple implements AnimalDao {
 		}
 		return list;
 	}
+	
+	@Override
+	public List<Animal> getAnimalListByZooId(int zoo_id){
+		String sql = "SELECT  DISTINCT "+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "
+				+ ""+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_NAME +" "
+				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +
+				" INNER JOIN "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +" ON "+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID +
+				" AND " +  ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID + " = ?";
+		// SQL実行結果をMap型リストへ代入
+		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql,zoo_id);
+		
+		List<Animal> returnAnimalList = new ArrayList();
+		for(Map<String, Object> result:resultList) {
+			Animal animal = new Animal();
+			animal.setAnimal_id((int) result.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));
+			animal.setName((String) result.get(ENTITY_ANIMAL.COLUMN_NAME));
+			returnAnimalList.add(animal);
+		}
+		
+		return returnAnimalList;
+		
+	}
 
 	@Override
 	public int insert(Animal animal) {
@@ -369,7 +391,7 @@ public class AnimalDaoImple implements AnimalDao {
 		animal.setName((String) result.get(ENTITY_ANIMAL.COLUMN_NAME));
 		animal.setId((int) result.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));
 
-	animal.setProfileImagePath((String) result.get(ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE));
+		animal.setProfileImagePath((String) result.get(ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE));
 //		mainAnimal.setAnimal_id((int) resultList.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));
 		animal.setSex((int) result.get(ENTITY_ANIMAL.COLUMN_SEX));
 //		mainAnimal.setBirthdate((Date) result.get(ENTITY_ANIMAL.COLUMN_BIRTHDATE));

@@ -16,7 +16,7 @@
 
 
 <!-- Custom styles for this template -->
-<link href="/css/starter-template.css" rel="stylesheet">
+<link href="/css/starter-template.css" rel="stylesheet"></link>
 
 
 <title th:text="${title}"></title>
@@ -24,10 +24,6 @@
 
 <body>
 	<div th:replace="~{block/header_boot::headerA_boot}"></div>
-	<br>
-	<br>
-	<br>
-	<br>
 	<div th:object="${zoo}">
 		<button class="btn btn-primary btn-sm" type="button"
 			th:onclick="'location.href = \'' +@{/post/{zoo_id}(zoo_id=*{zoo_id})} + '\''">投稿する</button>
@@ -39,6 +35,53 @@
 			<tr>
 				<th class="cell_title">所在地</th>
 				<td th:text="*{prefecture.name}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">投稿</th>
+				<td><div th:each="post : ${postList}" th:object="${post}"
+						style="margin: 10px; border: solid;">
+						<div style="margin: 10px;">
+							<a
+								th:href="@{/user/mypage/{user_id}(user_id=*{loginUser.user_id})}"><img
+								th:src="*{loginUser.profileImagePath}" width="40px"
+								height="40px"></a> <a
+								th:href="@{/user/mypage/{user_id}(user_id=*{loginUser.user_id})}"
+								th:text="*{loginUser.userName}"> </a> <span
+								th:text="*{displayDiffTime}"></span>
+						</div>
+						<div
+							th:unless="*{#dates.format(visitDate,'yyyy年M月d日')} == '9999年1月1日'"
+							th:text="'訪問日:  ' + *{#dates.format(visitDate,'yyyy年M月d日')}"
+							style="margin: 10px;"></div>
+						<div
+							th:if="*{#dates.format(visitDate,'yyyy年M月d日')} == '9999年1月1日'"
+							th:text="'訪問日:  指定なし'" style="margin: 10px;"></div>
+						<a th:href="@{/post/postDetail/{post_id}(post_id=*{post_id})}"
+							style="text-decoration: none; color: black;">
+							<div th:text="*{contents}"
+								style="white-space: pre-wrap; margin: 10px;"></div>
+						</a>
+						<div style="margin: 10px;">
+							<span th:each="postImage : *{postImageList}"
+								th:object="${postImage}"
+								style="display: inline-block; margin: 10px;"> <a
+								th:unless="*{animal} == null"
+								th:href="@{/detail/{animal_id}(animal_id=*{animal.animal_id})}"
+								th:text="'#' + *{animal.name}"></a><br
+								th:unless="*{animal} == null"> <a
+								th:unless="*{post} == null"
+								th:href="@{/post/postDetail/{post_id}(post_id=*{post.post_id})}"
+								style="text-decoration: none; color: black;"> <img
+									th:src="*{imageAddress}" width="100px" height="100px"
+									style="border: solid;">
+							</a>
+							</span>
+						</div>
+						<a th:href="@{/post/postDetail/{post_id}(post_id=*{post_id})}">
+						<div th:text="*{childrenCount}+'件のコメント'"></div>
+						</a>
+					</div>
+				</td>
 			</tr>
 		</table>
 	</div>

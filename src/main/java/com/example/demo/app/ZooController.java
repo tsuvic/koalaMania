@@ -1,5 +1,8 @@
 package com.example.demo.app;
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.demo.entity.Zoo;
+import com.example.demo.entity.Post;
 import com.example.demo.service.ZooService;
 
 @Controller
@@ -22,11 +25,36 @@ public class ZooController {
 		this.zooService = zooService;
 	}
 	
-	@GetMapping("/detail/{id}")
-	public String detail(@PathVariable int id, Model model){
-		Zoo zoo = zooService.findById(id);
+	@GetMapping("/detail/{zoo_id}")
+	public String detail(@PathVariable int zoo_id, Model model){
 		
-		model.addAttribute("zoo", zoo);
+		model.addAttribute("zoo", zooService.findById(zoo_id));
+		
+		List<Post> postList = zooService.getPostListByZooId(zoo_id);
+		Date now = new Date();
+		long nowtime = now.getTime();
+		
+		for(Post post : postList) {
+			Date cteate = post.getCreatedDate();
+			long createtime = cteate.getTime();
+			long difftime  =  nowtime - createtime;
+			
+			if(difftime/1000/60 < 59) {
+				post.setDisplayDiffTime(difftime/1000/60  + "分前");
+			}else if(difftime/1000/60/60 < 24) {
+				post.setDisplayDiffTime(difftime/1000/60/60  + "時間前");
+			}else if(difftime/1000/60/60/24 < 31) {
+				post.setDisplayDiffTime(difftime/1000/60/60/24  + "日前");
+			}else if(difftime/1000/60/60/24/30 < 1) {
+				post.setDisplayDiffTime(difftime/1000/60/60/24/30  + "ヶ月前");
+			}else {
+				post.setDisplayDiffTime(difftime/1000/60/60/24/30  + "年前");
+			}
+			
+			
+		}
+		
+		model.addAttribute("postList", postList);
 		
 		return "zoo/detail";
 	}

@@ -120,6 +120,24 @@ public class CloudinaryServiceImpl implements CloudinaryService{
 		}
 	}
     
+    @Override
+	public	Map uploadPostImage(File uploadFile,int post_id) {
+    	
+	    String uploadCloudinaryFolderPath = getPostUploadDir(post_id);
+	    Map optionMap = ObjectUtils.asMap("folder",uploadCloudinaryFolderPath);
+	    optionMap.put("use_filename", true);
+	    optionMap.put("unique_filename", false);
+	    try {
+	    	Cloudinary cloudinary = new Cloudinary("cloudinary://"+mApiKey+":"+mApiSecret+"@"+mCloudName);
+	    	Map resultMap = cloudinary.uploader().upload(uploadFile, optionMap);
+			return resultMap;
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+			return null;
+		}
+	}
+    
     private String getanimalUploadDir(int animal_id) {
 		// 写真を格納するファイルのパス
         StringBuffer dirPath = new StringBuffer("animal").append("/")
@@ -132,6 +150,14 @@ public class CloudinaryServiceImpl implements CloudinaryService{
 		// 写真を格納するファイルのパス
         StringBuffer dirPath = new StringBuffer("user").append("/")
         								.append(String.valueOf(user_id));
+        
+        return dirPath.toString();
+    }
+    
+    private String getPostUploadDir(int post_id) {
+		// 写真を格納するファイルのパス
+        StringBuffer dirPath = new StringBuffer("post").append("/")
+        								.append(String.valueOf(post_id));
         
         return dirPath.toString();
     }

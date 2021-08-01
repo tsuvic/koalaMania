@@ -1,5 +1,16 @@
 package com.example.demo.repository;
 
-public interface PostDao {
+import java.util.List;
 
+import com.example.demo.entity.Post;
+
+public interface PostDao {
+	
+	int insertNewPost(Post post);
+	
+	List<Post> getPostListByZooId(int zoo_id);
+	
+	Post getPostByPostId(int post_id);
+	
+	List<Post> getPostListByUserId(int user_id);
 }
