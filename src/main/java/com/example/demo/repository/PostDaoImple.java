@@ -222,10 +222,10 @@ public class PostDaoImple implements PostDao {
 					animal.setAnimal_id((int) result.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));
 					animal.setName((String) result.get(ENTITY_ANIMAL.COLUMN_NAME));
 					postImage.setAnimal(animal);
-					Post post = new Post();
-					post.setPost_id((int) result.get(ENTITY_POST.COLUMN_POST_ID));
-					postImage.setPost(post);
 				}
+				Post post = new Post();
+				post.setPost_id((int) result.get(ENTITY_POST.COLUMN_POST_ID));
+				postImage.setPost(post);
 				returnPostList.get(returnPostList.size() - 1).getPostImageList().add(postImage);
 
 				before_post_id = (int) result.get(ENTITY_POST.COLUMN_POST_ID);
@@ -249,10 +249,10 @@ public class PostDaoImple implements PostDao {
 						animal.setAnimal_id((int) result.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));
 						animal.setName((String) result.get(ENTITY_ANIMAL.COLUMN_NAME));
 						postImage.setAnimal(animal);
-						postImage.setPost(post);
 					}
 					post.setPostImageList(new ArrayList<PostImage>());
 					post.getPostImageList().add(postImage);
+					postImage.setPost(post);
 				}
 
 				returnPostList.add(post);
@@ -343,10 +343,10 @@ public class PostDaoImple implements PostDao {
 					animal.setAnimal_id((int) result.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));
 					animal.setName((String) result.get(ENTITY_ANIMAL.COLUMN_NAME));
 					postImage.setAnimal(animal);
-					Post post = new Post();
-					post.setPost_id((int) result.get(ENTITY_POST.COLUMN_POST_ID));
-					postImage.setPost(post);
 				}
+				Post post = new Post();
+				post.setPost_id((int) result.get(ENTITY_POST.COLUMN_POST_ID));
+				postImage.setPost(post);
 				returnPostList.get(returnPostList.size() - 1).getPostImageList().add(postImage);
 
 				before_post_id = (int) result.get(ENTITY_POST.COLUMN_POST_ID);
@@ -378,10 +378,10 @@ public class PostDaoImple implements PostDao {
 						animal.setAnimal_id((int) result.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));
 						animal.setName((String) result.get(ENTITY_ANIMAL.COLUMN_NAME));
 						postImage.setAnimal(animal);
-						postImage.setPost(post);
 					}
 					post.setPostImageList(new ArrayList<PostImage>());
 					post.getPostImageList().add(postImage);
+					postImage.setPost(post);
 				}
 
 				returnPostList.add(post);

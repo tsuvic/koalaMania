@@ -32,5 +32,4 @@ public class Post {
 	private Zoo zoo;
 	private String displayDiffTime;
 	private long childrenCount;
-	
 }
