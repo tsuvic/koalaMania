@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.demo.entity.LoginUser;
+import com.example.demo.service.PostService;
 import com.example.demo.service.UserService;
 
 @Controller
@@ -20,12 +21,15 @@ public class UserController {
 	
 	private final UserService userService;
 	
+	private final PostService postService;
+	
 	private UserAuthenticationUtil userAuthenticationUtil;
 
 	@Autowired
-	public UserController(UserService userService,UserAuthenticationUtil userAuthenticationUtil) {
+	public UserController(UserService userService,UserAuthenticationUtil userAuthenticationUtil,PostService postService) {
 		this.userService = userService;
-		this.userAuthenticationUtil = userAuthenticationUtil; 
+		this.userAuthenticationUtil = userAuthenticationUtil;
+		this.postService = postService; 
 	}
 	
 	
@@ -56,6 +60,8 @@ public class UserController {
 		}
 		
 		setDefaultUserProfileImage(form);
+		
+		model.addAttribute("postList", postService.getPostByUSerId(user_id));
 		
 		return "user/mypage";
 	}

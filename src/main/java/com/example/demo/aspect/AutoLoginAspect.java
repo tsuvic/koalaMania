@@ -35,7 +35,7 @@ public class AutoLoginAspect {
 		this.twitterLoginService = twitterLoginService;
 	}
 	
-	@Before("within(com.example.demo.app.AnimalController) or within(com.example.demo.app.UserController) or within(com.example.demo.app.PostController)")
+	@Before("execution(* com.example.demo.app.*Controller.*(..))")
 	public void CheckAutoLoginAspect(){
 		javax.servlet.http.Cookie[] cookies =  request.getCookies();
 		String autoLogin = null;

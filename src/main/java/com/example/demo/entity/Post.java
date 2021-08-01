@@ -27,8 +27,10 @@ public class Post {
 	private Date visitDate;
 	private Date createdDate;
 	private LoginUser loginUser;
-	private Post parent;
+	private Post parentPost;
+	private List<Post> childrenPost;
 	private Zoo zoo;
 	private String displayDiffTime;
+	private long childrenCount;
 	
 }

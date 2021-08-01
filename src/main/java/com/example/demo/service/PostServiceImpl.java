@@ -48,6 +48,12 @@ public class PostServiceImpl implements PostService {
 		this.postImageDao = postImageDao;
 		this.cloudinaryService = cloudinaryService;
 	}
+	
+	@Override
+	public Post getPostByPostId(int post_id){
+		
+		return postDao.getPostByPostId(post_id);
+	}
 
 	@Override
 	public Zoo getZooById(int zoo_id) {
@@ -69,7 +75,7 @@ public class PostServiceImpl implements PostService {
 		post.setZoo(zoo);
 		post.setContents(form.getContents());
 		post.setVisitDate(getDate(form.getVisitdate()));
-		post.setParent(parent);
+		post.setParentPost(parent);
 		
 		int insert_id = postDao.insertNewPost(post);
 		
@@ -122,12 +128,18 @@ public class PostServiceImpl implements PostService {
 
 	}
 	
+	@Override
+	public List<Post> getPostByUSerId(int user_id){
+		return postDao.getPostListByUserId(user_id);
+	}
+	
 	public Date getDate(String visitDate) {
+		
 		String year;
 		String month;
 		String day;
 		String hyphen = "-";
-		if(visitDate.trim().isEmpty()) {
+		if(visitDate == null || visitDate.trim().isEmpty()) {
 			year = "9999";
 			month = "01";
 			day = "01";

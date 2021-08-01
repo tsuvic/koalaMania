@@ -29,6 +29,7 @@ import com.example.demo.entity.AnimalImage;
 import com.example.demo.entity.AnimalZooHistory;
 import com.example.demo.entity.Zoo;
 import com.example.demo.service.AnimalService;
+import com.example.demo.service.PostImageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
@@ -37,10 +38,13 @@ public class AnimalController {
 
 	//下記のリクエストで使用するために、AnimalService型のフィールド用意 & @AutowiredでDIを実施する。	
 	private final AnimalService animalService;
+	
+	private final PostImageService postImageService;
 
 	@Autowired
-	public AnimalController(AnimalService animalService) {
+	public AnimalController(AnimalService animalService,PostImageService postImageService) {
 		this.animalService = animalService;
+		this.postImageService = postImageService;
 	}
 
 	@Autowired
@@ -200,7 +204,8 @@ public class AnimalController {
 		animal.setStringBirthDate(stringBirthDate);
 		animal.setStringDeathDate(stringDeathDate);
 		setDefaultAnimalProfileImage(animal);
-		model.addAttribute("detail", animal);	
+		model.addAttribute("detail", animal);
+		model.addAttribute("postImageList", postImageService.getPostImageListByAnimalId(id));
 		return "detail";
 	}
 

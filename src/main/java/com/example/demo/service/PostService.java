@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.app.PostInsertForm;
 import com.example.demo.entity.Animal;
+import com.example.demo.entity.Post;
 import com.example.demo.entity.Zoo;
 
 public interface PostService {
@@ -16,4 +17,8 @@ public interface PostService {
 	void insertNewPost(PostInsertForm postInsertForm);
 	
 	String insertPostImage(int post_id, MultipartFile postImageUpload ,int post_image_id);
+	
+	Post getPostByPostId(int post_id);
+	
+	List<Post> getPostByUSerId(int user_id);
 }
