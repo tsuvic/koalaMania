@@ -1,5 +1,7 @@
 package com.example.demo.app;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.demo.entity.LoginUser;
+import com.example.demo.entity.Post;
 import com.example.demo.service.PostService;
 import com.example.demo.service.UserService;
 
@@ -61,7 +64,14 @@ public class UserController {
 		
 		setDefaultUserProfileImage(form);
 		
-		model.addAttribute("postList", postService.getPostByUSerId(user_id));
+		List<Post> postList = postService.getPostByUSerId(user_id);
+		
+		postList.stream()
+		.forEach(post -> post.getLoginUser().setProfileImagePath(form.getProfileImagePath()));
+		
+		model.addAttribute("postList", postList);
+		
+		
 		
 		return "user/mypage";
 	}

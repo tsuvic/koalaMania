@@ -50,11 +50,23 @@ public class ZooController {
 			}else {
 				post.setDisplayDiffTime(difftime/1000/60/60/24/30  + "年前");
 			}
+			setDefaultUserProfileImage(post);
 		}
 		
 		model.addAttribute("postList", postList);
 		
 		return "zoo/detail";
+	}
+	
+	/**
+	 * プロフィール画像がセットされていない場合、デフォルトの画像をセットする
+	 * 
+	 * @param UserForm form
+	*/
+	private void setDefaultUserProfileImage(Post post) {
+		if (post.getLoginUser().getProfileImagePath() == null) {
+			post.getLoginUser().setProfileImagePath("/images/user/profile/defaultUser.png");
+		}
 	}
 
 }
