@@ -303,11 +303,20 @@ public class PostDaoImple implements PostDao {
 				ENTITY_LOGIN_USER.TABLE_NAME + "." + ENTITY_LOGIN_USER.COLUMN_USER_NAME + "," +
 				ENTITY_LOGIN_USER.TABLE_NAME + "." + ENTITY_LOGIN_USER.COLUMN_PROFILE_IMAGE_PATH + "," +
 				ENTITY_ANIMAL.TABLE_NAME + "." + ENTITY_ANIMAL.COLUMN_ANIMAL_ID + "," +
-				ENTITY_ANIMAL.TABLE_NAME + "." + ENTITY_ANIMAL.COLUMN_NAME +
+				ENTITY_ANIMAL.TABLE_NAME + "." + ENTITY_ANIMAL.COLUMN_NAME + "," +
+				ENTITY_ZOO.TABLE_NAME + "." + ENTITY_ZOO.COLUMN_ZOO_ID + "," +
+				ENTITY_ZOO.TABLE_NAME + "." + ENTITY_ZOO.COLUMN_ZOO_NAME + "," +
+				ENTITY_PREFECTURE.TABLE_NAME + "." + ENTITY_PREFECTURE.COLUMN_PREFECTURE_NAME +
 				" FROM " + ENTITY_POST.TABLE_NAME +
 				" LEFT OUTER JOIN " + ENTITY_LOGIN_USER.TABLE_NAME + " ON " + ENTITY_POST.TABLE_NAME + "."
 				+ ENTITY_POST.COLUMN_USER_ID + " = " +
 				ENTITY_LOGIN_USER.TABLE_NAME + "." + ENTITY_LOGIN_USER.COLUMN_USER_ID +
+				" LEFT OUTER JOIN " + ENTITY_ZOO.TABLE_NAME + " ON " + ENTITY_POST.TABLE_NAME + "."
+				+ ENTITY_POST.COLUMN_ZOO_ID + " = " +
+				ENTITY_ZOO.TABLE_NAME + "." + ENTITY_ZOO.COLUMN_ZOO_ID +
+				" LEFT OUTER JOIN " + ENTITY_PREFECTURE.TABLE_NAME + " ON " + ENTITY_PREFECTURE.TABLE_NAME + "."
+				+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID + " = " +
+				ENTITY_ZOO.TABLE_NAME + "." + ENTITY_ZOO.COLUMN_PREFECTURE_ID +
 				" LEFT OUTER JOIN " + ENTITY_POST_IMAGE.TABLE_NAME + " ON " + ENTITY_POST.TABLE_NAME + "."
 				+ ENTITY_POST.COLUMN_POST_ID + " = " +
 				ENTITY_POST_IMAGE.TABLE_NAME + "." + ENTITY_POST_IMAGE.COLUMN_POST_ID +
@@ -353,6 +362,14 @@ public class PostDaoImple implements PostDao {
 				loginUser.setUserName((String) result.get(ENTITY_LOGIN_USER.COLUMN_USER_NAME));
 				loginUser.setProfileImagePath((String) result.get(ENTITY_LOGIN_USER.COLUMN_PROFILE_IMAGE_PATH));
 				post.setLoginUser(loginUser);
+				Zoo zoo = new Zoo();
+				zoo.setZoo_id((int) result.get(ENTITY_ZOO.COLUMN_ZOO_ID));
+				zoo.setZoo_name((String) result.get(ENTITY_ZOO.COLUMN_ZOO_NAME));
+				Prefecture prefecture = new Prefecture();
+				prefecture.setName((String) result.get(ENTITY_PREFECTURE.COLUMN_PREFECTURE_NAME));
+				zoo.setPrefecture(prefecture);
+				post.setZoo(zoo);
+				
 				if (result.get(ENTITY_POST_IMAGE.COLUMN_IMAGE_ADDRESS) != null) {
 					PostImage postImage = new PostImage();
 					postImage.setImageAddress((String) result.get(ENTITY_POST_IMAGE.COLUMN_IMAGE_ADDRESS));

@@ -54,6 +54,11 @@
 								th:text="*{loginUser.userName}"> </span> <span
 								th:text="*{displayDiffTime}"></span>
 						</div>
+						<div style="margin: 10px;">
+						<a th:href="@{/zoo/detail/{zoo_id}(zoo_id=*{zoo.zoo_id})}">
+						<h3 th:text="*{zoo.zoo_name} + '(' + *{zoo.prefecture.name} +')'"> </h3>
+						</a>
+						</div>
 						<div
 							th:unless="*{#dates.format(visitDate,'yyyy年M月d日')} == '9999年1月1日'"
 							th:text="'訪問日:  ' + *{#dates.format(visitDate,'yyyy年M月d日')}"
