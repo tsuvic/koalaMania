@@ -44,6 +44,8 @@ public class PostController {
 		
 		Post post = postService.getPostByPostId(post_id);
 		
+		setDefaultUserProfileImage(post);
+		
 		if(post.getChildrenPost() != null) {
 		
 			Date now = new Date();
@@ -65,6 +67,7 @@ public class PostController {
 				}else {
 					childPost.setDisplayDiffTime(difftime/1000/60/60/24/30  + "年前");
 				}
+				setDefaultUserProfileImage(childPost);
 			}
 		}
 		
@@ -89,6 +92,17 @@ public class PostController {
 		postService.insertNewPost(postInsertForm);
 		
 		return "redirect:/post/postDetail/" + postInsertForm.getParent_id();
+	}
+	
+	/**
+	 * プロフィール画像がセットされていない場合、デフォルトの画像をセットする
+	 * 
+	 * @param UserForm form
+	*/
+	private void setDefaultUserProfileImage(Post post) {
+		if (post.getLoginUser().getProfileImagePath() == null) {
+			post.getLoginUser().setProfileImagePath("/images/user/profile/defaultUser.png");
+		}
 	}
 
 }
