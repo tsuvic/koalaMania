@@ -69,7 +69,6 @@
 								th:href="@{/detail/{animal_id}(animal_id=*{animal.animal_id})}"
 								th:text="'#' + *{animal.name}"></a><br
 								th:unless="*{animal} == null"> <a
-								th:unless="*{post} == null"
 								th:href="@{/post/postDetail/{post_id}(post_id=*{post.post_id})}"
 								style="text-decoration: none; color: black;"> <img
 									th:src="*{imageAddress}" width="100px" height="100px"

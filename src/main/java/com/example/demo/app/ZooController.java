@@ -50,8 +50,6 @@ public class ZooController {
 			}else {
 				post.setDisplayDiffTime(difftime/1000/60/60/24/30  + "年前");
 			}
-			
-			
 		}
 		
 		model.addAttribute("postList", postList);
