@@ -5,14 +5,16 @@ import java.util.Date;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.stereotype.Component;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Component
 public class LoginUser extends org.springframework.security.core.userdetails.User {
-	
+
 	public final String TABLE_NAME = "login_user";
 	
 	public final String COLUMN_USER_ID = "user_id";
@@ -40,6 +42,9 @@ public class LoginUser extends org.springframework.security.core.userdetails.Use
 	private int status;
 	private Date loginDate;
 	
+	private static final String dummyPassword = "password";
+	private static final String ROLE_USER = "ROLE_USER";
+	
 	public LoginUser(String userName, String password, String authorities,int user_id,
 			String provider,long provider_id,String provider_adress,String profile,
 			int status,String profileImagePath, boolean twitterLinkFlag) {
@@ -62,6 +67,10 @@ public class LoginUser extends org.springframework.security.core.userdetails.Use
 			Collection<? extends GrantedAuthority> authorities) {
 		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
 		// TODO 自動生成されたコンストラクター・スタブ
+	}
+
+	public LoginUser() {
+		super(dummyPassword, dummyPassword, AuthorityUtils.createAuthorityList(ROLE_USER));
 	}
 
 }

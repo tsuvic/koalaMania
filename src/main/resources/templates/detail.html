@@ -24,10 +24,6 @@
 
 <body>
 	<div th:replace="~{block/header_boot::headerA_boot}"></div>
-	<br>
-	<br>
-	<br>
-	<br>
 	<h2>コアラ情報詳細</h2>
 	<div th:object="${detail}">
 		<table class="table table-hover table-responsive">
@@ -65,30 +61,25 @@
 			</tr>
 			<tr>
 				<th class="cell_title">動物園</th>
-				<td th:if="*{animalZooHistoryList[0].zoo.zoo_id} == 0" 
-				th:text="*{animalZooHistoryList[0].zoo.zoo_name}">
-				</td>
-				<td th:unless="*{animalZooHistoryList[0].zoo.zoo_id} == 0">
-				<a th:href="@{/zoo/detail/{zoo_id}(zoo_id=*{animalZooHistoryList[0].zoo.zoo_id})}" 
-				th:text="*{animalZooHistoryList[0].zoo.zoo_name}">
-				</a>
-				</td>
+				<td th:if="*{animalZooHistoryList[0].zoo.zoo_id} == 0"
+					th:text="*{animalZooHistoryList[0].zoo.zoo_name}"></td>
+				<td th:unless="*{animalZooHistoryList[0].zoo.zoo_id} == 0"><a
+					th:href="@{/zoo/detail/{zoo_id}(zoo_id=*{animalZooHistoryList[0].zoo.zoo_id})}"
+					th:text="*{animalZooHistoryList[0].zoo.zoo_name}"> </a></td>
 			</tr>
 			<tr>
 				<th class="cell_title">母親</th>
 				<td th:if="*{#strings.isEmpty(motherAnimal.name)}">不明</td>
-				<td th:unless="*{#strings.isEmpty(motherAnimal.name)}">
-				<a th:href="@{/detail/{animal_id}(animal_id=*{motherAnimal.animal_id})}" th:text="*{motherAnimal.name}">
-				</a>
-				</td>
+				<td th:unless="*{#strings.isEmpty(motherAnimal.name)}"><a
+					th:href="@{/detail/{animal_id}(animal_id=*{motherAnimal.animal_id})}"
+					th:text="*{motherAnimal.name}"> </a></td>
 			</tr>
 			<tr>
 				<th class="cell_title">父親</th>
 				<td th:if="*{#strings.isEmpty(fatherAnimal.name)}">不明</td>
-				<td th:unless="*{#strings.isEmpty(fatherAnimal.name)}">
-				<a th:href="@{/detail/{animal_id}(animal_id=*{fatherAnimal.animal_id})}" th:text="*{fatherAnimal.name}">
-				</a>
-				</td>
+				<td th:unless="*{#strings.isEmpty(fatherAnimal.name)}"><a
+					th:href="@{/detail/{animal_id}(animal_id=*{fatherAnimal.animal_id})}"
+					th:text="*{fatherAnimal.name}"> </a></td>
 			</tr>
 			<tr>
 				<th class="cell_title">詳細</th>
@@ -100,11 +91,10 @@
 			</tr>
 			<tr>
 				<th class="cell_title">写真</th>
-				<td><span th:each="animalImage,index:*{animalImageList}"
-					th:object="${animalImage}"> <img
-						th:src="@{{cloudinaryImageUrl}{animal_id}/{fileName}(cloudinaryImageUrl = ${cloudinaryImageUrl},animal_id=${detail.animal_id},fileName=*{animalimage_id} + *{filetype})}"
-						width="200" height="200">
-				</span></td>
+				<td><span th:each="postImage:${postImageList}"
+					th:object="${postImage}"><a
+						th:href="@{/post/postDetail/{post_id}(post_id=*{post.post_id})}"> <img
+							th:src="*{imageAddress}" width="200" height="200"></a> </span></td>
 			</tr>
 		</table>
 	</div>
