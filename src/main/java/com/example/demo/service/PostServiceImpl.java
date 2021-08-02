@@ -99,7 +99,9 @@ public class PostServiceImpl implements PostService {
 			
 				File uploadFile = new File("images/" + "post/" + post_image_id + profileImagePath);
 	
-				byte[] bytes = fileResize(postImageUpload.getBytes(), profileImagePath.substring(1));
+				//byte[] bytes = fileResize(postImageUpload.getBytes(), profileImagePath.substring(1));
+				
+				byte[] bytes = postImageUpload.getBytes();
 	
 				if (bytes == null) {
 					bytes = postImageUpload.getBytes();
@@ -131,6 +133,12 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public List<Post> getPostByUSerId(int user_id){
 		return postDao.getPostListByUserId(user_id);
+	}
+	
+	@Override
+	public void deletePost(PostInsertForm postInsertForm) {
+		postDao.deletePost(postInsertForm.getPost_id());
+		cloudinaryService.deleteDirs(postInsertForm.getPost_id());
 	}
 	
 	public Date getDate(String visitDate) {

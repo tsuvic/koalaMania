@@ -85,17 +85,17 @@ public class CloudinaryServiceImpl implements CloudinaryService{
     }
     
     @Override
-	public void  deleteDirs(int animal_id) {
+	public void  deleteDirs(int post_id) {
 		try {
 			Cloudinary cloudinary = new Cloudinary("cloudinary://"+mApiKey+":"+mApiSecret+"@"+mCloudName);
-			Map resultmap = cloudinary.search().expression("folder:" + getanimalUploadDir(animal_id)).execute();
+			Map resultmap = cloudinary.search().expression("folder:" + getPostUploadDir(post_id)).execute();
 			List<Map> resultList = (List<Map>) resultmap.get("resources");
 			List<String> publicIds = new ArrayList<String>();
 			for(Map result:resultList) {
 				 publicIds.add((String)result.get("public_id"));
 			}
 			cloudinary.api().deleteResources(publicIds, ObjectUtils.emptyMap())	;
-			cloudinary.api().deleteFolder(getanimalUploadDir(animal_id), ObjectUtils.emptyMap());
+			cloudinary.api().deleteFolder(getPostUploadDir(post_id), ObjectUtils.emptyMap());
 		} catch (Exception e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();

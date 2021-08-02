@@ -11,6 +11,8 @@ import lombok.Data;
 @Data
 public class PostInsertForm {
 	
+	private int post_id;
+	
 	private int zoo_id;
 	
 	private int parent_id;

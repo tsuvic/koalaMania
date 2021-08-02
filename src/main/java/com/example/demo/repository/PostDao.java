@@ -13,4 +13,6 @@ public interface PostDao {
 	Post getPostByPostId(int post_id);
 	
 	List<Post> getPostListByUserId(int user_id);
+	
+	void deletePost(int post_id);
 }
