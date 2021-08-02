@@ -13,7 +13,7 @@ public interface CloudinaryService {
 	
 	List<String> deleteAnimalImage(String[] AnimalImageFiles,int animal_id);
 	
-	void  deleteDirs(int animal_id);
+	void  deleteDirs(int post_id);
 	
 	Map uploadPostImage(File uploadFile,int post_id);
 }

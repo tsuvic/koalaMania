@@ -101,7 +101,7 @@ public class PostDaoImple implements PostDao {
 				" LEFT OUTER JOIN " + ENTITY_ANIMAL.TABLE_NAME + " ON " + ENTITY_POST_IMAGE.TABLE_NAME + "."
 				+ ENTITY_POST_IMAGE.COLUMN_ANIMAL_ID + " = " +
 				ENTITY_ANIMAL.TABLE_NAME + "." + ENTITY_ANIMAL.COLUMN_ANIMAL_ID +
-				" where " + ENTITY_POST.TABLE_NAME + "." + ENTITY_POST.COLUMN_POST_ID + " =  ?  ";
+				" WHERE " + ENTITY_POST.TABLE_NAME + "." + ENTITY_POST.COLUMN_POST_ID + " =  ?  ";
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, post_id);
 
 		Post returnPost = new Post();
@@ -153,7 +153,8 @@ public class PostDaoImple implements PostDao {
 				" LEFT OUTER JOIN " + ENTITY_LOGIN_USER.TABLE_NAME + " ON " + asChildPost + "."
 				+ ENTITY_POST.COLUMN_USER_ID + " = " +
 				ENTITY_LOGIN_USER.TABLE_NAME + "." + ENTITY_LOGIN_USER.COLUMN_USER_ID +
-				" WHERE " + asChildPost + "." + ENTITY_POST.COLUMN_PARENT_ID + " =  ?  ";
+				" WHERE " + asChildPost + "." + ENTITY_POST.COLUMN_PARENT_ID + " =  ?  " +
+				" ORDER BY " + asChildPost + "." + commonSqlUtil.COLUMN_CREATE_DATE + " ASC";
 		List<Map<String, Object>> resultList2 = jdbcTemplate.queryForList(sql2, post_id);
 
 		if (resultList2.size() > 0 && resultList2.get(0).get(ENTITY_POST.COLUMN_POST_ID) != null) {
@@ -417,6 +418,17 @@ public class PostDaoImple implements PostDao {
 		}
 
 		return returnPostList;
+	}
+	
+	@Override
+	public void deletePost(int post_id) {
+		String sql = "DELETE FROM " +
+				ENTITY_POST.TABLE_NAME  +
+				" WHERE " +  ENTITY_POST.COLUMN_POST_ID + " = ? " +
+				" or " + ENTITY_POST.COLUMN_PARENT_ID + " = ? ";
+		
+		jdbcTemplate.update(sql,post_id,post_id);
+		
 	}
 
 }
