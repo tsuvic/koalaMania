@@ -1,9 +1,13 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <link rel="canonical"
 	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
 <!-- Bootstrap core CSS -->
@@ -17,8 +21,25 @@
 
 <!-- Custom styles for this template -->
 <link href="/css/starter-template.css" rel="stylesheet"></link>
-
-
+<script type="text/javascript">
+	$(function() {
+		$('.deletePost').click(function(e) {
+			const deleteImageFalg = confirm('この投稿を削除してもよろしいですか？');
+			if (deleteImageFalg) {
+				const post_id = $(this).next().val();
+				const zoo_id = $(this).next().next().val();
+				const csrf = $(this).next().next().next().val();
+				$('<form/>', {action: '/post/delete', method: 'post'})
+				  .append($('<input/>', {type: 'hidden', name: 'post_id', value: post_id}))
+				  .append($('<input/>', {type: 'hidden', name: 'zoo_id', value: zoo_id}))
+				  .append($('<input/>', {type: 'hidden', name: '_csrf', value: csrf}))
+				  .appendTo(document.body)
+				  .submit();
+			}
+		});
+		
+	});
+</script>
 <title th:text="${title}"></title>
 </head>
 
@@ -47,7 +68,12 @@
 								height="40px"></a> <a
 								th:href="@{/user/mypage/{user_id}(user_id=*{loginUser.user_id})}"
 								th:text="*{loginUser.userName}"> </a> <span
-								th:text="*{displayDiffTime}"></span>
+								th:text="*{displayDiffTime}"></span>	
+							<button sec:authorize="isAuthenticated()" class="btn btn-danger btn-sm deletePost" th:if ="*{loginUser.user_id} == ${#authentication.principal.user_id}" type="button">
+							この投稿を削除</button>
+							<input sec:authorize="isAuthenticated()" th:if ="*{loginUser.user_id} == ${#authentication.principal.user_id}" type = "hidden" name = "post_id" th:value = "*{post_id}">
+							<input sec:authorize="isAuthenticated()" th:if ="*{loginUser.user_id} == ${#authentication.principal.user_id}" type = "hidden" name = "zoo_id" th:value = "${zoo.zoo_id}">
+							<input sec:authorize="isAuthenticated()" th:if ="*{loginUser.user_id} == ${#authentication.principal.user_id}" type = "hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 						</div>
 						<div
 							th:unless="*{#dates.format(visitDate,'yyyy年M月d日')} == '9999年1月1日'"

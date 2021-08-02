@@ -4,7 +4,7 @@ body {
 
 .masthead{
 	/*background-color: #198754;*/
-	background-image: url("../images/background.jpg");
+	background-image: url("../images/background-medium.jpg");
 	/*background-blend-mode: screen;*/
 	background-position: center;
 	background-repeat: no-repeat;
@@ -54,6 +54,12 @@ body {
 	height: 6rem;
 }
 
+@media only screen and (max-width: 799px){
+	.logo img {
+	height: 4rem;
+}
+}
+
 .copy {
 	color: white;
 }
@@ -62,6 +68,13 @@ body {
 	width:500px;
 	margin:0 auto;
 	padding-top: 150px;
+}
+
+@media only screen and (max-width: 799px){
+	.topsearch {
+		width:80vw;
+		padding-top: 100px;
+	}
 }
 
 .topsearch_tabs{

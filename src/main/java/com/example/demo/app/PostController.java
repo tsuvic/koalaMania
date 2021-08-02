@@ -43,29 +43,44 @@ public class PostController {
 			@ModelAttribute PostInsertForm postInsertForm) {
 		
 		Post post = postService.getPostByPostId(post_id);
+		Date now = new Date();
+		long nowtime = now.getTime();
+		
+		Date cteate = post.getCreatedDate();
+		long createtime = cteate.getTime();
+		long difftime  =  nowtime - createtime;
+		
+		if(difftime/1000/60 < 59) {
+			post.setDisplayDiffTime(difftime/1000/60  + "分前");
+		}else if(difftime/1000/60/60 < 24) {
+			post.setDisplayDiffTime(difftime/1000/60/60  + "時間前");
+		}else if(difftime/1000/60/60/24 < 31) {
+			post.setDisplayDiffTime(difftime/1000/60/60/24  + "日前");
+		}else if(difftime/1000/60/60/24/30 < 1) {
+			post.setDisplayDiffTime(difftime/1000/60/60/24/30  + "ヶ月前");
+		}else {
+			post.setDisplayDiffTime(difftime/1000/60/60/24/30  + "年前");
+		}
 		
 		setDefaultUserProfileImage(post);
 		
 		if(post.getChildrenPost() != null) {
-		
-			Date now = new Date();
-			long nowtime = now.getTime();
 			
 			for(Post childPost : post.getChildrenPost()) {
-				Date cteate = post.getCreatedDate();
-				long createtime = cteate.getTime();
-				long difftime  =  nowtime - createtime;
+				Date cteate2 = childPost.getCreatedDate();
+				long createtime2 = cteate2.getTime();
+				long difftime2  =  nowtime - createtime2;
 				
 				if(difftime/1000/60 < 59) {
-					childPost.setDisplayDiffTime(difftime/1000/60  + "分前");
-				}else if(difftime/1000/60/60 < 24) {
-					childPost.setDisplayDiffTime(difftime/1000/60/60  + "時間前");
-				}else if(difftime/1000/60/60/24 < 31) {
-					childPost.setDisplayDiffTime(difftime/1000/60/60/24  + "日前");
-				}else if(difftime/1000/60/60/24/30 < 1) {
-					childPost.setDisplayDiffTime(difftime/1000/60/60/24/30  + "ヶ月前");
+					childPost.setDisplayDiffTime(difftime2/1000/60  + "分前");
+				}else if(difftime2/1000/60/60 < 24) {
+					childPost.setDisplayDiffTime(difftime2/1000/60/60  + "時間前");
+				}else if(difftime2/1000/60/60/24 < 31) {
+					childPost.setDisplayDiffTime(difftime2/1000/60/60/24  + "日前");
+				}else if(difftime2/1000/60/60/24/30 < 1) {
+					childPost.setDisplayDiffTime(difftime2/1000/60/60/24/30  + "ヶ月前");
 				}else {
-					childPost.setDisplayDiffTime(difftime/1000/60/60/24/30  + "年前");
+					childPost.setDisplayDiffTime(difftime2/1000/60/60/24/30  + "年前");
 				}
 				setDefaultUserProfileImage(childPost);
 			}
@@ -90,6 +105,22 @@ public class PostController {
 	public String postNewChildPost(@ModelAttribute PostInsertForm postInsertForm) {
 		
 		postService.insertNewPost(postInsertForm);
+		
+		return "redirect:/post/postDetail/" + postInsertForm.getParent_id();
+	}
+	
+	@PostMapping("/delete")
+	public String deletePost(@ModelAttribute PostInsertForm postInsertForm) {
+		
+		postService.deletePost(postInsertForm);
+		
+		return "redirect:/zoo/detail/" + postInsertForm.getZoo_id();
+	}
+	
+	@PostMapping("/deleteChild")
+	public String deleteChildPost(@ModelAttribute PostInsertForm postInsertForm) {
+		
+		postService.deletePost(postInsertForm);
 		
 		return "redirect:/post/postDetail/" + postInsertForm.getParent_id();
 	}
