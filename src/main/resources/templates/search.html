@@ -7,8 +7,8 @@
 <meta name="viewport"
 	content="width=device-width,initial-scale=1,maximum-scale=1">
 
-<title>koalaMania</title>
-
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <link rel="canonical"
 	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
 <!-- Bootstrap core CSS -->
@@ -29,7 +29,6 @@
 	<div class="searchResult-container">
 
 		<br> <br> <br> 
-		<h2>検索</h2>
 		<form class="card-body row no-gutters align-items-center" method="get"
 			th:action="@{/search}" th:object="${animalSearchForm}">
 			<div class="col-auto">
@@ -38,16 +37,14 @@
 			<div class="col">
 				<input class="form-control form-control-lg form-control-borderless"
 					type="text" name="keyword" th:field="*{keyword}"
-					placeholder="コアラ名 or 動物園名">
+					placeholder="コアラ・動物園名">
 			</div>
 			<div class="col-auto">
 				<button class="btn btn-lg btn-success" type="submit">検索</button>
 			</div>
 		</form>
-		<br> <br>
 
-
-		<h2 th:text="${searchResult}"></h2>
+		<!-- <h2 th:text="${searchResult}"></h2> -->
 		<!--タイトル名を 変数式でControllerから取得 -->
 		<div class="searchResult_content">
 			<div class="results">
