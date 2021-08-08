@@ -12,8 +12,8 @@
     stroke: #aaa;
 }
 .node {
-    stroke:  white;
-    fill:white;
+    stroke:  rgba(255, 255, 255, 0.05);
+    fill:rgba(255, 255, 255, 0.05);
 }
 
 .image {

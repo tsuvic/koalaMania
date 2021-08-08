@@ -84,7 +84,7 @@ public class AnimalController {
 		List<Animal> list = new ArrayList<Animal>();
 		if (keyword == null || keyword.replaceAll(" ", "　").split("　", 0).length == 0) {
 			list = animalService.getAll();
-			model.addAttribute("searchResult", "コアラ一覧");
+			model.addAttribute("searchResult", "検索結果一覧");
 		} else {
 			list = animalService.findByKeyword(keyword);
 			model.addAttribute("searchResult", "検索結果");
@@ -313,6 +313,12 @@ public class AnimalController {
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(animalForTree);
 		return json;
+	}
+	
+	@GetMapping("/discription")
+	public String discriptionDisplay(Model model) {
+		model.addAttribute("searchResult", "コアラマニアとは");
+        return "discription";
 	}
 	
 }

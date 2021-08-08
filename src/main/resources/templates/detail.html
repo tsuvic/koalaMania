@@ -4,6 +4,10 @@
 
 <head>
 <meta charset="utf-8">
+
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <link rel="canonical"
 	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
 <!-- Bootstrap core CSS -->
@@ -13,18 +17,17 @@
 	integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
 	crossorigin="anonymous">
 
+<!-- Custom styles for this template -->
 
 
 <!-- Custom styles for this template -->
 <link href="/css/starter-template.css" rel="stylesheet">
-
-
 <title th:text="${title}"></title>
 </head>
 
 <body>
 	<div th:replace="~{block/header_boot::headerA_boot}"></div>
-	<h2>コアラ情報詳細</h2>
+	
 	<div th:object="${detail}">
 		<table class="table table-hover table-responsive">
 			<tr>
