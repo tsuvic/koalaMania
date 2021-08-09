@@ -62,11 +62,7 @@ public class AnimalInsertForm {
 	private String feature = "未入力";
 	
 	private MultipartFile animalProfileImageUpload;
-	
-	private List<MultipartFile> animalImage;
-	
-	private List<AnimalImage> animalImageList;
-	
+			
 	private String deleteAnimalImageFiles;
 	
 	private String profileImagePath;

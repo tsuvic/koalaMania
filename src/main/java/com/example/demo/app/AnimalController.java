@@ -63,21 +63,6 @@ public class AnimalController {
 		return "index";
 	}
 
-
-	/*@GetMapping("/search")
-	public String displayAllAnimal(Model model, @ModelAttribute AnimalSearchForm animalSearchForm,
-			BindingResult bindingResult) {
-		List<Animal> list = animalService.getAll();
-		for (Animal animal : list) {
-			Date birthDate = (Date) animal.getBirthdate();
-			animal.setStringBirthDate(disPlayDate(birthDate));
-	
-		}
-		model.addAttribute("animalList", list);
-		model.addAttribute("searchResult", "コアラ一覧");
-		return "search";
-	}*/
-
 	@GetMapping("/search")
 	public String displaySearchedKoara(Model model, @RequestParam(required = false, name = "keyword") String keyword,
 			@ModelAttribute AnimalSearchForm animalSearchForm, BindingResult bindingResult) {
@@ -159,31 +144,7 @@ public class AnimalController {
 	}
 
 	@PostMapping("/insert")
-	public String insertAnimal(Model model, @Validated AnimalInsertForm form, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			// エラーになった場合、コアラの写真情報を引き継ぐための処理
-			List<AnimalImage> animalImageList = animalService.findAnimalImageById(form.getAnimal_id());
-			// 削除したい写真がある場合、表示しない
-			if (form.getDeleteAnimalImageFiles() != null) {
-				// 拡張子の前のanimalImageIdを取得
-				String[] animalImageFiles = form.getDeleteAnimalImageFiles().split(",");
-				// 削除したいanimalImageIdと表示しようとしているanimalImageIdが一致していたら表示させない
-				for (int i = 0; i < animalImageFiles.length; ++i) {
-					String animalImageId = animalImageFiles[i].split("\\.")[0];
-					for (int index = 0; index < animalImageList.size(); ++index) {
-						AnimalImage animalImage = animalImageList.get(index);
-						if (animalImage.getAnimalimage_id() == Integer.parseInt(animalImageId)) {
-							animalImageList.remove(index);
-							break;
-						}
-					}
-				}
-			}
-			
-			form.setAnimalImageList(animalImageList);
-			return getInsert(model, form, true);
-		}
-
+	public String insertAnimal(Model model, @Validated AnimalInsertForm form, BindingResult bindingResult) {	
 		if (form.getAnimal_id() == 0) {
 			animalService.insert(form);
 		} else {
@@ -238,7 +199,6 @@ public class AnimalController {
 //		form.setZoo(animal.getZoo());
 		form.setDetails(animal.getDetails());
 		form.setFeature(animal.getFeature());
-		form.setAnimalImageList(animal.getAnimalImageList());
 		List<Animal> motherList = animalService.getMotherList(form.getAnimal_id(), form.getBirthYear(),
 				form.getBirthMonth(), form.getBirthDay());
 		model.addAttribute("motherList", motherList);
