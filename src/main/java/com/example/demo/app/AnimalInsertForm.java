@@ -55,11 +55,11 @@ public class AnimalInsertForm {
 	@Min(0)
 	private int father_id;
 	@NotBlank
-	@Length(min = 1,max = 50)
-	private String details;
+	@Length(min = 1,max = 300)
+	private String details = "未入力";
 	@NotBlank
-	@Length(min = 1,max = 50)
-	private String feature;
+	@Length(min = 1,max = 300)
+	private String feature = "未入力";
 	
 	private MultipartFile animalProfileImageUpload;
 	

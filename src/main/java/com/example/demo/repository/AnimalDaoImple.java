@@ -134,7 +134,10 @@ public class AnimalDaoImple implements AnimalDao {
 
 	@Override
 	public List<Animal> getMotherList(int animal_id, Date birthDay) {
-		String sql = "SELECT "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +","+ ENTITY_ANIMAL.COLUMN_NAME +" FROM "+ ENTITY_ANIMAL.TABLE_NAME +" WHERE "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" NOT IN (?) AND "+ ENTITY_ANIMAL.COLUMN_SEX +" = "+ woman +"  AND "+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" < ?";
+		String sql = "SELECT "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +","+ ENTITY_ANIMAL.COLUMN_NAME +" FROM "+ ENTITY_ANIMAL.TABLE_NAME 
+							+" WHERE "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" NOT IN (?) AND "
+							+ ENTITY_ANIMAL.COLUMN_SEX +" = "+ woman +" AND ("+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" < ?"
+							+" OR "+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" = '9999-01-01')" + "ORDER BY " + ENTITY_ANIMAL.COLUMN_NAME ;
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, animal_id, birthDay);
 		List<Animal> motherList = new ArrayList<Animal>();
 		for (Map<String, Object> result : resultList) {
@@ -148,7 +151,10 @@ public class AnimalDaoImple implements AnimalDao {
 
 	@Override
 	public List<Animal> getFatherList(int animal_id, Date birthDay) {
-		String sql = "SELECT "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "+ ENTITY_ANIMAL.COLUMN_NAME +" FROM "+ ENTITY_ANIMAL.TABLE_NAME +" WHERE "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" NOT IN (?) AND "+ ENTITY_ANIMAL.COLUMN_SEX +" = "+ man + " AND "+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" < ?";
+		String sql = "SELECT "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "+ ENTITY_ANIMAL.COLUMN_NAME +" FROM "+ ENTITY_ANIMAL.TABLE_NAME 
+						+" WHERE "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" NOT IN (?) AND "
+						+ ENTITY_ANIMAL.COLUMN_SEX +" = "+ man + " AND ("+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" < ?"
+						+" OR "+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" = '9999-01-01')" + "ORDER BY " + ENTITY_ANIMAL.COLUMN_NAME ;
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, animal_id, birthDay);
 		List<Animal> fatherList = new ArrayList<Animal>();
 		for (Map<String, Object> result : resultList) {
