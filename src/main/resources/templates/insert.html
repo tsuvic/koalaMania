@@ -9,7 +9,6 @@
 <meta name="author"
 	content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
 <meta name="generator" content="Hugo 0.79.0">
-<title>koalaMania</title>
 
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
@@ -234,17 +233,18 @@
 					th:errorclass="is-invalid" />
 				<div class="invalid-feedback" th:errors="*{name}"></div>
 			</div>
-			<br> <input th:unless="*{animal_id}==0" type="hidden"
+			<br>
+			<input th:unless="*{animal_id}==0" type="hidden"
 				th:field="*{animal_id}"> <input type="hidden"
-				th:field="*{profileImagePath}"> プロフィール画像<br> <span
-				th:id="*{profileImagePath}" th:if="*{profileImagePath}"> <img
+				th:field="*{profileImagePath}"> プロフィール画像<br>
+				<img
 				th:src="*{profileImagePath}" width="200" height="200">
-			</span>
-
+			
 			<div id="animalProfileImageUpload">
 				<input type="file" accept="image/*"
 					th:field="*{animalProfileImageUpload}" th:errorclass="is-invalid"
 					class="form-control-file">
+				<br>
 			</div>
 			<br>
 

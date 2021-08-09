@@ -30,11 +30,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.app.AnimalInsertForm;
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.AnimalForTree;
-import com.example.demo.entity.AnimalImage;
 import com.example.demo.entity.RelationForTree;
 import com.example.demo.entity.Zoo;
 import com.example.demo.repository.AnimalDao;
-import com.example.demo.repository.AnimalImageDao;
 import com.example.demo.repository.AnimalZooHistoryDao;
 import com.example.demo.repository.ZooDao;
 
@@ -42,17 +40,15 @@ import com.example.demo.repository.ZooDao;
 public class AnimalServiceImpl implements AnimalService {
 
 	private final AnimalDao animalDao;
-	private final AnimalImageDao animalImageDao;
 	private final CloudinaryService cloudinaryService;
 	private final AnimalZooHistoryDao animalZooHistoryDao;
 	private final ZooDao zooDao;
 	
 	@Autowired
-	public AnimalServiceImpl(AnimalDao animalDao, AnimalImageDao animalImageDao, 
+	public AnimalServiceImpl(AnimalDao animalDao, 
 			CloudinaryService cloudinaryService, AnimalZooHistoryDao animalZooHistoryDao,
 			ZooDao zooDao) {
 		this.animalDao = animalDao;
-		this.animalImageDao = animalImageDao;
 		this.cloudinaryService = cloudinaryService;
 		this.animalZooHistoryDao = animalZooHistoryDao;
 		this.zooDao = zooDao;
@@ -135,17 +131,6 @@ public class AnimalServiceImpl implements AnimalService {
 		animal.setMotherAnimal(motherAnimal);
 		animal.setFatherAnimal(fatherAnimal);
 		int insertAnimal_id = animalDao.insert(animal);
-		// 追加するコアラに画像が添付されているか確認
-		boolean animalImageInsetFlag = false;
-		for (MultipartFile animalImgae : form.getAnimalImage()) {
-			if (animalImgae.getSize() != 0) {
-				animalImageInsetFlag = true;
-				break;
-			}
-		}
-		if (animalImageInsetFlag) {
-			insertAnimalImage(insertAnimal_id, form.getAnimalImage());
-		}
 
 		//プロフィール画像登録
 		if (!form.getAnimalProfileImageUpload().isEmpty()) {
@@ -490,17 +475,6 @@ public class AnimalServiceImpl implements AnimalService {
 			insertAnimalProfileImage(form.getAnimal_id(), form.getAnimalProfileImageUpload(), profileImagePath);
 		}
 
-		//		コアラ画像登録		
-		if (form.getAnimalImage() != null) {
-			insertAnimalImage(form.getAnimal_id(), form.getAnimalImage());
-		}
-
-//		コアラ画像削除
-		if (form.getDeleteAnimalImageFiles() != null) {
-			deleteAnimalImage(form.getDeleteAnimalImageFiles(), form.getAnimal_id());
-		}
-		
-		
 		//入退園履歴
 		List<Date> admissionDateList = new ArrayList<Date>();
 		for (int i = 0; i < form.getAdmissionYear().size(); i++) {
@@ -523,13 +497,8 @@ public class AnimalServiceImpl implements AnimalService {
 	@Transactional
 	public void delete(int animal_id) {
 		animalDao.delete(animal_id);
-		deleteDirs(animal_id);
 	}
 
-	@Override
-	public List<AnimalImage> findAnimalImageById(int id) {
-		return animalImageDao.findByAnimal_id(id);
-	}
 
 	@Override
 	public void insertAnimalProfileImage(int animal_id, MultipartFile animalProfileImageUpload, String profileImagePath) {
@@ -560,64 +529,6 @@ public class AnimalServiceImpl implements AnimalService {
 			// 異常終了時の処理
 		}
 
-	}
-
-	@Override
-	public void insertAnimalImage(int animal_id, List<MultipartFile> animalImageLust) {
-		AnimalImage animalImage = new AnimalImage();
-		animalImage.setAnimal_id(animal_id);
-
-		for (MultipartFile inputImage : animalImageLust) {
-			if (inputImage.getSize() != 0) {
-				// ファイルの拡張子を取得する
-				String profileImagePath = inputImage.getOriginalFilename()
-						.substring(inputImage.getOriginalFilename().lastIndexOf("."));
-
-				animalImage.setFiletype(profileImagePath);
-
-				int animalImageId = animalImageDao.insert(animalImage);
-				try {
-					// アップロードファイルを置く
-					File uploadFile = new File("images/" + animalImageId + profileImagePath);
-
-					byte[] bytes = fileResize(inputImage.getBytes(), profileImagePath.substring(1));
-
-					if (bytes == null) {
-						bytes = inputImage.getBytes();
-					}
-
-					BufferedOutputStream uploadFileStream = new BufferedOutputStream(new FileOutputStream(uploadFile));
-
-					uploadFileStream.write(bytes);
-
-					uploadFileStream.close();
-
-					// cloudinaryに写真をアップロードする
-					Map resultmap = cloudinaryService.uploadAnimalImage(uploadFile, animal_id);
-					uploadFile.delete();
-				} catch (Exception e) {
-					// 異常終了時の処理
-					continue;
-				} catch (Throwable t) {
-					// 異常終了時の処理
-					continue;
-				}
-			}
-		}
-	}
-
-	@Override
-	public void deleteAnimalImage(String AnimalImageFilesString, int animal_id) {
-		String[] animalImageFiles = AnimalImageFilesString.split(",");
-
-		// cloudinaryにあるファイルを削除
-		List<String> animalImageIds = cloudinaryService.deleteAnimalImage(animalImageFiles, animal_id);
-
-		animalImageDao.delete(animalImageIds);
-	}
-
-	private void deleteDirs(int animal_id) {
-		cloudinaryService.deleteDirs(animal_id);
 	}
 
 	private byte[] fileResize(byte[] originalImage, String originalExtension) {

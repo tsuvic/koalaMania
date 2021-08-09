@@ -30,14 +30,8 @@ public interface AnimalService {
 	void update(AnimalInsertForm form);
 
 	void delete(int animal_id);
-
-	List<AnimalImage> findAnimalImageById(int id);
 	
 	void insertAnimalProfileImage(int animal_id, MultipartFile animalProfileImage, String profileImagePath);
-
-	void insertAnimalImage(int animal_id, List<MultipartFile> animalImage);
-
-	void deleteAnimalImage(String AnimalImageIds, int animal_id);
 	
 	Map<String, Object> getAnimalForTree(int i);
 	
