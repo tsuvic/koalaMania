@@ -108,7 +108,7 @@ public class UserServiceImple implements UserService {
 			int width = src.getWidth(); // . オリジナル画像の幅
 			int height = src.getHeight(); // . オリジナル画像の高さ
 
-			int w = 200; // . 幅をこの数値に合わせて調整する
+			int w = 500; // . 幅をこの数値に合わせて調整する
 
 			int new_height = w * height / width;
 			int new_width = w;

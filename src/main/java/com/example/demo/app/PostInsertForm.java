@@ -17,6 +17,10 @@ public class PostInsertForm {
 	
 	private int parent_id;
 	
+	private int user_id;
+	
+	private int tabType;
+	
 	private String visitdate;
 	@NotBlank
 	private String contents;
@@ -24,6 +28,4 @@ public class PostInsertForm {
 	private List<Integer> tagList;
 	
 	private List<MultipartFile> imageList;
-	
-	private List<Integer> deletePostImageIds;
 }

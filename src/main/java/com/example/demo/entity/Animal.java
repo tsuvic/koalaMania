@@ -49,6 +49,5 @@ public class Animal {
 	private AnimalType animalType;
 	private Animal motherAnimal;
 	private Animal fatherAnimal;
-	private List<AnimalImage> animalImageList;
 	private List<AnimalZooHistory> animalZooHistoryList;
 }
