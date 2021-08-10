@@ -103,10 +103,10 @@
 								th:text="*{loginUser.userName}"> </a> <span
 								th:text="*{displayDiffTime}"></span> <input type="hidden"
 								name="favorite_post_id" th:value="*{post_id}">
-							<button type="button" th:if="*{favoriteFlag == false}"
+							<button sec:authorize="isAuthenticated()" type="button" th:if="*{favoriteFlag == false}"
 								class="btn btn-outline-warning btn-sm postFavoriteRegister"
 								th:text="お気に入りに追加"></button>
-							<button type="button" th:unless="*{favoriteFlag == false}"
+							<button sec:authorize="isAuthenticated()" type="button" th:unless="*{favoriteFlag == false}"
 								th:text="お気に入りから外す"
 								class="btn btn-warning btn-sm postFavoriteRegister"></button>
 							<button sec:authorize="isAuthenticated()"

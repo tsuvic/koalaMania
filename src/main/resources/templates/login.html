@@ -4,11 +4,13 @@
 
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>koalaMania</title>
 
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <link rel="canonical"
 	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
-
 <!-- Bootstrap core CSS -->
 <link
 	href=https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css
@@ -21,24 +23,24 @@
 </head>
 
 <body>
-		<div th:replace="~{block/header_boot::headerA_boot}"></div>
-		<div class="container">
-		<br> <br>		<br> <br>
-			<div class="row align-items-center text-center">
+	<div th:replace="~{block/header_boot::headerA_boot}"></div>
+	<div class="container">
+		<br> <br> <br> <br>
+		<div class="row align-items-center text-center">
 			<h2>ログイン画面</h2>
-				<div class="d-flex flex-column bd-highlight mb-3">
-					<div class="p-2 bd-highlight">
-						<a th:href="@{/oauth/twitter/auth}">
-							<button class="btn btn-info mx-2" type="submit">Twitterでログイン</button>
-						</a>
-					</div>
-					<div class="p-2 bd-highlight">
-						<a th:href="@{/signup}"> アカウント登録はこちら </a>
-					</div>
+			<div class="d-flex flex-column bd-highlight mb-3">
+				<div class="p-2 bd-highlight">
+					<a th:href="@{/oauth/twitter/auth}">
+						<button class="btn btn-info mx-2" type="submit">Twitterでログイン</button>
+					</a>
+				</div>
+				<div class="p-2 bd-highlight">
+					<a th:href="@{/signup}"> アカウント登録はこちら </a>
 				</div>
 			</div>
 		</div>
-		
+	</div>
+
 
 
 	<script>

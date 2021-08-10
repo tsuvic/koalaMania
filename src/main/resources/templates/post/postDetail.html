@@ -119,25 +119,25 @@
 		$('.addModaiImage').click(function(e) {
 			const requestParam = $(this).prev().val();
 			const img = $(this);
-			
+			console.log(requestParam);
 			$.getJSON("/post/checkPostImageFavorite", {
 				postImage_id : requestParam
 			}, function(json) {
 				const count = json.resourse.count;
 				const flag = json.resourse.flag;
 				const postimageFavoriteId = json.resourse.postimageFavoriteId;
-				let text ="";
-				
-				if(flag){
+				let text = "";
+				console.log(requestParam);
+				if (flag) {
 					$('#addAlbumButton').removeClass("btn-outline-warning");
 					$('#addAlbumButton').addClass("btn-warning");
-					text ="アルバムから消す";
-				}else{
+					text = "アルバムから消す";
+				} else {
 					$('#addAlbumButton').removeClass("btn-warning");
 					$('#addAlbumButton').addClass("btn-outline-warning");
-					text ="アルバムに追加";
+					text = "アルバムに追加";
 				}
-				$('#addAlbumButton').text(text + "  (" + count +")");
+				$('#addAlbumButton').text(text + "  (" + count + ")");
 				$('#addAlbumButton').next().val(postimageFavoriteId);
 				const src = img.attr('src');
 				const postImageId = img.prev().val();
@@ -148,16 +148,16 @@
 				if (typeof tag != "undefined") {
 					$('#modalImageLink').attr('href', tag.attr('href'));
 					$('#modalImageLink').text(tag.text());
-				}else{
-					$('#modalImageLink').attr('href',"");
+				} else {
+					$('#modalImageLink').attr('href', "");
 					$('#modalImageLink').text("");
 				}
-				
+
 				$('#opneModalButton').trigger('click');
 			});
 
 		});
-		
+
 		$('#addAlbumButton').click(function(e) {
 			const id = $(this).next().val();
 			const param = $(this).prev().val();
@@ -177,26 +177,26 @@
 				});
 			}
 		});
-		
-		function checkPostImageFavorite(postImage_id){
+
+		function checkPostImageFavorite(postImage_id) {
 			$.getJSON("/post/checkPostImageFavorite", {
 				postImage_id : postImage_id
 			}, function(json) {
 				const count = json.resourse.count;
 				const flag = json.resourse.flag;
 				const postimageFavoriteId = json.resourse.postimageFavoriteId;
-				let text ="";
-				
-				if(flag){
+				let text = "";
+
+				if (flag) {
 					$('#addAlbumButton').removeClass("btn-outline-warning");
 					$('#addAlbumButton').addClass("btn-warning");
-					text ="アルバムから消す";
-				}else{
+					text = "アルバムから消す";
+				} else {
 					$('#addAlbumButton').removeClass("btn-warning");
 					$('#addAlbumButton').addClass("btn-outline-warning");
-					text ="アルバムに追加";
+					text = "アルバムに追加";
 				}
-				$('#addAlbumButton').text(text + "  (" + count +")");
+				$('#addAlbumButton').text(text + "  (" + count + ")");
 			});
 		}
 
@@ -208,7 +208,7 @@
 <body>
 	<!-- Modal -->
 	<button type="button" data-toggle="modal" id="opneModalButton"
-					data-target="#exampleModalCenter" style="display:none;"></button>
+		data-target="#exampleModalCenter" style="display: none;"></button>
 	<div class="modal fade" id="exampleModalCenter" tabindex="-1"
 		role="dialog" aria-labelledby="exampleModalCenterTitle"
 		aria-hidden="true">
@@ -229,12 +229,19 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<a id="modalImageLink" href="/"></a> <img id="modalImage"
-						src="/images/defaultAnimal.png" style="width: 100%">
+					<h5>
+						<a id="modalImageLink" href="/"></a>
+					</h5>
+					<img id="modalImage" src="/images/defaultAnimal.png"
+						style="width: 100%">
 				</div>
 				<div class="modal-footer">
 					<input type="hidden" name="albumPostImageId">
-					<button type="button" class="btn btn-outline-warning" id="addAlbumButton"></button>
+					<button type="button" class="btn btn-outline-warning"
+						id="addAlbumButton" sec:authorize="isAuthenticated()"></button>
+					<button type="button" class="btn btn-outline-warning"
+						id="addAlbumButton" th:onclick="location.href = '/login'"
+						sec:authorize="!isAuthenticated()"></button>
 					<input type="hidden" name="PostImageFavoritId">
 					<button type="button" class="btn btn-secondary"
 						data-dismiss="modal" id="closeModalButton">閉じる</button>
@@ -259,11 +266,12 @@
 					th:text="*{loginUser.userName}"> </a> <span
 					th:text="*{displayDiffTime}"></span> <input type="hidden"
 					name="favorite_post_id" th:value="*{post_id}">
-				<button type="button" th:if="*{favoriteFlag == false}"
+				<button sec:authorize="isAuthenticated()" type="button"
+					th:if="*{favoriteFlag == false}"
 					class="btn btn-outline-warning btn-sm postFavoriteRegister"
 					th:text="お気に入りに追加"></button>
-				<button type="button" th:unless="*{favoriteFlag == false}"
-					th:text="お気に入りから外す"
+				<button sec:authorize="isAuthenticated()" type="button"
+					th:unless="*{favoriteFlag == false}" th:text="お気に入りから外す"
 					class="btn btn-warning btn-sm postFavoriteRegister"></button>
 				<button sec:authorize="isAuthenticated()"
 					class="btn btn-danger btn-sm deletePost"
@@ -297,7 +305,8 @@
 					th:text="'#' + *{animal.name}"></a><br
 					th:unless="*{animal} == null"> <input type="hidden"
 					name="postImageId" th:value="*{postimage_id}"><img
-					th:src="*{imageAddress}" class="addModaiImage" width="100px" style="border: solid;cursor:zoom-in;">
+					th:src="*{imageAddress}" class="addModaiImage"
+					style="border: solid; cursor: zoom-in; width: 100px; height: 100px;">
 				</span>
 			</div>
 			<div
@@ -317,8 +326,6 @@
 				<div id="send-zone">
 					<button class="btn btn-outline-primary btn-sm" id="submitButton"
 						type="submit">コメントを送信</button>
-					<button class="btn btn-warning btn-sm" type="button"
-						th:onclick="'location.href = \'' +@{/zoo/detail/{zoo_id}(zoo_id=${post.zoo.zoo_id})} + '\''">戻る</button>
 				</div>
 			</form>
 			<a th:href="@{/login}" sec:authorize="!isAuthenticated()">
@@ -334,11 +341,12 @@
 					th:text="*{loginUser.userName}"> </a> <span
 					th:text="*{displayDiffTime}"></span> <input type="hidden"
 					name="favorite_post_id" th:value="*{post_id}">
-				<button type="button" th:if="*{favoriteFlag == false}"
+				<button sec:authorize="isAuthenticated()" type="button"
+					th:if="*{favoriteFlag == false}"
 					class="btn btn-outline-warning btn-sm postFavoriteRegister"
 					th:text="お気に入りに追加"></button>
-				<button type="button" th:unless="*{favoriteFlag == false}"
-					th:text="お気に入りから外す"
+				<button sec:authorize="isAuthenticated()" type="button"
+					th:unless="*{favoriteFlag == false}" th:text="お気に入りから外す"
 					class="btn btn-warning btn-sm postFavoriteRegister"></button>
 				<button sec:authorize="isAuthenticated()"
 					class="btn btn-danger btn-sm deleteChildPost"

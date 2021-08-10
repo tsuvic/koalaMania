@@ -93,46 +93,74 @@
 				});
 			}
 		});
-		
-		$('.addModaiImage').click(function(e) {
-			const requestParam = $(this).prev().val();
-			const img = $(this);
 
-			$.getJSON("/post/checkPostImageFavorite", {
-				postImage_id : requestParam
-			}, function(json) {
-				console.log(json);
-				const count = json.resourse.count;
-				const flag = json.resourse.flag;
-				const postimageFavoriteId = json.resourse.postimageFavoriteId;
-				const postId = img.prev().prev().prev().val();
-				const createdDate = img.prev().prev().val();
-				let text = "";
+		$('.addModaiImage')
+				.click(
+						function(e) {
+							const requestParam = $(this).prev().val();
+							const img = $(this);
 
-				if (flag) {
-					$('#addAlbumButton').removeClass("btn-outline-warning");
-					$('#addAlbumButton').addClass("btn-warning");
-					text = "アルバムから消す";
-				} else {
-					$('#addAlbumButton').removeClass("btn-warning");
-					$('#addAlbumButton').addClass("btn-outline-warning");
-					text = "アルバムに追加";
-				}
-				$('#addAlbumButton').text(text + "  (" + count + ")");
-				$('#addAlbumButton').next().val(postimageFavoriteId);
-				const src = img.attr('src');
-				const postImageId = img.prev().val();
-				$('#modalImage').attr('src', src);
-				$('#addAlbumButton').prev().val(postImageId);
-				
-				$('#modalHeaderLink').attr('href', '/post/postDetail/' +  postId);
-				$('#modalHeaderLink').text(createdDate + 'の投稿');
-				
+							$
+									.getJSON(
+											"/post/checkPostImageFavorite",
+											{
+												postImage_id : requestParam
+											},
+											function(json) {
+												console.log(json);
+												const count = json.resourse.count;
+												const flag = json.resourse.flag;
+												const postimageFavoriteId = json.resourse.postimageFavoriteId;
+												const postId = img.prev()
+														.prev().prev().val();
+												const createdDate = img.prev()
+														.prev().val();
+												let text = "";
 
-				$('#opneModalButton').trigger('click');
-			});
+												if (flag) {
+													$('#addAlbumButton')
+															.removeClass(
+																	"btn-outline-warning");
+													$('#addAlbumButton')
+															.addClass(
+																	"btn-warning");
+													text = "アルバムから消す";
+												} else {
+													$('#addAlbumButton')
+															.removeClass(
+																	"btn-warning");
+													$('#addAlbumButton')
+															.addClass(
+																	"btn-outline-warning");
+													text = "アルバムに追加";
+												}
+												$('#addAlbumButton').text(
+														text + "  (" + count
+																+ ")");
+												$('#addAlbumButton')
+														.next()
+														.val(
+																postimageFavoriteId);
+												const src = img.attr('src');
+												const postImageId = img.prev()
+														.val();
+												$('#modalImage').attr('src',
+														src);
+												$('#addAlbumButton').prev()
+														.val(postImageId);
 
-		});
+												$('#modalHeaderLink').attr(
+														'href',
+														'/post/postDetail/'
+																+ postId);
+												$('#modalHeaderLink').text(
+														createdDate + 'の投稿');
+
+												$('#opneModalButton').trigger(
+														'click');
+											});
+
+						});
 
 		$('#addAlbumButton').click(function(e) {
 			const id = $(this).next().val();
@@ -147,11 +175,11 @@
 			} else {
 				const img = $('#postImage_' + param);
 				if (typeof img != "undefined") {
-					if(!confirm("この写真をアルバムから消してもよろしいですか？")){
+					if (!confirm("この写真をアルバムから消してもよろしいですか？")) {
 						return;
 					}
 				}
-				
+
 				$.getJSON("/post/deletePostImageFavorite", {
 					postImage_id : param
 				}, function(json) {
@@ -211,13 +239,19 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<a id="modalImageLink" href="/"></a> <img id="modalImage"
-						src="/images/defaultAnimal.png" style="width: 100%">
+					<h5>
+						<a id="modalImageLink" href="/"></a>
+					</h5>
+					<img id="modalImage" src="/images/defaultAnimal.png"
+						style="width: 100%">
 				</div>
 				<div class="modal-footer">
 					<input type="hidden" name="albumPostImageId">
 					<button type="button" class="btn btn-outline-warning"
-						id="addAlbumButton"></button>
+						id="addAlbumButton" sec:authorize="isAuthenticated()"></button>
+					<button type="button" class="btn btn-outline-warning"
+						id="addAlbumButton" th:onclick="location.href = '/login'"
+						sec:authorize="!isAuthenticated()"></button>
 					<input type="hidden" name="PostImageFavoritId">
 					<button type="button" class="btn btn-secondary"
 						data-dismiss="modal" id="closeModalButton">閉じる</button>
@@ -286,11 +320,12 @@
 					th:text="*{loginUser.userName}"> </a> <span
 					th:text="*{displayDiffTime}"></span> <input type="hidden"
 					name="favorite_post_id" th:value="*{post_id}">
-				<button type="button" th:if="*{favoriteFlag == false}"
+				<button sec:authorize="isAuthenticated()" type="button"
+					th:if="*{favoriteFlag == false}"
 					class="btn btn-outline-warning btn-sm postFavoriteRegister"
 					th:text="お気に入りに追加"></button>
-				<button type="button" th:unless="*{favoriteFlag == false}"
-					th:text="お気に入りから外す"
+				<button sec:authorize="isAuthenticated()" type="button"
+					th:unless="*{favoriteFlag == false}" th:text="お気に入りから外す"
 					class="btn btn-warning btn-sm postFavoriteRegister"></button>
 				<button sec:authorize="isAuthenticated()"
 					class="btn btn-danger btn-sm deletePost"
@@ -343,8 +378,8 @@
 					th:unless="*{animal} == null"> <a
 					th:href="@{/post/postDetail/{post_id}(post_id=*{post.post_id})}"
 					style="text-decoration: none; color: black;"> <img
-						th:src="*{imageAddress}" width="100px" height="100px"
-						style="border: solid;">
+						th:src="*{imageAddress}"
+						style="border: solid; cursor: zoom-in; width: 100px; height: 100px;">
 				</a>
 				</span>
 			</div>

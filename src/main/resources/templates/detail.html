@@ -1,10 +1,11 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 <meta charset="utf-8">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
@@ -24,45 +25,71 @@
 <link href="/css/starter-template.css" rel="stylesheet">
 <script type="text/javascript">
 	$(function() {
-		$('.addModaiImage').click(function(e) {
-			const requestParam = $(this).prev().val();
-			const img = $(this);
+		$('.addModaiImage')
+				.click(
+						function(e) {
+							const requestParam = $(this).prev().val();
+							const img = $(this);
 
-			$.getJSON("/post/checkPostImageFavorite", {
-				postImage_id : requestParam
-			}, function(json) {
-				console.log(json);
-				const count = json.resourse.count;
-				const flag = json.resourse.flag;
-				const postimageFavoriteId = json.resourse.postimageFavoriteId;
-				const postId = json.resourse.postImage.post.post_id;
-				const userName = json.resourse.postImage.post.loginUser.userName;
-				let text = "";
+							$
+									.getJSON(
+											"/post/checkPostImageFavorite",
+											{
+												postImage_id : requestParam
+											},
+											function(json) {
+												console.log(json);
+												const count = json.resourse.count;
+												const flag = json.resourse.flag;
+												const postimageFavoriteId = json.resourse.postimageFavoriteId;
+												const postId = json.resourse.postImage.post.post_id;
+												const userName = json.resourse.postImage.post.loginUser.userName;
+												let text = "";
 
-				if (flag) {
-					$('#addAlbumButton').removeClass("btn-outline-warning");
-					$('#addAlbumButton').addClass("btn-warning");
-					text = "アルバムから消す";
-				} else {
-					$('#addAlbumButton').removeClass("btn-warning");
-					$('#addAlbumButton').addClass("btn-outline-warning");
-					text = "アルバムに追加";
-				}
-				$('#addAlbumButton').text(text + "  (" + count + ")");
-				$('#addAlbumButton').next().val(postimageFavoriteId);
-				const src = img.attr('src');
-				const postImageId = img.prev().val();
-				$('#modalImage').attr('src', src);
-				$('#addAlbumButton').prev().val(postImageId);
-				
-				$('#modalHeaderLink').attr('href', '/post/postDetail/' +  postId);
-				$('#modalHeaderLink').text(userName + 'さんの投稿');
-				
+												if (flag) {
+													$('#addAlbumButton')
+															.removeClass(
+																	"btn-outline-warning");
+													$('#addAlbumButton')
+															.addClass(
+																	"btn-warning");
+													text = "アルバムから消す";
+												} else {
+													$('#addAlbumButton')
+															.removeClass(
+																	"btn-warning");
+													$('#addAlbumButton')
+															.addClass(
+																	"btn-outline-warning");
+													text = "アルバムに追加";
+												}
+												$('#addAlbumButton').text(
+														text + "  (" + count
+																+ ")");
+												$('#addAlbumButton')
+														.next()
+														.val(
+																postimageFavoriteId);
+												const src = img.attr('src');
+												const postImageId = img.prev()
+														.val();
+												$('#modalImage').attr('src',
+														src);
+												$('#addAlbumButton').prev()
+														.val(postImageId);
 
-				$('#opneModalButton').trigger('click');
-			});
+												$('#modalHeaderLink').attr(
+														'href',
+														'/post/postDetail/'
+																+ postId);
+												$('#modalHeaderLink').text(
+														userName + 'さんの投稿');
 
-		});
+												$('#opneModalButton').trigger(
+														'click');
+											});
+
+						});
 
 		$('#addAlbumButton').click(function(e) {
 			const id = $(this).next().val();
@@ -113,7 +140,7 @@
 <body>
 	<!-- Modal -->
 	<button type="button" data-toggle="modal" id="opneModalButton"
-					data-target="#exampleModalCenter" style="display:none;"></button>
+		data-target="#exampleModalCenter" style="display: none;"></button>
 	<div class="modal fade" id="exampleModalCenter" tabindex="-1"
 		role="dialog" aria-labelledby="exampleModalCenterTitle"
 		aria-hidden="true">
@@ -121,8 +148,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalCenterTitle">
-						<a id="modalHeaderLink"
-							href=""> </a>
+						<a id="modalHeaderLink" href=""> </a>
 					</h5>
 					<button type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
@@ -135,7 +161,11 @@
 				</div>
 				<div class="modal-footer">
 					<input type="hidden" name="albumPostImageId">
-					<button type="button" class="btn btn-outline-warning" id="addAlbumButton"></button>
+					<button type="button" class="btn btn-outline-warning"
+						id="addAlbumButton" sec:authorize="isAuthenticated()"></button>
+					<button type="button" class="btn btn-outline-warning"
+						id="addAlbumButton" th:onclick="location.href = '/login'"
+						sec:authorize="!isAuthenticated()"></button>
 					<input type="hidden" name="PostImageFavoritId">
 					<button type="button" class="btn btn-secondary"
 						data-dismiss="modal" id="closeModalButton">閉じる</button>
@@ -217,10 +247,10 @@
 			<tr>
 				<th class="cell_title">写真</th>
 				<td><span th:each="postImage:${postImageList}"
-					th:object="${postImage}"><input
-							type="hidden" name="postImageId" th:value="*{postimage_id}">
-							<img th:src="*{imageAddress}" class="addModaiImage" width="100px"
-							style="border: solid; cursor: zoom-in;"></span></td>
+					th:object="${postImage}"><input type="hidden"
+						name="postImageId" th:value="*{postimage_id}"> <img
+						th:src="*{imageAddress}" class="addModaiImage"
+						style="border: solid; cursor: zoom-in; width: 100px; height: 100px;"></span></td>
 			</tr>
 		</table>
 	</div>
