@@ -28,6 +28,7 @@ import com.example.demo.entity.Post;
 import com.example.demo.entity.Zoo;
 import com.example.demo.repository.AnimalDao;
 import com.example.demo.repository.PostDao;
+import com.example.demo.repository.PostFavoriteDao;
 import com.example.demo.repository.PostImageDao;
 import com.example.demo.repository.ZooDao;
 
@@ -38,21 +39,23 @@ public class PostServiceImpl implements PostService {
 	private final AnimalDao animalDao;
 	private final PostDao postDao;
 	private final PostImageDao postImageDao;
+	private final PostFavoriteDao postFavoriteDao;
 	private final CloudinaryService cloudinaryService;
 	
 	@Autowired
-	public PostServiceImpl(ZooDao zooDao,AnimalDao animalDao,PostDao postDao,PostImageDao postImageDao,CloudinaryService cloudinaryService) {
+	public PostServiceImpl(ZooDao zooDao,AnimalDao animalDao,PostDao postDao,PostImageDao postImageDao,CloudinaryService cloudinaryService,PostFavoriteDao postFavoriteDao) {
 		this.zooDao = zooDao;
 		this.animalDao = animalDao;
 		this.postDao = postDao;
 		this.postImageDao = postImageDao;
+		this.postFavoriteDao = postFavoriteDao;
 		this.cloudinaryService = cloudinaryService;
 	}
 	
 	@Override
 	public Post getPostByPostId(int post_id){
 		
-		return postDao.getPostByPostId(post_id);
+		return postFavoriteDao.getPostFavorite(postDao.getPostByPostId(post_id));
 	}
 
 	@Override
@@ -131,8 +134,8 @@ public class PostServiceImpl implements PostService {
 	}
 	
 	@Override
-	public List<Post> getPostByUSerId(int user_id){
-		return postDao.getPostListByUserId(user_id);
+	public List<Post> getPostByUserId(int user_id){
+		return postFavoriteDao.getFavoritePost(postDao.getPostListByUserId(user_id));
 	}
 	
 	@Override

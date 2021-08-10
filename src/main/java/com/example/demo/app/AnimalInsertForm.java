@@ -1,6 +1,5 @@
 package com.example.demo.app;
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.validation.constraints.Max;
@@ -10,7 +9,6 @@ import javax.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.entity.AnimalImage;
 import com.example.demo.entity.AnimalZooHistory;
 
 import lombok.Data;
@@ -64,8 +62,6 @@ public class AnimalInsertForm {
 	private MultipartFile animalProfileImageUpload;
 	
 	private List<MultipartFile> animalImage;
-	
-	private List<AnimalImage> animalImageList;
 	
 	private String deleteAnimalImageFiles;
 	

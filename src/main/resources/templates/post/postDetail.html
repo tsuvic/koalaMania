@@ -39,66 +39,85 @@
 			}
 		});
 
-		$(function() {
-			$('.deletePost').click(function(e) {
-				const deleteImageFalg = confirm('この投稿を削除してもよろしいですか？');
-				if (deleteImageFalg) {
-					const post_id = $(this).next().val();
-					const zoo_id = $(this).next().next().val();
-					const csrf = $(this).next().next().next().val();
-					$('<form/>', {
-						action : '/post/delete',
-						method : 'post'
-					}).append($('<input/>', {
-						type : 'hidden',
-						name : 'post_id',
-						value : post_id
-					})).append($('<input/>', {
-						type : 'hidden',
-						name : 'zoo_id',
-						value : zoo_id
-					})).append($('<input/>', {
-						type : 'hidden',
-						name : '_csrf',
-						value : csrf
-					})).appendTo(document.body).submit();
-				}
-			});
+		$('.deletePost').click(function(e) {
+			const deleteImageFalg = confirm('この投稿を削除してもよろしいですか？');
+			if (deleteImageFalg) {
+				const post_id = $(this).next().val();
+				const zoo_id = $(this).next().next().val();
+				const csrf = $(this).next().next().next().val();
+				$('<form/>', {
+					action : '/post/delete',
+					method : 'post'
+				}).append($('<input/>', {
+					type : 'hidden',
+					name : 'post_id',
+					value : post_id
+				})).append($('<input/>', {
+					type : 'hidden',
+					name : 'zoo_id',
+					value : zoo_id
+				})).append($('<input/>', {
+					type : 'hidden',
+					name : '_csrf',
+					value : csrf
+				})).appendTo(document.body).submit();
+			}
+		});
 
+		$('.deleteChildPost').click(function(e) {
+			const deleteImageFalg = confirm('この投稿を削除してもよろしいですか？');
+			if (deleteImageFalg) {
+				const post_id = $(this).next().val();
+				const zoo_id = $(this).next().next().val();
+				const parent_id = $(this).next().next().next().val();
+				const csrf = $(this).next().next().next().next().val();
+				$('<form/>', {
+					action : '/post/deleteChild',
+					method : 'post'
+				}).append($('<input/>', {
+					type : 'hidden',
+					name : 'post_id',
+					value : post_id
+				})).append($('<input/>', {
+					type : 'hidden',
+					name : 'zoo_id',
+					value : zoo_id
+				})).append($('<input/>', {
+					type : 'hidden',
+					name : 'parent_id',
+					value : parent_id
+				})).append($('<input/>', {
+					type : 'hidden',
+					name : '_csrf',
+					value : csrf
+				})).appendTo(document.body).submit();
+			}
 		});
 		
-		$(function() {
-			$('.deleteChildPost').click(function(e) {
-				const deleteImageFalg = confirm('この投稿を削除してもよろしいですか？');
-				if (deleteImageFalg) {
-					const post_id = $(this).next().val();
-					const zoo_id = $(this).next().next().val();
-					const parent_id = $(this).next().next().next().val();
-					const csrf = $(this).next().next().next().next().val();
-					$('<form/>', {
-						action : '/post/deleteChild',
-						method : 'post'
-					}).append($('<input/>', {
-						type : 'hidden',
-						name : 'post_id',
-						value : post_id
-					})).append($('<input/>', {
-						type : 'hidden',
-						name : 'zoo_id',
-						value : zoo_id
-					})).append($('<input/>', {
-						type : 'hidden',
-						name : 'parent_id',
-						value : parent_id
-					})).append($('<input/>', {
-						type : 'hidden',
-						name : '_csrf',
-						value : csrf
-					})).appendTo(document.body).submit();
-				}
-			});
-
+		$('.postFavoriteRegister').click(function(e) {
+			var requestParam = $(this).prev().val();
+			var button = $(this);
+			if (button.hasClass("btn-outline-warning")) {
+				$.getJSON("/post/insertPostFavorite", {
+					post_id : requestParam
+				}, function(json) {
+					console.log(json);
+					console.log(button);
+					button.removeClass("btn-outline-warning");
+					button.addClass("btn-warning");
+					button.text("お気に入りから外す");
+				});
+			} else {
+				$.getJSON("/post/deletePostFavorite", {
+					post_id : requestParam
+				}, function(json) {
+					button.removeClass("btn-warning");
+					button.addClass("btn-outline-warning");
+					button.text("お気に入りに追加");
+				});
+			}
 		});
+
 	});
 </script>
 
@@ -121,6 +140,14 @@
 				<a th:href="@{/user/mypage/{user_id}(user_id=*{loginUser.user_id})}"
 					th:text="*{loginUser.userName}"> </a> <span
 					th:text="*{displayDiffTime}"></span>
+					<input type="hidden"
+								name="favorite_post_id" th:value="*{post_id}">
+				<button type="button" th:if="*{favoriteFlag == false}"
+					class="btn btn-outline-warning btn-sm postFavoriteRegister"
+					th:text="お気に入りに追加"></button>
+				<button type="button" th:unless="*{favoriteFlag == false}"
+					th:text="お気に入りから外す"
+					class="btn btn-warning btn-sm postFavoriteRegister"></button>
 				<button sec:authorize="isAuthenticated()"
 					class="btn btn-danger btn-sm deletePost"
 					th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
@@ -157,7 +184,7 @@
 			</div>
 			<div th:text="*{#dates.format(createdDate,'yyyy.MM.dd  hh:mm')}"></div>
 		</div>
-		<div class="container" style="margin: 10px;">
+		<div class="container">
 			<form sec:authorize="isAuthenticated()"
 				th:action="@{/post/insertChildPost}" method="post"
 				th:object="${postInsertForm}">
@@ -168,7 +195,7 @@
 						placeholder="この投稿へコメントする" th:errorclass="is-invalid"
 						style="height: 120px;"></textarea>
 				</div>
-				<div id="send-zone" style="margin: 10px;">
+				<div id="send-zone">
 					<button class="btn btn-outline-primary btn-sm" id="submitButton"
 						type="submit">コメントを送信</button>
 					<button class="btn btn-warning btn-sm" type="button"
@@ -187,19 +214,25 @@
 				<a th:href="@{/user/mypage/{user_id}(user_id=*{loginUser.user_id})}"
 					th:text="*{loginUser.userName}"> </a> <span
 					th:text="*{displayDiffTime}"></span>
+					<input type="hidden"
+								name="favorite_post_id" th:value="*{post_id}">
+				<button type="button" th:if="*{favoriteFlag == false}"
+					class="btn btn-outline-warning btn-sm postFavoriteRegister"
+					th:text="お気に入りに追加"></button>
+				<button type="button" th:unless="*{favoriteFlag == false}"
+					th:text="お気に入りから外す"
+					class="btn btn-warning btn-sm postFavoriteRegister"></button>
 				<button sec:authorize="isAuthenticated()"
 					class="btn btn-danger btn-sm deleteChildPost"
 					th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
 					type="button">この投稿を削除</button>
 				<input sec:authorize="isAuthenticated()"
 					th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
-					type="hidden" name="post_id" th:value="*{post_id}">
-				 <input
+					type="hidden" name="post_id" th:value="*{post_id}"> <input
 					sec:authorize="isAuthenticated()"
 					th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
 					type="hidden" name="zoo_id" th:value="${post.zoo.zoo_id}">
-				 <input
-					sec:authorize="isAuthenticated()"
+				<input sec:authorize="isAuthenticated()"
 					th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
 					type="hidden" name="parent_id" th:value="${post.post_id}">
 				<input sec:authorize="isAuthenticated()"

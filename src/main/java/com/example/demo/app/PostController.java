@@ -1,8 +1,11 @@
 package com.example.demo.app;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,19 +13,27 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.Post;
 import com.example.demo.entity.Zoo;
+import com.example.demo.service.PostFavoriteService;
 import com.example.demo.service.PostService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Controller
 @RequestMapping("/post")
 public class PostController {
 	private PostService postService;
-	public PostController(PostService postService) {
+	private PostFavoriteService postFavoriteService;
+	
+	@Autowired
+	public PostController(PostService postService,PostFavoriteService postFavoriteService) {
 		this.postService = postService;
+		this.postFavoriteService = postFavoriteService;
 	}
 	
 	@GetMapping("/{zoo_id}")
@@ -123,6 +134,26 @@ public class PostController {
 		postService.deletePost(postInsertForm);
 		
 		return "redirect:/post/postDetail/" + postInsertForm.getParent_id();
+	}
+	
+	@GetMapping("/insertPostFavorite")
+	@ResponseBody
+	public String getInsertPostFavorite(@RequestParam(required = true, name = "post_id") int post_id) throws Exception {
+		postFavoriteService.insertPostFavoirte(post_id);
+		Map<String, Object> status =  new HashMap<String,Object>(){{put("status", "ok");}};
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(status);
+		return json;
+	}
+	
+	@GetMapping("/deletePostFavorite")
+	@ResponseBody
+	public String getDeletePostFavorite(@RequestParam(required = true, name = "post_id") int post_id) throws Exception {
+		postFavoriteService.deletePostFavoirte(post_id);
+		Map<String, Object> status =  new HashMap<String,Object>(){{put("status", "ok");}};
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(status);
+		return json;
 	}
 	
 	/**

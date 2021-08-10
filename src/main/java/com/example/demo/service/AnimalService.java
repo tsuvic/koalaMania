@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.app.AnimalInsertForm;
 import com.example.demo.entity.Animal;
-import com.example.demo.entity.AnimalImage;
 import com.example.demo.entity.Zoo;
 
 public interface AnimalService {
@@ -30,14 +29,8 @@ public interface AnimalService {
 	void update(AnimalInsertForm form);
 
 	void delete(int animal_id);
-
-	List<AnimalImage> findAnimalImageById(int id);
 	
 	void insertAnimalProfileImage(int animal_id, MultipartFile animalProfileImage, String profileImagePath);
-
-	void insertAnimalImage(int animal_id, List<MultipartFile> animalImage);
-
-	void deleteAnimalImage(String AnimalImageIds, int animal_id);
 	
 	Map<String, Object> getAnimalForTree(int i);
 	
