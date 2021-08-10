@@ -61,9 +61,5 @@ public class AnimalInsertForm {
 	
 	private MultipartFile animalProfileImageUpload;
 	
-	private List<MultipartFile> animalImage;
-	
-	private String deleteAnimalImageFiles;
-	
 	private String profileImagePath;
 }

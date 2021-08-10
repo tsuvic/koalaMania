@@ -497,7 +497,6 @@ public class AnimalServiceImpl implements AnimalService {
 	@Transactional
 	public void delete(int animal_id) {
 		animalDao.delete(animal_id);
-		deleteDirs(animal_id);
 	}
 
 	@Override
