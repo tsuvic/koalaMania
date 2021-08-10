@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.entity.Animal;
-import com.example.demo.entity.AnimalImage;
 import com.example.demo.entity.AnimalZooHistory;
 import com.example.demo.entity.Zoo;
 import com.example.demo.service.AnimalService;

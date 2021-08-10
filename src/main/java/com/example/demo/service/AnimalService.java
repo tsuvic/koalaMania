@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.app.AnimalInsertForm;
 import com.example.demo.entity.Animal;
-import com.example.demo.entity.AnimalImage;
 import com.example.demo.entity.Zoo;
 
 public interface AnimalService {

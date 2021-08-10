@@ -79,6 +79,7 @@ public class PostDaoImple implements PostDao {
 				ENTITY_ZOO.TABLE_NAME + "." + ENTITY_ZOO.COLUMN_ZOO_ID + "," +
 				ENTITY_ZOO.TABLE_NAME + "." + ENTITY_ZOO.COLUMN_ZOO_NAME + "," +
 				ENTITY_PREFECTURE.TABLE_NAME + "." + ENTITY_PREFECTURE.COLUMN_PREFECTURE_NAME + "," +
+				ENTITY_POST_IMAGE.TABLE_NAME + "." + ENTITY_POST_IMAGE.COLUMN_POSTIMAGE_ID + "," +
 				ENTITY_POST_IMAGE.TABLE_NAME + "." + ENTITY_POST_IMAGE.COLUMN_IMAGE_ADDRESS + "," +
 				ENTITY_LOGIN_USER.TABLE_NAME + "." + ENTITY_LOGIN_USER.COLUMN_USER_ID + "," +
 				ENTITY_LOGIN_USER.TABLE_NAME + "." + ENTITY_LOGIN_USER.COLUMN_USER_NAME + "," +
@@ -127,8 +128,9 @@ public class PostDaoImple implements PostDao {
 
 		for (Map<String, Object> result : resultList) {
 
-			if (result.get(ENTITY_POST_IMAGE.COLUMN_IMAGE_ADDRESS) != null) {
+			if (result.get(ENTITY_POST_IMAGE.COLUMN_POSTIMAGE_ID) != null) {
 				PostImage postImage = new PostImage();
+				postImage.setPostimage_id((int) result.get(ENTITY_POST_IMAGE.COLUMN_POSTIMAGE_ID));
 				postImage.setImageAddress((String) result.get(ENTITY_POST_IMAGE.COLUMN_IMAGE_ADDRESS));
 				if (result.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID) != null) {
 					Animal animal = new Animal();
@@ -429,6 +431,69 @@ public class PostDaoImple implements PostDao {
 		
 		jdbcTemplate.update(sql,post_id,post_id);
 		
+	}
+
+	@Override
+	public List<Post> getCommentListByUserId(int user_id) {
+		String asOriginalPost = "originalPost";
+		String asOriginalPostId = "originalPostId";
+		String asCommentFromPost = "commentFromPost";
+		String asCommentFromPostId = "commentFromPostId";
+		String asOrginalLoginUser = "OrginalLoginUser";
+		String asOrginalLoginUserName = "OrginalLoginUserName";
+		String asCommentFromLoginUser = "CommentFromLoginUser";
+		String asCommentFromLoginUserName = "CommentFromLoginUserName";
+		
+		String sql ="SELECT " +
+				asOriginalPost + "." + ENTITY_POST.COLUMN_POST_ID + " AS " + asOriginalPostId +"," +
+				asOriginalPost + "." + ENTITY_POST.COLUMN_CONTENTS + "," +
+				asOriginalPost + "." + commonSqlUtil.COLUMN_CREATE_DATE + "," +
+				asOrginalLoginUser + "." + ENTITY_LOGIN_USER.COLUMN_USER_ID + "," +
+				asOrginalLoginUser + "." + ENTITY_LOGIN_USER.COLUMN_USER_NAME + " AS " + asOrginalLoginUserName +"," +
+				asOrginalLoginUser + "." + ENTITY_LOGIN_USER.COLUMN_PROFILE_IMAGE_PATH + "," +
+				asCommentFromPost + "." + ENTITY_POST.COLUMN_POST_ID +  " AS " + asCommentFromPostId +"," +
+				asCommentFromLoginUser + "." + ENTITY_LOGIN_USER.COLUMN_USER_NAME + " AS " + asCommentFromLoginUserName +" " +
+				" FROM " + ENTITY_POST.TABLE_NAME + " AS " + asOriginalPost + 
+				" LEFT OUTER JOIN " + ENTITY_POST.TABLE_NAME + " AS " + asCommentFromPost  + " ON " + asOriginalPost + "."
+				+ ENTITY_POST.COLUMN_PARENT_ID + " = " 
+				+ asCommentFromPost + "." + ENTITY_POST.COLUMN_POST_ID +
+				" LEFT OUTER JOIN " + ENTITY_LOGIN_USER.TABLE_NAME + " AS " + asOrginalLoginUser + " ON " + asOriginalPost + "."
+				+ ENTITY_POST.COLUMN_USER_ID + " = " +
+				asOrginalLoginUser + "." + ENTITY_LOGIN_USER.COLUMN_USER_ID +
+				" LEFT OUTER JOIN " + ENTITY_LOGIN_USER.TABLE_NAME + " AS " + asCommentFromLoginUser + " ON " + asCommentFromPost + "."
+				+ ENTITY_POST.COLUMN_USER_ID + " = " +
+				asCommentFromLoginUser + "." + ENTITY_LOGIN_USER.COLUMN_USER_ID +
+				" WHERE " + asOriginalPost + "." + ENTITY_POST.COLUMN_USER_ID + " =  ?  " +
+				" AND " + asOriginalPost + "." + ENTITY_POST.COLUMN_PARENT_ID + " <> " + defaultParentId   +
+				" ORDER BY " + asOriginalPost + "." + commonSqlUtil.COLUMN_CREATE_DATE + " DESC";
+		
+		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql,user_id);
+		
+		List<Post> returnPostList = new ArrayList<Post>();
+
+
+		for (Map<String, Object> result : resultList) {
+
+				Post post = new Post();
+				post.setPost_id((int) result.get(asOriginalPostId));
+				post.setContents((String) result.get(ENTITY_POST.COLUMN_CONTENTS));
+				post.setCreatedDate((Date) result.get(commonSqlUtil.COLUMN_CREATE_DATE));
+				LoginUser loginUser = new LoginUser();
+				loginUser.setUser_id((int) result.get(ENTITY_LOGIN_USER.COLUMN_USER_ID));
+				loginUser.setUserName((String) result.get(asOrginalLoginUserName));
+				loginUser.setProfileImagePath((String) result.get(ENTITY_LOGIN_USER.COLUMN_PROFILE_IMAGE_PATH));
+				post.setLoginUser(loginUser);
+				
+				Post commentpost = new Post();
+				commentpost.setPost_id((int) result.get(asCommentFromPostId));
+				LoginUser commentloginUser = new LoginUser();
+				commentloginUser.setUserName((String) result.get(asCommentFromLoginUserName));
+				commentpost.setLoginUser(commentloginUser);
+				post.setParentPost(commentpost);
+
+				returnPostList.add(post);
+		}
+		return returnPostList;
 	}
 
 }

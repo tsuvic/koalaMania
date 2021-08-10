@@ -1,8 +1,11 @@
 package com.example.demo.app;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,19 +13,31 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.Post;
 import com.example.demo.entity.Zoo;
+import com.example.demo.service.PostFavoriteService;
+import com.example.demo.service.PostImageFavoriteService;
 import com.example.demo.service.PostService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Controller
 @RequestMapping("/post")
 public class PostController {
 	private PostService postService;
-	public PostController(PostService postService) {
+	private PostFavoriteService postFavoriteService;
+	private PostImageFavoriteService postImageFavoriteService;
+	
+	@Autowired
+	public PostController(PostService postService,PostFavoriteService postFavoriteService
+			,PostImageFavoriteService postImageFavoriteService) {
 		this.postService = postService;
+		this.postFavoriteService = postFavoriteService;
+		this.postImageFavoriteService = postImageFavoriteService;
 	}
 	
 	@GetMapping("/{zoo_id}")
@@ -123,6 +138,61 @@ public class PostController {
 		postService.deletePost(postInsertForm);
 		
 		return "redirect:/post/postDetail/" + postInsertForm.getParent_id();
+	}
+	
+	@PostMapping("/deleteFromMypage")
+	public String deleteFromMypage(@ModelAttribute PostInsertForm postInsertForm) {
+		
+		postService.deletePost(postInsertForm);
+		
+		return "redirect:/user/mypage/" + postInsertForm.getUser_id() + "/" + postInsertForm.getTabType();
+	}
+	
+	@GetMapping("/insertPostFavorite")
+	@ResponseBody
+	public String getInsertPostFavorite(@RequestParam(required = true, name = "post_id") int post_id) throws Exception {
+		postFavoriteService.insertPostFavoirte(post_id);
+		Map<String, Object> status =  new HashMap<String,Object>(){{put("status", "ok");}};
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(status);
+		return json;
+	}
+	
+	@GetMapping("/deletePostFavorite")
+	@ResponseBody
+	public String getDeletePostFavorite(@RequestParam(required = true, name = "post_id") int post_id) throws Exception {
+		postFavoriteService.deletePostFavoirte(post_id);
+		Map<String, Object> status =  new HashMap<String,Object>(){{put("status", "ok");}};
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(status);
+		return json;
+	}
+	
+	@GetMapping("/checkPostImageFavorite")
+	@ResponseBody
+	public String getCheckPostImageFavorite(@RequestParam(required = true, name = "postImage_id") int postImage_id) throws Exception {
+		Map<String, Object> resultMap =  postImageFavoriteService.checkPostImageFavoriteByPostImageId(postImage_id);
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(resultMap);
+		return json;
+	}
+	
+	@GetMapping("/insertPostImageFavorite")
+	@ResponseBody
+	public String getInsertPostImageFavorite(@RequestParam(required = true, name = "postImage_id") int postImage_id) throws Exception {
+		Map<String, Object> resultMap =  postImageFavoriteService.insertPostImageFavorite(postImage_id);
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(resultMap);
+		return json;
+	}
+	
+	@GetMapping("/deletePostImageFavorite")
+	@ResponseBody
+	public String getDeletePostImageFavorite(@RequestParam(required = true, name = "postImage_id") int postImage_id) throws Exception {
+		Map<String, Object> resultMap =  postImageFavoriteService.deletePostImageFavorite(postImage_id);
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(resultMap);
+		return json;
 	}
 	
 	/**
