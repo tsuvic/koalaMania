@@ -23,4 +23,6 @@ public interface PostService {
 	Post getPostByPostId(int post_id);
 	
 	List<Post> getPostByUserId(int user_id);
+	
+	List<Post> getCommentByUserId(int user_id);
 }

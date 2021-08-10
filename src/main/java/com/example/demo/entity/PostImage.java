@@ -19,4 +19,5 @@ public class PostImage {
 	private String imageAddress;
 	private Animal animal;
 	private Post post;
+	private PostImageFavorite postImageFavorite;
 }

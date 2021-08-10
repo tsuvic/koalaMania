@@ -11,4 +11,8 @@ public interface PostImageDao {
 	void updateUrl(int postImageId,String url);
 	
 	List<PostImage> getPostImageListByAnimalId(int animal_id);
+	
+	List<PostImage> getPostImageListByUserId(int user_id);
+	
+	PostImage getPostImageByPostImageId(int postImage_id);
 }

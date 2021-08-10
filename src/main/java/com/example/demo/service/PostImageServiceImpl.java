@@ -23,5 +23,11 @@ public class PostImageServiceImpl implements PostImageService {
 		
 		return postImageDao.getPostImageListByAnimalId(animal_id);
 	}
+	
+	@Override
+	public List<PostImage> getPostImageListByUserId(int user_id) {
+		
+		return postImageDao.getPostImageListByUserId(user_id);
+	}
 
 }

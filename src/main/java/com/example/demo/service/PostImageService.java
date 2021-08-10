@@ -6,4 +6,6 @@ import com.example.demo.entity.PostImage;
 
 public interface PostImageService {
 	List<PostImage> getPostImageListByAnimalId(int animal_id);
+	
+	List<PostImage> getPostImageListByUserId(int user_id);
 }

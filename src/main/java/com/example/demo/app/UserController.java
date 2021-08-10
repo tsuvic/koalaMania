@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.demo.entity.LoginUser;
 import com.example.demo.entity.Post;
 import com.example.demo.service.PostFavoriteService;
+import com.example.demo.service.PostImageFavoriteService;
+import com.example.demo.service.PostImageService;
 import com.example.demo.service.PostService;
 import com.example.demo.service.UserService;
 
@@ -28,17 +30,23 @@ public class UserController {
 
 	private final PostService postService;
 	
+	private final PostImageService postImageService;
+	
 	private final PostFavoriteService postFavoriteService;
+	
+	private final PostImageFavoriteService postImageFavoriteService; 
 
-	private UserAuthenticationUtil userAuthenticationUtil;
+	private final UserAuthenticationUtil userAuthenticationUtil;
 
 	@Autowired
 	public UserController(UserService userService, PostFavoriteService postFavoriteService ,UserAuthenticationUtil userAuthenticationUtil,
-			PostService postService) {
+			PostService postService,PostImageService postImageService,PostImageFavoriteService postImageFavoriteService) {
 		this.userService = userService;
 		this.userAuthenticationUtil = userAuthenticationUtil;
 		this.postService = postService;
 		this.postFavoriteService = postFavoriteService;
+		this.postImageService = postImageService;
+		this.postImageFavoriteService = postImageFavoriteService;
 	}
 
 	@GetMapping("/mypage/{user_id}")
@@ -90,7 +98,17 @@ public class UserController {
 				model.addAttribute("postList", postFavoriteList);
 				break;
 			case 3:
-		
+				model.addAttribute("postImageList", postImageService.getPostImageListByUserId(user_id));
+				break;
+			case 4:
+				List<Post> postCommnetList = postService.getCommentByUserId(user_id);
+				postCommnetList.stream()
+						.forEach(post -> setDefaultUserProfileImage(post));
+				 setDiffTime(postCommnetList);
+				model.addAttribute("postList", postCommnetList);
+				break;
+			case 5:
+				model.addAttribute("postImageList", postImageFavoriteService.getPostImageFavoirteByUserId(user_id));
 		}
 
 		model.addAttribute("tabType", tabType);

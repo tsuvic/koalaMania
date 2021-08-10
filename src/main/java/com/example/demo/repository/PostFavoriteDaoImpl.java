@@ -157,8 +157,7 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 				ENTITY_ZOO.TABLE_NAME + "." + ENTITY_ZOO.COLUMN_ZOO_NAME + "," +
 				ENTITY_PREFECTURE.TABLE_NAME + "." + ENTITY_PREFECTURE.COLUMN_PREFECTURE_NAME + "," +
 				asCommentFromPost + "." + ENTITY_POST.COLUMN_POST_ID +  " AS " + asCommentFromPostId +"," +
-				asCommentFromLoginUser + "." + ENTITY_LOGIN_USER.COLUMN_USER_NAME + " AS " + asCommentFromLoginUserName +"," +
-				ENTITY_PREFECTURE.TABLE_NAME + "." + ENTITY_PREFECTURE.COLUMN_PREFECTURE_NAME +
+				asCommentFromLoginUser + "." + ENTITY_LOGIN_USER.COLUMN_USER_NAME + " AS " + asCommentFromLoginUserName +" " +
 				" FROM " + ENTITY_POST_FAVORITE.TABLE_NAME + " AS " + asFavoritePost + 
 				" LEFT OUTER JOIN " + ENTITY_POST.TABLE_NAME + " AS " + asOriginalPost  + " ON " + asOriginalPost + "."
 				+ ENTITY_POST.COLUMN_POST_ID + " = " 

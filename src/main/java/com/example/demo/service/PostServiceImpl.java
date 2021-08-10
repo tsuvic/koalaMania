@@ -102,9 +102,7 @@ public class PostServiceImpl implements PostService {
 			
 				File uploadFile = new File("images/" + "post/" + post_image_id + profileImagePath);
 	
-				//byte[] bytes = fileResize(postImageUpload.getBytes(), profileImagePath.substring(1));
-				
-				byte[] bytes = postImageUpload.getBytes();
+				byte[] bytes = fileResize(postImageUpload.getBytes(), profileImagePath.substring(1));
 	
 				if (bytes == null) {
 					bytes = postImageUpload.getBytes();
@@ -184,6 +182,11 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 	
+	@Override
+	public List<Post> getCommentByUserId(int user_id) {
+		return postFavoriteDao.getFavoritePost(postDao.getCommentListByUserId(user_id));
+	}
+	
 	private byte[] fileResize(byte[] originalImage, String originalExtension) {
 		BufferedImage src = null;
 		BufferedImage dst = null;
@@ -195,7 +198,7 @@ public class PostServiceImpl implements PostService {
 			int width = src.getWidth(); // . オリジナル画像の幅
 			int height = src.getHeight(); // . オリジナル画像の高さ
 
-			int w = 200; // . 幅をこの数値に合わせて調整する
+			int w = 500; // . 幅をこの数値に合わせて調整する
 
 			int new_height = w * height / width;
 			int new_width = w;
