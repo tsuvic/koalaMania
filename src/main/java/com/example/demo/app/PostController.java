@@ -86,7 +86,7 @@ public class PostController {
 				long createtime2 = cteate2.getTime();
 				long difftime2  =  nowtime - createtime2;
 				
-				if(difftime/1000/60 < 59) {
+				if(difftime2/1000/60 < 59) {
 					childPost.setDisplayDiffTime(difftime2/1000/60  + "分前");
 				}else if(difftime2/1000/60/60 < 24) {
 					childPost.setDisplayDiffTime(difftime2/1000/60/60  + "時間前");
