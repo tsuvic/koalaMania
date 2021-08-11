@@ -133,7 +133,7 @@ public class PostServiceImpl implements PostService {
 	
 	@Override
 	public List<Post> getPostByUserId(int user_id){
-		return postFavoriteDao.getFavoritePost(postDao.getPostListByUserId(user_id));
+		return postFavoriteDao.getPostFavoriteList(postDao.getPostListByUserId(user_id));
 	}
 	
 	@Override
@@ -184,7 +184,7 @@ public class PostServiceImpl implements PostService {
 	
 	@Override
 	public List<Post> getCommentByUserId(int user_id) {
-		return postFavoriteDao.getFavoritePost(postDao.getCommentListByUserId(user_id));
+		return postFavoriteDao.getPostFavoriteList(postDao.getCommentListByUserId(user_id));
 	}
 	
 	private byte[] fileResize(byte[] originalImage, String originalExtension) {

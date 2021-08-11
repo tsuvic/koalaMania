@@ -33,4 +33,5 @@ public class Post {
 	private String displayDiffTime;
 	private long childrenCount;
 	private boolean favoriteFlag;
+	private long favoriteCount;
 }

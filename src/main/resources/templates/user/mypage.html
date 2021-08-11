@@ -81,7 +81,7 @@
 					console.log(button);
 					button.removeClass("btn-outline-warning");
 					button.addClass("btn-warning");
-					button.text("お気に入りから外す");
+					button.text("お気に入りから外す (" + json.count + ")");
 				});
 			} else {
 				$.getJSON("/post/deletePostFavorite", {
@@ -89,7 +89,7 @@
 				}, function(json) {
 					button.removeClass("btn-warning");
 					button.addClass("btn-outline-warning");
-					button.text("お気に入りに追加");
+					button.text("お気に入りに追加 (" + json.count + ")");
 				});
 			}
 		});
@@ -320,12 +320,18 @@
 					th:text="*{loginUser.userName}"> </a> <span
 					th:text="*{displayDiffTime}"></span> <input type="hidden"
 					name="favorite_post_id" th:value="*{post_id}">
+				<button sec:authorize="!isAuthenticated()" type="button"
+					th:if="*{favoriteFlag == false}"
+					class="btn btn-outline-warning btn-sm postFavoriteRegister"
+					th:text="'お気に入りに追加 (' + *{favoriteCount} +')'"
+					th:onclick="location.href = '/login'"></button>
 				<button sec:authorize="isAuthenticated()" type="button"
 					th:if="*{favoriteFlag == false}"
 					class="btn btn-outline-warning btn-sm postFavoriteRegister"
-					th:text="お気に入りに追加"></button>
+					th:text="'お気に入りに追加 (' + *{favoriteCount} +')'"></button>
 				<button sec:authorize="isAuthenticated()" type="button"
-					th:unless="*{favoriteFlag == false}" th:text="お気に入りから外す"
+					th:unless="*{favoriteFlag == false}"
+					th:text="'お気に入りから外す (' + *{favoriteCount} +')'"
 					class="btn btn-warning btn-sm postFavoriteRegister"></button>
 				<button sec:authorize="isAuthenticated()"
 					class="btn btn-danger btn-sm deletePost"
@@ -363,12 +369,13 @@
 			<div
 				th:if="*{#dates.format(visitDate,'yyyy年M月d日') == '9999年1月1日' && parentPost == null}"
 				th:text="'訪問日:  指定なし'" style="margin: 10px;"></div>
-			<a th:unless="*{parentPost != null}" th:href="@{/post/postDetail/{post_id}(post_id=*{post_id})}"
+			<a th:unless="*{parentPost != null}"
+				th:href="@{/post/postDetail/{post_id}(post_id=*{post_id})}"
 				style="text-decoration: none; color: black;">
 				<div th:text="*{contents}"
 					style="white-space: pre-wrap; margin: 10px;"></div>
-			</a>
-			<a th:if="*{parentPost != null}" th:href="@{/post/postDetail/{post_id}(post_id=*{parentPost.post_id})}"
+			</a> <a th:if="*{parentPost != null}"
+				th:href="@{/post/postDetail/{post_id}(post_id=*{parentPost.post_id})}"
 				style="text-decoration: none; color: black;">
 				<div th:text="*{contents}"
 					style="white-space: pre-wrap; margin: 10px;"></div>

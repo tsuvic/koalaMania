@@ -59,14 +59,17 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 	}
 
 	@Override
-	public List<Post> getFavoritePost(List<Post> postList) {
+	public List<Post> getPostFavoriteList(List<Post> postList) {
+		
+		postList.stream()
+		.forEach(post ->getPostFavoirteCount(post));
 
 		if (userAuthenticationUtil.isUserAuthenticated() != null) {
 			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			int user_id = ((LoginUser) principal).getUser_id();
 
 			if (postList.size() > 0) {
-				final String placeHolder = postList.stream().map(post -> String.valueOf(post.getPost_id()))
+				String placeHolder = postList.stream().map(post -> String.valueOf(post.getPost_id()))
 						.collect(Collectors.joining(","));
 
 				String sql = "SELECT " +
@@ -92,7 +95,7 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 	}
 
 	@Override
-	public void insertPostFavorite(int post_id) {
+	public long insertPostFavorite(int post_id) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		int user_id = ((LoginUser) principal).getUser_id();
 
@@ -106,10 +109,17 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 		commonSqlUtil.updateAllCommonColumn(ENTITY_POST_FAVORITE.TABLE_NAME,
 				ENTITY_POST_FAVORITE.COLUMN_POST_FAVORITE_ID, user_id,
 				(int) result.get(ENTITY_POST_FAVORITE.COLUMN_POST_FAVORITE_ID));
+		
+		Post post = new Post();
+		post.setPost_id(post_id);
+		
+		getPostFavoirteCount(post);
+		
+		return post.getFavoriteCount();
 	}
 
 	@Override
-	public void deletePostFavorite(int post_id) {
+	public long deletePostFavorite(int post_id) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		int user_id = ((LoginUser) principal).getUser_id();
 
@@ -119,10 +129,19 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 				" AND " + ENTITY_POST_FAVORITE.COLUMN_USER_ID + " = ? ";
 
 		jdbcTemplate.update(sql, post_id, user_id);
+		
+		Post post = new Post();
+		post.setPost_id(post_id);
+		
+		getPostFavoirteCount(post);
+		
+		return post.getFavoriteCount();
 	}
 
 	@Override
 	public Post getPostFavorite(Post post) {
+		
+		getPostFavoirteCount(post);
 
 		if (userAuthenticationUtil.isUserAuthenticated() != null) {
 			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -140,7 +159,7 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 			}
 
 			if (post.getChildrenPost() != null && post.getChildrenPost().size() > 0) {
-				post.setChildrenPost(getFavoritePost(post.getChildrenPost()));
+				post.setChildrenPost(getPostFavoriteList(post.getChildrenPost()));
 			}
 
 			return post;
@@ -308,6 +327,20 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 		}
 
 		return returnPostList;
+	}
+
+	@Override
+	public Post getPostFavoirteCount(Post post) {
+		String sql = "SELECT COUNT(*) FROM " +
+				ENTITY_POST_FAVORITE.TABLE_NAME +
+				" WHERE " + ENTITY_POST_FAVORITE.COLUMN_POST_ID + " = ? ";
+
+		Map<String, Object> result = jdbcTemplate.queryForMap(sql, post.getPost_id());
+
+		post.setFavoriteCount((long) result.get("count"));
+		
+		return post;
+
 	}
 
 }
