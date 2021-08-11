@@ -1,7 +1,6 @@
 package com.example.demo.app;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -151,20 +150,18 @@ public class PostController {
 	@GetMapping("/insertPostFavorite")
 	@ResponseBody
 	public String getInsertPostFavorite(@RequestParam(required = true, name = "post_id") int post_id) throws Exception {
-		postFavoriteService.insertPostFavoirte(post_id);
-		Map<String, Object> status =  new HashMap<String,Object>(){{put("status", "ok");}};
+		Map<String, Object> map  = postFavoriteService.insertPostFavoirte(post_id);
 		ObjectMapper mapper = new ObjectMapper();
-		String json = mapper.writeValueAsString(status);
+		String json = mapper.writeValueAsString(map);
 		return json;
 	}
 	
 	@GetMapping("/deletePostFavorite")
 	@ResponseBody
 	public String getDeletePostFavorite(@RequestParam(required = true, name = "post_id") int post_id) throws Exception {
-		postFavoriteService.deletePostFavoirte(post_id);
-		Map<String, Object> status =  new HashMap<String,Object>(){{put("status", "ok");}};
+		Map<String, Object> map =  postFavoriteService.deletePostFavoirte(post_id);
 		ObjectMapper mapper = new ObjectMapper();
-		String json = mapper.writeValueAsString(status);
+		String json = mapper.writeValueAsString(map);
 		return json;
 	}
 	

@@ -32,6 +32,6 @@ public class ZooServiceImple implements ZooService {
 	@Override
 	public List<Post> getPostListByZooId(int zoo_id){
 		
-		return postFavoriteDao.getFavoritePost(postDao.getPostListByZooId(zoo_id));
+		return postFavoriteDao.getPostFavoriteList(postDao.getPostListByZooId(zoo_id));
 	}
 }

@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,18 +21,22 @@ public class PostFavoriteServiceImpl implements PostFavoriteService {
 	}
 
 	@Override
-	public void insertPostFavoirte(int post_id) {
-		postFavoriteDao.insertPostFavorite(post_id);
+	public Map<String,Object> insertPostFavoirte(int post_id) {
+		long count = postFavoriteDao.insertPostFavorite(post_id);
+		Map<String, Object> map =  new HashMap<String,Object>(){{put("count", count);}};
+		return map;
 	}
 
 	@Override
-	public void deletePostFavoirte(int post_id) {
-		postFavoriteDao.deletePostFavorite(post_id);
+	public Map<String,Object> deletePostFavoirte(int post_id) {
+		long count  = postFavoriteDao.deletePostFavorite(post_id);
+		Map<String, Object> map =  new HashMap<String,Object>(){{put("count", count);}};
+		return map;
 	}
 	
 	@Override
 	public List<Post> getPostFavoirteByUserId(int user_id) {
-		return postFavoriteDao.getFavoritePost(postFavoriteDao.getPostFavoirteByUserId(user_id));
+		return postFavoriteDao.getPostFavoriteList(postFavoriteDao.getPostFavoirteByUserId(user_id));
 	}
 
 }
