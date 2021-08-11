@@ -363,7 +363,12 @@
 			<div
 				th:if="*{#dates.format(visitDate,'yyyy年M月d日') == '9999年1月1日' && parentPost == null}"
 				th:text="'訪問日:  指定なし'" style="margin: 10px;"></div>
-			<a th:href="@{/post/postDetail/{post_id}(post_id=*{post_id})}"
+			<a th:unless="*{parentPost != null}" th:href="@{/post/postDetail/{post_id}(post_id=*{post_id})}"
+				style="text-decoration: none; color: black;">
+				<div th:text="*{contents}"
+					style="white-space: pre-wrap; margin: 10px;"></div>
+			</a>
+			<a th:if="*{parentPost != null}" th:href="@{/post/postDetail/{post_id}(post_id=*{parentPost.post_id})}"
 				style="text-decoration: none; color: black;">
 				<div th:text="*{contents}"
 					style="white-space: pre-wrap; margin: 10px;"></div>
@@ -379,7 +384,7 @@
 					th:href="@{/post/postDetail/{post_id}(post_id=*{post.post_id})}"
 					style="text-decoration: none; color: black;"> <img
 						th:src="*{imageAddress}"
-						style="border: solid; cursor: zoom-in; width: 100px; height: 100px;">
+						style="border: solid; width: 100px; height: 100px;">
 				</a>
 				</span>
 			</div>

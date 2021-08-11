@@ -310,7 +310,7 @@
 				</span>
 			</div>
 			<div
-				th:text="'投稿日時:  ' + *{#dates.format(createdDate,'yyyy.MM.dd  hh:mm')}"></div>
+				th:text="'投稿日時:  ' + *{#dates.format(createdDate,'yyyy.MM.dd  HH:mm')}"></div>
 		</div>
 		<div class="container">
 			<form sec:authorize="isAuthenticated()"
@@ -369,7 +369,7 @@
 			<div th:text="*{contents}"
 				style="white-space: pre-wrap; margin: 10px;"></div>
 			<div
-				th:text="'投稿日時:  ' + *{#dates.format(createdDate,'yyyy.MM.dd  hh:mm')}"></div>
+				th:text="'投稿日時:  ' + *{#dates.format(createdDate,'yyyy.MM.dd  HH:mm')}"></div>
 		</div>
 	</div>
 </body>
