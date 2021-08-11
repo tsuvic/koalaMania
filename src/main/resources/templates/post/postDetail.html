@@ -103,7 +103,7 @@
 				}, function(json) {
 					button.removeClass("btn-outline-warning");
 					button.addClass("btn-warning");
-					button.text("お気に入りから外す");
+					button.text("お気に入りから外す (" + json.count + ")");
 				});
 			} else {
 				$.getJSON("/post/deletePostFavorite", {
@@ -111,7 +111,7 @@
 				}, function(json) {
 					button.removeClass("btn-warning");
 					button.addClass("btn-outline-warning");
-					button.text("お気に入りに追加");
+					button.text("お気に入りに追加 (" + json.count + ")");
 				});
 			}
 		});
@@ -266,12 +266,18 @@
 					th:text="*{loginUser.userName}"> </a> <span
 					th:text="*{displayDiffTime}"></span> <input type="hidden"
 					name="favorite_post_id" th:value="*{post_id}">
+				<button sec:authorize="!isAuthenticated()" type="button"
+					th:if="*{favoriteFlag == false}"
+					class="btn btn-outline-warning btn-sm postFavoriteRegister"
+					th:text="'お気に入りに追加 (' + *{favoriteCount} +')'"
+					th:onclick="location.href = '/login'"></button>
 				<button sec:authorize="isAuthenticated()" type="button"
 					th:if="*{favoriteFlag == false}"
 					class="btn btn-outline-warning btn-sm postFavoriteRegister"
-					th:text="お気に入りに追加"></button>
+					th:text="'お気に入りに追加 (' + *{favoriteCount} +')'"></button>
 				<button sec:authorize="isAuthenticated()" type="button"
-					th:unless="*{favoriteFlag == false}" th:text="お気に入りから外す"
+					th:unless="*{favoriteFlag == false}"
+					th:text="'お気に入りから外す (' + *{favoriteCount} +')'"
 					class="btn btn-warning btn-sm postFavoriteRegister"></button>
 				<button sec:authorize="isAuthenticated()"
 					class="btn btn-danger btn-sm deletePost"
@@ -341,12 +347,18 @@
 					th:text="*{loginUser.userName}"> </a> <span
 					th:text="*{displayDiffTime}"></span> <input type="hidden"
 					name="favorite_post_id" th:value="*{post_id}">
+				<button sec:authorize="!isAuthenticated()" type="button"
+					th:if="*{favoriteFlag == false}"
+					class="btn btn-outline-warning btn-sm postFavoriteRegister"
+					th:text="'お気に入りに追加 (' + *{favoriteCount} +')'"
+					th:onclick="location.href = '/login'"></button>
 				<button sec:authorize="isAuthenticated()" type="button"
 					th:if="*{favoriteFlag == false}"
 					class="btn btn-outline-warning btn-sm postFavoriteRegister"
-					th:text="お気に入りに追加"></button>
+					th:text="'お気に入りに追加 (' + *{favoriteCount} +')'"></button>
 				<button sec:authorize="isAuthenticated()" type="button"
-					th:unless="*{favoriteFlag == false}" th:text="お気に入りから外す"
+					th:unless="*{favoriteFlag == false}"
+					th:text="'お気に入りから外す (' + *{favoriteCount} +')'"
 					class="btn btn-warning btn-sm postFavoriteRegister"></button>
 				<button sec:authorize="isAuthenticated()"
 					class="btn btn-danger btn-sm deleteChildPost"
