@@ -1,6 +1,6 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
@@ -29,15 +29,46 @@
 				const post_id = $(this).next().val();
 				const zoo_id = $(this).next().next().val();
 				const csrf = $(this).next().next().next().val();
-				$('<form/>', {action: '/post/delete', method: 'post'})
-				  .append($('<input/>', {type: 'hidden', name: 'post_id', value: post_id}))
-				  .append($('<input/>', {type: 'hidden', name: 'zoo_id', value: zoo_id}))
-				  .append($('<input/>', {type: 'hidden', name: '_csrf', value: csrf}))
-				  .appendTo(document.body)
-				  .submit();
+				$('<form/>', {
+					action : '/post/delete',
+					method : 'post'
+				}).append($('<input/>', {
+					type : 'hidden',
+					name : 'post_id',
+					value : post_id
+				})).append($('<input/>', {
+					type : 'hidden',
+					name : 'zoo_id',
+					value : zoo_id
+				})).append($('<input/>', {
+					type : 'hidden',
+					name : '_csrf',
+					value : csrf
+				})).appendTo(document.body).submit();
 			}
 		});
-		
+
+		$('.postFavoriteRegister').click(function(e) {
+			var requestParam = $(this).prev().val();
+			var button = $(this);
+			if (button.hasClass("btn-outline-warning")) {
+				$.getJSON("/post/insertPostFavorite", {
+					post_id : requestParam
+				}, function(json) {
+					button.removeClass("btn-outline-warning");
+					button.addClass("btn-warning");
+					button.text("お気に入りから外す (" + json.count + ")");
+				});
+			} else {
+				$.getJSON("/post/deletePostFavorite", {
+					post_id : requestParam
+				}, function(json) {
+					button.removeClass("btn-warning");
+					button.addClass("btn-outline-warning");
+					button.text("お気に入りに追加 (" + json.count + ")");
+				});
+			}
+		});
 	});
 </script>
 <title th:text="${title}"></title>
@@ -68,12 +99,31 @@
 								height="40px"></a> <a
 								th:href="@{/user/mypage/{user_id}(user_id=*{loginUser.user_id})}"
 								th:text="*{loginUser.userName}"> </a> <span
-								th:text="*{displayDiffTime}"></span>	
-							<button sec:authorize="isAuthenticated()" class="btn btn-danger btn-sm deletePost" th:if ="*{loginUser.user_id} == ${#authentication.principal.user_id}" type="button">
-							この投稿を削除</button>
-							<input sec:authorize="isAuthenticated()" th:if ="*{loginUser.user_id} == ${#authentication.principal.user_id}" type = "hidden" name = "post_id" th:value = "*{post_id}">
-							<input sec:authorize="isAuthenticated()" th:if ="*{loginUser.user_id} == ${#authentication.principal.user_id}" type = "hidden" name = "zoo_id" th:value = "${zoo.zoo_id}">
-							<input sec:authorize="isAuthenticated()" th:if ="*{loginUser.user_id} == ${#authentication.principal.user_id}" type = "hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+								th:text="*{displayDiffTime}"></span> <input type="hidden"
+								name="favorite_post_id" th:value="*{post_id}">
+							<button sec:authorize="!isAuthenticated()" type="button" th:if="*{favoriteFlag == false}"
+								class="btn btn-outline-warning btn-sm postFavoriteRegister"
+								th:text="'お気に入りに追加 (' + *{favoriteCount} +')'" th:onclick="location.href = '/login'"></button>
+							<button sec:authorize="isAuthenticated()" type="button" th:if="*{favoriteFlag == false}"
+								class="btn btn-outline-warning btn-sm postFavoriteRegister"
+								th:text="'お気に入りに追加 (' + *{favoriteCount} +')'"></button>
+							<button sec:authorize="isAuthenticated()" type="button" th:unless="*{favoriteFlag == false}"
+								th:text="'お気に入りから外す (' + *{favoriteCount} +')'"
+								class="btn btn-warning btn-sm postFavoriteRegister"></button>
+							<button sec:authorize="isAuthenticated()"
+								class="btn btn-danger btn-sm deletePost"
+								th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
+								type="button">この投稿を削除</button>
+							<input sec:authorize="isAuthenticated()"
+								th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
+								type="hidden" name="post_id" th:value="*{post_id}"> <input
+								sec:authorize="isAuthenticated()"
+								th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
+								type="hidden" name="zoo_id" th:value="${zoo.zoo_id}"> <input
+								sec:authorize="isAuthenticated()"
+								th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
+								type="hidden" th:name="${_csrf.parameterName}"
+								th:value="${_csrf.token}" />
 						</div>
 						<div
 							th:unless="*{#dates.format(visitDate,'yyyy年M月d日')} == '9999年1月1日'"
@@ -102,11 +152,11 @@
 							</a>
 							</span>
 						</div>
-						<a th:href="@{/post/postDetail/{post_id}(post_id=*{post_id})}">
-						<div th:text="*{childrenCount}+'件のコメント'"></div>
-						</a>
-					</div>
-				</td>
+						<div>
+							<a th:href="@{/post/postDetail/{post_id}(post_id=*{post_id})}"
+								th:text="*{childrenCount}+'件のコメント'"> </a>
+						</div>
+					</div></td>
 			</tr>
 		</table>
 	</div>

@@ -32,4 +32,6 @@ public class Post {
 	private Zoo zoo;
 	private String displayDiffTime;
 	private long childrenCount;
+	private boolean favoriteFlag;
+	private long favoriteCount;
 }

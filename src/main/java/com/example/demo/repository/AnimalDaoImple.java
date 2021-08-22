@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.AnimalForTree;
-import com.example.demo.entity.AnimalImage;
 import com.example.demo.entity.AnimalZooHistory;
 import com.example.demo.entity.LoginUser;
 import com.example.demo.entity.Prefecture;
@@ -336,8 +335,6 @@ public class AnimalDaoImple implements AnimalDao {
 		animal.setFatherAnimal(fatherAnimal);
 		animal.setDetails((String) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_DETAILS));
 		animal.setFeature((String) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_FEATURE));
-		
-
 		return animal;
 	}
 
@@ -402,7 +399,7 @@ public class AnimalDaoImple implements AnimalDao {
 	public 	List<AnimalForTree> getBrotherAnimalForTree(int animal_id, int mother_id, int father_id){
 		String sql = "SELECT "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_SEX +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_IS_ALIVE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DEATHDATE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +", "
 				+ ""+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +", "+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +", "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DETAILS +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FEATURE +" "
-				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal + " "
+				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +" ON "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME +" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_PREFECTURE.TABLE_NAME +" ON "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" = "+ ENTITY_PREFECTURE.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" "

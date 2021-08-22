@@ -39,72 +39,216 @@
 			}
 		});
 
-		$(function() {
-			$('.deletePost').click(function(e) {
-				const deleteImageFalg = confirm('この投稿を削除してもよろしいですか？');
-				if (deleteImageFalg) {
-					const post_id = $(this).next().val();
-					const zoo_id = $(this).next().next().val();
-					const csrf = $(this).next().next().next().val();
-					$('<form/>', {
-						action : '/post/delete',
-						method : 'post'
-					}).append($('<input/>', {
-						type : 'hidden',
-						name : 'post_id',
-						value : post_id
-					})).append($('<input/>', {
-						type : 'hidden',
-						name : 'zoo_id',
-						value : zoo_id
-					})).append($('<input/>', {
-						type : 'hidden',
-						name : '_csrf',
-						value : csrf
-					})).appendTo(document.body).submit();
+		$('.deletePost').click(function(e) {
+			const deleteImageFalg = confirm('この投稿を削除してもよろしいですか？');
+			if (deleteImageFalg) {
+				const post_id = $(this).next().val();
+				const zoo_id = $(this).next().next().val();
+				const csrf = $(this).next().next().next().val();
+				$('<form/>', {
+					action : '/post/delete',
+					method : 'post'
+				}).append($('<input/>', {
+					type : 'hidden',
+					name : 'post_id',
+					value : post_id
+				})).append($('<input/>', {
+					type : 'hidden',
+					name : 'zoo_id',
+					value : zoo_id
+				})).append($('<input/>', {
+					type : 'hidden',
+					name : '_csrf',
+					value : csrf
+				})).appendTo(document.body).submit();
+			}
+		});
+
+		$('.deleteChildPost').click(function(e) {
+			const deleteImageFalg = confirm('この投稿を削除してもよろしいですか？');
+			if (deleteImageFalg) {
+				const post_id = $(this).next().val();
+				const zoo_id = $(this).next().next().val();
+				const parent_id = $(this).next().next().next().val();
+				const csrf = $(this).next().next().next().next().val();
+				$('<form/>', {
+					action : '/post/deleteChild',
+					method : 'post'
+				}).append($('<input/>', {
+					type : 'hidden',
+					name : 'post_id',
+					value : post_id
+				})).append($('<input/>', {
+					type : 'hidden',
+					name : 'zoo_id',
+					value : zoo_id
+				})).append($('<input/>', {
+					type : 'hidden',
+					name : 'parent_id',
+					value : parent_id
+				})).append($('<input/>', {
+					type : 'hidden',
+					name : '_csrf',
+					value : csrf
+				})).appendTo(document.body).submit();
+			}
+		});
+
+		$('.postFavoriteRegister').click(function(e) {
+			var requestParam = $(this).prev().val();
+			var button = $(this);
+			if (button.hasClass("btn-outline-warning")) {
+				$.getJSON("/post/insertPostFavorite", {
+					post_id : requestParam
+				}, function(json) {
+					button.removeClass("btn-outline-warning");
+					button.addClass("btn-warning");
+					button.text("お気に入りから外す (" + json.count + ")");
+				});
+			} else {
+				$.getJSON("/post/deletePostFavorite", {
+					post_id : requestParam
+				}, function(json) {
+					button.removeClass("btn-warning");
+					button.addClass("btn-outline-warning");
+					button.text("お気に入りに追加 (" + json.count + ")");
+				});
+			}
+		});
+
+		$('.addModaiImage').click(function(e) {
+			const requestParam = $(this).prev().val();
+			const img = $(this);
+			console.log(requestParam);
+			$.getJSON("/post/checkPostImageFavorite", {
+				postImage_id : requestParam
+			}, function(json) {
+				const count = json.resourse.count;
+				const flag = json.resourse.flag;
+				const postimageFavoriteId = json.resourse.postimageFavoriteId;
+				let text = "";
+				console.log(requestParam);
+				if (flag) {
+					$('#addAlbumButton').removeClass("btn-outline-warning");
+					$('#addAlbumButton').addClass("btn-warning");
+					text = "アルバムから消す";
+				} else {
+					$('#addAlbumButton').removeClass("btn-warning");
+					$('#addAlbumButton').addClass("btn-outline-warning");
+					text = "アルバムに追加";
 				}
+				$('#addAlbumButton').text(text + "  (" + count + ")");
+				$('#addAlbumButton').next().val(postimageFavoriteId);
+				const src = img.attr('src');
+				const postImageId = img.prev().val();
+				$('#modalImage').attr('src', src);
+				$('#addAlbumButton').prev().val(postImageId);
+
+				const tag = img.parent().find("a");
+				if (typeof tag != "undefined") {
+					$('#modalImageLink').attr('href', tag.attr('href'));
+					$('#modalImageLink').text(tag.text());
+				} else {
+					$('#modalImageLink').attr('href', "");
+					$('#modalImageLink').text("");
+				}
+
+				$('#opneModalButton').trigger('click');
 			});
 
 		});
-		
-		$(function() {
-			$('.deleteChildPost').click(function(e) {
-				const deleteImageFalg = confirm('この投稿を削除してもよろしいですか？');
-				if (deleteImageFalg) {
-					const post_id = $(this).next().val();
-					const zoo_id = $(this).next().next().val();
-					const parent_id = $(this).next().next().next().val();
-					const csrf = $(this).next().next().next().next().val();
-					$('<form/>', {
-						action : '/post/deleteChild',
-						method : 'post'
-					}).append($('<input/>', {
-						type : 'hidden',
-						name : 'post_id',
-						value : post_id
-					})).append($('<input/>', {
-						type : 'hidden',
-						name : 'zoo_id',
-						value : zoo_id
-					})).append($('<input/>', {
-						type : 'hidden',
-						name : 'parent_id',
-						value : parent_id
-					})).append($('<input/>', {
-						type : 'hidden',
-						name : '_csrf',
-						value : csrf
-					})).appendTo(document.body).submit();
-				}
-			});
 
+		$('#addAlbumButton').click(function(e) {
+			const id = $(this).next().val();
+			const param = $(this).prev().val();
+			if (id == 0) {
+				$.getJSON("/post/insertPostImageFavorite", {
+					postImage_id : param
+				}, function(json) {
+					$('#addAlbumButton').next().val(json.postImageFavoriteId);
+					checkPostImageFavorite(param);
+				});
+			} else {
+				$.getJSON("/post/deletePostImageFavorite", {
+					postImage_id : param
+				}, function(json) {
+					$('#addAlbumButton').next().val(0);
+					checkPostImageFavorite(param);
+				});
+			}
 		});
+
+		function checkPostImageFavorite(postImage_id) {
+			$.getJSON("/post/checkPostImageFavorite", {
+				postImage_id : postImage_id
+			}, function(json) {
+				const count = json.resourse.count;
+				const flag = json.resourse.flag;
+				const postimageFavoriteId = json.resourse.postimageFavoriteId;
+				let text = "";
+
+				if (flag) {
+					$('#addAlbumButton').removeClass("btn-outline-warning");
+					$('#addAlbumButton').addClass("btn-warning");
+					text = "アルバムから消す";
+				} else {
+					$('#addAlbumButton').removeClass("btn-warning");
+					$('#addAlbumButton').addClass("btn-outline-warning");
+					text = "アルバムに追加";
+				}
+				$('#addAlbumButton').text(text + "  (" + count + ")");
+			});
+		}
+
 	});
 </script>
 
 </head>
 
 <body>
+	<!-- Modal -->
+	<button type="button" data-toggle="modal" id="opneModalButton"
+		data-target="#exampleModalCenter" style="display: none;"></button>
+	<div class="modal fade" id="exampleModalCenter" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalCenterTitle"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalCenterTitle">
+						投稿者：<a
+							th:href="@{/user/mypage/{user_id}(user_id=${post.loginUser.user_id})}"><img
+							th:src="${post.loginUser.profileImagePath}" width="40px"
+							height="40px"></a> <a
+							th:href="@{/user/mypage/{user_id}(user_id=${post.loginUser.user_id})}"
+							th:text="${post.loginUser.userName}"> </a>
+					</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<h5>
+						<a id="modalImageLink" href="/"></a>
+					</h5>
+					<img id="modalImage" src="/images/defaultAnimal.png"
+						style="width: 100%">
+				</div>
+				<div class="modal-footer">
+					<input type="hidden" name="albumPostImageId">
+					<button type="button" class="btn btn-outline-warning"
+						id="addAlbumButton" sec:authorize="isAuthenticated()"></button>
+					<button type="button" class="btn btn-outline-warning"
+						id="addAlbumButton" th:onclick="location.href = '/login'"
+						sec:authorize="!isAuthenticated()"></button>
+					<input type="hidden" name="PostImageFavoritId">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal" id="closeModalButton">閉じる</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div th:replace="~{block/header_boot::headerA_boot}"></div>
 	<div class="container">
 		<div th:object="${post.zoo}">
@@ -120,7 +264,21 @@
 					th:src="*{loginUser.profileImagePath}" width="40px" height="40px"></a>
 				<a th:href="@{/user/mypage/{user_id}(user_id=*{loginUser.user_id})}"
 					th:text="*{loginUser.userName}"> </a> <span
-					th:text="*{displayDiffTime}"></span>
+					th:text="*{displayDiffTime}"></span> <input type="hidden"
+					name="favorite_post_id" th:value="*{post_id}">
+				<button sec:authorize="!isAuthenticated()" type="button"
+					th:if="*{favoriteFlag == false}"
+					class="btn btn-outline-warning btn-sm postFavoriteRegister"
+					th:text="'お気に入りに追加 (' + *{favoriteCount} +')'"
+					th:onclick="location.href = '/login'"></button>
+				<button sec:authorize="isAuthenticated()" type="button"
+					th:if="*{favoriteFlag == false}"
+					class="btn btn-outline-warning btn-sm postFavoriteRegister"
+					th:text="'お気に入りに追加 (' + *{favoriteCount} +')'"></button>
+				<button sec:authorize="isAuthenticated()" type="button"
+					th:unless="*{favoriteFlag == false}"
+					th:text="'お気に入りから外す (' + *{favoriteCount} +')'"
+					class="btn btn-warning btn-sm postFavoriteRegister"></button>
 				<button sec:authorize="isAuthenticated()"
 					class="btn btn-danger btn-sm deletePost"
 					th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
@@ -151,13 +309,16 @@
 					th:unless="*{animal} == null"
 					th:href="@{/detail/{animal_id}(animal_id=*{animal.animal_id})}"
 					th:text="'#' + *{animal.name}"></a><br
-					th:unless="*{animal} == null"> <img th:src="*{imageAddress}"
-					width="200px" style="border: solid;">
+					th:unless="*{animal} == null"> <input type="hidden"
+					name="postImageId" th:value="*{postimage_id}"><img
+					th:src="*{imageAddress}" class="addModaiImage"
+					style="border: solid; cursor: zoom-in; width: 100px; height: 100px;">
 				</span>
 			</div>
-			<div th:text="*{#dates.format(createdDate,'yyyy.MM.dd  hh:mm')}"></div>
+			<div
+				th:text="'投稿日時:  ' + *{#dates.format(createdDate,'yyyy.MM.dd  HH:mm')}"></div>
 		</div>
-		<div class="container" style="margin: 10px;">
+		<div class="container">
 			<form sec:authorize="isAuthenticated()"
 				th:action="@{/post/insertChildPost}" method="post"
 				th:object="${postInsertForm}">
@@ -168,11 +329,9 @@
 						placeholder="この投稿へコメントする" th:errorclass="is-invalid"
 						style="height: 120px;"></textarea>
 				</div>
-				<div id="send-zone" style="margin: 10px;">
+				<div id="send-zone">
 					<button class="btn btn-outline-primary btn-sm" id="submitButton"
 						type="submit">コメントを送信</button>
-					<button class="btn btn-warning btn-sm" type="button"
-						th:onclick="'location.href = \'' +@{/zoo/detail/{zoo_id}(zoo_id=${post.zoo.zoo_id})} + '\''">戻る</button>
 				</div>
 			</form>
 			<a th:href="@{/login}" sec:authorize="!isAuthenticated()">
@@ -186,20 +345,32 @@
 					th:src="*{loginUser.profileImagePath}" width="40px" height="40px"></a>
 				<a th:href="@{/user/mypage/{user_id}(user_id=*{loginUser.user_id})}"
 					th:text="*{loginUser.userName}"> </a> <span
-					th:text="*{displayDiffTime}"></span>
+					th:text="*{displayDiffTime}"></span> <input type="hidden"
+					name="favorite_post_id" th:value="*{post_id}">
+				<button sec:authorize="!isAuthenticated()" type="button"
+					th:if="*{favoriteFlag == false}"
+					class="btn btn-outline-warning btn-sm postFavoriteRegister"
+					th:text="'お気に入りに追加 (' + *{favoriteCount} +')'"
+					th:onclick="location.href = '/login'"></button>
+				<button sec:authorize="isAuthenticated()" type="button"
+					th:if="*{favoriteFlag == false}"
+					class="btn btn-outline-warning btn-sm postFavoriteRegister"
+					th:text="'お気に入りに追加 (' + *{favoriteCount} +')'"></button>
+				<button sec:authorize="isAuthenticated()" type="button"
+					th:unless="*{favoriteFlag == false}"
+					th:text="'お気に入りから外す (' + *{favoriteCount} +')'"
+					class="btn btn-warning btn-sm postFavoriteRegister"></button>
 				<button sec:authorize="isAuthenticated()"
 					class="btn btn-danger btn-sm deleteChildPost"
 					th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
 					type="button">この投稿を削除</button>
 				<input sec:authorize="isAuthenticated()"
 					th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
-					type="hidden" name="post_id" th:value="*{post_id}">
-				 <input
+					type="hidden" name="post_id" th:value="*{post_id}"> <input
 					sec:authorize="isAuthenticated()"
 					th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
 					type="hidden" name="zoo_id" th:value="${post.zoo.zoo_id}">
-				 <input
-					sec:authorize="isAuthenticated()"
+				<input sec:authorize="isAuthenticated()"
 					th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
 					type="hidden" name="parent_id" th:value="${post.post_id}">
 				<input sec:authorize="isAuthenticated()"
@@ -209,7 +380,8 @@
 			</div>
 			<div th:text="*{contents}"
 				style="white-space: pre-wrap; margin: 10px;"></div>
-			<div th:text="*{#dates.format(createdDate,'yyyy.MM.dd  hh:mm')}"></div>
+			<div
+				th:text="'投稿日時:  ' + *{#dates.format(createdDate,'yyyy.MM.dd  HH:mm')}"></div>
 		</div>
 	</div>
 </body>

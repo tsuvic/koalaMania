@@ -28,6 +28,7 @@ import com.example.demo.entity.Post;
 import com.example.demo.entity.Zoo;
 import com.example.demo.repository.AnimalDao;
 import com.example.demo.repository.PostDao;
+import com.example.demo.repository.PostFavoriteDao;
 import com.example.demo.repository.PostImageDao;
 import com.example.demo.repository.ZooDao;
 
@@ -38,21 +39,23 @@ public class PostServiceImpl implements PostService {
 	private final AnimalDao animalDao;
 	private final PostDao postDao;
 	private final PostImageDao postImageDao;
+	private final PostFavoriteDao postFavoriteDao;
 	private final CloudinaryService cloudinaryService;
 	
 	@Autowired
-	public PostServiceImpl(ZooDao zooDao,AnimalDao animalDao,PostDao postDao,PostImageDao postImageDao,CloudinaryService cloudinaryService) {
+	public PostServiceImpl(ZooDao zooDao,AnimalDao animalDao,PostDao postDao,PostImageDao postImageDao,CloudinaryService cloudinaryService,PostFavoriteDao postFavoriteDao) {
 		this.zooDao = zooDao;
 		this.animalDao = animalDao;
 		this.postDao = postDao;
 		this.postImageDao = postImageDao;
+		this.postFavoriteDao = postFavoriteDao;
 		this.cloudinaryService = cloudinaryService;
 	}
 	
 	@Override
 	public Post getPostByPostId(int post_id){
 		
-		return postDao.getPostByPostId(post_id);
+		return postFavoriteDao.getPostFavorite(postDao.getPostByPostId(post_id));
 	}
 
 	@Override
@@ -99,9 +102,7 @@ public class PostServiceImpl implements PostService {
 			
 				File uploadFile = new File("images/" + "post/" + post_image_id + profileImagePath);
 	
-				//byte[] bytes = fileResize(postImageUpload.getBytes(), profileImagePath.substring(1));
-				
-				byte[] bytes = postImageUpload.getBytes();
+				byte[] bytes = fileResize(postImageUpload.getBytes(), profileImagePath.substring(1));
 	
 				if (bytes == null) {
 					bytes = postImageUpload.getBytes();
@@ -131,8 +132,8 @@ public class PostServiceImpl implements PostService {
 	}
 	
 	@Override
-	public List<Post> getPostByUSerId(int user_id){
-		return postDao.getPostListByUserId(user_id);
+	public List<Post> getPostByUserId(int user_id){
+		return postFavoriteDao.getPostFavoriteList(postDao.getPostListByUserId(user_id));
 	}
 	
 	@Override
@@ -181,6 +182,11 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 	
+	@Override
+	public List<Post> getCommentByUserId(int user_id) {
+		return postFavoriteDao.getPostFavoriteList(postDao.getCommentListByUserId(user_id));
+	}
+	
 	private byte[] fileResize(byte[] originalImage, String originalExtension) {
 		BufferedImage src = null;
 		BufferedImage dst = null;
@@ -192,7 +198,7 @@ public class PostServiceImpl implements PostService {
 			int width = src.getWidth(); // . オリジナル画像の幅
 			int height = src.getHeight(); // . オリジナル画像の高さ
 
-			int w = 200; // . 幅をこの数値に合わせて調整する
+			int w = 500; // . 幅をこの数値に合わせて調整する
 
 			int new_height = w * height / width;
 			int new_width = w;

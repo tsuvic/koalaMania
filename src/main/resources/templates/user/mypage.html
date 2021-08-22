@@ -1,11 +1,13 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 <meta charset="utf-8">
-<link rel="canonical"
-	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <!-- Bootstrap core CSS -->
 <link
 	href=https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css
@@ -14,84 +16,416 @@
 	crossorigin="anonymous">
 
 
-
+<!-- Custom styles for this template -->
+<link rel="canonical"
+	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
 <!-- Custom styles for this template -->
 <link href="/css/starter-template.css" rel="stylesheet">
 
 
 <title th:text="${title}"></title>
+<script type="text/javascript">
+	$(function() {
+		$("#submitButton").click(function(e) {
+			$(this).prop('disabled', true);
+			let val = $.trim($('textarea[name="contents"]').val());
+			console.log(val);
+			if (val) {
+				$(this).text('送信中...');
+				$('form').submit();
+			} else {
+				alert('投稿内容が空欄です。');
+				$(this).prop('disabled', false);
+				return false;
+			}
+		});
+
+		$('.deletePost').click(function(e) {
+			const deleteImageFalg = confirm('この投稿を削除してもよろしいですか？');
+			if (deleteImageFalg) {
+				const post_id = $(this).next().val();
+				const user_id = $(this).next().next().val();
+				const tabType = $(this).next().next().next().val();
+				const csrf = $(this).next().next().next().next().val();
+				$('<form/>', {
+					action : '/post/deleteFromMypage',
+					method : 'post'
+				}).append($('<input/>', {
+					type : 'hidden',
+					name : 'post_id',
+					value : post_id
+				})).append($('<input/>', {
+					type : 'hidden',
+					name : 'user_id',
+					value : user_id
+				})).append($('<input/>', {
+					type : 'hidden',
+					name : 'tabType',
+					value : tabType
+				})).append($('<input/>', {
+					type : 'hidden',
+					name : '_csrf',
+					value : csrf
+				})).appendTo(document.body).submit();
+			}
+		});
+
+		$('.postFavoriteRegister').click(function(e) {
+			var requestParam = $(this).prev().val();
+			var button = $(this);
+			if (button.hasClass("btn-outline-warning")) {
+				$.getJSON("/post/insertPostFavorite", {
+					post_id : requestParam
+				}, function(json) {
+					console.log(json);
+					console.log(button);
+					button.removeClass("btn-outline-warning");
+					button.addClass("btn-warning");
+					button.text("お気に入りから外す (" + json.count + ")");
+				});
+			} else {
+				$.getJSON("/post/deletePostFavorite", {
+					post_id : requestParam
+				}, function(json) {
+					button.removeClass("btn-warning");
+					button.addClass("btn-outline-warning");
+					button.text("お気に入りに追加 (" + json.count + ")");
+				});
+			}
+		});
+
+		$('.addModaiImage')
+				.click(
+						function(e) {
+							const requestParam = $(this).prev().val();
+							const img = $(this);
+
+							$
+									.getJSON(
+											"/post/checkPostImageFavorite",
+											{
+												postImage_id : requestParam
+											},
+											function(json) {
+												console.log(json);
+												const count = json.resourse.count;
+												const flag = json.resourse.flag;
+												const postimageFavoriteId = json.resourse.postimageFavoriteId;
+												const postId = img.prev()
+														.prev().prev().val();
+												const createdDate = img.prev()
+														.prev().val();
+												let text = "";
+
+												if (flag) {
+													$('#addAlbumButton')
+															.removeClass(
+																	"btn-outline-warning");
+													$('#addAlbumButton')
+															.addClass(
+																	"btn-warning");
+													text = "アルバムから消す";
+												} else {
+													$('#addAlbumButton')
+															.removeClass(
+																	"btn-warning");
+													$('#addAlbumButton')
+															.addClass(
+																	"btn-outline-warning");
+													text = "アルバムに追加";
+												}
+												$('#addAlbumButton').text(
+														text + "  (" + count
+																+ ")");
+												$('#addAlbumButton')
+														.next()
+														.val(
+																postimageFavoriteId);
+												const src = img.attr('src');
+												const postImageId = img.prev()
+														.val();
+												$('#modalImage').attr('src',
+														src);
+												$('#addAlbumButton').prev()
+														.val(postImageId);
+
+												$('#modalHeaderLink').attr(
+														'href',
+														'/post/postDetail/'
+																+ postId);
+												$('#modalHeaderLink').text(
+														createdDate + 'の投稿');
+
+												$('#opneModalButton').trigger(
+														'click');
+											});
+
+						});
+
+		$('#addAlbumButton').click(function(e) {
+			const id = $(this).next().val();
+			const param = $(this).prev().val();
+			if (id == 0) {
+				$.getJSON("/post/insertPostImageFavorite", {
+					postImage_id : param
+				}, function(json) {
+					$('#addAlbumButton').next().val(json.postImageFavoriteId);
+					checkPostImageFavorite(param);
+				});
+			} else {
+				const img = $('#postImage_' + param);
+				if (typeof img != "undefined") {
+					if (!confirm("この写真をアルバムから消してもよろしいですか？")) {
+						return;
+					}
+				}
+
+				$.getJSON("/post/deletePostImageFavorite", {
+					postImage_id : param
+				}, function(json) {
+					$('#addAlbumButton').next().val(0);
+					checkPostImageFavorite(param);
+					const img = $('#postImage_' + param)
+					if (typeof img != "undefined") {
+						img.remove();
+						$('#closeModalButton').trigger('click');
+					}
+				});
+			}
+		});
+
+		function checkPostImageFavorite(postImage_id) {
+			$.getJSON("/post/checkPostImageFavorite", {
+				postImage_id : postImage_id
+			}, function(json) {
+				const count = json.resourse.count;
+				const flag = json.resourse.flag;
+				const postimageFavoriteId = json.resourse.postimageFavoriteId;
+				let text = "";
+
+				if (flag) {
+					$('#addAlbumButton').removeClass("btn-outline-warning");
+					$('#addAlbumButton').addClass("btn-warning");
+					text = "アルバムから消す";
+				} else {
+					$('#addAlbumButton').removeClass("btn-warning");
+					$('#addAlbumButton').addClass("btn-outline-warning");
+					text = "アルバムに追加";
+				}
+				$('#addAlbumButton').text(text + "  (" + count + ")");
+			});
+		}
+
+	});
+</script>
 </head>
 
 <body>
+	<!-- Modal -->
+	<button type="button" data-toggle="modal" id="opneModalButton"
+		data-target="#exampleModalCenter" style="display: none;"></button>
+	<div class="modal fade" id="exampleModalCenter" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalCenterTitle"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalCenterTitle">
+						<a id="modalHeaderLink" href=""> </a>
+					</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<h5>
+						<a id="modalImageLink" href="/"></a>
+					</h5>
+					<img id="modalImage" src="/images/defaultAnimal.png"
+						style="width: 100%">
+				</div>
+				<div class="modal-footer">
+					<input type="hidden" name="albumPostImageId">
+					<button type="button" class="btn btn-outline-warning"
+						id="addAlbumButton" sec:authorize="isAuthenticated()"></button>
+					<button type="button" class="btn btn-outline-warning"
+						id="addAlbumButton" th:onclick="location.href = '/login'"
+						sec:authorize="!isAuthenticated()"></button>
+					<input type="hidden" name="PostImageFavoritId">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal" id="closeModalButton">閉じる</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div th:replace="~{block/header_boot::headerA_boot}"></div>
 	<div th:object="${userForm}">
-	<div class="btn_area_center" th:if="${editFlag}">
-	
-		<button class="btn btn-primary btn-sm" type="button"
-			th:onclick="'location.href = \'' +@{/user/edit/{user_id}(user_id=*{user_id})} + '\''">プロフィール編集</button>
-	</div>
+		<div class="btn_area_center" th:if="${editFlag}">
+
+			<button class="btn btn-primary btn-sm" type="button"
+				th:onclick="'location.href = \'' +@{/user/edit/{user_id}(user_id=*{user_id})} + '\''">プロフィール編集</button>
+		</div>
 		<table class="table table-hover table-responsive">
 			<tr>
-				<th class="cell_title"><img th:src="*{profileImagePath}" width="100" height="100"></th>
+				<th class="cell_title"><img th:src="*{profileImagePath}"
+					width="100" height="100"></th>
 				<td th:text="*{name}"></td>
 			</tr>
 			<tr th:if="*{twitterLinkFlag}">
 				<th class="cell_title">Twiiter</th>
-				<td><a target=”_blank” th:href="@{https://twitter.com/{adress}(adress=*{adress})}" th:text="*{name} + さんのTwitterアカウント"></a></td>
+				<td><a target=”_blank”
+					th:href="@{https://twitter.com/{adress}(adress=*{adress})}"
+					th:text="*{name} + さんのTwitterアカウント"></a></td>
 			</tr>
 			<tr>
 				<th class="cell_title">プロフィール</th>
 				<td th:text="*{profile}" style="white-space: pre-wrap;"></td>
 			</tr>
-			<tr>
-				<th class="cell_title">投稿一覧</th>
-				<td><div th:each="post : ${postList}" th:object="${post}"
-						style="margin: 10px; border: solid;">
-						<div style="margin: 10px;">
-						<img
-								th:src="*{loginUser.profileImagePath}" width="40px"
-								height="40px"><span
-								th:text="*{loginUser.userName}"> </span> <span
-								th:text="*{displayDiffTime}"></span>
-						</div>
-						<div style="margin: 10px;">
-						<a th:href="@{/zoo/detail/{zoo_id}(zoo_id=*{zoo.zoo_id})}">
-						<h3 th:text="*{zoo.zoo_name} + '(' + *{zoo.prefecture.name} +')'"> </h3>
-						</a>
-						</div>
-						<div
-							th:unless="*{#dates.format(visitDate,'yyyy年M月d日')} == '9999年1月1日'"
-							th:text="'訪問日:  ' + *{#dates.format(visitDate,'yyyy年M月d日')}"
-							style="margin: 10px;"></div>
-						<div
-							th:if="*{#dates.format(visitDate,'yyyy年M月d日')} == '9999年1月1日'"
-							th:text="'訪問日:  指定なし'" style="margin: 10px;"></div>
-						<a th:href="@{/post/postDetail/{post_id}(post_id=*{post_id})}"
-							style="text-decoration: none; color: black;">
-							<div th:text="*{contents}"
-								style="white-space: pre-wrap; margin: 10px;"></div>
-						</a>
-						<div style="margin: 10px;">
-							<span th:each="postImage : *{postImageList}"
-								th:object="${postImage}"
-								style="display: inline-block; margin: 10px;"> <a
-								th:unless="*{animal} == null"
-								th:href="@{/detail/{animal_id}(animal_id=*{animal.animal_id})}"
-								th:text="'#' + *{animal.name}"></a><br
-								th:unless="*{animal} == null"> <a 
-								th:href="@{/post/postDetail/{post_id}(post_id=*{post.post_id})}"
-								style="text-decoration: none; color: black;"> <img
-									th:src="*{imageAddress}" width="100px" height="100px"
-									style="border: solid;">
-							</a>
-							</span>
-						</div>
-						<a th:href="@{/post/postDetail/{post_id}(post_id=*{post_id})}">
-						<div th:text="*{childrenCount}+'件のコメント'"></div>
-						</a>
-					</div></td>
-			</tr>
 		</table>
+		<ul class="nav nav-pills">
+			<li th:if="${tabType} == 1" class="nav-item"><a
+				class="nav-link active" aria-current="page" href="#">投稿</a></li>
+			<li th:unless="${tabType} == 1" class="nav-item"><a
+				class="nav-link" aria-current="page"
+				th:href="@{/user/mypage/{user_id}/1(user_id=*{user_id})}">投稿</a></li>
+			<li th:if="${tabType} == 4" class="nav-item"><a
+				class="nav-link  active" href="#">コメント</a></li>
+			<li th:unless="${tabType} == 4" class="nav-item"><a
+				class="nav-link"
+				th:href="@{/user/mypage/{user_id}/4(user_id=*{user_id})}">コメント</a></li>
+			<li th:if="${tabType} == 3" class="nav-item"><a
+				class="nav-link  active" href="#">写真</a></li>
+			<li th:unless="${tabType} == 3" class="nav-item"><a
+				class="nav-link"
+				th:href="@{/user/mypage/{user_id}/3(user_id=*{user_id})}">写真</a></li>
+			<li th:if="${tabType} == 2" class="nav-item"><a
+				class="nav-link  active" href="#">お気に入り</a></li>
+			<li th:unless="${tabType} == 2" class="nav-item"><a
+				class="nav-link"
+				th:href="@{/user/mypage/{user_id}/2(user_id=*{user_id})}">お気に入り</a></li>
+			<li th:if="${tabType} == 5" class="nav-item"><a
+				class="nav-link  active" href="#">アルバム</a></li>
+			<li th:unless="${tabType} == 5" class="nav-item"><a
+				class="nav-link"
+				th:href="@{/user/mypage/{user_id}/5(user_id=*{user_id})}">アルバム</a></li>
+		</ul>
+		<div th:if="${tabType == 1 || tabType == 2 || tabType == 4}"
+			th:each="post : ${postList}" th:object="${post}"
+			style="margin: 10px; border: solid;">
+			<div style="margin: 10px;">
+				<a th:href="@{/user/mypage/{user_id}(user_id=*{loginUser.user_id})}"><img
+					th:src="*{loginUser.profileImagePath}" width="40px" height="40px"></a>
+				<a th:href="@{/user/mypage/{user_id}(user_id=*{loginUser.user_id})}"
+					th:text="*{loginUser.userName}"> </a> <span
+					th:text="*{displayDiffTime}"></span> <input type="hidden"
+					name="favorite_post_id" th:value="*{post_id}">
+				<button sec:authorize="!isAuthenticated()" type="button"
+					th:if="*{favoriteFlag == false}"
+					class="btn btn-outline-warning btn-sm postFavoriteRegister"
+					th:text="'お気に入りに追加 (' + *{favoriteCount} +')'"
+					th:onclick="location.href = '/login'"></button>
+				<button sec:authorize="isAuthenticated()" type="button"
+					th:if="*{favoriteFlag == false}"
+					class="btn btn-outline-warning btn-sm postFavoriteRegister"
+					th:text="'お気に入りに追加 (' + *{favoriteCount} +')'"></button>
+				<button sec:authorize="isAuthenticated()" type="button"
+					th:unless="*{favoriteFlag == false}"
+					th:text="'お気に入りから外す (' + *{favoriteCount} +')'"
+					class="btn btn-warning btn-sm postFavoriteRegister"></button>
+				<button sec:authorize="isAuthenticated()"
+					class="btn btn-danger btn-sm deletePost"
+					th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
+					type="button">この投稿を削除</button>
+				<input sec:authorize="isAuthenticated()"
+					th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
+					type="hidden" name="post_id" th:value="*{post_id}"> <input
+					sec:authorize="isAuthenticated()"
+					th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
+					type="hidden" name="user_id" th:value="*{loginUser.user_id}"><input
+					sec:authorize="isAuthenticated()"
+					th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
+					type="hidden" name="user_id" th:value="${tabType}"> <input
+					sec:authorize="isAuthenticated()"
+					th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
+					type="hidden" th:name="${_csrf.parameterName}"
+					th:value="${_csrf.token}" />
+			</div>
+			<div style="margin: 10px;">
+				<a th:unless="*{parentPost != null}"
+					th:href="@{/zoo/detail/{zoo_id}(zoo_id=*{zoo.zoo_id})}">
+					<h5 th:text="*{zoo.zoo_name} + '(' + *{zoo.prefecture.name} +')'">
+					</h5>
+				</a> <a th:if="*{parentPost != null} "
+					th:href="@{/post/postDetail/{post_id}(post_id=*{parentPost.post_id})}">
+					<h5 th:text="*{parentPost.loginUser.userName} + 'さんの投稿へのコメント'">
+					</h5>
+				</a>
+			</div>
+			<div
+				th:if="*{#dates.format(visitDate,'yyyy年M月d日') != '9999年1月1日' && parentPost == null}"
+				th:text="'訪問日:  ' + *{#dates.format(visitDate,'yyyy年M月d日')}"
+				style="margin: 10px;"></div>
+			<div
+				th:if="*{#dates.format(visitDate,'yyyy年M月d日') == '9999年1月1日' && parentPost == null}"
+				th:text="'訪問日:  指定なし'" style="margin: 10px;"></div>
+			<a th:unless="*{parentPost != null}"
+				th:href="@{/post/postDetail/{post_id}(post_id=*{post_id})}"
+				style="text-decoration: none; color: black;">
+				<div th:text="*{contents}"
+					style="white-space: pre-wrap; margin: 10px;"></div>
+			</a> <a th:if="*{parentPost != null}"
+				th:href="@{/post/postDetail/{post_id}(post_id=*{parentPost.post_id})}"
+				style="text-decoration: none; color: black;">
+				<div th:text="*{contents}"
+					style="white-space: pre-wrap; margin: 10px;"></div>
+			</a>
+			<div style="margin: 10px;">
+				<span th:each="postImage : *{postImageList}"
+					th:object="${postImage}"
+					style="display: inline-block; margin: 10px;"> <a
+					th:unless="*{animal} == null"
+					th:href="@{/detail/{animal_id}(animal_id=*{animal.animal_id})}"
+					th:text="'#' + *{animal.name}"></a><br
+					th:unless="*{animal} == null"> <a
+					th:href="@{/post/postDetail/{post_id}(post_id=*{post.post_id})}"
+					style="text-decoration: none; color: black;"> <img
+						th:src="*{imageAddress}"
+						style="border: solid; width: 100px; height: 100px;">
+				</a>
+				</span>
+			</div>
+			<a th:if="*{parentPost} == null"
+				th:href="@{/post/postDetail/{post_id}(post_id=*{post_id})}">
+				<div th:text="*{childrenCount}+'件のコメント'"></div>
+			</a>
+		</div>
+
+		<div th:if="${tabType == 3 || tabType == 5}">
+			<span th:each="postImage:${postImageList}" th:object="${postImage}"
+				style="display: inline-block; margin: 10px;" th:if="${tabType == 3}"><a
+				th:unless="*{animal} == null"
+				th:href="@{/detail/{animal_id}(animal_id=*{animal.animal_id})}"
+				th:text="'#' + *{animal.name}"></a><br th:unless="*{animal} == null">
+				<input type="hidden" name="postId" th:value="*{post.post_id}">
+				<input type="hidden" name="postDate"
+				th:value="*{#dates.format(post.createdDate,'yyyy年M月d日h時m分')}"><input
+				type="hidden" name="postImageId" th:value="*{postimage_id}">
+				<img th:src="*{imageAddress}" class="addModaiImage" width="100px"
+				height="100px" style="border: solid; cursor: zoom-in;"></span> <span
+				th:each="postImage:${postImageList}" th:object="${postImage}"
+				style="display: inline-block; margin: 10px;" th:if="${tabType == 5}"
+				th:id="'postImage_' + *{postimage_id}"><a
+				th:unless="*{animal} == null"
+				th:href="@{/detail/{animal_id}(animal_id=*{animal.animal_id})}"
+				th:text="'#' + *{animal.name}"></a><br th:unless="*{animal} == null">
+				<input type="hidden" name="postId" th:value="*{post.post_id}">
+				<input type="hidden" name="postDate"
+				th:value="*{post.loginUser.userName} + 'さん'"><input
+				type="hidden" name="postImageId" th:value="*{postimage_id}">
+				<img th:src="*{imageAddress}" class="addModaiImage" width="100px"
+				height="100px" style="border: solid; cursor: zoom-in;"></span>
+		</div>
 	</div>
 </body>
 </html>

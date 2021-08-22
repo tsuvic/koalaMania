@@ -14,5 +14,7 @@ public interface PostDao {
 	
 	List<Post> getPostListByUserId(int user_id);
 	
+	List<Post> getCommentListByUserId(int user_id);
+	
 	void deletePost(int post_id);
 }

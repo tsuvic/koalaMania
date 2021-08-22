@@ -45,7 +45,7 @@ public class AnimalServiceImpl implements AnimalService {
 	private final ZooDao zooDao;
 	
 	@Autowired
-	public AnimalServiceImpl(AnimalDao animalDao, 
+	public AnimalServiceImpl(AnimalDao animalDao,
 			CloudinaryService cloudinaryService, AnimalZooHistoryDao animalZooHistoryDao,
 			ZooDao zooDao) {
 		this.animalDao = animalDao;
@@ -470,7 +470,7 @@ public class AnimalServiceImpl implements AnimalService {
 		if (profileImagePath  != null) {
 			insertAnimalProfileImage(form.getAnimal_id(), form.getAnimalProfileImageUpload(), profileImagePath);
 		}
-
+		
 		//入退園履歴
 		List<Date> admissionDateList = new ArrayList<Date>();
 		for (int i = 0; i < form.getAdmissionYear().size(); i++) {
@@ -494,7 +494,6 @@ public class AnimalServiceImpl implements AnimalService {
 	public void delete(int animal_id) {
 		animalDao.delete(animal_id);
 	}
-
 
 	@Override
 	public void insertAnimalProfileImage(int animal_id, MultipartFile animalProfileImageUpload, String profileImagePath) {
@@ -527,6 +526,10 @@ public class AnimalServiceImpl implements AnimalService {
 
 	}
 
+	private void deleteDirs(int animal_id) {
+		cloudinaryService.deleteDirs(animal_id);
+	}
+
 	private byte[] fileResize(byte[] originalImage, String originalExtension) {
 		BufferedImage src = null;
 		BufferedImage dst = null;
@@ -538,7 +541,7 @@ public class AnimalServiceImpl implements AnimalService {
 			int width = src.getWidth(); // . オリジナル画像の幅
 			int height = src.getHeight(); // . オリジナル画像の高さ
 
-			int w = 200; // . 幅をこの数値に合わせて調整する
+			int w = 500; // . 幅をこの数値に合わせて調整する
 
 			int new_height = w * height / width;
 			int new_width = w;
@@ -546,7 +549,7 @@ public class AnimalServiceImpl implements AnimalService {
 			xform = new AffineTransformOp(
 					AffineTransform.getScaleInstance((double) new_width / width, (double) new_height / height),
 					AffineTransformOp.TYPE_BILINEAR);
-			dst = new BufferedImage(new_width, new_height, src.getType());
+			dst = new BufferedImage(new_width, new_height, src.getType()==0?5:src.getType());
 			xform.filter(src, dst);
 
 			// . 変換後のバイナリイメージを byte 配列に再格納
