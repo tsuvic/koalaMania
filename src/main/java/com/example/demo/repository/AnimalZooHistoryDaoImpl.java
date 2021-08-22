@@ -31,6 +31,8 @@ public class AnimalZooHistoryDaoImpl implements AnimalZooHistoryDao {
 	public AnimalZooHistoryDaoImpl(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
+	@Autowired
+	private Zoo ENTITY_ZOO;
 	
 	@Override
 	public void deleteAllAnimalZooHistory(int id) {
@@ -39,16 +41,21 @@ public class AnimalZooHistoryDaoImpl implements AnimalZooHistoryDao {
 		jdbcTemplate.update(sql,id);
 	}
 
-	
 	@Override
-	public Animal addAnimalZooHistory(int id, Animal animal) {
+	public Animal getAnimalZooHistory(int id, Animal animal) {
 		
-		String sql = "SELECT"+ " " + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID + ", "
+		//動物園履歴取得SQL
+		String sql = "SELECT"+ " " 
+		+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID + ", "
 		+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID + ", "
-		+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID + ", "
+		+ ENTITY_ZOO.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID + ", "
 		+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ADMISSION_DATE + ", "
-		+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE + " "
-		+ "FROM" +" "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + " "
+		+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE + ", "
+		+ ENTITY_ZOO.COLUMN_ZOO_NAME + " "
+		+ "FROM" +" "+ ENTITY_ZOO.TABLE_NAME + " "
+		+ "LEFT OUTER JOIN" +" "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + " "
+		+ "ON" + " " + ENTITY_ZOO.TABLE_NAME + "." + ENTITY_ZOO.COLUMN_ZOO_ID + " "
+		+ "=" + " " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID+ " "
 		+ "WHERE" + " " + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID + " " + "=" + "?" ;
 		
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, id);
@@ -59,10 +66,11 @@ public class AnimalZooHistoryDaoImpl implements AnimalZooHistoryDao {
 			animalZooHistory.setAnimal_id((int)result.get(ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID));
 			animalZooHistory.setAdmission_date((Date)result.get(ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ADMISSION_DATE));
 			animalZooHistory.setExit_date((Date)result.get(ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE));
-			animalZooHistoryList.add(animalZooHistory);
 			Zoo zoo = new Zoo();
 			zoo.setZoo_id((int)result.get(ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID));
+			zoo.setZoo_name((String)result.get(ENTITY_ZOO.COLUMN_ZOO_NAME));
 			animalZooHistory.setZoo(zoo);
+			animalZooHistoryList.add(animalZooHistory);
 		}
 		animal.setAnimalZooHistoryList(animalZooHistoryList);
 		

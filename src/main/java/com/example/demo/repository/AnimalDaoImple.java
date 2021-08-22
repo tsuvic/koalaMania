@@ -55,7 +55,9 @@ public class AnimalDaoImple implements AnimalDao {
 	String dummyDate = "9999-01-01";
 	String man = "1";
 	String woman = "2";
-
+	String ENTITY_ANIMAL_ZOO_HISTORY2 = "animal_zoo_history_2";
+	String COLUMN_ANIMAL_ID2 = "animal_id";
+	
 	@Override
 	public List<Animal> getAll() {
 		String sql = "SELECT "
@@ -71,9 +73,22 @@ public class AnimalDaoImple implements AnimalDao {
 				+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "
 				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +" "
 				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal 
-				+" LEFT OUTER JOIN "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  
-				+" ON "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID 
-				+" = "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
+				
+				+" LEFT OUTER JOIN " 
+				+" (SELECT "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID 
+				+ ", " + " MAX (" +ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE + ") "
+				+"FROM " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + " "
+				+"GROUP BY " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." +ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID + ")"
+				+ ENTITY_ANIMAL_ZOO_HISTORY2
+				+ " ON " +  AsMainAnimal + "." +ENTITY_ANIMAL.COLUMN_ANIMAL_ID 
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + COLUMN_ANIMAL_ID2
+				
+				+" LEFT OUTER JOIN " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME
+				+" ON " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." +ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + COLUMN_ANIMAL_ID2
+				+" AND " +  ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + "MAX" + " "
+				
 				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME 
 				+" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID 
 				+" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
@@ -86,9 +101,7 @@ public class AnimalDaoImple implements AnimalDao {
 				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsFatherAnimal 
 				+" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER 
 				+"  = "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "WHERE "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE 
-				+" = '"+ dummyDate +"' "
-				+ "ORDER BY "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" DESC";
+				+" ORDER BY "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" DESC";
 		
 		// SQL実行結果をMap型リストへ代入
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql);
@@ -282,21 +295,21 @@ public class AnimalDaoImple implements AnimalDao {
 						AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "+ AsMainAnimal +"."+ 
 						ENTITY_ANIMAL.COLUMN_NAME +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_SEX +", "+ 
 						AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "+ AsMainAnimal +"."+ 
-						ENTITY_ANIMAL.COLUMN_IS_ALIVE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DEATHDATE +", "
-						+ ""+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +", "+ 
-						ENTITY_ZOO.COLUMN_ZOO_NAME +", "+ 
+						ENTITY_ANIMAL.COLUMN_IS_ALIVE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DEATHDATE +", " +
+
 						AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsMotherId +" , " +
 						AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsFatherId +", " +
 						AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +", "+ 
 						AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "+ 
-						AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DETAILS +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FEATURE 
-				+ " FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal +" "
+						AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DETAILS +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FEATURE +" "
+						
+				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +" ON "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME +" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_PREFECTURE.TABLE_NAME +" ON "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" = "+ ENTITY_PREFECTURE.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMotherAnimal +" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +"  = "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsFatherAnimal +" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +"  = "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "WHERE  "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE +" = '"+ dummyDate +"' AND "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = ?";
+				+ "WHERE  " + AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = ?";
 
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, id);
 
@@ -322,14 +335,6 @@ public class AnimalDaoImple implements AnimalDao {
 		animal.setFatherAnimal(fatherAnimal);
 		animal.setDetails((String) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_DETAILS));
 		animal.setFeature((String) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_FEATURE));
-		AnimalZooHistory animalZooHistory = new AnimalZooHistory();
-		Zoo zoo = new Zoo();
-		zoo.setZoo_id((int) resultList.get(0).get(ENTITY_ZOO.COLUMN_ZOO_ID));
-		zoo.setZoo_name((String) resultList.get(0).get(ENTITY_ZOO.COLUMN_ZOO_NAME));
-		animalZooHistory.setZoo(zoo);
-		List<AnimalZooHistory> animalZooHistoryList = Arrays.asList(animalZooHistory);
-		animal.setAnimalZooHistoryList(animalZooHistoryList);
-		
 		return animal;
 	}
 

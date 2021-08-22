@@ -229,7 +229,7 @@
 					th:text="*{fatherAnimal.name}"> </a></td>
 			</tr>
 			<tr>
-				<th class="cell_title">動物園</th>
+				<th class="cell_title">所属動物園</th>
 				<td th:if="*{animalZooHistoryList[0].zoo.zoo_id} == 0"
 					th:text="*{animalZooHistoryList[0].zoo.zoo_name}"></td>
 				<td th:unless="*{animalZooHistoryList[0].zoo.zoo_id} == 0"><a
@@ -253,6 +253,27 @@
 						style="border: solid; cursor: zoom-in; width: 100px; height: 100px;"></span></td>
 			</tr>
 		</table>
+
+		<h3 class="cell_title mx-2">動物園履歴</h3>
+
+		<table class="table table-hover table-responsive">
+			<tr>
+				<th class="cell_title">入園日</th>
+				<th class="cell_title">退園日</th>
+				<th class="cell_title">動物園</th>
+			</tr>
+			<tr th:each="zooHistory : *{animalZooHistoryList}">
+				<td th:text="${zooHistory.admission_date}"></td>
+				<td th:text="${zooHistory.exit_date}"></td>
+				<td th:if="zooHistory.zoo.zoo_id == 0"
+					th:text="${zooHistory.zoo.zoo_name}"></td>
+				<td th:unless="zooHistory.zoo.zoo_id == 0"><a
+					th:href="@{/zoo/detail/{zoo_id}(zoo_id=${zooHistory.zoo.zoo_id})}"
+					th:text="${zooHistory.zoo.zoo_name}"> </a></td>
+			</tr>
+		</table>
+
+
 	</div>
 </body>
 </html>
