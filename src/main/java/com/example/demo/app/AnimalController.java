@@ -155,7 +155,7 @@ public class AnimalController {
 
 	@GetMapping("/detail/{id}")
 	public String displayDetailAnimal(@PathVariable int id, Model model) {
-		Animal animal = animalService.findById(id , true);
+		Animal animal = animalService.findById(id);
 		model.addAttribute("title", "コアラ情報詳細");
 		model.addAttribute("cloudinaryImageUrl", cloudinaryImageUrl);
 		Date birthDate = (Date) animal.getBirthdate();
@@ -179,7 +179,7 @@ public class AnimalController {
 		model.addAttribute("cloudinaryImageUrl", cloudinaryImageUrl);
 		List<Zoo> zooList = animalService.getZooList();
 		model.addAttribute("zooList", zooList);
-		Animal animal = animalService.findById(id,false);
+		Animal animal = animalService.findById(id);
 		form.setAnimal_id(animal.getAnimal_id());
 		form.setName(animal.getName());
 		form.setIs_alive(animal.getIs_alive());

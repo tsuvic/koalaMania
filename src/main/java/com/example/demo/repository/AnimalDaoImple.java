@@ -30,9 +30,6 @@ public class AnimalDaoImple implements AnimalDao {
 	private Animal ENTITY_ANIMAL;
 	
 	@Autowired
-	private AnimalImage ENTITY_ANIMAL_IMAGE;
-	
-	@Autowired
 	private AnimalZooHistory ENTITY_ANIMAL_ZOO_HISTORY;
 	
 	@Autowired
@@ -299,21 +296,21 @@ public class AnimalDaoImple implements AnimalDao {
 						AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "+ AsMainAnimal +"."+ 
 						ENTITY_ANIMAL.COLUMN_NAME +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_SEX +", "+ 
 						AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "+ AsMainAnimal +"."+ 
-						ENTITY_ANIMAL.COLUMN_IS_ALIVE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DEATHDATE +", "
-						+ ""+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +", "+ 
-						ENTITY_ZOO.COLUMN_ZOO_NAME +", "+ 
+						ENTITY_ANIMAL.COLUMN_IS_ALIVE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DEATHDATE +", " +
+
 						AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsMotherId +" , " +
 						AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsFatherId +", " +
 						AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +", "+ 
 						AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "+ 
 						AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DETAILS +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FEATURE +" "
+						
 				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +" ON "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME +" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_PREFECTURE.TABLE_NAME +" ON "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" = "+ ENTITY_PREFECTURE.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMotherAnimal +" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +"  = "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
 				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsFatherAnimal +" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +"  = "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "WHERE  "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE +" = '"+ dummyDate +"' AND "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = ?";
+				+ "WHERE  " + AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = ?";
 
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, id);
 
@@ -339,29 +336,8 @@ public class AnimalDaoImple implements AnimalDao {
 		animal.setFatherAnimal(fatherAnimal);
 		animal.setDetails((String) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_DETAILS));
 		animal.setFeature((String) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_FEATURE));
-		AnimalZooHistory animalZooHistory = new AnimalZooHistory();
-		Zoo zoo = new Zoo();
-		zoo.setZoo_id((int) resultList.get(0).get(ENTITY_ZOO.COLUMN_ZOO_ID));
-		zoo.setZoo_name((String) resultList.get(0).get(ENTITY_ZOO.COLUMN_ZOO_NAME));
-		animalZooHistory.setZoo(zoo);
-		List<AnimalZooHistory> animalZooHistoryList = Arrays.asList(animalZooHistory);
-		animal.setAnimalZooHistoryList(animalZooHistoryList);
-
-		//アニマル写真（いずれ不要になる）
-		if (resultList.get(0).get(ENTITY_ANIMAL_IMAGE.COLUMN_ANIMAL_IMAGE_ID) != null) {
-
-			List<AnimalImage> animalImageList = new ArrayList<AnimalImage>();
-			for (Map<String, Object> result : resultList) {
-				AnimalImage animalImage = new AnimalImage();
-				animalImage.setAnimalimage_id((int) result.get(ENTITY_ANIMAL_IMAGE.COLUMN_ANIMAL_IMAGE_ID));
-				animalImage.setAnimal_id((int) resultList.get(0).get(ENTITY_ANIMAL_IMAGE.COLUMN_ANIMAL_ID));
-				animalImage.setFiletype((String) result.get(ENTITY_ANIMAL_IMAGE.COLUMN_FILETYPE));
-				animalImageList.add(animalImage);
-				animalImage = null;
-			}
-			animal.setAnimalImageList(animalImageList);
-		}
 		
+
 		return animal;
 	}
 

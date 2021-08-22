@@ -182,13 +182,9 @@ public class AnimalServiceImpl implements AnimalService {
 	}
 
 	@Override
-	public Animal findById(int id ,boolean detailFlag) {
+	public Animal findById(int id) {
 		Animal animal =  animalDao.findById(id);
-		if(detailFlag) {
-			return animal;
-		}else {
-			return animalZooHistoryDao.addAnimalZooHistory(id, animal);
-		}
+		return animalZooHistoryDao.getAnimalZooHistory(id, animal);
 	}
 	
 	@Override
