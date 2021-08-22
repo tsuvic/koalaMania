@@ -90,9 +90,11 @@ public class AnimalDaoImple implements AnimalDao {
 				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsFatherAnimal 
 				+" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER 
 				+"  = "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "WHERE "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE 
-				+" = '"+ dummyDate +"' "
-				+ "ORDER BY "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" DESC";
+				+ "WHERE "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID
+				+" IN " + " (SELECT MAX( " + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID + " ) "
+				+" FROM " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME
+				+" GROUP BY " + ENTITY_ANIMAL.COLUMN_ANIMAL_ID +")"
+				+" ORDER BY "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" DESC";
 		
 		// SQL実行結果をMap型リストへ代入
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql);
