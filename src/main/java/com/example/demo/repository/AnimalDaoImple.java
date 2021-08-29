@@ -180,30 +180,60 @@ public class AnimalDaoImple implements AnimalDao {
 
 		String[] splitkeyWord = keyword.replaceAll(" ", "　").split("　", 0);
 
-		String sql = "SELECT "+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "
-				+ ""+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_NAME +", "
-				+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_SEX +","+ 
-				ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "+ 
-				ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID + "," + 
-				ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "+
-				AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsMotherId +" , " +
-				AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsFatherId +", " +
-				AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +" , "+ 
-				AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "+ 
-				ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +" "
-				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" LEFT OUTER JOIN "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +" ON "+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME +" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_PREFECTURE.TABLE_NAME +" ON "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" = "+ ENTITY_PREFECTURE.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMotherAnimal +" on "+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_MOTHER +"  = "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsFatherAnimal +" on "+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_FATHER +"  = "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "WHERE "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE +" = '"+ dummyDate +"' ";
-
+		String sql = "SELECT "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_SEX +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "
+				+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +", "
+				+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "
+				+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsMotherId +" , "
+				+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsFatherId +", "
+				+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +" , "
+				+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +" "
+				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal 
+				
+				+" LEFT OUTER JOIN " 
+				+" (SELECT "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID 
+				+ ", " + " MAX (" +ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE + ") "
+				+"FROM " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + " "
+				+"GROUP BY " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." +ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID + ")"
+				+ ENTITY_ANIMAL_ZOO_HISTORY2
+				+ " ON " +  AsMainAnimal + "." +ENTITY_ANIMAL.COLUMN_ANIMAL_ID 
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + COLUMN_ANIMAL_ID2
+				
+				+" LEFT OUTER JOIN " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME
+				+" ON " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." +ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + COLUMN_ANIMAL_ID2
+				+" AND " +  ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + "MAX" + " "
+				
+				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME 
+				+" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID 
+				+" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_PREFECTURE.TABLE_NAME 
+				+" ON "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID 
+				+" = "+ ENTITY_PREFECTURE.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMotherAnimal 
+				+" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER 
+				+"  = "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsFatherAnimal 
+				+" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER 
+				+"  = "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
+				+"WHERE" ;
+		
 		for (int i = 0; i < splitkeyWord.length; ++i) {
-			sql += "AND ("+ ENTITY_ANIMAL.TABLE_NAME + "."+ ENTITY_ANIMAL.COLUMN_NAME +" like '%" + splitkeyWord[i] + "%' OR "+ ENTITY_ZOO.COLUMN_ZOO_NAME +" like '%" + splitkeyWord[i]
+			sql += " ("+ AsMainAnimal + "."+ ENTITY_ANIMAL.COLUMN_NAME +" like '%" + splitkeyWord[i] + "%' OR "+ ENTITY_ZOO.COLUMN_ZOO_NAME +" like '%" + splitkeyWord[i]
 					+ "%' OR "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" like '%" + splitkeyWord[i] + "%' OR "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" like '%" + splitkeyWord[i]
 					+ "%')";
+			if	(i < splitkeyWord.length - 1) {
+				sql += " AND ";
+			}
 		}
 
+		sql += " ORDER BY "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" DESC";
+		
 		// SQL実行結果をMap型リストへ代入
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql);
 		// view返却用のリストを生成
@@ -274,13 +304,13 @@ public class AnimalDaoImple implements AnimalDao {
 				animal.getProfileImagePath());
 
 		//削除対象？？
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = new Date();
-		try {
-			date = dateFormat.parse(dummyDate);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//		Date date = new Date();
+//		try {
+//			date = dateFormat.parse(dummyDate);
+//		} catch (ParseException e) {
+//			e.printStackTrace();
+//		}
 		
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		commonSqlUtil.updateAllCommonColumn(ENTITY_ANIMAL.TABLE_NAME,ENTITY_ANIMAL.COLUMN_ANIMAL_ID ,(int) ((LoginUser) principal).getUser_id() ,(int) insertId.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));
@@ -368,44 +398,107 @@ public class AnimalDaoImple implements AnimalDao {
 
 	@Override
 	public AnimalForTree getAnimalForTree(int id) {
-		String sql = "SELECT "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_SEX +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_IS_ALIVE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DEATHDATE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +", "
-				+ ""+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +", "+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +", "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DETAILS +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FEATURE +" "
-				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME +" ON "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME +" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_PREFECTURE.TABLE_NAME +" ON "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" = "+ ENTITY_PREFECTURE.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMotherAnimal +" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +"  = "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsFatherAnimal +" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +"  = "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "WHERE  "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE +" = '"+ dummyDate +"' AND "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = ?";
+		String sql = "SELECT "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_SEX +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "
+				+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +", "
+				+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +", "
+//				+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsMotherId +" , "
+//				+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsFatherId +", "
+				+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +" , "
+				+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +" "
+				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal 
+				
+				+" LEFT OUTER JOIN " 
+				+" (SELECT "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID 
+				+ ", " + " MAX (" +ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE + ") "
+				+"FROM " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + " "
+				+"GROUP BY " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." +ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID + ")"
+				+ ENTITY_ANIMAL_ZOO_HISTORY2
+				+ " ON " +  AsMainAnimal + "." +ENTITY_ANIMAL.COLUMN_ANIMAL_ID 
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + COLUMN_ANIMAL_ID2
+				
+				+" LEFT OUTER JOIN " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME
+				+" ON " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." +ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + COLUMN_ANIMAL_ID2
+				+" AND " +  ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + "MAX" + " "
+				
+				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME 
+				+" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID 
+				+" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_PREFECTURE.TABLE_NAME 
+				+" ON "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID 
+				+" = "+ ENTITY_PREFECTURE.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMotherAnimal 
+				+" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER 
+				+"  = "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsFatherAnimal 
+				+" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER 
+				+"  = "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
+				+"WHERE "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID + "= ?";
 		
 		Map<String, Object> result = jdbcTemplate.queryForMap(sql, id);
 		AnimalForTree animal = new AnimalForTree();
 		animal.setName((String) result.get(ENTITY_ANIMAL.COLUMN_NAME));
 		animal.setId((int) result.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));
-
 		animal.setProfileImagePath((String) result.get(ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE));
-//		mainAnimal.setAnimal_id((int) resultList.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));
 		animal.setSex((int) result.get(ENTITY_ANIMAL.COLUMN_SEX));
-//		mainAnimal.setBirthdate((Date) result.get(ENTITY_ANIMAL.COLUMN_BIRTHDATE));
-//		mainAnimal.setIs_alive((int) result.get(ENTITY_ANIMAL.COLUMN_IS_ALIVE));
-//		mainAnimal.setDeathdate((Date) result.get(ENTITY_ANIMAL.COLUMN_DEATHDATE));
-//		mainAnimal.setZooName((String) result.get(ENTITY_ZOO.COLUMN_ZOO_NAME));
-		animal.setMother_id((int)result.get( ENTITY_ANIMAL.COLUMN_MOTHER));
+		animal.setMother_id((int)result.get(ENTITY_ANIMAL.COLUMN_MOTHER));
 		animal.setFather_id((int)result.get(ENTITY_ANIMAL.COLUMN_FATHER));
-
 		return animal;
 	}
 	@Override
 	public 	List<AnimalForTree> getBrotherAnimalForTree(int animal_id, int mother_id, int father_id){
-		String sql = "SELECT "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_SEX +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_IS_ALIVE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DEATHDATE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +", "
-				+ ""+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +", "+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +", "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DETAILS +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FEATURE +" "
-				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +" ON "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME +" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_PREFECTURE.TABLE_NAME +" ON "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" = "+ ENTITY_PREFECTURE.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMotherAnimal +" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +"  = "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsFatherAnimal +" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +"  = "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "WHERE  "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE +" = '"+ dummyDate +"' AND "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +" = ? AND "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +" = ? AND NOT " + AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID + "= ? "
+		String sql = "SELECT "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_SEX +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "
+				+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +", "
+				+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +", "
+//				+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsMotherId +" , "
+//				+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsFatherId +", "
+				+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +" , "
+				+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +" "
+				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal 
+				
+				+" LEFT OUTER JOIN " 
+				+" (SELECT "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID 
+				+ ", " + " MAX (" +ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE + ") "
+				+"FROM " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + " "
+				+"GROUP BY " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." +ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID + ")"
+				+ ENTITY_ANIMAL_ZOO_HISTORY2
+				+ " ON " +  AsMainAnimal + "." +ENTITY_ANIMAL.COLUMN_ANIMAL_ID 
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + COLUMN_ANIMAL_ID2
+				
+				+" LEFT OUTER JOIN " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME
+				+" ON " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." +ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + COLUMN_ANIMAL_ID2
+				+" AND " +  ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + "MAX" + " "
+				
+				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME 
+				+" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID 
+				+" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_PREFECTURE.TABLE_NAME 
+				+" ON "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID 
+				+" = "+ ENTITY_PREFECTURE.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMotherAnimal 
+				+" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER 
+				+"  = "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsFatherAnimal 
+				+" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER 
+				+"  = "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
+				+ "WHERE  "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +" = ? AND "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +" = ? AND NOT " + AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID + "= ? "
 				+ "ORDER BY "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" ASC";
 		
 //		queryForListで実装予定
@@ -416,15 +509,9 @@ public class AnimalDaoImple implements AnimalDao {
 			AnimalForTree brother = new AnimalForTree();
 		brother.setName((String) result.get(ENTITY_ANIMAL.COLUMN_NAME));
 		brother.setId((int) result.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));
-
 		brother.setProfileImagePath((String) result.get(ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE));
-//		mainAnimal.setAnimal_id((int) resultList.get(""+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +""));
 		brother.setSex((int) result.get(ENTITY_ANIMAL.COLUMN_SEX));
-//		mainAnimal.setBirthdate((Date) result.get(ENTITY_ANIMAL.COLUMN_BIRTHDATE));
-//		mainAnimal.setIs_alive((int) result.get(ENTITY_ANIMAL.COLUMN_IS_ALIVE));
-//		mainAnimal.setDeathdate((Date) result.get(ENTITY_ANIMAL.COLUMN_DEATHDATE));
-//		mainAnimal.setZooName((String) result.get(ENTITY_ZOO.COLUMN_ZOO_NAME));
-		brother.setMother_id((int)result.get( ENTITY_ANIMAL.COLUMN_MOTHER));
+		brother.setMother_id((int)result.get(ENTITY_ANIMAL.COLUMN_MOTHER));
 		brother.setFather_id((int)result.get(ENTITY_ANIMAL.COLUMN_FATHER));
 		brotherList.add(brother);
 		}
@@ -433,31 +520,99 @@ public class AnimalDaoImple implements AnimalDao {
 	
 	@Override
 	public 	List<AnimalForTree> getChildrenAnimalForTree(int animal_id, int sex){
-		String sqlAsMother = "SELECT "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_SEX +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_IS_ALIVE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DEATHDATE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +", "
-				+ ""+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +", "+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +", "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DETAILS +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FEATURE +" "
-				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME +" ON "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME +" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_PREFECTURE.TABLE_NAME +" ON "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" = "+ ENTITY_PREFECTURE.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMotherAnimal +" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +"  = "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsFatherAnimal +" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +"  = "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "WHERE  "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE +" = '"+ dummyDate +"' AND "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +" = ? "
-        + "ORDER BY "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" ASC";
+		String sqlAsMother = "SELECT "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_SEX +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "
+				+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +", "
+				+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +", "
+//				+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsMotherId +" , "
+//				+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsFatherId +", "
+				+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +" , "
+				+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +" "
+				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal 
+				
+				+" LEFT OUTER JOIN " 
+				+" (SELECT "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID 
+				+ ", " + " MAX (" +ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE + ") "
+				+"FROM " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + " "
+				+"GROUP BY " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." +ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID + ")"
+				+ ENTITY_ANIMAL_ZOO_HISTORY2
+				+ " ON " +  AsMainAnimal + "." +ENTITY_ANIMAL.COLUMN_ANIMAL_ID 
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + COLUMN_ANIMAL_ID2
+				
+				+" LEFT OUTER JOIN " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME
+				+" ON " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." +ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + COLUMN_ANIMAL_ID2
+				+" AND " +  ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + "MAX" + " "
+				
+				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME 
+				+" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID 
+				+" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_PREFECTURE.TABLE_NAME 
+				+" ON "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID 
+				+" = "+ ENTITY_PREFECTURE.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMotherAnimal 
+				+" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER 
+				+"  = "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsFatherAnimal 
+				+" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER 
+				+"  = "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
+				+ "WHERE  "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +" = ? "
+				+ "ORDER BY "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" ASC";
 		
 
-		String sqlAsFather = "SELECT "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_SEX +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_IS_ALIVE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DEATHDATE +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +", "
-				+ ""+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +", "+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +", "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_DETAILS +", "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FEATURE +" "
-				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME +" ON "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME +" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_PREFECTURE.TABLE_NAME +" ON "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" = "+ ENTITY_PREFECTURE.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMotherAnimal +" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +"  = "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsFatherAnimal +" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +"  = "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
-				+ "WHERE  "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE +" = '"+ dummyDate +"' AND "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +" = ? "
-        + "ORDER BY "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" ASC";
+		String sqlAsFather = "SELECT "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_SEX +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +", "
+				+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +", "
+				+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_NAME +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER +", "
+//				+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsMotherId +" , "
+//				+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" as "+ AsFatherId +", "
+				+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsMotherName +" , "
+				+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_NAME +" as "+ AsFatherName +", "
+				+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE +" "
+				+ "FROM "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMainAnimal 
+				
+				+" LEFT OUTER JOIN " 
+				+" (SELECT "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID 
+				+ ", " + " MAX (" +ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE + ") "
+				+"FROM " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + " "
+				+"GROUP BY " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." +ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID + ")"
+				+ ENTITY_ANIMAL_ZOO_HISTORY2
+				+ " ON " +  AsMainAnimal + "." +ENTITY_ANIMAL.COLUMN_ANIMAL_ID 
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + COLUMN_ANIMAL_ID2
+				
+				+" LEFT OUTER JOIN " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME
+				+" ON " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." +ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + COLUMN_ANIMAL_ID2
+				+" AND " +  ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "." + ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE
+				+" = " + ENTITY_ANIMAL_ZOO_HISTORY2 + "." + "MAX" + " "
+				
+				+ "LEFT OUTER JOIN "+ ENTITY_ZOO.TABLE_NAME 
+				+" ON "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +"."+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID 
+				+" = "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_ZOO.COLUMN_ZOO_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_PREFECTURE.TABLE_NAME 
+				+" ON "+ ENTITY_ZOO.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID 
+				+" = "+ ENTITY_PREFECTURE.TABLE_NAME +"."+ ENTITY_PREFECTURE.COLUMN_PREFECTURE_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsMotherAnimal 
+				+" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_MOTHER 
+				+"  = "+ AsMotherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
+				+ "LEFT OUTER JOIN "+ ENTITY_ANIMAL.TABLE_NAME +" AS "+ AsFatherAnimal 
+				+" on "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER 
+				+"  = "+ AsFatherAnimal +"."+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" "
+				+ "WHERE  "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_FATHER +" = ? "
+				+ "ORDER BY "+ AsMainAnimal +"."+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" ASC";
 
-		
-		
 //		queryForListで実装予定
 		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
 		
@@ -475,13 +630,8 @@ public class AnimalDaoImple implements AnimalDao {
 			children.setId((int) result.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));
 
 			children.setProfileImagePath((String) result.get(ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE));
-//			mainAnimal.setAnimal_id((int) resultList.get(""+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +""));
 			children.setSex((int) result.get(ENTITY_ANIMAL.COLUMN_SEX));
-//			mainAnimal.setBirthdate((Date) result.get(ENTITY_ANIMAL.COLUMN_BIRTHDATE));
-//			mainAnimal.setIs_alive((int) result.get(ENTITY_ANIMAL.COLUMN_IS_ALIVE));
-//			mainAnimal.setDeathdate((Date) result.get(ENTITY_ANIMAL.COLUMN_DEATHDATE));
-//			mainAnimal.setZooName((String) result.get(ENTITY_ZOO.COLUMN_ZOO_NAME));
-			children.setMother_id((int)result.get( ENTITY_ANIMAL.COLUMN_MOTHER));
+			children.setMother_id((int)result.get(ENTITY_ANIMAL.COLUMN_MOTHER));
 			children.setFather_id((int)result.get(ENTITY_ANIMAL.COLUMN_FATHER));
 		childrenList.add(children);
 		}

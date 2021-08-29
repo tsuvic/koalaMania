@@ -205,7 +205,7 @@ public class AnimalServiceImpl implements AnimalService {
 		}
 		
 		AnimalForTree fatherAnimal = new AnimalForTree();
-		if (mainAnimal.getMother_id() != 0) {
+		if (mainAnimal.getFather_id() != 0) {
 			fatherAnimal = animalDao.getAnimalForTree(mainAnimal.getFather_id());
 		} else {
 			fatherAnimal.setId(9998);
