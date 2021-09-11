@@ -32,3 +32,6 @@ spring:
       app-secret: ${TWITTER_SECRET}
       callback-url: ${TWITTER_CALLBACK_URL}
       autoLoginKey: ${AUTO_LOGIN_KEY}
+      
+  messages:
+    basename: messages, ValidationMessages

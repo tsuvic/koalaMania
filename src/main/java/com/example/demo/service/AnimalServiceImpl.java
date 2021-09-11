@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.app.AnimalInsertForm;
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.AnimalForTree;
+import com.example.demo.entity.AnimalZooHistory;
 import com.example.demo.entity.RelationForTree;
 import com.example.demo.entity.Zoo;
 import com.example.demo.repository.AnimalDao;
@@ -138,21 +139,78 @@ public class AnimalServiceImpl implements AnimalService {
 		}
 		
 		//入園退園の経歴登録
-		List<Date> admissionDateList = new ArrayList<Date>();
-		for (int i = 0; i < form.getAdmissionYear().size(); i++) {
+		List<AnimalZooHistory> animalZooHistoryList = new ArrayList<AnimalZooHistory>();
+		for (int i = 0; i < form.getInsertZoo().size(); i++) {
+			AnimalZooHistory animalZooHistory = new AnimalZooHistory();
+			Zoo zoo = new Zoo();
+			zoo.setZoo_id(form.getInsertZoo().get(i));
 			Date admissionDate = getDate(form.getAdmissionYear().get(i),form.getAdmissionMonth().get(i), form.getAdmissionDay().get(i));
-			admissionDateList.add(admissionDate);
-		}
-		
-		List<Date> exitDateList = new ArrayList<Date>();
-		for (int i = 0; i < form.getExitYear().size(); i++) {
 			Date exitDate = getDate(form.getExitYear().get(i),form.getExitMonth().get(i), form.getExitDay().get(i));
-			exitDateList.add(exitDate);
+			
+			animalZooHistory.setAnimal_id(insertAnimal_id);
+			animalZooHistory.setAdmission_date(admissionDate);
+			animalZooHistory.setExit_date(exitDate);
+			animalZooHistory.setZoo(zoo);
+			animalZooHistoryList.add(animalZooHistory);
+		}		
+		animalZooHistoryDao.insertZooHistory(animalZooHistoryList);
+	}
+	
+	@Override
+	public void update(AnimalInsertForm form) {
+		Animal animal = new Animal();
+		animal.setAnimal_id(form.getAnimal_id());
+		animal.setName(form.getName());
+		animal.setSex(form.getSex());
+		Date birthDate = getDate(form.getBirthYear(), form.getBirthMonth(), form.getBirthDay());
+		if (birthDate != null) {
+			animal.setBirthdate(birthDate);
+		}
+		animal.setIs_alive(form.getIs_alive());
+		Date deathDate = getDate(form.getDeathYear(), form.getDeathMonth(), form.getDeathDay());
+		if (deathDate != null) {
+			animal.setDeathdate(deathDate);
+		}
+		Animal motherAnimal = new Animal();
+		Animal fatherAnimal = new Animal();
+		motherAnimal.setAnimal_id(form.getMother_id());
+		fatherAnimal.setAnimal_id(form.getFather_id());
+		animal.setMotherAnimal(motherAnimal);
+		animal.setFatherAnimal(fatherAnimal);
+		animal.setDetails(form.getDetails());
+		animal.setFeature(form.getFeature());
+		animal.setProfileImagePath(form.getProfileImagePath());
+		String profileImagePath =  null;
+		if( !form.getAnimalProfileImageUpload().isEmpty()) {
+			profileImagePath = form.getAnimalProfileImageUpload().getOriginalFilename()
+					.substring(form.getAnimalProfileImageUpload().getOriginalFilename().lastIndexOf("."));
+			animal.setProfileImagePath(profileImagePath);
+		}
+		animalDao.update(animal);
+
+//		プロフィール画像登録 or 更新
+	
+		if (profileImagePath  != null) {
+			insertAnimalProfileImage(form.getAnimal_id(), form.getAnimalProfileImageUpload(), profileImagePath);
 		}
 		
-		
-		animalZooHistoryDao.insertZooHistory(insertAnimal_id, form.getInsertZoo(),admissionDateList, exitDateList);
-
+		//入園退園の経歴登録
+		List<AnimalZooHistory> animalZooHistoryList = new ArrayList<AnimalZooHistory>();
+		for (int i = 0; i < form.getInsertZoo().size(); i++) {
+			AnimalZooHistory animalZooHistory = new AnimalZooHistory();
+			Zoo zoo = new Zoo();
+			zoo.setZoo_id(form.getInsertZoo().get(i));
+			Date admissionDate = getDate(form.getAdmissionYear().get(i),form.getAdmissionMonth().get(i), form.getAdmissionDay().get(i));
+			Date exitDate = getDate(form.getExitYear().get(i),form.getExitMonth().get(i), form.getExitDay().get(i));
+			
+			animalZooHistory.setAnimal_id(form.getAnimal_id());
+			animalZooHistory.setAdmission_date(admissionDate);
+			animalZooHistory.setExit_date(exitDate);
+			animalZooHistory.setZoo(zoo);
+			animalZooHistoryList.add(animalZooHistory);
+		}
+		animalZooHistoryDao.deleteAllAnimalZooHistory(form.getAnimal_id());
+		animalZooHistoryDao.insertZooHistory(animalZooHistoryList);
 	}
 
 	public Date getDate(String year, String month, String day) {
@@ -433,62 +491,6 @@ public class AnimalServiceImpl implements AnimalService {
 		return mapForTree;
 	}
 	
-	@Override
-	public void update(AnimalInsertForm form) {
-		Animal animal = new Animal();
-		animal.setAnimal_id(form.getAnimal_id());
-		animal.setName(form.getName());
-		animal.setSex(form.getSex());
-		Date birthDate = getDate(form.getBirthYear(), form.getBirthMonth(), form.getBirthDay());
-		if (birthDate != null) {
-			animal.setBirthdate(birthDate);
-		}
-		animal.setIs_alive(form.getIs_alive());
-		Date deathDate = getDate(form.getDeathYear(), form.getDeathMonth(), form.getDeathDay());
-		if (deathDate != null) {
-			animal.setDeathdate(deathDate);
-		}
-		Animal motherAnimal = new Animal();
-		Animal fatherAnimal = new Animal();
-		motherAnimal.setAnimal_id(form.getMother_id());
-		fatherAnimal.setAnimal_id(form.getFather_id());
-		animal.setMotherAnimal(motherAnimal);
-		animal.setFatherAnimal(fatherAnimal);
-		animal.setDetails(form.getDetails());
-		animal.setFeature(form.getFeature());
-		animal.setProfileImagePath(form.getProfileImagePath());
-		String profileImagePath =  null;
-		if( !form.getAnimalProfileImageUpload().isEmpty()) {
-			profileImagePath = form.getAnimalProfileImageUpload().getOriginalFilename()
-					.substring(form.getAnimalProfileImageUpload().getOriginalFilename().lastIndexOf("."));
-			animal.setProfileImagePath(profileImagePath);
-		}
-		animalDao.update(animal);
-
-//		プロフィール画像登録 or 更新
-	
-		if (profileImagePath  != null) {
-			insertAnimalProfileImage(form.getAnimal_id(), form.getAnimalProfileImageUpload(), profileImagePath);
-		}
-		
-		//入退園履歴
-		List<Date> admissionDateList = new ArrayList<Date>();
-		for (int i = 0; i < form.getAdmissionYear().size(); i++) {
-			Date admissionDate = getDate(form.getAdmissionYear().get(i),form.getAdmissionMonth().get(i), form.getAdmissionDay().get(i));
-			admissionDateList.add(admissionDate);
-		}
-		
-		List<Date> exitDateList = new ArrayList<Date>();
-		for (int i = 0; i < form.getExitYear().size(); i++) {
-			Date exitDate = getDate(form.getExitYear().get(i),form.getExitMonth().get(i), form.getExitDay().get(i));
-			exitDateList.add(exitDate);
-		}
-		
-		animalZooHistoryDao.deleteAllAnimalZooHistory(form.getAnimal_id());
-		animalZooHistoryDao.insertZooHistory(form.getAnimal_id(), form.getInsertZoo(),admissionDateList, exitDateList);
-		
-	}
-
 	@Override
 	@Transactional
 	public void delete(int animal_id) {

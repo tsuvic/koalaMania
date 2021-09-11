@@ -1,5 +1,6 @@
 package com.example.demo.app;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.validation.constraints.Max;
@@ -17,8 +18,10 @@ import lombok.Data;
 public class AnimalInsertForm {
 	
 	private int animal_id;
+	
 	@NotBlank
 	private String name;
+	
 	@Max(1)
 	private int is_alive = 1;
 	
