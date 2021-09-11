@@ -40,13 +40,13 @@ public class AnimalInsertForm {
 	private List<Integer> insertZoo;
 	
 	@NotBlank
-	private String birthYear = "2021";
+	private String birthYear = "9999";
 	@NotBlank
-	private String birthMonth = "1";
+	private String birthMonth = "0";
 	@NotBlank
-	private String birthDay = "1";
+	private String birthDay = "0";
 	@NotBlank
-	private String deathYear = "0";
+	private String deathYear = "9999";
 	@NotBlank
 	private String deathMonth = "0";
 	@NotBlank

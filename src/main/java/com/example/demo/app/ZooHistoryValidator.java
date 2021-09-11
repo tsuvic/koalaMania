@@ -35,15 +35,23 @@ public class ZooHistoryValidator implements Validator {
 //	        if (!StringUtils.hasLength(password)) { 
 //	            return;
 //	        }
-	    	
-	        if (!Objects.equals(admissionYear.get(0), birthYear)) {
-	            errors.rejectValue("admissionYear", "",
-	            "※バリデーションテスト。誕生日と最初の動物園入園日は同一年である必要があります。");
-	        }
+	
+//	        if (!Objects.equals(admissionYear.get(0), birthYear)) {
+//	            errors.rejectValue("admissionYear", "",
+//	            "※生年月日と最初の動物園の入園日は同じにする必要があります");
+//	        }
 	        
+	    	if (!admissionYear.get(0).equals(birthYear) 
+	    			|| !admissionMonth.get(0).equals(birthMonth)
+	    				|| !admissionDay.get(0).equals(birthDay)) {
+	    		errors.rejectValue("admissionYear", "",
+	    		"※生年月日と最初の動物園の入園日は同じにする必要があります");
+	    	}
+	    	
 	        for (int i = 0; i < insertZoo.size(); i++) {
 		        if (insertZoo.get(i) == -1) {
-		            errors.rejectValue("insertZoo", "", "※バリデーションテスト。動物園は入力必須");
+		            errors.rejectValue("insertZoo", "", 
+		            "※動物園の入力は必須です");
 		            break;
 	        }
 		}
