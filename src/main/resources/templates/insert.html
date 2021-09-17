@@ -21,13 +21,74 @@
 <link href="/css/starter-template.css" rel="stylesheet"></link>
 <title th:text="${title}">Insert title here</title>
 <script type="text/javascript">
+
+	function birthYearChange($this) {
+		$("#zooHistoryDiv0").find('#admissionForm0 select[name="admissionYear"]').val($this.value);
+	}
+	
+	function birthMonthChange($this) {
+		$("#zooHistoryDiv0").find('#admissionForm0 select[name="admissionMonth"]').val($this.value);
+	}
+	
+	function birthDayChange($this) {
+		$("#zooHistoryDiv0").find('#admissionForm0 select[name="admissionDay"]').val($this.value);
+	}
+	
+	function admissionYearComplete($this){
+		let indexForAdmissionYear = $this.parentNode.id.slice(-1);
+		indexForAdmissionYear = Number(indexForAdmissionYear) + 1;
+		$("#zooHistory").find('#admissionForm' + indexForAdmissionYear).find('select[name="admissionYear"]').val($this.value);
+	}
+	
+	function admissionMonthComplete($this){
+		let indexForAdmissionMonth = $this.parentNode.id.slice(-1);
+		indexForAdmissionMonth = Number(indexForAdmissionMonth) + 1;
+		$("#zooHistory").find('#admissionForm' + indexForAdmissionMonth).find('select[name="admissionMonth"]').val($this.value);
+	}
+	
+	function admissionDayComplete($this){
+		let indexForAdmissionDay = $this.parentNode.id.slice(-1);
+		indexForAdmissionDay = Number(indexForAdmissionDay) + 1;
+		$("#zooHistory").find('#admissionForm' + indexForAdmissionDay).find('select[name="admissionDay"]').val($this.value);
+	}
+	
+	function exitYearComplete($this){
+		let indexForAdmissionYear = $this.parentNode.id.slice(-1);
+		indexForAdmissionYear = Number(indexForAdmissionYear) - 1;
+		$("#zooHistory").find('#exitForm' + indexForAdmissionYear).find('select[name="exitYear"]').val($this.value);
+		
+		if (indexForAdmissionYear = -1){
+			$('#birthYear').val($this.value);
+		}
+	}
+	
+	function exitMonthComplete($this){
+		let indexForAdmissionMonth = $this.parentNode.id.slice(-1);
+		indexForAdmissionMonth = Number(indexForAdmissionMonth) - 1;
+		$("#zooHistory").find('#exitForm' + indexForAdmissionMonth).find('select[name="exitMonth"]').val($this.value);
+		
+		if (indexForAdmissionMonth = -1){
+			$('#birthMonth').val($this.value);
+		}
+	}
+	
+	function exitDayComplete($this){
+		let indexForAdmissionDay = $this.parentNode.id.slice(-1);
+		indexForAdmissionDay = Number(indexForAdmissionDay) - 1;
+		$("#zooHistory").find('#exitForm' + indexForAdmissionDay).find('select[name="exitDay"]').val($this.value);
+		
+		if (indexForAdmissionDay = -1){
+			$('#birthDay').val($this.value);
+		}
+	}
+
 	function isAliveFlag($this) {
 		const isAliveFlag = $this.value;
 		if (isAliveFlag == 1) {
 			document.getElementById("deathYear").disabled = true;
 			document.getElementById("deathMonth").disabled = true;
 			document.getElementById("deathDay").disabled = true;
-			document.getElementById("deathYear").value = 0;
+			document.getElementById("deathYear").value = 9999;
 			document.getElementById("deathMonth").value = 0;
 			document.getElementById("deathDay").value = 0;
 
@@ -35,9 +96,9 @@
 			document.getElementById("deathYear").disabled = false;
 			document.getElementById("deathMonth").disabled = false;
 			document.getElementById("deathDay").disabled = false;
-			document.getElementById("deathYear").value = "2000";
-			document.getElementById("deathMonth").value = "1";
-			document.getElementById("deathDay").value = "1";
+			document.getElementById("deathYear").value = 9999;
+			document.getElementById("deathMonth").value = 0;
+			document.getElementById("deathDay").value = 0;
 		}
 	}
 
@@ -73,7 +134,7 @@
 
 		let deathZeroCount = 0;
 		for (let i = 0; i < death.length; i++) {
-			if (death[i] == 0) {
+			if (death[i] == 0 ||death[i] == 9999) {
 				deathZeroCount++;
 			}
 		}
@@ -139,13 +200,8 @@
 	}
 
 	$(function() {
-		$(document).ready(function() {
-			const contents = $("#zooHistory > #zooHistoryDiv").length;
-			if (contents <= 1) {
-				$('.cancelHistoryButton').hide();
-			}
-		});
-
+		$(document).ready();
+		
 		$('.addInputFileButton').click(function(e) {
 			const input = $("#animalImage").clone(true);
 			console.log(input);
@@ -164,37 +220,45 @@
 				$(this).remove();
 			}
 		});
+		
 
 		$('.addHistoryButton').click(function(e) {
-			const input = $("#zooHistoryDiv").clone(true);
+			const input = $("#zooHistoryDiv0").clone(true);
+			
+			input.attr('id','zooHistoryDiv' + $(".zooHistory > div ").length);
+			
+			input.find('#zooForm0').attr('id','zooForm' + $(".zooHistory > div ").length);
+			input.find('#admissionForm0').attr('id','admissionForm' + $(".zooHistory > div ").length);
+			input.find('#exitForm0').attr('id','exitForm' + $(".zooHistory > div ").length);
+			
 			input.find('select[name="insertZoo"]').val(-1);
+			input.find('select[name="insertZoo"]').attr('id','insertZoo' + $(".zooHistory > div ").length);
+			
+			input.find('select[name="admissionYear"]').val(9999);
 
-			const other = 0;
+			input.find('select[name="admissionMonth"]').val(0);
 
-			input.find('select[name="admissionYear"]').val(other);
+			input.find('select[name="admissionDay"]').val(0);
 
-			input.find('select[name="admissionMonth"]').val(other);
+			input.find('select[name="exitYear"]').val(9999);
 
-			input.find('select[name="admissionDay"]').val(other);
+			input.find('select[name="exitMonth"]').val(0);
 
-			input.find('select[name="exitYear"]').val(other);
-
-			input.find('select[name="exitMonth"]').val(other);
-
-			input.find('select[name="exitDay"]').val(other);
+			input.find('select[name="exitDay"]').val(0);
 
 			input.appendTo("#zooHistory");
 
 			$('.cancelHistoryButton').show();
+			
 		});
 
 		$('.cancelHistoryButton').click(function(e) {
-			$(this).parent().remove();
-			const contents = $("#zooHistory > #zooHistoryDiv").length;
+			$('.zooHistory .zooHistoryDiv:last-child').remove();
+			const contents = $(".zooHistory > .zooHistoryDiv").length;
 			if (contents <= 1) {
 				$('.cancelHistoryButton').hide();
 			}
-		});
+			});
 
 		$('.deleteImageButton').click(function(e) {
 			const deleteImageFalg = confirm('この写真を削除してもよろしいですか？');
@@ -255,15 +319,15 @@
 				</select>
 			</div>
 			<div class="form-group">
-				生年月日 <select th:field="*{birthYear}">
-					<option value="0">--</option>
-					<option th:each="i : ${#numbers.sequence(1990, 2021)}"
+				生年月日 <select th:field="*{birthYear}" onchange="birthYearChange(this);">
+					<option value="9999">--</option>
+					<option th:each="i : ${#numbers.sequence(2021, 1980)}"
 						th:value="${i}" th:text="${i}"></option>
-				</select>年 <select th:field="*{birthMonth}">
+				</select>年 <select th:field="*{birthMonth}" onchange="birthMonthChange(this);">
 					<option value="0">--</option>
 					<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}"
 						th:text="${i}"></option>
-				</select>月 <select th:field="*{birthDay}">
+				</select>月 <select th:field="*{birthDay}" onchange="birthDayChange(this);">
 					<option value="0">--</option>
 					<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}"
 						th:text="${i}"></option>
@@ -277,8 +341,8 @@
 			</div>
 			<div class="form-group">
 				死亡日 <select th:field="*{deathYear}" th:disabled="*{is_alive} == 1">
-					<option value="0">--</option>
-					<option th:each="i : ${#numbers.sequence(1990, 2021)}"
+					<option value="9999">--</option>
+					<option th:each="i : ${#numbers.sequence(2021, 1980)}"
 						th:value="${i}" th:text="${i}" th:selected="${i}==2000"></option>
 				</select>年 <select th:field="*{deathMonth}" th:disabled="*{is_alive} == 1">
 					<option value="0">--</option>
@@ -292,7 +356,6 @@
 			</div>
 			<div class="form-group">
 				母親 <select th:field="*{mother_id}" th:errorclass="is-invalid">
-					<!-- id とnameはform用 -->
 					<option th:each="mother : ${motherList}"
 						th:value="${mother.animal_id}" th:text="${mother.name}"></option>
 				</select> <br> 父親 <select th:field="*{father_id}"
@@ -301,87 +364,109 @@
 						th:value="${father.animal_id}" th:text="${father.name}"></option>
 				</select>
 			</div>
-			<br>
-			<div th:id="zooHistory">
-				<div th:id="zooHistoryDiv" th:each="animalZoo : *{animalZooHistory}"
-					th:object="${animalZoo}">
-					<div class="form-group" id="zooForm">
-						動物園 <select th:name="insertZoo">
-							<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}"
-								th:text="${zoo.zoo_name}"
-								th:selected="${animalInsertForm.animalZooHistory[__${animalZooStat.index}__].zoo.zoo_id} == ${zoo.zoo_id}"></option>
-							<!--fieldは送信先のフォームクラスの変数、 each は繰り返し、valueはフォームで送信する実際の値、textはHTMLに表示される名前 -->
+			<div class="zooHistory" th:id="zooHistory">
+				<div class="zooHistoryDiv" th:id="zooHistoryDiv__${status.index}__" th:each="repetition, status: *{insertZoo}">
+							<br>
+					<div class="form-group" th:id="zooForm__${status.index}__">
+						動物園
+						<select class="insertZoo" th:name="insertZoo">
+							<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}" th:text="${zoo.zoo_name}"
+								th:selected="${animalInsertForm.insertZoo[status.index]} == ${zoo.zoo_id}"></option>
 						</select>
-						<!-- <div class="invalid-feedback" th:errors="*{zooList}"></div> -->
-					</div>
+					</div>		
+						
+						<div class="text-danger" th:errorclass="is-invalid"
+						th:if="${#fields.hasErrors('insertZoo') && animalInsertForm.insertZoo[status.index] == -1}" 
+						th:errors="${animalInsertForm.insertZoo}" ></div>
 
-					<div class="form-group" th:id="admissionForm">
-						入園日 <select th:name="admissionYear">
+					<div class="form-group" th:id="admissionForm__${status.index}__">
+						入園日 
+						<select th:if="${animalInsertForm.admissionYear[status.index]} == '9999'" th:name="admissionYear" onchange="exitYearComplete(this);">
+							<option value="9999">--</option>
+							<option th:each="i : ${#numbers.sequence(2021, 1980)}" th:value="${i}" th:text="${i}" ></option>
+						</select>
+						
+						<select th:unless="${animalInsertForm.admissionYear[status.index]} == '9999'" th:name="admissionYear" onchange="exitYearComplete(this);">
+							<option value="9999">--</option>
+							<option th:each="i : ${#numbers.sequence(2021, 1980)}" th:value="${i}" th:text="${i}" 
+							th:selected="${animalInsertForm.admissionYear[status.index]} == ${i}"></option>
+						</select>						
+						 年
+						 
+						 <select th:if="${animalInsertForm.admissionYear[status.index]} == '9999'" th:name="admissionMonth" onchange="exitMonthComplete(this);">
 							<option value="0">--</option>
-							<option th:each="i : ${#numbers.sequence(1990, 2021)}"
-								th:value="${i}" th:text="${i}"
-								th:selected="*{#dates.year(admission_date)} == ${i}"></option>
-						</select>年 <select th:if="*{#dates.year(admission_date)} == '9999'"
-							th:name="admissionMonth">
+							<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}" th:text="${i}"></option>
+						</select>
+						
+						<select th:unless="${animalInsertForm.admissionYear[status.index]} == '9999'" th:name="admissionMonth" onchange="exitMonthComplete(this);">
 							<option value="0">--</option>
-							<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}"
-								th:text="${i}"></option>
-						</select> <select th:unless="*{#dates.year(admission_date)} == '9999'"
-							th:name="admissionMonth">
+							<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}" th:text="${i}"
+							 th:selected="${animalInsertForm.admissionMonth[status.index]} == ${i}"></option>
+						</select>
+						月 
+						
+						<select th:if="${animalInsertForm.admissionYear[status.index]} == '9999'" th:name="admissionDay" onchange="exitDayComplete(this);">
 							<option value="0">--</option>
-							<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}"
-								th:text="${i}"
-								th:selected="*{#dates.month(admission_date)} == ${i}"></option>
-						</select>月 <select th:if="*{#dates.year(admission_date)} == '9999'"
-							th:name="admissionDay">
+							<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}" th:text="${i}"></option>
+						</select>
+						
+						<select th:unless="${animalInsertForm.admissionYear[status.index]} == '9999'" th:name="admissionDay" onchange="exitDayComplete(this);">
 							<option value="0">--</option>
-							<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}"
-								th:text="${i}"></option>
-						</select> <select th:unless="*{#dates.year(admission_date)} == '9999'"
-							th:name="admissionDay">
-							<option value="0">--</option>
-							<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}"
-								th:text="${i}"
-								th:selected="*{#dates.day(admission_date)} == ${i}"></option>
-						</select>日
+							<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}" th:text="${i}"
+								th:selected="${animalInsertForm.admissionDay[status.index]} == ${i}"></option>
+						</select>
+						日
 					</div>
+					
+					<div class="text-danger" 
+					th:errorclass="is-invalid"
+					th:if="${#fields.hasErrors('admissionYear') && status.index == 0}" 
+					th:errors="${animalInsertForm.admissionYear}" ></div>
 
-					<div class="form-group" th:id="exitForm">
-						退園日 <select th:name="exitYear">
+					<div class="form-group" th:id="exitForm__${status.index}__">
+						退園日 
+						<select th:if="${animalInsertForm.exitYear[status.index]} == '9999'" th:name="exitYear" onchange="admissionYearComplete(this);">
+							<option value="9999">--</option>
+							<option th:each="i : ${#numbers.sequence (2021, 1980)}" th:value="${i}" th:text="${i}" ></option>
+						</select>
+						
+						<select th:unless="${animalInsertForm.exitYear[status.index]} == '9999'" th:name="exitYear" onchange="admissionYearComplete(this);">
+							<option value="9999">--</option>
+							<option th:each="i : ${#numbers.sequence(2021, 1980)}" th:value="${i}" th:text="${i}" 
+							th:selected="${animalInsertForm.exitYear[status.index]} == ${i}"></option>
+						</select>
+						
+						 年
+						 <select th:if="${animalInsertForm.exitYear[status.index]} == '9999'" th:name="exitMonth" onchange="admissionMonthComplete(this);">
 							<option value="0">--</option>
-							<option th:each="i : ${#numbers.sequence(1990, 2021)}"
-								th:value="${i}" th:text="${i}"
-								th:selected="*{#dates.year(exit_date)} == ${i}"></option>
-						</select>年 <select th:name="exitMonth"
-							th:if="*{#dates.year(exit_date)} == '9999'">
+							<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}" th:text="${i}"></option>
+						</select>
+						
+						<select th:unless="${animalInsertForm.exitYear[status.index]} == '9999'" th:name="exitMonth" onchange="admissionMonthComplete(this);">
 							<option value="0">--</option>
-							<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}"
-								th:text="${i}"></option>
-						</select> <select th:name="exitMonth"
-							th:unless="*{#dates.year(exit_date)} == '9999'">
+							<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}" th:text="${i}"
+							 th:selected="${animalInsertForm.exitMonth[status.index]} == ${i}"></option>
+						</select>
+						
+						月 
+						<select th:if="${animalInsertForm.exitYear[status.index]} == '9999'" th:name="exitDay" onchange="admissionDayComplete(this);">
 							<option value="0">--</option>
-							<option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}"
-								th:text="${i}" th:selected="*{#dates.month(exit_date)} == ${i}"></option>
-						</select>月 <select th:name="exitDay"
-							th:if="*{#dates.year(exit_date)} == '9999'">
+							<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}" th:text="${i}"></option>
+						</select>
+						
+						<select th:unless="${animalInsertForm.exitYear[status.index]} == '9999'" th:name="exitDay" onchange="admissionDayComplete(this);">
 							<option value="0">--</option>
-							<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}"
-								th:text="${i}"></option>
-						</select> <select th:name="exitDay"
-							th:unless="*{#dates.year(exit_date)} == '9999'">
-							<option value="0">--</option>
-							<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}"
-								th:text="${i}" th:selected="*{#dates.day(exit_date)} == ${i}"></option>
-						</select>日
+							<option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}" th:text="${i}"
+								th:selected="${animalInsertForm.exitDay[status.index]} == ${i}"></option>
+						</select>
+						日
 					</div>
+					
 
-					<button class="btn btn-outline-warning btn-sm cancelHistoryButton"
-						type="button">動物園削除</button>
 				</div>
 			</div>
-			<button class="btn btn-outline-success btn-sm addHistoryButton"
-				type="button">動物園追加</button>
-
+			<button class="btn btn-outline-success btn-sm addHistoryButton" type="button">動物園追加</button>
+			<button class="btn btn-outline-warning btn-sm cancelHistoryButton" type="button">動物園削除</button>
 			<br>
 			<br>
 			<div class="form-group">

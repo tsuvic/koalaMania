@@ -262,14 +262,15 @@
 				<th class="cell_title">退園日</th>
 				<th class="cell_title">動物園</th>
 			</tr>
-			<tr th:each="zooHistory : *{animalZooHistoryList}">
-				<td th:text="${zooHistory.admission_date}"></td>
-				<td th:text="${zooHistory.exit_date}"></td>
-				<td th:if="zooHistory.zoo.zoo_id == 0"
-					th:text="${zooHistory.zoo.zoo_name}"></td>
-				<td th:unless="zooHistory.zoo.zoo_id == 0"><a
-					th:href="@{/zoo/detail/{zoo_id}(zoo_id=${zooHistory.zoo.zoo_id})}"
-					th:text="${zooHistory.zoo.zoo_name}"> </a></td>
+			<tr th:each="zooHistory, status : *{animalZooHistoryList}">
+				<td th:if="${#dates.format(detail.animalZooHistoryList[status.index].admission_date , 'yyyy-MM-dd')} == '9999-01-01'" th:text="--"></td>
+				<td th:unless="${#dates.format(detail.animalZooHistoryList[status.index].admission_date , 'yyyy-MM-dd')} == '9999-01-01'" th:text="${zooHistory.admission_date}"></td>
+					
+				<td th:if="${#dates.format(detail.animalZooHistoryList[status.index].exit_date , 'yyyy-MM-dd')} == '9999-01-01'" th:text="--"></td>
+				<td th:unless="${#dates.format(detail.animalZooHistoryList[status.index].exit_date , 'yyyy-MM-dd')} == '9999-01-01'" th:text="${detail.animalZooHistoryList[status.index].exit_date}"></td>
+					
+				<td th:if="zooHistory.zoo.zoo_id == 0" th:text="${zooHistory.zoo.zoo_name}"></td>
+				<td th:unless="zooHistory.zoo.zoo_id == 0"> <a th:href="@{/zoo/detail/{zoo_id}(zoo_id=${zooHistory.zoo.zoo_id})}" th:text="${zooHistory.zoo.zoo_name}"> </a></td>
 			</tr>
 		</table>
 
