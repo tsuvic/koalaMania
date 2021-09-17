@@ -73,23 +73,26 @@ public class AnimalZooHistoryDaoImpl implements AnimalZooHistoryDao {
 			animalZooHistoryList.add(animalZooHistory);
 		}
 		animal.setAnimalZooHistoryList(animalZooHistoryList);
-		
 		return animal;
-		
 	}
 	
 	@Override
-	public void insertZooHistory(int animal_id, List<Integer> zooList, List<Date> admissionDateList, List<Date> exitDateList) {
+	public void insertZooHistory(List<AnimalZooHistory> animalZooHistoryList) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		for (int i = 0; i < zooList.size(); i++) {
+		for (int i = 0; i < animalZooHistoryList.size(); i++) {
 			Map<String, Object> insertedAnimalZooHistory = jdbcTemplate.queryForMap(
 					"INSERT INTO " + ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME + "(" 
 					+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ID + ", "
 					+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID + ", "
 					+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ADMISSION_DATE + ", "
-					+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE + ") VALUES(?, ?, ?, ?) RETURNING " 
+					+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_EXIT_DATE + ") "
+					+ "VALUES( ?, ?, ?, ?) RETURNING " 
 					+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID, 
-					animal_id, zooList.get(i), admissionDateList.get(i), exitDateList.get(i));
+					animalZooHistoryList.get(i).getAnimal_id(),
+					animalZooHistoryList.get(i).getZoo().getZoo_id(),
+					animalZooHistoryList.get(i).getAdmission_date(),
+					animalZooHistoryList.get(i).getExit_date()
+					);
 			commonSqlUtil.updateAllCommonColumn(ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME, ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID , (int) ((LoginUser) principal).getUser_id(),(int) insertedAnimalZooHistory.get(ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ANIMAL_ZOO_HISTORY_ID));
 
 		}

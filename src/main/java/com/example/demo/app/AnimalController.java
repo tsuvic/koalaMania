@@ -1,6 +1,5 @@
 package com.example.demo.app;
 
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,7 +15,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +35,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 @RequestMapping("/")
 public class AnimalController {
+	@Autowired
+	ZooHistoryValidator zooHistoryValidator;
 
+    @InitBinder("animalInsertForm")
+    public void initBinder(WebDataBinder binder) {
+        binder.addValidators(zooHistoryValidator);
+    }
+	
 	//下記のリクエストで使用するために、AnimalService型のフィールド用意 & @AutowiredでDIを実施する。	
 	private final AnimalService animalService;
 	
@@ -90,8 +98,8 @@ public class AnimalController {
 	 */
 	final static Map<Integer, String> SEX_ITEMS = new LinkedHashMap<Integer, String>() {
 		{
-			put(2, "女性");
-			put(1, "男性");
+			put(2, "メス");
+			put(1, "オス");
 			put(0, "不明");
 		}
 	};
@@ -105,50 +113,86 @@ public class AnimalController {
 			put(0, "死亡");
 		}
 	};
-
-	@GetMapping("/insert")
-	public String getInsert(Model model, @ModelAttribute AnimalInsertForm form, boolean updateFlag) {
-		// 新しいコアラ登録画面からか、編集画面のバリデーションでエラーが出て戻ってきたか判定
-		if (updateFlag) {
-			model.addAttribute("title", "コアラ編集画面");
-			model.addAttribute("cloudinaryImageUrl", cloudinaryImageUrl);
-		} else {
-			model.addAttribute("title", "コアラの登録");
-			if(form.getAnimalZooHistory() == null) {
-				Date dummyDate =  animalService.getDate("9999", "01", "01");
-				AnimalZooHistory dummyHistory = new AnimalZooHistory();
-				Zoo zoo = new Zoo();
-				zoo.setZoo_id(0);
-				dummyHistory.setZoo(zoo);
-				dummyHistory.setAdmission_date(dummyDate);
-				dummyHistory.setExit_date(dummyDate);
-				form.setAnimalZooHistory(Arrays.asList(dummyHistory));		}
-		}
+	
+	@GetMapping("/insert") 
+	public String getInsert(Model model, @ModelAttribute AnimalInsertForm form) {
+		model.addAttribute("title", "コアラ情報登録");
 		model.addAttribute("sexItems", SEX_ITEMS);
 		model.addAttribute("isAliveItems", IS_ALIVE_ITEMS);
 		List<Zoo> zooList = animalService.getZooList();
 		model.addAttribute("zooList", zooList);
-
-		List<Animal> motherList = animalService.getMotherList(form.getAnimal_id(), form.getBirthYear(),
-				form.getBirthMonth(), form.getBirthDay());
+		List<Animal> motherList = animalService.getMotherList(form.getAnimal_id(), form.getBirthYear(), form.getBirthMonth(), form.getBirthDay());
 		model.addAttribute("motherList", motherList);
-		List<Animal> fatherList = animalService.getFatherList(form.getAnimal_id(), form.getBirthYear(),
-				form.getBirthMonth(), form.getBirthDay());
+		List<Animal> fatherList = animalService.getFatherList(form.getAnimal_id(), form.getBirthYear(), form.getBirthMonth(), form.getBirthDay());
 		model.addAttribute("fatherList", fatherList);
+		
+		if (form.getInsertZoo() == null ) {
+			List<Integer> insertZoo = new ArrayList<Integer>();
+			insertZoo.add(-1);
+			form.setInsertZoo(insertZoo);
+		}
+		
+		if(form.getAdmissionYear() == null) {
+			List<String> admissionYear = new ArrayList<String>();
+			admissionYear.add("9999");
+			form.setAdmissionYear(admissionYear);
+		}
+
+		if(form.getAdmissionMonth() == null) {
+			List<String> admissionMonth = new ArrayList<String>();
+			admissionMonth.add("0");
+			form.setAdmissionMonth(admissionMonth);
+		}
+		
+		if(form.getAdmissionDay() == null) {
+			List<String> admissionDay = new ArrayList<String>();
+			admissionDay.add("0");
+			form.setAdmissionDay(admissionDay);
+		}
+		
+		if(form.getExitYear() == null) {
+			List<String> exitYear = new ArrayList<String>();
+			exitYear.add("9999");
+			form.setExitYear(exitYear);
+		}
+
+		if(form.getExitMonth() == null) {
+			List<String> exitMonth = new ArrayList<String>();
+			exitMonth.add("0");
+			form.setExitMonth(exitMonth);
+		}
+		
+		if(form.getExitDay() == null) {
+			List<String> exitDay = new ArrayList<String>();
+			exitDay.add("0");
+			form.setExitDay(exitDay);
+		}
+		
 		if (form.getProfileImagePath() == null) {
 			form.setProfileImagePath("/images/defaultAnimal.png");
 		}
-
+		
 		return "insert";
 	}
 
 	@PostMapping("/insert")
-	public String insertAnimal(Model model, @Validated AnimalInsertForm form, BindingResult bindingResult) {	
+	public String insertAnimal(Model model, @Validated AnimalInsertForm form, BindingResult bindingResult) {
+		if(bindingResult.hasErrors()) {
+			if (form.getAnimal_id() == 0) {
+				getInsert(model, form);
+			} else {
+				editAnimal(form.getAnimal_id(), model, form);
+			}
+			System.out.println(bindingResult);
+				return "insert";
+		}
+		
 		if (form.getAnimal_id() == 0) {
 			animalService.insert(form);
 		} else {
 			animalService.update(form);
 		}
+		
 		return "redirect:/search";
 	}
 
@@ -170,9 +214,8 @@ public class AnimalController {
 	}
 
 	@GetMapping("/edit/{id}")
-	public String editAnimal(@PathVariable int id, Model model, @ModelAttribute AnimalInsertForm form)
-			throws ParseException {
-		model.addAttribute("title", "コアラ編集画面");
+	public String editAnimal(@PathVariable int id, Model model, @ModelAttribute AnimalInsertForm form){
+		model.addAttribute("title", "コアラ情報編集");
 		model.addAttribute("sexItems", SEX_ITEMS);
 		model.addAttribute("isAliveItems", IS_ALIVE_ITEMS);
 		model.addAttribute("cloudinaryImageUrl", cloudinaryImageUrl);
@@ -195,20 +238,56 @@ public class AnimalController {
 		deathDate[2] = zeroCut(deathDate[2], deathDate[0]);
 		form.setDeathMonth(deathDate[1]);
 		form.setDeathDay(deathDate[2]);
-//		form.setZoo(animal.getZoo());
 		form.setDetails(animal.getDetails());
 		form.setFeature(animal.getFeature());
 		List<Animal> motherList = animalService.getMotherList(form.getAnimal_id(), form.getBirthYear(),
-				form.getBirthMonth(), form.getBirthDay());
+		form.getBirthMonth(), form.getBirthDay());
 		model.addAttribute("motherList", motherList);
 		List<Animal> fatherList = animalService.getFatherList(form.getAnimal_id(), form.getBirthYear(),
-				form.getBirthMonth(), form.getBirthDay());
+		form.getBirthMonth(), form.getBirthDay());
 		model.addAttribute("fatherList", fatherList);
 		form.setMother_id(animal.getMotherAnimal().getAnimal_id());
 		form.setFather_id(animal.getFatherAnimal().getAnimal_id());
 		setDefaultAnimalProfileImage(animal);
 		form.setProfileImagePath(animal.getProfileImagePath());
-		form.setAnimalZooHistory(animal.getAnimalZooHistoryList());
+		
+//		既存のコアラ情報修正の画面表示で、動物園履歴が取得できない。
+//		なぜならformにanimalZooHistroyを詰めることになっているから。
+//		formに年月日の配列を詰めるように修正する。メソッドの切り出し等のリファクタリングは後回し。
+//		controllerが肥大化してる。entityからformにセットするのはcontrollerの責務。serviceの責務にすべき箇所か。
+//		animalエンティティと併せて、zooHistoryエンティティのリストをserviceからcontrollerに渡す等。
+		 List<String> admissionYear = new ArrayList<String>();
+		 List<String> admissionMonth= new ArrayList<String>();
+		 List<String> admissionDay= new ArrayList<String>();
+		 List<String> exitYear= new ArrayList<String>();
+		 List<String> exitMonth= new ArrayList<String>();
+		 List<String> exitDay= new ArrayList<String>();
+		 List<Integer> insertZoo= new ArrayList<Integer>(); 
+		 List<AnimalZooHistory> animalZooHistoryList = animal.getAnimalZooHistoryList();
+		
+		SimpleDateFormat getYearFormat = new SimpleDateFormat("yyyy");
+		SimpleDateFormat getMonthFormat = new SimpleDateFormat("MM");
+		SimpleDateFormat getDateFormat = new SimpleDateFormat("dd");
+		
+		for (AnimalZooHistory animalZooHistory : animalZooHistoryList) {
+			admissionYear.add(getYearFormat.format(animalZooHistory.getAdmission_date()).toString());
+			admissionMonth.add(getMonthFormat.format(animalZooHistory.getAdmission_date()).toString());
+			admissionDay.add(getDateFormat.format(animalZooHistory.getAdmission_date()).toString());
+			exitYear.add(getYearFormat.format(animalZooHistory.getExit_date()).toString());
+			exitMonth.add(getMonthFormat.format(animalZooHistory.getExit_date()).toString());
+			exitDay.add(getDateFormat.format(animalZooHistory.getExit_date()).toString());
+			insertZoo.add(animalZooHistory.getZoo().getZoo_id());
+		}
+		
+		form.setAnimalZooHistory(animal.getAnimalZooHistoryList()); //詳細情報表示画面用にanimalのanimalzooHistoryListは残す
+		form.setAdmissionYear(admissionYear);
+		form.setAdmissionMonth(admissionMonth);
+		form.setAdmissionDay(admissionDay);
+		form.setExitYear(exitYear);
+		form.setExitMonth(exitMonth);
+		form.setExitDay(exitDay);
+		form.setInsertZoo(insertZoo);
+		
 		return "insert";
 	}
 

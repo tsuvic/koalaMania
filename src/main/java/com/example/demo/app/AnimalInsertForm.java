@@ -1,5 +1,6 @@
 package com.example.demo.app;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.validation.constraints.Max;
@@ -17,8 +18,10 @@ import lombok.Data;
 public class AnimalInsertForm {
 	
 	private int animal_id;
+	
 	@NotBlank
 	private String name;
+	
 	@Max(1)
 	private int is_alive = 1;
 	
@@ -37,13 +40,13 @@ public class AnimalInsertForm {
 	private List<Integer> insertZoo;
 	
 	@NotBlank
-	private String birthYear = "2021";
+	private String birthYear = "9999";
 	@NotBlank
-	private String birthMonth = "1";
+	private String birthMonth = "0";
 	@NotBlank
-	private String birthDay = "1";
+	private String birthDay = "0";
 	@NotBlank
-	private String deathYear = "0";
+	private String deathYear = "9999";
 	@NotBlank
 	private String deathMonth = "0";
 	@NotBlank

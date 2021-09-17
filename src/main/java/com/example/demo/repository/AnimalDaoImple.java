@@ -134,7 +134,7 @@ public class AnimalDaoImple implements AnimalDao {
 			zoo.setZoo_id((int) result.get(ENTITY_ZOO.COLUMN_ZOO_ID));
 			zoo.setZoo_name((String) result.get(ENTITY_ZOO.COLUMN_ZOO_NAME));
 			animalZooHistory.setZoo(zoo);
-			List<AnimalZooHistory> animalZooHistoryList = Arrays.asList(animalZooHistory);
+			List<AnimalZooHistory> animalZooHistoryList = Arrays.asList(animalZooHistory); //現在所属する動物園のみ追加されたリストをanimalにセットする
 			animal.setAnimalZooHistoryList(animalZooHistoryList);
 			list.add(animal);
 		}
@@ -302,15 +302,6 @@ public class AnimalDaoImple implements AnimalDao {
 				animal.getName(), animal.getSex(), animal.getBirthdate(), animal.getIs_alive(), animal.getDeathdate(),
 				animal.getMotherAnimal().getAnimal_id(), animal.getFatherAnimal().getAnimal_id(), animal.getDetails(), animal.getFeature(),
 				animal.getProfileImagePath());
-
-		//削除対象？？
-//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//		Date date = new Date();
-//		try {
-//			date = dateFormat.parse(dummyDate);
-//		} catch (ParseException e) {
-//			e.printStackTrace();
-//		}
 		
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		commonSqlUtil.updateAllCommonColumn(ENTITY_ANIMAL.TABLE_NAME,ENTITY_ANIMAL.COLUMN_ANIMAL_ID ,(int) ((LoginUser) principal).getUser_id() ,(int) insertId.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));

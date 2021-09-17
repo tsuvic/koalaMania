@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.example.demo.entity.Animal;
+import com.example.demo.entity.AnimalZooHistory;
 
 public interface AnimalZooHistoryDao {
 	
@@ -11,5 +12,5 @@ public interface AnimalZooHistoryDao {
 	
 	Animal getAnimalZooHistory(int id, Animal animal);
 	
-	void insertZooHistory(int animal_id, List<Integer> zooList, List<Date> admissionDateList, List<Date> exitDateList);
+	void insertZooHistory(List<AnimalZooHistory> animalZooHistoryList);
 }
