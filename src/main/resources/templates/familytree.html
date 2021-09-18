@@ -1,5 +1,4 @@
-
-<!doctype html>
+	<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
@@ -28,13 +27,15 @@
 <script type="text/javascript" th:inline="javascript">
 
 
-	/*<![CDATA[*/
-		var requestParam = /*[[${id}]]*/ null;
-		/*]]>*/	
-	
-	$.getJSON("/familytreeAnimal", {id : requestParam}, function(json, textStatus, jqXHR){
-		
-		//オブジェクト全体の位置
+	/*<![CDATA[*/ var requestParam = /*[[${id}]]*/ null; /*]]>*/	
+	$.ajax({
+		type: "GET",
+		url : "/familytreeAnimal",
+		data : {id : requestParam} ,
+		dataType: "json",
+		timeout: 5000,
+	}).done((json, textStatus, jqXHR) => {
+			//オブジェクト全体の位置
 			//200 400 800 400 デフォルト値からオブジェクトが生成されるたびに引かれる数値
 			var margin = {top : 0, right : 20,bottom : 300, left : 20}, width = 1400, height = 1100;	
 		
@@ -263,7 +264,9 @@ test.append("image")
 				.interpolate("step-after");
 				return fun(linedata);
 			}
-		});
+		}).fail((jqXHR, textStatus, errorThrown) => {
+		    alert("読み込み失敗。再読み込みをお願いします。");
+		});;
 		
 </script>
 </head>
