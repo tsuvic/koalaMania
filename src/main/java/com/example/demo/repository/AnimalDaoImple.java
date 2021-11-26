@@ -143,7 +143,7 @@ public class AnimalDaoImple implements AnimalDao {
 
 	@Override
 	public List<Animal> getMotherList(int animal_id, Date birthDay) {
-		String sql = "SELECT "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +","+ ENTITY_ANIMAL.COLUMN_NAME +" FROM "+ ENTITY_ANIMAL.TABLE_NAME 
+		String sql = "SELECT "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +","+ ENTITY_ANIMAL.COLUMN_NAME + "," + ENTITY_ANIMAL.COLUMN_BIRTHDATE + "," + ENTITY_ANIMAL.COLUMN_SEX + " FROM "+ ENTITY_ANIMAL.TABLE_NAME 
 							+" WHERE "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" NOT IN (?) AND "
 							+ ENTITY_ANIMAL.COLUMN_SEX +" = "+ woman +" AND ("+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" < ?"
 							+" OR "+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" = '9999-01-01')" + "ORDER BY " + ENTITY_ANIMAL.COLUMN_NAME ;
@@ -153,6 +153,8 @@ public class AnimalDaoImple implements AnimalDao {
 			Animal animal = new Animal();
 			animal.setAnimal_id((int) result.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));
 			animal.setName((String) result.get(ENTITY_ANIMAL.COLUMN_NAME));
+			animal.setSex((int)result.get(ENTITY_ANIMAL.COLUMN_SEX));
+			animal.setBirthdate((Date)result.get(ENTITY_ANIMAL.COLUMN_BIRTHDATE));
 			motherList.add(animal);
 		}
 		return motherList;
@@ -160,7 +162,7 @@ public class AnimalDaoImple implements AnimalDao {
 
 	@Override
 	public List<Animal> getFatherList(int animal_id, Date birthDay) {
-		String sql = "SELECT "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "+ ENTITY_ANIMAL.COLUMN_NAME +" FROM "+ ENTITY_ANIMAL.TABLE_NAME 
+		String sql = "SELECT "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +", "+ ENTITY_ANIMAL.COLUMN_NAME + "," + ENTITY_ANIMAL.COLUMN_BIRTHDATE + "," + ENTITY_ANIMAL.COLUMN_SEX +" FROM "+ ENTITY_ANIMAL.TABLE_NAME 
 						+" WHERE "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" NOT IN (?) AND "
 						+ ENTITY_ANIMAL.COLUMN_SEX +" = "+ man + " AND ("+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" < ?"
 						+" OR "+ ENTITY_ANIMAL.COLUMN_BIRTHDATE +" = '9999-01-01')" + "ORDER BY " + ENTITY_ANIMAL.COLUMN_NAME ;
@@ -170,6 +172,8 @@ public class AnimalDaoImple implements AnimalDao {
 			Animal animal = new Animal();
 			animal.setAnimal_id((int) result.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));
 			animal.setName((String) result.get(ENTITY_ANIMAL.COLUMN_NAME));
+			animal.setSex((int)result.get(ENTITY_ANIMAL.COLUMN_SEX));
+			animal.setBirthdate((Date)result.get(ENTITY_ANIMAL.COLUMN_BIRTHDATE));
 			fatherList.add(animal);
 		}
 		return fatherList;

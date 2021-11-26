@@ -43,9 +43,7 @@ public class AnimalController {
         binder.addValidators(zooHistoryValidator);
     }
 	
-	//下記のリクエストで使用するために、AnimalService型のフィールド用意 & @AutowiredでDIを実施する。	
 	private final AnimalService animalService;
-	
 	private final PostImageService postImageService;
 
 	@Autowired

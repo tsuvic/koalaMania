@@ -11,6 +11,7 @@ targetCompatibility = '11'
 
 repositories {
 	mavenCentral()
+	jcenter()
 }
 
 configurations {
@@ -35,7 +36,8 @@ dependencies {
 	  // tag::actuator[]
 	  compile("org.springframework.boot:spring-boot-starter-actuator")
 	  // end::actuator[]
-  	testCompile("junit:junit")
+  	//testCompile("junit:junit")
+  	testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
 	implementation('org.springframework.boot:spring-boot-starter-jdbc')
 	implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
 	implementation('org.springframework.boot:spring-boot-starter-validation')
@@ -61,4 +63,12 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+	  testLogging {
+    // テスト時の標準出力と標準エラー出力を表示する
+    showStandardStreams true
+    // イベントを出力する (TestLogEvent)
+    events 'started', 'skipped', 'passed', 'failed'
+    // 例外発生時の出力設定 (TestExceptionFormat)
+    exceptionFormat 'full'
+  }
 }

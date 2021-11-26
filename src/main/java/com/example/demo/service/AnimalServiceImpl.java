@@ -72,6 +72,7 @@ public class AnimalServiceImpl implements AnimalService {
 		Animal unknownForInsertForm = new Animal();
 		unknownForInsertForm.setName("不明");
 		unknownForInsertForm.setAnimal_id(0);
+		unknownForInsertForm.setSex(2);
 		motherList.add(unknownForInsertForm);
 		return motherList;
 	}
@@ -83,6 +84,7 @@ public class AnimalServiceImpl implements AnimalService {
 		Animal unknownForInsertForm = new Animal();
 		unknownForInsertForm.setName("不明");
 		unknownForInsertForm.setAnimal_id(0);
+		unknownForInsertForm.setSex(1);
 		fatherList.add(unknownForInsertForm);
 		return fatherList;
 	}
