@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,14 +41,18 @@ class AnimalServiceImplTest {
 	AnimalServiceImpl animalServiceImpl = new AnimalServiceImpl(animalDao, cloudinaryService, animalZooHistoryDao, zooDao);
 	
 	@BeforeEach
-	public void setUp() throws Exception{
+	public void setUp() {
+	}
+
+	@AfterEach
+	public void tearDown() {
 	}
 	
 	@Test
 	void getAll_アニマル型のリストを返却() {
 		var animalList = new ArrayList<Animal>();
 		final List<Animal> actual = animalServiceImpl.getAll();
-		assertEquals(actual.getClass(), animalList.getClass());
+		assertEquals(animalList.getClass(), actual.getClass());
 	}
 	
 	@Test
@@ -78,7 +83,6 @@ class AnimalServiceImplTest {
 		motherList.stream().filter(x -> x.getBirthdate() != filterDate && x.getBirthdate() != null).map(x -> x.getBirthdate()).forEach(System.out::println);
 		assertTrue(motherList.stream().allMatch(o -> o.getSex() != 1)); //メスは2であるが、母親不明時にセットするフォーム用データに性別はセットされてないため、!=1とする
 		assertTrue(motherList.stream().filter(x -> x.getBirthdate() != filterDate && x.getBirthdate() != null).allMatch(o -> o.getBirthdate().before(testDate))); //誕生日不明の9999年生まれのコアラ、nullを除く
-		
 	}
 	
 }
