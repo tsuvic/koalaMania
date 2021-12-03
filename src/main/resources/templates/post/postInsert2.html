@@ -79,24 +79,24 @@
 
 					$(img).appendTo(".imageDisplay_" + i);
 					$('</br>').appendTo(".imageDisplay_" + i);
-					
+
 					var inputHiddenTag = $("<input>", {
 						type : "hidden",
 						addClass : "input-hidden-tag",
 						name : "tagList",
-						value: 0
+						value : 0
 					});
 					$(inputHiddenTag).appendTo(".imageDisplay_" + i);
-					
+
 					var modalButton = $("<button>", {
 						type : "button",
 						addClass : "btn btn-primary btn-sm modal-open-button",
 						text : "コアラをタグ付け"
 					});
-					 modalButton.attr('data-toggle', 'modal');
-					 modalButton.attr('data-target', '#exampleModalCenter');
-					 $(modalButton).appendTo(".imageDisplay_" + i);
-					
+					modalButton.attr('data-toggle', 'modal');
+					modalButton.attr('data-target', '#exampleModalCenter');
+					$(modalButton).appendTo(".imageDisplay_" + i);
+
 					var button = $("<button>", {
 						type : "button",
 						addClass : "btn btn-danger btn-sm deleteImageButton",
@@ -110,10 +110,10 @@
 			})(file);
 
 			reader.readAsDataURL(file);
-			
+
 			const contents = $("#input-file-zone > span").length;
-			
-			if (contents >= 5) {
+
+			if (contents >= 4) {
 				$('.addInputFileButton').hide();
 			}
 
@@ -123,156 +123,235 @@
 			$(this).parent().remove();
 			$('.addInputFileButton').show();
 		});
-		
+
 		/* $('#exampleModalCenter').on('shown.bs.modal', function () {
 			 // $('#myInput').trigger('focus');
 		}); */
-		
+
 		$('.animal-tag').click(function(e) {
 			$('.modal-body').find('.animal-tag').each(function(index, element) {
 				$(element).removeClass('btn-primary');
 				$(element).addClass('btn-outline-primary');
 			});
-			
+
 			$(this).removeClass('btn-outline-primary');
 			$(this).addClass('btn-primary');
-			
+
 		});
-		
-		$(document).on('click', '.modal-open-button', function(e) {
-			let tagId = $(this).prev().val();
-			$('.modal-body').find('.animal-tag').each(function(index, element) {
-				$(element).removeClass('btn-primary');
-				$(element).addClass('btn-outline-primary');
-				
-				if($(element).prev().val() == tagId){
-					$(element).removeClass('btn-outline-primary');
-					$(element).addClass('btn-primary');
-				}
-			});
-			
-			$('input[name="image_tag_class"]').val($(this).parent().attr('class'));
-		});
-		
-		$('#addTagButton').click(function(e) {
-			let targetImageClass = $('#input-file-zone').find('.' + $('input[name="image_tag_class"]').val());		
-			let targetInput = targetImageClass.find('.input-hidden-tag');
-			if(!targetImageClass.find('.deleteTagButton').lenght){
-				targetImageClass.find('.deleteTagButton').trigger('click');
-			}
-			$('.modal-body').find('.animal-tag').each(function(index, element) {
-				if($(element).hasClass('btn-primary')){
-					targetInput.val($(element).prev().val());
-					let addTag = $(element).clone(false);
-					addTag.removeClass('btn-primary');
-					addTag.addClass('btn-outline-primary');
-					addTag.prependTo(targetImageClass);
-					var button = $("<buttonn>", {
-						type : "button",
-						addClass : "btn btn-danger btn-sm deleteTagButton",
-						text : "タグ削除"
-					});
-					addTag.after(button);
-					button.after('<br>');
-				}
-			});
-			$('#closeModalButton').trigger('click');
-		});
-		
+
+		$(document).on(
+				'click',
+				'.modal-open-button',
+				function(e) {
+					let tagId = $(this).prev().val();
+					$('.modal-body').find('.animal-tag').each(
+							function(index, element) {
+								$(element).removeClass('btn-primary');
+								$(element).addClass('btn-outline-primary');
+
+								if ($(element).prev().val() == tagId) {
+									$(element).removeClass(
+											'btn-outline-primary');
+									$(element).addClass('btn-primary');
+								}
+							});
+
+					$('input[name="image_tag_class"]').val(
+							$(this).parent().attr('class'));
+				});
+
+		$('#addTagButton')
+				.click(
+						function(e) {
+							let targetImageClass = $('#input-file-zone')
+									.find(
+											'.'
+													+ $(
+															'input[name="image_tag_class"]')
+															.val());
+							let targetInput = targetImageClass
+									.find('.input-hidden-tag');
+							if (!targetImageClass.find('.deleteTagButton').lenght) {
+								targetImageClass.find('.deleteTagButton')
+										.trigger('click');
+							}
+							$('.modal-body')
+									.find('.animal-tag')
+									.each(
+											function(index, element) {
+												if ($(element).hasClass(
+														'btn-primary')) {
+													targetInput.val($(element)
+															.prev().val());
+													let addTag = $(element)
+															.clone(false);
+													addTag
+															.removeClass('btn-primary');
+													addTag
+															.addClass('btn-outline-primary');
+													addTag
+															.prependTo(targetImageClass);
+													var button = $(
+															"<buttonn>",
+															{
+																type : "button",
+																addClass : "btn btn-danger btn-sm deleteTagButton",
+																text : "タグ削除"
+															});
+													addTag.after(button);
+													button.after('<br>');
+												}
+											});
+							$('#closeModalButton').trigger('click');
+						});
+
 		$(document).on('click', '.deleteTagButton', function(e) {
 			$(this).prev().remove();
 			$(this).next().remove();
 			$(this).parent().find('.input-hidden-tag').val(0);
 			$(this).remove();
-			
+
 		});
-		
+
 		$('#dateCancel').click(function(e) {
 			$(".datepicker").val(null);
 			$(this).hide();
 		});
-		
+
 		$(".datepicker").change(function(e) {
 			let val = $(this).val();
 			console.log(val);
-			if(val){
+			if (val) {
 				$('#dateCancel').show();
-			}else{
+			} else {
 				$('#dateCancel').hide();
 			}
 		});
-		
+
 		$("#submitButton").click(function(e) {
-			$(this).prop('disabled',true);
+			$(this).prop('disabled', true);
 			let val = $.trim($('textarea[name="contents"]').val());
 			console.log(val);
-			if(val){
+			if (val) {
 				$(this).text('保存中...');
 				$('form').submit();
-			}else{
+			} else {
 				alert('投稿内容が空欄です。');
-				$(this).prop('disabled',false);
+				$(this).prop('disabled', false);
 				return false;
 			}
 		});
+		
+		$('.visitZoo').on('change', function(){
+			const zoo_id = $(".visitZoo").val();
+			$.ajax({
+				type:"GET",
+				url:"/post/animalList",
+				data:{zoo_id : zoo_id},
+				dataType: "json",
+				timeout: 5000,
+			}).done((json, textStatus, jqXHR) => {
+				const root =  JSON.parse(JSON.stringify(json, ["animal_id", "name"],10));				
+				
+				console.log(JSON.stringify(json, ["animal_id", "name"],10));
+				console.log(root.length);
+				console.log(json.length);
+				console.log(root[0].name);
+				
+				for(i = 0; i < root.length; i++){	
+					let animal = $("<span>");
+					animal.append($("<input>").attr('type', 'hidden').attr('name', 'animal_tag_id').attr('value', root[i].animal_id));
+					animal.append($("<button>", {addClass:"btn btn-outline-primary btn-sm animal-tag"}).attr('type', 'button').text('#' + root[i].name));
+					$(animal).appendTo(".modal-body");
+				}
+
+			/* 	やりたいこと
+				<span th:each="animal : ${animalList}" th:object="${animal}">
+				<input type="hidden" name="animal_tag_id" th:value="*{animal_id}">
+				<button class="btn btn-outline-primary btn-sm animal-tag" type="button" th:text="'&#035;' + *{name}"></button>
+				</span>
+				
+				方法
+				var modalButton = $("<button>", {
+					type : "button",
+					addClass : "btn btn-primary btn-sm modal-open-button",
+					text : "コアラをタグ付け"
+				});
+				modalButton.attr('data-toggle', 'modal');
+				modalButton.attr('data-target', '#exampleModalCenter');
+				$(modalButton).appendTo(".imageDisplay_" + i);
+			 */
+			})
+		});
+		
 	});
+	
+	
 </script>
 
-<title th:text="${title}"></title>
+<title th:text="投稿"></title>
 </head>
 
 <body>
 	<div th:replace="~{block/header_boot::headerA_boot}"></div>
 	<!-- Modal -->
-	<div class="modal fade" id="exampleModalCenter" tabindex="-1"
-		role="dialog" aria-labelledby="exampleModalCenterTitle"
-		aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalCenterTitle">コアラをタグ付け</h5>
-					<input type="hidden" name="image_tag_class">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<span th:each="animal : ${animalList}" th:object="${animal}">
-						<input type="hidden" name="animal_tag_id" th:value="*{animal_id}">
-						<button class="btn btn-outline-primary btn-sm animal-tag"
-							type="button" th:text="'&#035;' + *{name}"></button>
-					</span>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" id="addTagButton">タグ付けする</button>
-					<button type="button" class="btn btn-secondary"
-						data-dismiss="modal" id="closeModalButton">キャンセル</button>
+			<div class="modal fade" id="exampleModalCenter" tabindex="-1"
+			role="dialog" aria-labelledby="exampleModalCenterTitle"
+			aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalCenterTitle">コアラをタグ付け</h5>
+						<input type="hidden" name="image_tag_class">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<span th:each="animal : ${animalList}" th:object="${animal}">
+							<input type="hidden" name="animal_tag_id" th:value="*{animal_id}">
+							<button class="btn btn-outline-primary btn-sm animal-tag"
+								type="button" th:text="'&#035;' + *{name}"></button>
+						</span>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" id="addTagButton">タグ付けする</button>
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal" id="closeModalButton">キャンセル</button>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 
 	<div class="container">
-		<h2 th:text="${zoo.zoo_name} + へ投稿"></h2>
 		<form th:action="@{/post/insertParentPost}" method="post"
 			enctype="multipart/form-data" th:object="${postInsertForm}">
-			<input type="hidden" th:field="*{zoo_id}">
+			
+			訪問場所<br>
+			<select class="visitZoo" th:name="zoo_id"> <!-- selectのフォーム送信値はnameでフォームのフィールドを指定 -->
+				<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}"
+					th:text="${zoo.zoo_name}"
+					th:selected="${postInsertForm.zoo_id} == ${zoo.zoo_id}"></option>
+			</select>
 
 			<div th:id="visitDate" class="form-group">
-				訪問日: <input type="text" class="datepicker" name="visitdate" value=""
+				訪問日<br>
+				<input type="text" class="datepicker" name="visitdate" value=""
 					placeholder="クリックして日付を入力" readonly></input>
 				<button type="button" class="btn btn-secondary btn-sm"
 					id="dateCancel" style="display: none">指定しない</button>
 			</div>
+			
 			<div th:id="contents" class="form-group">
 				<div>投稿内容</div>
 				<textarea name="contents" class="form-control postTextarea"
 					th:errorclass="is-invalid"></textarea>
 			</div>
+			
 			<div th:id="image" class="form-group">
 				<div>
-					写真(5枚まで)
+					写真(4枚まで)
 					<button class="btn btn-outline-success btn-sm addInputFileButton"
 						type="button">写真追加</button>
 				</div>
@@ -284,7 +363,6 @@
 					<button class="btn btn-warning btn-sm" type="button"
 						onclick="window.history.back(); return false;">戻る</button>
 				</div>
-
 			</div>
 		</form>
 	</div>

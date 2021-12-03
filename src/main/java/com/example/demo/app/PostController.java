@@ -18,27 +18,51 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.Post;
 import com.example.demo.entity.Zoo;
+import com.example.demo.service.AnimalService;
 import com.example.demo.service.PostFavoriteService;
 import com.example.demo.service.PostImageFavoriteService;
 import com.example.demo.service.PostService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Controller
 @RequestMapping("/post")
 public class PostController {
-	private PostService postService;
-	private PostFavoriteService postFavoriteService;
-	private PostImageFavoriteService postImageFavoriteService;
+	private final PostService postService;
+	private final PostFavoriteService postFavoriteService;
+	private final PostImageFavoriteService postImageFavoriteService;
+	private final AnimalService animalSearvice;
 	
 	@Autowired
-	public PostController(PostService postService,PostFavoriteService postFavoriteService
-			,PostImageFavoriteService postImageFavoriteService) {
+	public PostController(PostService postService,PostFavoriteService postFavoriteService ,PostImageFavoriteService postImageFavoriteService, AnimalService animalService) {
 		this.postService = postService;
 		this.postFavoriteService = postFavoriteService;
 		this.postImageFavoriteService = postImageFavoriteService;
+		this.animalSearvice = animalService;
 	}
 	
+	@GetMapping("/")
+	public String getNewPost(Model model,@ModelAttribute PostInsertForm postInsertForm) {
+		var zooList = animalSearvice.getZooList();
+		model.addAttribute("zooList", zooList);		
+		postInsertForm.setParent_id(0);
+		return "post/postInsert2";
+	}
+	
+	@GetMapping("/animalList")
+	@ResponseBody
+	public String getAnimalList(@RequestParam(required = false, name = "zoo_id") int zoo_id,Model model) throws JsonProcessingException {
+		Zoo zoo = postService.getZooById(zoo_id);
+		List<Animal> animalList = postService.getAnimalListByZooId(zoo_id);
+		model.addAttribute("zoo", zoo);
+		model.addAttribute("animalList", animalList);
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(animalList);
+		System.out.println(json);
+		return json;
+	}
+		
 	@GetMapping("/{zoo_id}")
 	public String getNewParentPost(@PathVariable int zoo_id, Model model,@ModelAttribute PostInsertForm postInsertForm) {
 		Zoo zoo = postService.getZooById(zoo_id);

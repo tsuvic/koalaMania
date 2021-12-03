@@ -13,7 +13,7 @@ public class PostInsertForm {
 	
 	private int post_id;
 	
-	private int zoo_id;
+	private int zoo_id = -1;
 	
 	private int parent_id;
 	
