@@ -56,30 +56,18 @@
 		let indexForAdmissionYear = $this.parentNode.id.slice(-1);
 		indexForAdmissionYear = Number(indexForAdmissionYear) - 1;
 		$("#zooHistory").find('#exitForm' + indexForAdmissionYear).find('select[name="exitYear"]').val($this.value);
-		
-		if (indexForAdmissionYear = -1){
-			$('#birthYear').val($this.value);
-		}
 	}
 	
 	function exitMonthComplete($this){
 		let indexForAdmissionMonth = $this.parentNode.id.slice(-1);
 		indexForAdmissionMonth = Number(indexForAdmissionMonth) - 1;
 		$("#zooHistory").find('#exitForm' + indexForAdmissionMonth).find('select[name="exitMonth"]').val($this.value);
-		
-		if (indexForAdmissionMonth = -1){
-			$('#birthMonth').val($this.value);
-		}
 	}
 	
 	function exitDayComplete($this){
 		let indexForAdmissionDay = $this.parentNode.id.slice(-1);
 		indexForAdmissionDay = Number(indexForAdmissionDay) - 1;
 		$("#zooHistory").find('#exitForm' + indexForAdmissionDay).find('select[name="exitDay"]').val($this.value);
-		
-		if (indexForAdmissionDay = -1){
-			$('#birthDay').val($this.value);
-		}
 	}
 
 	function isAliveFlag($this) {
