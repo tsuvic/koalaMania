@@ -24,6 +24,7 @@ import static com.codeborne.selenide.Condition.*;
  * selenide:5.24.3-selenium-4.0.0-rc-1'
  * org.junit.jupiter:junit-jupiter:5.5.2
  * https://selenide.org/quick-start.html
+ * https://www.seleniumqref.com/api/webdriver_gyaku.html
  */
 
 public class SelenideTest {
@@ -58,7 +59,7 @@ public class SelenideTest {
 		path.append("/Users/Oyama/dev/");
 		
 		var datetime = LocalDateTime.now();
-		var dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd_hhmm");
+		var dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd_kkmm");
 		path.append(datetime.format(dateTimeFormatter));
 		path.append("/");
 		

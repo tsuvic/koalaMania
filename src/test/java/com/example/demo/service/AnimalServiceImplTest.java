@@ -1,6 +1,9 @@
 package com.example.demo.service;
 
 
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -53,14 +56,18 @@ class AnimalServiceImplTest {
 		var animalList = new ArrayList<Animal>();
 		final List<Animal> actual = animalServiceImpl.getAll();
 		assertEquals(animalList.getClass(), actual.getClass());
+		assertThat(animalList).isSameAs(animalList); //こういう書き方もある
 	}
 	
+	//構造化テスト・パラメータ化テスト、拡張モデルは今後の検討
+	//アサーションのグループ化
 	@Test
 	@DisplayName("コアラ名で検索_対象を含む結果を返却")
 	void findbyKeyword() {
 		final List<Animal> actual = animalServiceImpl.findByKeyword("コタロウ");
-		assertTrue(actual.stream().anyMatch(o -> o.getName().equals("コタロウ")));
-		assertTrue(actual.stream().anyMatch(o -> o.getFatherAnimal().getName().equals("コタロウ")));
+		assertAll("コタロウ",
+			() -> assertTrue(actual.stream().anyMatch(o -> o.getName().equals("コタロウ"))),
+			() -> assertTrue(actual.stream().anyMatch(o -> o.getFatherAnimal().getName().equals("コタロウ"))));
 	}	
 	
 	@DisplayName("動物園名で検索_対象を含む結果を返却")

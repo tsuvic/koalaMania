@@ -35,36 +35,31 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 @RequestMapping("/")
 public class AnimalController {
+	private final AnimalService animalService;
+	private final PostImageService postImageService;
+	private final ZooHistoryValidator zooHistoryValidator;
+	
 	@Autowired
-	ZooHistoryValidator zooHistoryValidator;
+	public AnimalController(AnimalService animalService,PostImageService postImageService, ZooHistoryValidator zooHistoryValidator) {
+		this.animalService = animalService;
+		this.postImageService = postImageService;
+		this.zooHistoryValidator = zooHistoryValidator;
+	}
 
     @InitBinder("animalInsertForm")
     public void initBinder(WebDataBinder binder) {
         binder.addValidators(zooHistoryValidator);
     }
 	
-	private final AnimalService animalService;
-	private final PostImageService postImageService;
-
-	@Autowired
-	public AnimalController(AnimalService animalService,PostImageService postImageService) {
-		this.animalService = animalService;
-		this.postImageService = postImageService;
-	}
-
 	@Autowired
 	@Qualifier("com.cloudinary.image.url")
 	String cloudinaryImageUrl;
 
-	//ドメインに対してリクエストが来た際には/indexを返す
-	@GetMapping
-	public String index() {
-		return "index";
-	}
-
-	// /indexに対してリクエストが来た際には/indexを返す
-	@GetMapping("/index")
-	public String indexReload() {
+	@GetMapping("/")
+	public String indexDisplay(Model model) {
+		var zooList = animalService.getZooList();
+		zooList.remove(0);
+		model.addAttribute("zooList", zooList);
 		return "index";
 	}
 
