@@ -157,7 +157,7 @@
 		$('#addTagButton').click(function(e) {
 			let targetImageClass = $('#input-file-zone').find('.' + $('input[name="image_tag_class"]').val());		
 			let targetInput = targetImageClass.find('.input-hidden-tag');
-			if(!targetImageClass.find('.deleteTagButton').lenght){
+			if(!targetImageClass.find('.deleteTagButton').lenght){ //lengthは不要では？
 				targetImageClass.find('.deleteTagButton').trigger('click');
 			}
 			$('.modal-body').find('.animal-tag').each(function(index, element) {
@@ -224,67 +224,59 @@
 <body>
 	<div th:replace="~{block/header_boot::headerA_boot}"></div>
 	<!-- Modal -->
-	<div class="modal fade" id="exampleModalCenter" tabindex="-1"
-		role="dialog" aria-labelledby="exampleModalCenterTitle"
-		aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalCenterTitle">コアラをタグ付け</h5>
-					<input type="hidden" name="image_tag_class">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<span th:each="animal : ${animalList}" th:object="${animal}">
-						<input type="hidden" name="animal_tag_id" th:value="*{animal_id}">
-						<button class="btn btn-outline-primary btn-sm animal-tag"
-							type="button" th:text="'&#035;' + *{name}"></button>
-					</span>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" id="addTagButton">タグ付けする</button>
-					<button type="button" class="btn btn-secondary"
-						data-dismiss="modal" id="closeModalButton">キャンセル</button>
-				</div>
-			</div>
-		</div>
+	<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalCenterTitle">コアラをタグ付け</h5>
+	        <input type = "hidden" name="image_tag_class">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+		       <span th:each="animal : ${animalList}"
+							th:object="${animal}">
+					<input type = "hidden" name="animal_tag_id" th:value = "*{animal_id}">
+					<button class="btn btn-outline-primary btn-sm animal-tag" type="button" th:text = "'&#035;' + *{name}"></button>
+		      </span>
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-primary" id="addTagButton">タグ付けする</button>
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModalButton">キャンセル</button>
+	      </div>
+	    </div>
+	  </div>
 	</div>
-
+	
 	<div class="container">
 		<h2 th:text="${zoo.zoo_name} + へ投稿"></h2>
 		<form th:action="@{/post/insertParentPost}" method="post"
 			enctype="multipart/form-data" th:object="${postInsertForm}">
 			<input type="hidden" th:field="*{zoo_id}">
-
 			<div th:id="visitDate" class="form-group">
 				訪問日: <input type="text" class="datepicker" name="visitdate" value=""
 					placeholder="クリックして日付を入力" readonly></input>
-				<button type="button" class="btn btn-secondary btn-sm"
-					id="dateCancel" style="display: none">指定しない</button>
+					<button type="button" class="btn btn-secondary btn-sm" id="dateCancel" style = "display:none">指定しない</button>
 			</div>
 			<div th:id="contents" class="form-group">
 				<div>投稿内容</div>
-				<textarea name="contents" class="form-control postTextarea"
-					th:errorclass="is-invalid"></textarea>
+				<textarea name="contents" class="form-control postTextarea" th:errorclass="is-invalid"></textarea>
 			</div>
 			<div th:id="image" class="form-group">
 				<div>
 					写真(5枚まで)
-					<button class="btn btn-outline-success btn-sm addInputFileButton"
+					  <button class="btn btn-outline-success btn-sm addInputFileButton"
 						type="button">写真追加</button>
 				</div>
 				<div id="input-file-zone"></div>
 				<input type="hidden" th:field="*{parent_id}">
 				<div id="send-zone">
-					<button class="btn btn-outline-primary btn-sm" id="submitButton"
-						type="submit">保存</button>
-					<button class="btn btn-warning btn-sm" type="button"
-						onclick="window.history.back(); return false;">戻る</button>
+				<button class="btn btn-outline-primary btn-sm" id = "submitButton" type="submit">保存</button>
+				<button class="btn btn-warning btn-sm" type="button"
+			onclick="window.history.back(); return false;">戻る</button>
 				</div>
-
+				
 			</div>
 		</form>
 	</div>

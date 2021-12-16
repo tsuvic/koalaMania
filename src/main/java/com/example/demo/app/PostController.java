@@ -42,12 +42,24 @@ public class PostController {
 		this.animalSearvice = animalService;
 	}
 	
-	@GetMapping("/")
+	@GetMapping
 	public String getNewPost(Model model,@ModelAttribute PostInsertForm postInsertForm) {
 		var zooList = animalSearvice.getZooList();
 		model.addAttribute("zooList", zooList);		
 		postInsertForm.setParent_id(0);
 		return "post/postInsert2";
+	}
+	
+	@GetMapping("/{zoo_id}")
+	public String getNewParentPost(@PathVariable int zoo_id, Model model,@ModelAttribute PostInsertForm postInsertForm) {
+		Zoo zoo = postService.getZooById(zoo_id);
+		List<Animal> animalList = postService.getAnimalListByZooId(zoo_id);
+		model.addAttribute("zoo",zoo);
+		model.addAttribute("title", zoo.getZoo_name() + "に投稿");
+		model.addAttribute("animalList", animalList);
+		postInsertForm.setParent_id(0);
+		postInsertForm.setZoo_id(zoo_id);
+		return "post/postInsert";
 	}
 	
 	@GetMapping("/animalList")
@@ -63,18 +75,7 @@ public class PostController {
 		return json;
 	}
 		
-	@GetMapping("/{zoo_id}")
-	public String getNewParentPost(@PathVariable int zoo_id, Model model,@ModelAttribute PostInsertForm postInsertForm) {
-		Zoo zoo = postService.getZooById(zoo_id);
-		List<Animal> animalList = postService.getAnimalListByZooId(zoo_id);
-		model.addAttribute("zoo",zoo);
-		model.addAttribute("title", zoo.getZoo_name() + "に投稿");
-		model.addAttribute("animalList", animalList);
-		postInsertForm.setParent_id(0);
-		postInsertForm.setZoo_id(zoo_id);
-		
-		return "post/postInsert";
-	}
+
 	
 	@GetMapping("/postDetail/{post_id}")
 	public String getPostDetail(@PathVariable int post_id, Model model,

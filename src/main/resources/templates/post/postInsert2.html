@@ -124,11 +124,7 @@
 			$('.addInputFileButton').show();
 		});
 
-		/* $('#exampleModalCenter').on('shown.bs.modal', function () {
-			 // $('#myInput').trigger('focus');
-		}); */
-
-		$('.animal-tag').click(function(e) {
+		$(document).on('click' ,'.animal-tag' ,function(e) {
 			$('.modal-body').find('.animal-tag').each(function(index, element) {
 				$(element).removeClass('btn-primary');
 				$(element).addClass('btn-outline-primary');
@@ -136,7 +132,6 @@
 
 			$(this).removeClass('btn-outline-primary');
 			$(this).addClass('btn-primary');
-
 		});
 
 		$(document).on(
@@ -159,51 +154,33 @@
 					$('input[name="image_tag_class"]').val(
 							$(this).parent().attr('class'));
 				});
-
-		$('#addTagButton')
-				.click(
-						function(e) {
-							let targetImageClass = $('#input-file-zone')
-									.find(
-											'.'
-													+ $(
-															'input[name="image_tag_class"]')
-															.val());
-							let targetInput = targetImageClass
-									.find('.input-hidden-tag');
-							if (!targetImageClass.find('.deleteTagButton').lenght) {
-								targetImageClass.find('.deleteTagButton')
-										.trigger('click');
-							}
-							$('.modal-body')
-									.find('.animal-tag')
-									.each(
-											function(index, element) {
-												if ($(element).hasClass(
-														'btn-primary')) {
-													targetInput.val($(element)
-															.prev().val());
-													let addTag = $(element)
-															.clone(false);
-													addTag
-															.removeClass('btn-primary');
-													addTag
-															.addClass('btn-outline-primary');
-													addTag
-															.prependTo(targetImageClass);
-													var button = $(
-															"<buttonn>",
-															{
-																type : "button",
-																addClass : "btn btn-danger btn-sm deleteTagButton",
-																text : "タグ削除"
-															});
-													addTag.after(button);
-													button.after('<br>');
-												}
-											});
-							$('#closeModalButton').trigger('click');
-						});
+		
+		//コアラをタグ付けを押した瞬間にimage_tag_classのバリューがつく
+		//タグ付け、既存タグの削除
+		$(document).on('click', '#addTagButton', function(e) {
+			let targetImageClass = $('#input-file-zone').find('.' + $('input[name="image_tag_class"]').val());		
+			let targetInput = targetImageClass.find('.input-hidden-tag');
+			if(targetImageClass.find('.deleteTagButton')){
+				targetImageClass.find('.deleteTagButton').trigger('click');
+			}
+			$('.modal-body').find('.animal-tag').each(function(index, element) {
+				if($(element).hasClass('btn-primary')){
+					targetInput.val($(element).prev().val());
+					let addTag = $(element).clone(false);
+					addTag.removeClass('btn-primary');
+					addTag.addClass('btn-outline-primary');
+					addTag.prependTo(targetImageClass);
+					var button = $("<buttonn>", {
+						type : "button",
+						addClass : "btn btn-danger btn-sm deleteTagButton",
+						text : "タグ削除"
+					});
+					addTag.after(button);
+					button.after('<br>');
+				}
+			});
+			$('#closeModalButton').trigger('click');
+		});
 
 		$(document).on('click', '.deleteTagButton', function(e) {
 			$(this).prev().remove();
@@ -265,22 +242,6 @@
 					$(animal).appendTo(".modal-body");
 				}
 
-			/* 	やりたいこと
-				<span th:each="animal : ${animalList}" th:object="${animal}">
-				<input type="hidden" name="animal_tag_id" th:value="*{animal_id}">
-				<button class="btn btn-outline-primary btn-sm animal-tag" type="button" th:text="'&#035;' + *{name}"></button>
-				</span>
-				
-				方法
-				var modalButton = $("<button>", {
-					type : "button",
-					addClass : "btn btn-primary btn-sm modal-open-button",
-					text : "コアラをタグ付け"
-				});
-				modalButton.attr('data-toggle', 'modal');
-				modalButton.attr('data-target', '#exampleModalCenter');
-				$(modalButton).appendTo(".imageDisplay_" + i);
-			 */
 			})
 		});
 		
@@ -309,11 +270,7 @@
 						</button>
 					</div>
 					<div class="modal-body">
-						<span th:each="animal : ${animalList}" th:object="${animal}">
-							<input type="hidden" name="animal_tag_id" th:value="*{animal_id}">
-							<button class="btn btn-outline-primary btn-sm animal-tag"
-								type="button" th:text="'&#035;' + *{name}"></button>
-						</span>
+
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-primary" id="addTagButton">タグ付けする</button>
