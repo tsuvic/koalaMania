@@ -1,6 +1,5 @@
 package com.example.demo.app;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +21,7 @@ import com.example.demo.service.AnimalService;
 import com.example.demo.service.PostFavoriteService;
 import com.example.demo.service.PostImageFavoriteService;
 import com.example.demo.service.PostService;
+import com.example.demo.util.DateUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -33,13 +33,15 @@ public class PostController {
 	private final PostFavoriteService postFavoriteService;
 	private final PostImageFavoriteService postImageFavoriteService;
 	private final AnimalService animalSearvice;
+	private final DateUtil dateUtil;
 	
 	@Autowired
-	public PostController(PostService postService,PostFavoriteService postFavoriteService ,PostImageFavoriteService postImageFavoriteService, AnimalService animalService) {
+	public PostController(PostService postService,PostFavoriteService postFavoriteService ,PostImageFavoriteService postImageFavoriteService, AnimalService animalService , DateUtil dateUtil) {
 		this.postService = postService;
 		this.postFavoriteService = postFavoriteService;
 		this.postImageFavoriteService = postImageFavoriteService;
 		this.animalSearvice = animalService;
+		this.dateUtil = dateUtil;
 	}
 	
 	@GetMapping
@@ -82,45 +84,18 @@ public class PostController {
 			@ModelAttribute PostInsertForm postInsertForm) {
 		
 		Post post = postService.getPostByPostId(post_id);
-		Date now = new Date();
-		long nowtime = now.getTime();
 		
-		Date cteate = post.getCreatedDate();
-		long createtime = cteate.getTime();
-		long difftime  =  nowtime - createtime;
-		
-		if(difftime/1000/60 < 59) {
-			post.setDisplayDiffTime(difftime/1000/60  + "分前");
-		}else if(difftime/1000/60/60 < 24) {
-			post.setDisplayDiffTime(difftime/1000/60/60  + "時間前");
-		}else if(difftime/1000/60/60/24 < 31) {
-			post.setDisplayDiffTime(difftime/1000/60/60/24  + "日前");
-		}else if(difftime/1000/60/60/24/30 < 1) {
-			post.setDisplayDiffTime(difftime/1000/60/60/24/30  + "ヶ月前");
-		}else {
-			post.setDisplayDiffTime(difftime/1000/60/60/24/30  + "年前");
-		}
+		dateUtil.setPostDiffTime(post);
 		
 		setDefaultUserProfileImage(post);
 		
 		if(post.getChildrenPost() != null) {
 			
+			
 			for(Post childPost : post.getChildrenPost()) {
-				Date cteate2 = childPost.getCreatedDate();
-				long createtime2 = cteate2.getTime();
-				long difftime2  =  nowtime - createtime2;
 				
-				if(difftime2/1000/60 < 59) {
-					childPost.setDisplayDiffTime(difftime2/1000/60  + "分前");
-				}else if(difftime2/1000/60/60 < 24) {
-					childPost.setDisplayDiffTime(difftime2/1000/60/60  + "時間前");
-				}else if(difftime2/1000/60/60/24 < 31) {
-					childPost.setDisplayDiffTime(difftime2/1000/60/60/24  + "日前");
-				}else if(difftime2/1000/60/60/24/30 < 1) {
-					childPost.setDisplayDiffTime(difftime2/1000/60/60/24/30  + "ヶ月前");
-				}else {
-					childPost.setDisplayDiffTime(difftime2/1000/60/60/24/30  + "年前");
-				}
+				dateUtil.setPostDiffTime(childPost);
+				
 				setDefaultUserProfileImage(childPost);
 			}
 		}

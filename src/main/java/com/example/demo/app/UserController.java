@@ -1,6 +1,5 @@
 package com.example.demo.app;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import com.example.demo.service.PostImageFavoriteService;
 import com.example.demo.service.PostImageService;
 import com.example.demo.service.PostService;
 import com.example.demo.service.UserService;
+import com.example.demo.util.DateUtil;
 
 @Controller
 @RequestMapping("/user")
@@ -37,16 +37,19 @@ public class UserController {
 	private final PostImageFavoriteService postImageFavoriteService; 
 
 	private final UserAuthenticationUtil userAuthenticationUtil;
+	
+	private final DateUtil dateUtil;
 
 	@Autowired
 	public UserController(UserService userService, PostFavoriteService postFavoriteService ,UserAuthenticationUtil userAuthenticationUtil,
-			PostService postService,PostImageService postImageService,PostImageFavoriteService postImageFavoriteService) {
+			PostService postService,PostImageService postImageService,PostImageFavoriteService postImageFavoriteService,DateUtil dateUtil) {
 		this.userService = userService;
 		this.userAuthenticationUtil = userAuthenticationUtil;
 		this.postService = postService;
 		this.postFavoriteService = postFavoriteService;
 		this.postImageService = postImageService;
 		this.postImageFavoriteService = postImageFavoriteService;
+		this.dateUtil = dateUtil;
 	}
 
 	@GetMapping("/mypage/{user_id}")
@@ -172,33 +175,11 @@ public class UserController {
 		}
 	}
 	
-
-	/**
-	 * プロフィール画像がセットされていない場合、デフォルトの画像をセットする
-	 * 
-	 * @param UserForm form
-	*/
 	private List<Post> setDiffTime(List<Post> postList) {
-		
-		Date now = new Date();
-		long nowtime = now.getTime();
 	
 		for(Post post : postList) {
-			Date cteate = post.getCreatedDate();
-			long createtime = cteate.getTime();
-			long difftime  =  nowtime - createtime;
-			
-			if(difftime/1000/60 < 59) {
-				post.setDisplayDiffTime(difftime/1000/60  + "分前");
-			}else if(difftime/1000/60/60 < 24) {
-				post.setDisplayDiffTime(difftime/1000/60/60  + "時間前");
-			}else if(difftime/1000/60/60/24 < 31) {
-				post.setDisplayDiffTime(difftime/1000/60/60/24  + "日前");
-			}else if(difftime/1000/60/60/24/30 < 1) {
-				post.setDisplayDiffTime(difftime/1000/60/60/24/30  + "ヶ月前");
-			}else {
-				post.setDisplayDiffTime(difftime/1000/60/60/24/30  + "年前");
-			}
+
+			dateUtil.setPostDiffTime(post);
 		}
 		
 		return postList;

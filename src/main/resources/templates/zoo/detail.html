@@ -21,6 +21,7 @@
 
 <!-- Custom styles for this template -->
 <link href="/css/starter-template.css" rel="stylesheet"></link>
+<link href="/css/postgrad.css" rel="stylesheet">
 <script type="text/javascript">
 	$(function() {
 		$('.deletePost').click(function(e) {
@@ -69,6 +70,15 @@
 				});
 			}
 		});
+		
+		/* $('.grad-btn').click(function(e) {
+			const prop = $(this).prev().prop('checked');
+			if (prop) {
+				$(this).prev().prop('checked',false);
+			} else {
+				$(this).prev().prop('checked',true);
+			}
+		}); */
 	});
 </script>
 <title th:text="${title}"></title>
@@ -101,13 +111,17 @@
 								th:text="*{loginUser.userName}"> </a> <span
 								th:text="*{displayDiffTime}"></span> <input type="hidden"
 								name="favorite_post_id" th:value="*{post_id}">
-							<button sec:authorize="!isAuthenticated()" type="button" th:if="*{favoriteFlag == false}"
+							<button sec:authorize="!isAuthenticated()" type="button"
+								th:if="*{favoriteFlag == false}"
 								class="btn btn-outline-warning btn-sm postFavoriteRegister"
-								th:text="'お気に入りに追加 (' + *{favoriteCount} +')'" th:onclick="location.href = '/login'"></button>
-							<button sec:authorize="isAuthenticated()" type="button" th:if="*{favoriteFlag == false}"
+								th:text="'お気に入りに追加 (' + *{favoriteCount} +')'"
+								th:onclick="location.href = '/login'"></button>
+							<button sec:authorize="isAuthenticated()" type="button"
+								th:if="*{favoriteFlag == false}"
 								class="btn btn-outline-warning btn-sm postFavoriteRegister"
 								th:text="'お気に入りに追加 (' + *{favoriteCount} +')'"></button>
-							<button sec:authorize="isAuthenticated()" type="button" th:unless="*{favoriteFlag == false}"
+							<button sec:authorize="isAuthenticated()" type="button"
+								th:unless="*{favoriteFlag == false}"
 								th:text="'お気に入りから外す (' + *{favoriteCount} +')'"
 								class="btn btn-warning btn-sm postFavoriteRegister"></button>
 							<button sec:authorize="isAuthenticated()"
@@ -134,8 +148,12 @@
 							th:text="'訪問日:  指定なし'" style="margin: 10px;"></div>
 						<a th:href="@{/post/postDetail/{post_id}(post_id=*{post_id})}"
 							style="text-decoration: none; color: black;">
+							<div class="grad-wrap">
+							<label class="grad-btn"></label>
 							<div th:text="*{contents}"
-								style="white-space: pre-wrap; margin: 10px;"></div>
+								style="white-space: pre-wrap; margin: 10px;"
+								class="post-contents"></div>
+								</div>
 						</a>
 						<div style="margin: 10px;">
 							<span th:each="postImage : *{postImageList}"
