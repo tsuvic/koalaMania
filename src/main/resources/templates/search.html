@@ -28,16 +28,39 @@
 
 	<div class="searchResult-container">
 
-		<br> <br> <br> 
+		<br> <br> <br>
 		<form class="card-body row no-gutters align-items-center" method="get"
 			th:action="@{/search}" th:object="${animalSearchForm}">
-			<div class="col-auto">
-				<i class="fas fa-search h4 text-body"></i>
+
+			<div>
+				<input type="checkbox" id="selectSex" name="male" value="male">
+				<label for="selectSex">オス</label>
+				<input type="checkbox" id="selectSex" name="female" value="female">
+				<label for="selectSex">メス</label>
+				<input type="checkbox" id="selectAlive" name="alive" value="alive">
+				<label for="selectAlive">生</label>
+				<input type="checkbox" id="selectAlive" name="dead" value="dead">
+				<label for="selectAlive">死</label>
 			</div>
+			
+			<div class="form-group" th:id="a">
+				動物園 <select class="insertZoo" th:name="insertZoo">
+					<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}"
+						th:text="${zoo.zoo_name}"
+						th:selected="${animalInsertForm.insertZoo[status.index]} == ${zoo.zoo_id}"></option>
+				</select>
+
+				動物 <select class="insertZoo" th:name="insertZoo">
+					<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}"
+						th:text="${zoo.zoo_name}"
+						th:selected="${animalInsertForm.insertZoo[status.index]} == ${zoo.zoo_id}"></option>
+				</select>
+			</div>
+
 			<div class="col">
 				<input class="form-control form-control-lg form-control-borderless"
 					type="text" name="keyword" th:field="*{keyword}"
-					placeholder="コアラ・動物園名">
+					placeholder="キーワード">
 			</div>
 			<div class="col-auto">
 				<button class="btn btn-lg btn-success" type="submit">検索</button>
