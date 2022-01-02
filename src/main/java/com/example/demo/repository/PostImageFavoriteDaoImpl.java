@@ -16,6 +16,7 @@ import com.example.demo.entity.LoginUser;
 import com.example.demo.entity.Post;
 import com.example.demo.entity.PostImage;
 import com.example.demo.entity.PostImageFavorite;
+import com.example.demo.util.CommonSqlUtil;
 
 @Repository
 public class PostImageFavoriteDaoImpl implements PostImageFavoriteDao {
