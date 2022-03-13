@@ -33,27 +33,19 @@
 			th:action="@{/search}" th:object="${animalSearchForm}">
 
 			<div>
-				<input type="checkbox" id="selectSex" name="male" value="male">
-				<label for="selectSex">オス</label>
-				<input type="checkbox" id="selectSex" name="female" value="female">
-				<label for="selectSex">メス</label>
-				<input type="checkbox" id="selectAlive" name="alive" value="alive">
-				<label for="selectAlive">生</label>
-				<input type="checkbox" id="selectAlive" name="dead" value="dead">
-				<label for="selectAlive">死</label>
-			</div>
-			
-			<div class="form-group" th:id="a">
-				動物園 <select class="insertZoo" th:name="insertZoo">
-					<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}"
-						th:text="${zoo.zoo_name}"
-						th:selected="${animalInsertForm.insertZoo[status.index]} == ${zoo.zoo_id}"></option>
-				</select>
+				<!--th:field="*{isMale}"を使用するとhiddenフィールドが出力されるため、th:checkedを使用-->
+				<input type="checkbox" id="isMale" name="isMale" th:checked="*{isMale}">
+				<label for="isMale">オス</label>
 
-				動物 <select class="insertZoo" th:name="insertZoo">
-					<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}"
-						th:text="${zoo.zoo_name}"
-						th:selected="${animalInsertForm.insertZoo[status.index]} == ${zoo.zoo_id}"></option>
+				<input type="checkbox" id="Female" name="sex" value="FEMALE">
+				<label for="Female">メス</label>
+				<input type="checkbox" id="Alive" name="isAlive" value="alive">
+				<label for="Alive">生</label>
+				<input type="checkbox" id="Dead" name="isAlive" value="dead">
+				<label for="Dead">死</label>
+
+				動物園 <select class="insertZoo" th:name="insertZoo">
+					<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}" th:text="${zoo.zoo_name}"></option>
 				</select>
 			</div>
 
@@ -66,9 +58,6 @@
 				<button class="btn btn-lg btn-success" type="submit">検索</button>
 			</div>
 		</form>
-
-		<!-- <h2 th:text="${searchResult}"></h2> -->
-		<!--タイトル名を 変数式でControllerから取得 -->
 		<div class="searchResult_content">
 			<div class="results">
 				<div class="koalaList">

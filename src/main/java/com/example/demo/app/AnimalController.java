@@ -1,9 +1,7 @@
 package com.example.demo.app;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -64,24 +62,34 @@ public class AnimalController {
 	}
 
 	@GetMapping("/search")
-	public String displaySearchedKoara(Model model, @RequestParam(required = false, name = "keyword") String keyword,
-			@ModelAttribute AnimalSearchForm animalSearchForm, BindingResult bindingResult) {
-		List<Animal> list = new ArrayList<Animal>();
+	public String displaySearchedKoara(Model model,
+	   	@ModelAttribute AnimalSearchForm animalSearchForm, BindingResult bindingResult) {
+
+		System.out.println(animalSearchForm);
+		//コントローラーで条件分岐して判断する状況になっている
+		//animalSearchFormごと、Serviceに渡して、処理するようにする
+
+		String keyword = animalSearchForm.getKeyword();
+		List<Animal> animalList = new ArrayList<>();
+
 		if (keyword == null || keyword.replaceAll(" ", "　").split("　", 0).length == 0) {
-			list = animalService.getAll();
+			animalList = animalService.getAll();
 			model.addAttribute("searchResult", "検索結果一覧");
 		} else {
-			list = animalService.findByKeyword(keyword);
+			animalList = animalService.findByKeyword(keyword);
 			model.addAttribute("searchResult", "検索結果");
 		}
-		model.addAttribute("animalList", list);
-		for (Animal animal : list) {
-			Date birthDate = (Date) animal.getBirthdate();
+		model.addAttribute("animalList", animalList);
+		for (Animal animal : animalList) {
+			Date birthDate = animal.getBirthdate();
 			animal.setStringBirthDate(disPlayDate(birthDate));
 			if(animal.getProfileImagePath() == null) {
 				animal.setProfileImagePath("/images/defaultAnimal.png");
 			}
 		}
+		var zooList = animalService.getZooList();
+		model.addAttribute("zooList", zooList);
+		
 		return "search";
 
 	}

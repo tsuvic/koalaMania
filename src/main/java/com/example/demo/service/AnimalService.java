@@ -35,5 +35,5 @@ public interface AnimalService {
 	Map<String, Object> getAnimalForTree(int i);
 	
 	Date getDate(String year, String month, String day);
-		
+
 }

@@ -51,7 +51,7 @@ private final JdbcTemplate jdbcTemplate;
 	public List<Zoo> getZooList() {
 		String sql = "SELECT "+ ENTITY_ZOO.COLUMN_ZOO_ID +", "+ ENTITY_ZOO.COLUMN_ZOO_NAME +" FROM "+ ENTITY_ZOO.TABLE_NAME +" ORDER BY "+ ENTITY_ZOO.COLUMN_ZOO_ID +" ASC";
 		List<Map<String, Object>> resultZooList = jdbcTemplate.queryForList(sql);
-		List<Zoo> zooList = new ArrayList<Zoo>();
+		List<Zoo> zooList = new ArrayList<>();
 		for (Map<String, Object> result : resultZooList) {
 			Zoo zoo = new Zoo();
 			zoo.setZoo_id((int) result.get(ENTITY_ZOO.COLUMN_ZOO_ID));
