@@ -62,23 +62,18 @@ public class AnimalController {
 	}
 
 	@GetMapping("/search")
-	public String displaySearchedKoara(Model model,
-	   	@ModelAttribute AnimalSearchForm animalSearchForm, BindingResult bindingResult) {
+	public String displaySearchedKoala(Model model,
+	    @ModelAttribute AnimalSearchForm animalSearchForm, BindingResult bindingResult) {
 
 		System.out.println(animalSearchForm);
 		//コントローラーで条件分岐して判断する状況になっている
 		//animalSearchFormごと、Serviceに渡して、処理するようにする
-
 		String keyword = animalSearchForm.getKeyword();
 		List<Animal> animalList = new ArrayList<>();
 
-		if (keyword == null || keyword.replaceAll(" ", "　").split("　", 0).length == 0) {
-			animalList = animalService.getAll();
-			model.addAttribute("searchResult", "検索結果一覧");
-		} else {
-			animalList = animalService.findByKeyword(keyword);
-			model.addAttribute("searchResult", "検索結果");
-		}
+		model.addAttribute("searchResult", "検索結果一覧");
+		animalList = animalService.animalFilter(animalSearchForm);
+
 		model.addAttribute("animalList", animalList);
 		for (Animal animal : animalList) {
 			Date birthDate = animal.getBirthdate();
@@ -330,7 +325,7 @@ public class AnimalController {
 
 	/**
 	 * コアラにプロフィール画像がセットされていない場合、デフォルトの画像をセットする
-	 * 
+	 *
 	 * @param Animal animal
 	*/
 	private void setDefaultAnimalProfileImage(Animal animal) {

@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
+import com.example.demo.app.AnimalSearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,7 +99,7 @@ public class AnimalServiceImpl implements AnimalService {
 		//選択なし
 		Zoo zoo = new Zoo();
 		zoo.setZoo_id(-1);
-		zoo.setZoo_name("---");
+		zoo.setZoo_name("動物園を選択する");
 		zooList.add(0, zoo);
 
 		return zooList;
@@ -562,6 +563,18 @@ public class AnimalServiceImpl implements AnimalService {
 			e.printStackTrace();
 			return null;
 		}
-		
+	}
+
+	@Override
+	public List<Animal> animalFilter(AnimalSearchForm animalSearchForm){
+		if (animalSearchForm.getIsMale() == null && animalSearchForm.getIsFemale() == null &&
+				animalSearchForm.getIsDead() == null && animalSearchForm.getIsAlive() == null &&
+				animalSearchForm.getZoo() == null && animalSearchForm.getKeyword() == null) {
+			return getAll();
+		} else {
+			return animalDao.filter(animalSearchForm);
+		}
+
+
 	}
 }
