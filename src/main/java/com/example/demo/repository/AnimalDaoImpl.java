@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.example.demo.app.AnimalSearchForm;
+import com.example.demo.app.AnimalFilterForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -634,7 +634,7 @@ public class AnimalDaoImpl implements AnimalDao {
     }
 
     @Override
-    public List<Animal> filter(AnimalSearchForm animalSearchForm) {
+    public List<Animal> filter(AnimalFilterForm animalFilterForm) {
         String sql = "SELECT "
                 + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_ANIMAL_ID + ", "
                 + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_NAME + ", "
@@ -677,73 +677,74 @@ public class AnimalDaoImpl implements AnimalDao {
                 + " on " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_FATHER
                 + "  = " + AsFatherAnimal + "." + ENTITY_ANIMAL.COLUMN_ANIMAL_ID + " ";
 
-        System.out.println(animalSearchForm.getIsMale().booleanValue());
-
-        if (animalSearchForm.getIsMale() || animalSearchForm.getIsFemale() || animalSearchForm.getIsDead() || animalSearchForm.getIsAlive()) {
-            sql += "WHERE ";
-            System.out.println("X");
-        }
-
-        if (animalSearchForm.getIsMale() && animalSearchForm.getIsFemale()) {
-            System.out.println("A");
-            sql += "( " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_SEX + " = 1 OR ";
-            sql += AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_SEX + " = 2 ) ";
-        } else if (animalSearchForm.getIsMale()) {
-            System.out.println("B");
-            sql += "( " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_SEX + " = 1 ) ";
-        } else if (animalSearchForm.getIsFemale()) {
-            System.out.println("C");
-            sql += "( " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_SEX + " = 2 ) ";
-        }
-
-        if (animalSearchForm.getIsMale() || animalSearchForm.getIsFemale()) {
-            if (animalSearchForm.getIsAlive() && animalSearchForm.getIsDead()) {
-                System.out.println("D");
-                sql += "AND ( " + AsMainAnimal + "." + ENTITY_ANIMAL.getCOLUMN_IS_ALIVE() + " = 0 OR ";
-                sql += AsMainAnimal + "." + ENTITY_ANIMAL.getCOLUMN_IS_ALIVE() + " = 1 ) ";
-            } else if (animalSearchForm.getIsAlive()) {
-                System.out.println("E");
-                sql += "AND ( " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_IS_ALIVE + " = 1 ) ";
-            } else if (animalSearchForm.getIsDead()) {
-                System.out.println("F");
-                sql += "AND ( " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_IS_ALIVE + " = 0 ) ";
+        //index画面からの遷移の場合、nullの場合がある
+        if (animalFilterForm.getIsMale() != null) {
+            if (animalFilterForm.getIsMale() || animalFilterForm.getIsFemale() || animalFilterForm.getIsDead() || animalFilterForm.getIsAlive()) {
+                sql += "WHERE ";
+                System.out.println("X");
             }
-        } else {
-            if (animalSearchForm.getIsAlive() && animalSearchForm.getIsDead()) {
-                System.out.println("G");
-                sql += "( " + AsMainAnimal + "." + ENTITY_ANIMAL.getCOLUMN_IS_ALIVE() + " = 0 OR ";
-                sql += AsMainAnimal + "." + ENTITY_ANIMAL.getCOLUMN_IS_ALIVE() + " = 1 ) ";
-            } else if (animalSearchForm.getIsAlive()) {
-                System.out.println("H");
-                sql += "( " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_IS_ALIVE + " = 1 ) ";
-            } else if (animalSearchForm.getIsDead()) {
-                System.out.println("I");
-                sql += "( " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_IS_ALIVE + " = 0 ) ";
-            }
-        }
 
-        if(!animalSearchForm.getZoo().isEmpty()) {
-            if (animalSearchForm.getIsMale() || animalSearchForm.getIsFemale() || animalSearchForm.getIsDead() || animalSearchForm.getIsAlive()) {
-                sql += "AND ( ";
-                for (int i = 0; i < animalSearchForm.getZoo().size() - 1; i++) {
-                    sql += ENTITY_ZOO.TABLE_NAME + "." + ENTITY_ZOO.COLUMN_ZOO_ID + " = " + animalSearchForm.getZoo().get(i) + " OR ";
+            if (animalFilterForm.getIsMale() && animalFilterForm.getIsFemale()) {
+                System.out.println("A");
+                sql += "( " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_SEX + " = 1 OR ";
+                sql += AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_SEX + " = 2 ) ";
+            } else if (animalFilterForm.getIsMale()) {
+                System.out.println("B");
+                sql += "( " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_SEX + " = 1 ) ";
+            } else if (animalFilterForm.getIsFemale()) {
+                System.out.println("C");
+                sql += "( " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_SEX + " = 2 ) ";
+            }
+
+            if (animalFilterForm.getIsMale() || animalFilterForm.getIsFemale()) {
+                if (animalFilterForm.getIsAlive() && animalFilterForm.getIsDead()) {
+                    System.out.println("D");
+                    sql += "AND ( " + AsMainAnimal + "." + ENTITY_ANIMAL.getCOLUMN_IS_ALIVE() + " = 0 OR ";
+                    sql += AsMainAnimal + "." + ENTITY_ANIMAL.getCOLUMN_IS_ALIVE() + " = 1 ) ";
+                } else if (animalFilterForm.getIsAlive()) {
+                    System.out.println("E");
+                    sql += "AND ( " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_IS_ALIVE + " = 1 ) ";
+                } else if (animalFilterForm.getIsDead()) {
+                    System.out.println("F");
+                    sql += "AND ( " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_IS_ALIVE + " = 0 ) ";
                 }
-                sql += ENTITY_ZOO.TABLE_NAME + "." + ENTITY_ZOO.COLUMN_ZOO_ID + " = " + animalSearchForm.getZoo().get(animalSearchForm.getZoo().size() - 1);
+            } else {
+                if (animalFilterForm.getIsAlive() && animalFilterForm.getIsDead()) {
+                    System.out.println("G");
+                    sql += "( " + AsMainAnimal + "." + ENTITY_ANIMAL.getCOLUMN_IS_ALIVE() + " = 0 OR ";
+                    sql += AsMainAnimal + "." + ENTITY_ANIMAL.getCOLUMN_IS_ALIVE() + " = 1 ) ";
+                } else if (animalFilterForm.getIsAlive()) {
+                    System.out.println("H");
+                    sql += "( " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_IS_ALIVE + " = 1 ) ";
+                } else if (animalFilterForm.getIsDead()) {
+                    System.out.println("I");
+                    sql += "( " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_IS_ALIVE + " = 0 ) ";
+                }
+            }
+        }
+
+        if(!animalFilterForm.getZoo().isEmpty()) {
+            if (animalFilterForm.getIsMale() || animalFilterForm.getIsFemale() || animalFilterForm.getIsDead() || animalFilterForm.getIsAlive()) {
+                sql += "AND ( ";
+                for (int i = 0; i < animalFilterForm.getZoo().size() - 1; i++) {
+                    sql += ENTITY_ZOO.TABLE_NAME + "." + ENTITY_ZOO.COLUMN_ZOO_ID + " = " + animalFilterForm.getZoo().get(i) + " OR ";
+                }
+                sql += ENTITY_ZOO.TABLE_NAME + "." + ENTITY_ZOO.COLUMN_ZOO_ID + " = " + animalFilterForm.getZoo().get(animalFilterForm.getZoo().size() - 1);
                 sql += ") ";
             } else {
                 sql += "WHERE ( ";
-                for (int i = 0; i < animalSearchForm.getZoo().size() - 1; i++) {
-                    sql += ENTITY_ZOO.TABLE_NAME + "." + ENTITY_ZOO.COLUMN_ZOO_ID + " = " + animalSearchForm.getZoo().get(i) + " OR ";
+                for (int i = 0; i < animalFilterForm.getZoo().size() - 1; i++) {
+                    sql += ENTITY_ZOO.TABLE_NAME + "." + ENTITY_ZOO.COLUMN_ZOO_ID + " = " + animalFilterForm.getZoo().get(i) + " OR ";
                 }
-                sql += ENTITY_ZOO.TABLE_NAME + "." + ENTITY_ZOO.COLUMN_ZOO_ID + " = " + animalSearchForm.getZoo().get(animalSearchForm.getZoo().size() - 1);
+                sql += ENTITY_ZOO.TABLE_NAME + "." + ENTITY_ZOO.COLUMN_ZOO_ID + " = " + animalFilterForm.getZoo().get(animalFilterForm.getZoo().size() - 1);
                 sql += ") ";
             }
         }
 
-        if(animalSearchForm.getKeyword() != null) {
-            String[] splitkeyWord = animalSearchForm.getKeyword().replaceAll(" ", "　").split("　", 0);
-            if (animalSearchForm.getIsMale() || animalSearchForm.getIsFemale() || animalSearchForm.getIsDead()
-                    || animalSearchForm.getIsAlive() || !animalSearchForm.getZoo().isEmpty()) {
+        if(animalFilterForm.getKeyword() != null) {
+            String[] splitkeyWord = animalFilterForm.getKeyword().replaceAll(" ", "　").split("　", 0);
+            if (animalFilterForm.getIsMale() || animalFilterForm.getIsFemale() || animalFilterForm.getIsDead()
+                    || animalFilterForm.getIsAlive() || animalFilterForm.getZoo().isEmpty()) {
                 sql += "AND ( ";
                 for (int i = 0; i < splitkeyWord.length; ++i) {
                     sql += "( " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_NAME + " like '%" + splitkeyWord[i] + "%' OR " + ENTITY_ZOO.COLUMN_ZOO_NAME + " like '%" + splitkeyWord[i]

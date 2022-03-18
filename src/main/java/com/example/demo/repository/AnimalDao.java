@@ -3,7 +3,7 @@ package com.example.demo.repository;
 import java.util.Date;
 import java.util.List;
 
-import com.example.demo.app.AnimalSearchForm;
+import com.example.demo.app.AnimalFilterForm;
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.AnimalForTree;
 
@@ -34,5 +34,5 @@ public interface AnimalDao {
 	
 	List<AnimalForTree> getChildrenAnimalForTree(int animal_id, int sex);
 
-    List<Animal> filter(AnimalSearchForm animalSearchForm);
+    List<Animal> filter(AnimalFilterForm animalSearchForm);
 }
