@@ -744,7 +744,7 @@ public class AnimalDaoImpl implements AnimalDao {
         if(animalFilterForm.getKeyword() != null) {
             String[] splitkeyWord = animalFilterForm.getKeyword().replaceAll(" ", "　").split("　", 0);
             if (animalFilterForm.getIsMale() || animalFilterForm.getIsFemale() || animalFilterForm.getIsDead()
-                    || animalFilterForm.getIsAlive() || animalFilterForm.getZoo().isEmpty()) {
+                    || animalFilterForm.getIsAlive() || !animalFilterForm.getZoo().isEmpty()) {
                 sql += "AND ( ";
                 for (int i = 0; i < splitkeyWord.length; ++i) {
                     sql += "( " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_NAME + " like '%" + splitkeyWord[i] + "%' OR " + ENTITY_ZOO.COLUMN_ZOO_NAME + " like '%" + splitkeyWord[i]
