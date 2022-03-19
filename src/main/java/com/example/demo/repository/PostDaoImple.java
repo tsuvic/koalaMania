@@ -17,6 +17,7 @@ import com.example.demo.entity.Post;
 import com.example.demo.entity.PostImage;
 import com.example.demo.entity.Prefecture;
 import com.example.demo.entity.Zoo;
+import com.example.demo.util.CommonSqlUtil;
 
 @Repository
 public class PostDaoImple implements PostDao {

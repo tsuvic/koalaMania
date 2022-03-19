@@ -54,86 +54,88 @@
 
 <form class="searchform" method="get" th:action="@{/search}" th:object="${animalSearchForm}">
 
-    <!-- Modal 動物園-->
-    <div class="modal fade" id="exampleModal" tabindex="-1"
-         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">動物園で絞り込み</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+<!-- Modal 動物園-->
+<div class="modal fade" id="exampleModal" tabindex="-1"
+	 aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">動物園で絞り込み</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+			</div>
+				<div class="modal-body">
 
-                    <div th:each="zoo : ${zooList}">
-                        <input type="checkbox" th:id="${zoo.zoo_id}" th:value="${zoo.zoo_name}" name="keyword">
-                        <label th:for="${zoo.zoo_id}" th:text="${zoo.zoo_name}"></label>
-                    </div>
+					<div th:each="zoo : ${zooList}">
+						<input type="checkbox" th:id="${zoo.zoo_id}" th:value="${zoo.zoo_name}" name="keyword">
+						<label th:for="${zoo.zoo_id}" th:text="${zoo.zoo_name}"></label>
+					</div>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">さがす</button>
-                </div>
-            </div>
-        </div>
-    </div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary">さがす</button>
+				</div>
+		</div>
+	</div>
+</div>
 
-    <!-- Modal 動物 今後コアラ以外の動物に拡張した際に対応が必要-->
-    <div class="modal fade" id="animalModal" tabindex="-1"
-         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="animalModalLabel">動物で絞り込み</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="checkbox" th:text="コアラ">
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">さがす</button>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- Modal 動物 今後コアラ以外の動物に拡張した際に対応が必要-->
+<div class="modal fade" id="animalModal" tabindex="-1"
+	 aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="animalModalLabel">動物で絞り込み</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+			</div>
+				<div class="modal-body">
+					<input type="checkbox" th:text="コアラ">
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary">さがす</button>
+				</div>
+		</div>
+	</div>
+</div>
 
 
-    <div class="masthead">
-        <div class="masthead_content">
-            <div class="logo">
-                <img src="images/title.png" alt="title">
-            </div>
-            <div class="copy">
-                <p>コアラのことがもっと好きになるデータベース</p>
-            </div>
-            <div class="topsearch">
-                <div class="container g-0">
-                    <div class="row g-0 topsearch_tabs">
-                        <div class="col-4 topsearch_tab first d-flex align-items-center justify-content-center">
-                            <a class="search tab_active">キーワードから探す</a>
-                        </div>
-                        <div class="col-4 topsearch_tab second js-modal-open-zoo d-flex align-items-center justify-content-center">
-                            <a class="search" data-bs-toggle="modal"
-                               data-bs-target="#exampleModal">動物園から探す</a>
-                        </div>
-                        <div class="col-4 topsearch_tab third js-modal-open-animal d-flex align-items-center justify-content-center">
-                            <a class="search" data-bs-toggle="modal"
-                               data-bs-target="#animalModal">動物から探す</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="topsearch_keyword">
-                    <div class="formtext">
-                        <input class="formtext" type="text" name="keyword" value=""
-                               placeholder="コアラ・動物園名">
-                        <button class="topsearch_button" type="submit">さがす</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="masthead">
+	<div class="masthead_content">
+		<div class="logo">
+			<img src="images/title.png" alt="title">
+		</div>
+		<div class="copy">
+			<p>コアラのことがもっと好きになるデータベース</p>
+		</div>
+
+			<div class="topsearch">
+				<div class="container g-0">
+					<div class="row g-0 topsearch_tabs">
+						<div class="col-4 topsearch_tab first d-flex align-items-center justify-content-center">
+							<a class="search tab_active">キーワードから探す</a>
+						</div>
+						<div class="col-4 topsearch_tab second js-modal-open-zoo d-flex align-items-center justify-content-center">
+							<a class="search" data-bs-toggle="modal"
+							   data-bs-target="#exampleModal">動物園から探す</a>
+						</div>
+						<div class="col-4 topsearch_tab third js-modal-open-animal d-flex align-items-center justify-content-center">
+							<a class="search" data-bs-toggle="modal"
+							   data-bs-target="#animalModal">動物から探す</a>
+						</div>
+					</div>
+				</div>
+				<div class="topsearch_keyword">
+					<div class="formtext">
+						<input class="formtext" type="text" name="keyword" value=""
+							   placeholder="コアラ・動物園名">
+						<button class="topsearch_button" type="submit">さがす</button>
+					</div>
+				</div>
+			</div>
+
+	</div>
+</div>
 </form>
 
 <!-- Services-->

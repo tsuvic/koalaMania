@@ -1,6 +1,5 @@
 package com.example.demo.app;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.demo.entity.Post;
 import com.example.demo.service.ZooService;
+import com.example.demo.util.DateUtil;
 
 @Controller
 @RequestMapping("/zoo")
@@ -19,10 +19,13 @@ public class ZooController {
 	
 	//下記のリクエストで使用するために、AnimalService型のフィールド用意 & @AutowiredでDIを実施する。	
 	private final ZooService zooService;
+	
+	private final DateUtil dateUtil;
 
 	@Autowired
-	public ZooController(ZooService zooService) {
+	public ZooController(ZooService zooService,DateUtil dateUtil) {
 		this.zooService = zooService;
+		this.dateUtil = dateUtil;
 	}
 	
 	@GetMapping("/detail/{zoo_id}")
@@ -31,25 +34,11 @@ public class ZooController {
 		model.addAttribute("zoo", zooService.findById(zoo_id));
 		
 		List<Post> postList = zooService.getPostListByZooId(zoo_id);
-		Date now = new Date();
-		long nowtime = now.getTime();
 		
 		for(Post post : postList) {
-			Date cteate = post.getCreatedDate();
-			long createtime = cteate.getTime();
-			long difftime  =  nowtime - createtime;
 			
-			if(difftime/1000/60 < 59) {
-				post.setDisplayDiffTime(difftime/1000/60  + "分前");
-			}else if(difftime/1000/60/60 < 24) {
-				post.setDisplayDiffTime(difftime/1000/60/60  + "時間前");
-			}else if(difftime/1000/60/60/24 < 31) {
-				post.setDisplayDiffTime(difftime/1000/60/60/24  + "日前");
-			}else if(difftime/1000/60/60/24/30 < 1) {
-				post.setDisplayDiffTime(difftime/1000/60/60/24/30  + "ヶ月前");
-			}else {
-				post.setDisplayDiffTime(difftime/1000/60/60/24/30  + "年前");
-			}
+			dateUtil.setPostDiffTime(post);
+			
 			setDefaultUserProfileImage(post);
 		}
 		
