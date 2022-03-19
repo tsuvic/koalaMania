@@ -52,6 +52,8 @@
 <body>
 <div th:replace="~{block/header_boot::headerA_boot}"></div>
 
+<form class="searchform" method="get" th:action="@{/search}" th:object="${animalSearchForm}">
+
 <!-- Modal 動物園-->
 <div class="modal fade" id="exampleModal" tabindex="-1"
 	 aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -62,7 +64,6 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 			</div>
-			<form class="searchform" method="get" th:action="@{/search}">
 				<div class="modal-body">
 
 					<div th:each="zoo : ${zooList}">
@@ -74,7 +75,6 @@
 				<div class="modal-footer">
 					<button type="submit" class="btn btn-primary">さがす</button>
 				</div>
-			</form>
 		</div>
 	</div>
 </div>
@@ -89,14 +89,12 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 			</div>
-			<form class="searchform" method="get" th:action="@{/search}">
 				<div class="modal-body">
 					<input type="checkbox" th:text="コアラ">
 				</div>
 				<div class="modal-footer">
 					<button type="submit" class="btn btn-primary">さがす</button>
 				</div>
-			</form>
 		</div>
 	</div>
 </div>
@@ -110,8 +108,7 @@
 		<div class="copy">
 			<p>コアラのことがもっと好きになるデータベース</p>
 		</div>
-		<form class="searchform" method="get" th:action="@{/search}"
-			  th:object="${animalSearchForm}">
+
 			<div class="topsearch">
 				<div class="container g-0">
 					<div class="row g-0 topsearch_tabs">
@@ -136,10 +133,10 @@
 					</div>
 				</div>
 			</div>
-		</form>
+
 	</div>
 </div>
-
+</form>
 <!-- Services-->
 <section class="page-section" id="services">
 	<div class="container">
