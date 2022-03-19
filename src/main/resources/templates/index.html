@@ -52,7 +52,7 @@
 <body>
 <div th:replace="~{block/header_boot::headerA_boot}"></div>
 
-<form class="searchform" method="get" th:action="@{/search}" th:object="${animalSearchForm}">
+<form class="searchform" method="get" th:action="@{/filter}" th:object="${animalFilterForm}">
 
 <!-- Modal 動物園-->
 <div class="modal fade" id="exampleModal" tabindex="-1"
@@ -64,15 +64,17 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 			</div>
-				<div class="modal-body">
 
-					<div th:each="zoo : ${zooList}">
-						<input type="checkbox" th:id="${zoo.zoo_id}" th:value="${zoo.zoo_name}" name="keyword">
-						<label th:for="${zoo.zoo_id}" th:text="${zoo.zoo_name}"></label>
-					</div>
-
+			<div class="modal-body">
+				<div th:each="zoo, status : ${zooList}">
+					<input type="checkbox" th:value="${zoo.zoo_id}"
+						   th:id="${zoo.zoo_id}" th:field="${animalFilterForm.zoo}">
+					<label th:for="${zoo.zoo_id}" th:text="${zoo.zoo_name}"></label>
 				</div>
-				<div class="modal-footer">
+			</div>
+
+
+			<div class="modal-footer">
 					<button type="submit" class="btn btn-primary">さがす</button>
 				</div>
 		</div>
@@ -125,6 +127,11 @@
 						</div>
 					</div>
 				</div>
+				<input type="hidden" id="isMale" name="isMale" th:value="false">
+				<input type="hidden" id="isFemale" name="isFemale" th:value="false">
+				<input type="hidden" id="isAlive" name="isAlive" th:value="false">
+				<input type="hidden" id="isDead" name="isDead" th:value="false">
+
 				<div class="topsearch_keyword">
 					<div class="formtext">
 						<input class="formtext" type="text" name="keyword" value=""
