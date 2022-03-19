@@ -1,9 +1,7 @@
 package com.example.demo.app;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -56,34 +54,61 @@ public class AnimalController {
 	String cloudinaryImageUrl;
 
 	@GetMapping("/")
-	public String indexDisplay(Model model) {
+	public String indexDisplay(Model model, @ModelAttribute AnimalFilterForm animalSearchForm, BindingResult bindingResult) {
 		var zooList = animalService.getZooList();
-		zooList.remove(0);
 		model.addAttribute("zooList", zooList);
 		return "index";
 	}
 
 	@GetMapping("/search")
 	public String displaySearchedKoara(Model model, @RequestParam(required = false, name = "keyword") String keyword,
-			@ModelAttribute AnimalSearchForm animalSearchForm, BindingResult bindingResult) {
+									   @ModelAttribute AnimalFilterForm animalFilterForm, @ModelAttribute AnimalSearchForm animalSearchForm, BindingResult bindingResult) {
 		List<Animal> list = new ArrayList<Animal>();
 		if (keyword == null || keyword.replaceAll(" ", "　").split("　", 0).length == 0) {
 			list = animalService.getAll();
-			model.addAttribute("searchResult", "検索結果一覧");
 		} else {
 			list = animalService.findByKeyword(keyword);
-			model.addAttribute("searchResult", "検索結果");
 		}
-		model.addAttribute("animalList", list);
+
 		for (Animal animal : list) {
 			Date birthDate = (Date) animal.getBirthdate();
+			animal.setStringBirthDate(disPlayDate(birthDate));
+			if (animal.getProfileImagePath() == null) {
+				animal.setProfileImagePath("/images/defaultAnimal.png");
+			}
+		}
+
+		var zooList = animalService.getZooList();
+		model.addAttribute("zooList", zooList);
+		model.addAttribute("animalList", list);
+		model.addAttribute("searchResult", "検索結果一覧");
+		return "search";
+	}
+
+	@GetMapping("/filter")
+	public String displayFilteredKoala(Model model, @ModelAttribute AnimalFilterForm animalFilterForm, BindingResult bindingResult) {
+
+		System.out.println(animalFilterForm);
+//		計画：コントローラーで条件分岐して判断する状況になっている
+//		animalSearchFormごと、Serviceに渡して、処理するようにする
+//		結果：searchを統合できず、filetrと重複したコードを残置している
+
+		List<Animal> animalList = new ArrayList<>();
+		animalList = animalService.animalFilter(animalFilterForm);
+
+		var zooList = animalService.getZooList();
+		model.addAttribute("zooList", zooList);
+		model.addAttribute("searchResult", "検索結果一覧");
+		model.addAttribute("animalList", animalList);
+
+		for (Animal animal : animalList) {
+			Date birthDate = animal.getBirthdate();
 			animal.setStringBirthDate(disPlayDate(birthDate));
 			if(animal.getProfileImagePath() == null) {
 				animal.setProfileImagePath("/images/defaultAnimal.png");
 			}
 		}
 		return "search";
-
 	}
 
 	/**
@@ -312,7 +337,7 @@ public class AnimalController {
 	/**
 	 * yyyy年m月d日にした文字列を返す
 	 * 
-	 * @param Date date
+	 * @param date
 	 * @return yyyy年m月d日の文字列
 	 */
 	private String disPlayDate(Date date) {
@@ -322,8 +347,8 @@ public class AnimalController {
 
 	/**
 	 * コアラにプロフィール画像がセットされていない場合、デフォルトの画像をセットする
-	 * 
-	 * @param Animal animal
+	 *
+	 * @param animal
 	*/
 	private void setDefaultAnimalProfileImage(Animal animal) {
 		if (animal.getProfileImagePath() == null) {

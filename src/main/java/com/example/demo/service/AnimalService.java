@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.example.demo.app.AnimalFilterForm;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.app.AnimalInsertForm;
@@ -35,5 +36,6 @@ public interface AnimalService {
 	Map<String, Object> getAnimalForTree(int i);
 	
 	Date getDate(String year, String month, String day);
-		
+
+	List<Animal> animalFilter(AnimalFilterForm animalSearchForm);
 }

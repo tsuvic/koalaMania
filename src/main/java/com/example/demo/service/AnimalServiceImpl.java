@@ -12,16 +12,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
+import com.example.demo.app.AnimalFilterForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,11 +96,11 @@ public class AnimalServiceImpl implements AnimalService {
 		zooList.remove(0);
 		zooList.add(other_zoo);
 		
-		//選択なし
-		Zoo zoo = new Zoo();
-		zoo.setZoo_id(-1);
-		zoo.setZoo_name("---");
-		zooList.add(0, zoo);
+//		//選択なし
+//		Zoo zoo = new Zoo();
+//		zoo.setZoo_id(-1);
+//		zoo.setZoo_name("動物園を選択する");
+//		zooList.add(0, zoo);
 
 		return zooList;
 
@@ -566,7 +563,18 @@ public class AnimalServiceImpl implements AnimalService {
 			e.printStackTrace();
 			return null;
 		}
-		
 	}
 
+	@Override
+	public List<Animal> animalFilter(AnimalFilterForm animalFilterForm){
+		if (animalFilterForm.getIsMale() == null && animalFilterForm.getIsFemale() == null &&
+				animalFilterForm.getIsDead() == null && animalFilterForm.getIsAlive() == null &&
+				animalFilterForm.getZoo().isEmpty() && animalFilterForm.getKeyword() == null) {
+			return getAll();
+		} else {
+			return animalDao.filter(animalFilterForm);
+		}
+
+
+	}
 }
