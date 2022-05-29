@@ -17,7 +17,7 @@ public class SecurityConfig {
 
 		@Override
 		public void configure(WebSecurity web) throws Exception {
-			web.ignoring().antMatchers("/css/**", "/js/**", "/fonts/**", "/img/**");
+			web.ignoring().antMatchers("/assets/**", "/css/**", "/js/**", "/fonts/**", "/img/**");
 		}
 
 		protected void configure(HttpSecurity http) throws Exception {

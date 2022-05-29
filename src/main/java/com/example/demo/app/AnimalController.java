@@ -1,12 +1,11 @@
 package com.example.demo.app;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.example.demo.entity.Animal;
+import com.example.demo.entity.AnimalZooHistory;
+import com.example.demo.entity.Zoo;
+import com.example.demo.service.AnimalService;
+import com.example.demo.service.PostImageService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -14,21 +13,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.entity.Animal;
-import com.example.demo.entity.AnimalZooHistory;
-import com.example.demo.entity.Zoo;
-import com.example.demo.service.AnimalService;
-import com.example.demo.service.PostImageService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 @RequestMapping("/")
@@ -52,6 +40,11 @@ public class AnimalController {
 	@Autowired
 	@Qualifier("com.cloudinary.image.url")
 	String cloudinaryImageUrl;
+
+	@GetMapping("/static/index")
+	public String displaySpaTestPage(){
+		return "../static/index";
+	}
 
 	@GetMapping("/")
 	public String indexDisplay(Model model, @ModelAttribute AnimalFilterForm animalSearchForm, BindingResult bindingResult) {

@@ -1,0 +1,26 @@
+.link {
+    fill: none;
+    stroke: #000;
+}
+.sibling {
+    fill: none;
+    stroke: blue;
+}
+.border {
+    fill: none;
+    shape-rendering: crispEdges;
+    stroke: #aaa;
+}
+.node {
+    stroke:  rgba(255, 255, 255, 0.05);
+    fill:rgba(255, 255, 255, 0.05);
+}
+
+.image {
+  clip-path: circle(50%);
+}
+
+text {
+	font-size: 30px;
+}
+
