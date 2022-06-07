@@ -1,28 +1,16 @@
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import appbar from './views/appbar.vue';
+import navigationdrawer from './views/navigationdrawer.vue';
+import home from './views/home.vue';
+
+</script>
+
 <template>
   <v-app>
     <v-main>
-      <div id="nav">
-        <router-link to="/">Home</router-link> |
-        <router-link to="/param/1/2">param</router-link> |
-        <router-link to="/auth">auth</router-link> |
-        <router-link to="/inbox">Inbox</router-link> |
-        <router-link to="/adfnsdofjna">ERROR</router-link>
-      </div>
-      <router-view/>
+      <appbar></appbar>
+      <home></home>
     </v-main>
   </v-app>
 </template>
-
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'App',
-
-  data () {
-    return {
-      msg: 'Hello Vue!'
-    }
-  },
-})
-</script>

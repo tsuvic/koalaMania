@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import axios from 'axios';
 import { validate } from 'json-schema';
 import { defineComponent, ref, onMounted, computed, watch } from 'vue';
 
@@ -17,24 +18,6 @@ const pwRules = [
 const form = ref<{ validate: () => boolean }>()
 valid.value = form.value?.validate();
 
-
-// watch(form, (form) => {
-//   valid.value = form?.validate();
-// });
-
-
-
-function submitTwitter(){
-
-};
-
-function submitGoogle() {
-      // グーグルログインの処理
-};
-
-function forgetPw(){
-      // パスワードを忘れた時の処理
-};
 </script>
 
 <template>
@@ -50,11 +33,12 @@ function forgetPw(){
         dark
         depressed
         height="48px"
-        @click="submitTwitter"
+        link="true"
+        href="/oauth/twitter/auth"
       >
         <img
           class="button-logo-img mr-4"
-          src="../assets/2021-Twitter-logo-white.png"
+          src="../assets/202  1-Twitter-logo-white.png"
           style="height: 20px"
         />
         twitterでログイン
@@ -65,7 +49,7 @@ function forgetPw(){
         height="48px"
         outlined
         style="border-color: #979797"
-        @click="submitGoogle"
+        @click=""
       >
         <img
           class="button-logo-img mr-4"
@@ -93,7 +77,7 @@ function forgetPw(){
         ></v-text-field>
         <div class="text-center m-4">
           <v-btn large primary block :disabled="!valid">ログイン</v-btn>
-          <p class=" m-3" @click="forgetPw">パスワードを忘れた方</p>
+          <p class=" m-3" @click="">パスワードを忘れた方</p>
         </div>
       </v-form>
     </v-card-text>

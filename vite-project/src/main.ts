@@ -5,6 +5,7 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import { loadFonts } from './plugins/webfontloader'
 import './index.css'
+import navbarVue from './views/navbar.vue'
 
 
 loadFonts()

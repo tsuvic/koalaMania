@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Home from '/src/views/home.vue'
 import Param from '/src/views/param.vue'
 import Auth from '/src/views/auth.vue'
@@ -38,11 +38,19 @@ const routes = [
     name: 'users',
     component: Users
   },
+  {
+    path: '/oauth/twitter/auth',
+    name: 'twitter-auth',
+    component: Auth,
+    beforeEnter() {
+      window.location.href = "/oauth/twitter/auth"
+    },
+  },
 ]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes: routes,
 })
 
 export default router;
