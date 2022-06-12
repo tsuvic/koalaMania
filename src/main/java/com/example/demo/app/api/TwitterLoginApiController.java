@@ -1,13 +1,18 @@
 package com.example.demo.app.api;
 
+import com.example.demo.entity.LoginUser;
+import com.example.demo.service.TwitterLoginService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.OAuthAuthorization;
 import twitter4j.auth.RequestToken;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationContext;
@@ -32,7 +37,11 @@ public class TwitterLoginApiController {
     @Qualifier("spring.social.twitter.callback-url")
     private String twitterCallBackUrl;
 
+    @Autowired
     private HttpSession session;
+
+    @Autowired
+    private TwitterLoginService twitterLoginService;
 
     @RequestMapping("/oauth/twitter/request")
     String requestTwitter(){
@@ -49,23 +58,44 @@ public class TwitterLoginApiController {
         return "redirect:" + requestToken.getAuthenticationURL();
     }
 
-    @RequestMapping
-    String loginTwitter(HttpServletRequest req, HttpServletResponse res){
+    @RequestMapping("/oauth/twitter/login")
+    String loginTwitter(HttpServletResponse response,HttpServletRequest request) {
+
         Configuration conf = ConfigurationContext.getInstance();
         RequestToken requestToken = (RequestToken) session.getAttribute("requestToken");
 
-        if (requestToken == null){
-            throw new RuntimeException("requestToken is null");
+        // token secretが無い場合はエラーとする。
+        if (requestToken == null || StringUtils.isBlank(requestToken.getTokenSecret())) {
+            throw new RuntimeException("token secret is null.");
         }
 
-        if (StringUtils.isBlank(requestToken.getTokenSecret())){
-            throw new RuntimeException("Token Secret is blank")
+        AccessToken accessToken = new AccessToken(requestToken.getToken(), requestToken.getTokenSecret());
+        OAuthAuthorization oath = new OAuthAuthorization(conf);
+
+        oath.setOAuthAccessToken(accessToken);
+        String verifier = request.getParameter("oauth_verifier");
+        try {
+            if(verifier != null) {
+                accessToken = oath.getOAuthAccessToken(verifier);
+            }else {
+                return "redirect:/login";
+            }
+            Twitter twitter = new TwitterFactory().getInstance();
+            twitter.setOAuthConsumer(twitterApiKey, twitterApiSecret);
+            twitter.setOAuthAccessToken(accessToken);
+            //ユーザーを認証する
+            twitterLoginService.userLogin(twitter.verifyCredentials(),response,request);
+        } catch (TwitterException e) {
+            e.printStackTrace();
         }
 
-        
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return null;
+        return "redirect:/user/mypage/" + ((LoginUser) principal).getUser_id();
     }
+
+
+
 
 
 

@@ -1,4 +1,4 @@
-<template>
+<template class>
   <div class="inbox">
     <h1>Inbox</h1>
   </div>
@@ -8,4 +8,4 @@
     padding: 20px;
     background: #BBBBBB;
   }
-</style>
+</style>  

@@ -1,9 +1,7 @@
 package com.example.demo.service;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.example.demo.entity.LoginUser;
+import com.example.demo.repository.LoginUserDao;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,11 +9,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import com.example.demo.entity.LoginUser;
-import com.example.demo.repository.LoginUserDao;
-
 import twitter4j.User;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Service
 public class TwitterLoginServiceImple implements TwitterLoginService {
@@ -48,7 +46,7 @@ public class TwitterLoginServiceImple implements TwitterLoginService {
 		
 		
 		Cookie cookie = new Cookie("autoLogin", hashedKeys[0]); // Cookieの作成
-	    cookie.setMaxAge(30 * 24 * 60 * 60); // Cookieの残存期間（秒数）30日に設定
+	    cookie.setMaxAge(1 * 24 * 60 * 60); // Cookieの残存期間（秒数）30日に設定
 	    cookie.setPath("/");
 	    if(request.getScheme().equals("https")) {
 	    	cookie.setSecure(true);

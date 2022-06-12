@@ -4,15 +4,20 @@ import com.example.demo.app.UserAuthenticationUtil;
 import com.example.demo.app.UserForm;
 import com.example.demo.entity.LoginUser;
 import com.example.demo.entity.Post;
+import com.example.demo.repository.LoginUserDao;
 import com.example.demo.service.*;
 import com.example.demo.util.DateUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -33,9 +38,19 @@ public class UserRestController {
 
 	private final DateUtil dateUtil;
 
+	private final LoginUserDao loginUserDao;
+	private final TwitterLoginService twitterLoginService;
+
+	@Autowired
+	private HttpServletResponse response;
+
+	@Autowired
+	private HttpServletRequest request;
+
 	@Autowired
 	public UserRestController(UserService userService, PostFavoriteService postFavoriteService , UserAuthenticationUtil userAuthenticationUtil,
-                              PostService postService, PostImageService postImageService, PostImageFavoriteService postImageFavoriteService, DateUtil dateUtil) {
+                              PostService postService, PostImageService postImageService, PostImageFavoriteService postImageFavoriteService,
+							  DateUtil dateUtil, LoginUserDao userDao , TwitterLoginService twitterLoginService) {
 		this.userService = userService;
 		this.userAuthenticationUtil = userAuthenticationUtil;
 		this.postService = postService;
@@ -43,17 +58,73 @@ public class UserRestController {
 		this.postImageService = postImageService;
 		this.postImageFavoriteService = postImageFavoriteService;
 		this.dateUtil = dateUtil;
+		this.loginUserDao = userDao;
+		this.twitterLoginService = twitterLoginService;
 	}
+
+	@RequestMapping("/checkAuthenticated")
+	String checkAuthenticated(@ModelAttribute UserForm form) throws Exception{
+		LoginUser loginUser = userAuthenticationUtil.isUserAuthenticated();
+		if (loginUser != null){
+			form.setUser_id(loginUser.getUser_id());
+			form.setName(loginUser.getUserName());
+			form.setProfile(loginUser.getProfile());
+			form.setProfileImagePath(loginUser.getProfileImagePath());
+			form.setTwitterLinkFlag(loginUser.isTwitterLinkFlag());
+			return new ObjectMapper().writeValueAsString(form);
+		} else {
+			System.out.println("null");
+			return null;
+		}
+	}
+	
+
 
 //	@CrossOrigin(origins = {"http://localhost:3000", "http://127.0.0.1:8080"})
 	@GetMapping("/{userId}")
 	public String getUsers(@PathVariable int userId, Model model, @ModelAttribute UserForm form) throws Exception{
-		LoginUser principal = userAuthenticationUtil.isUserAuthenticated();
-
-
 		form.setUser_id(userId);
 		String json = new ObjectMapper().writeValueAsString(form);
 		return json;
+	}
+
+	@RequestMapping("/loginUser")
+	String getLoginUser(@ModelAttribute UserForm form) throws  Exception{
+		LoginUser principal = userAuthenticationUtil.isUserAuthenticated();
+
+		System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+		System.out.println(principal);
+
+		form.setUser_id(principal.getUser_id());
+		form.setProfile(principal.getProfile());
+		String json = new ObjectMapper().writeValueAsString(form);
+		return json;
+	}
+	@RequestMapping("/loginUser2")
+	public void CheckAutoLoginAspect(){
+		javax.servlet.http.Cookie[] cookies =  request.getCookies();
+		String autoLogin = null;
+		if(cookies != null) {
+			for (javax.servlet.http.Cookie cookie : cookies) {
+				System.out.println("4");
+				if ("autoLogin".equals(cookie.getName())) {
+					System.out.println("5");
+					autoLogin = cookie.getValue();
+					break;
+				}
+			}
+		}
+		System.out.println("1");
+		if(userAuthenticationUtil.isUserAuthenticated() == null && autoLogin != null) {
+			LoginUser loginUser  = loginUserDao.checkAutoLoginUser(DigestUtils.sha3_256Hex(autoLogin));
+			System.out.println("2");
+			if(loginUser != null) {
+				twitterLoginService.setCookie(loginUser, response,request);
+				loginUserDao.updateProviderAdressAndLoginDate(loginUser);
+				System.out.println("3");
+			}
+		}
+
 	}
 
 	@GetMapping("/mypage/{user_id}")

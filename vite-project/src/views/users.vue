@@ -12,11 +12,6 @@
     directives,
   })
 
-  const store = useStore()
-  const name = computed(() => {
-      return store.state.user.name
-  })
-
   const count = ref(0);
   const increment = () => {
     count.value++;
@@ -25,11 +20,17 @@
     count.value--;
   }
 
-
   const posts = ref([]);
   const axios = () => {
     usersApiService.getUser(count)
       .then(res => {posts.value = res.data;})
+      .catch(err => {console.log(err);});
+  }
+
+  const posts2 = ref([]);
+  const axios2 = () => {
+    usersApiService.test2()
+      .then(res => {posts2.value = res.data;})
       .catch(err => {console.log(err);});
   }
 
@@ -41,10 +42,12 @@
     <v-btn @click="increment" class="m-2">Increment</v-btn>
     <v-btn @click="decrement" class="m-2">Decrement</v-btn>
     <v-btn @click="axios" class="m-2">Axsios</v-btn>
+    <v-btn @click="axios2" class="m-2">Axsios2</v-btn>
     <br>
     <h1 class="m-2">{{count}}</h1>
-    <br>
     <p class="m-2"> axios結果 : {{posts}}</p>
+    <br>
+    <p class="m-2"> axios2結果 : {{posts2}}</p>
     <br>
 
 

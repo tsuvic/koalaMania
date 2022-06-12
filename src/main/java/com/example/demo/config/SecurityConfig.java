@@ -17,7 +17,7 @@ public class SecurityConfig {
 
 		@Override
 		public void configure(WebSecurity web) throws Exception {
-			web.ignoring().antMatchers("/assets/**", "/css/**", "/js/**", "/fonts/**", "/img/**");
+			web.ignoring().antMatchers("/css/**", "/js/**", "/fonts/**", "/img/**");
 		}
 
 		protected void configure(HttpSecurity http) throws Exception {
@@ -27,15 +27,18 @@ public class SecurityConfig {
 					.antMatchers("/insert").authenticated()
 					.antMatchers("/edit/*").authenticated()
 					.antMatchers("/post/postInsert").authenticated()
-					.antMatchers("/delete/*").authenticated();
-					
-			
-			http
+					.antMatchers("/delete/*").authenticated()
+
+			.and()
+					.exceptionHandling()
+
+
+			.and()
 				.formLogin()
 				.loginProcessingUrl("/oauth/twitter/access")
-				.loginPage("/login");
-			
-			http
+				.loginPage("/login")
+
+			.and()
 			.logout()
 			.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 			.logoutUrl("/logout")

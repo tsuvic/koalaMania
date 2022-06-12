@@ -37,9 +37,10 @@ valid.value = form.value?.validate();
         href="/oauth/twitter/auth"
       >
         <img
-          class="button-logo-img mr-4"
-          src="../assets/202  1-Twitter-logo-white.png"
+          class="button-logo-img mr-2 d-inline"
+          src="../assets/2021-Twitter-logo-white.png"
           style="height: 20px"
+          center
         />
         twitterでログイン
       </v-btn>
@@ -52,7 +53,7 @@ valid.value = form.value?.validate();
         @click=""
       >
         <img
-          class="button-logo-img mr-4"
+          class="button-logo-img mr-2 d-inline"
           src="https://madeby.google.com/static/images/google_g_logo.svg"
           style="height: 24px"
         />

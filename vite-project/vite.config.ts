@@ -1,16 +1,19 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vuetify from '@vuetify/vite-plugin'
+import vuetify from 'vite-plugin-vuetify'
 
 const path = require('path')
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  css: {
+    devSourcemap: true,
+  },
+
   plugins: [
     vue(),
-    // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
     vuetify({
-      autoImport: true,
+      autoImport: true
     }),
   ],
 
@@ -39,8 +42,12 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
-      
-    }
+      '/oauth': {
+        target: 'http://127.0.0.1:8080',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
 
   /* remove the need to specify .vue files https://vitejs.dev/config/#resolve-extensions

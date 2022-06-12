@@ -1,8 +1,7 @@
-import { createStore } from 'vuex'
-//@ts-ignore
+import { createPinia } from "pinia"
 import user from './modules/user'
 
-const store = createStore({
+const store = createPinia({
   modules: {
     user,
   }
