@@ -71,13 +71,14 @@ public class UserRestController {
 			form.setProfile(loginUser.getProfile());
 			form.setProfileImagePath(loginUser.getProfileImagePath());
 			form.setTwitterLinkFlag(loginUser.isTwitterLinkFlag());
+			System.out.println("HI");
 			return new ObjectMapper().writeValueAsString(form);
 		} else {
 			System.out.println("null");
 			return null;
 		}
 	}
-	
+
 
 
 //	@CrossOrigin(origins = {"http://localhost:3000", "http://127.0.0.1:8080"})

@@ -1,19 +1,26 @@
 <script setup lang="ts">
-import { ref, watchEffect, computed } from 'vue';
-import { useStore } from 'vuex';
+  import { storeToRefs } from 'pinia';
+  import { user } from '../store/user';
 
-const store = useStore()
-const name = computed(() => {
-    return store.state.user.name
-})
+  const store = user()
+  const { userId } = storeToRefs(store)
+  
 </script>
 
 <template>
   <div class="param">
-    <h1>test</h1>
+    <br>
+    <p>【テスト】動的ルーティング</p>
     <p>{{ $route.params.param1 }}</p>
     <p>{{ $route.params.param2 }}</p>
-    <p class="">Virtual DOM : {{name}}</p>
+
+    <br>
+    <p>【テスト】Pinia</p>
+    <p class="">{{userId}}</p>
+    <v-btn @click="store.getUser" class="m-2">Pinia Axios</v-btn>
+
+    <br>
+    <p>【テスト】Axios</p>
     <router-link to="/users">Axios</router-link>
   </div>
 </template>
