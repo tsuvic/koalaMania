@@ -13,7 +13,7 @@ export default defineConfig({
   plugins: [
     vue(),
     vuetify({
-      autoImport: true
+      autoImport: true,
     }),
   ],
 
@@ -43,6 +43,11 @@ export default defineConfig({
         secure: false,
       },
       '/oauth': {
+        target: 'http://127.0.0.1:8080',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/insert': {
         target: 'http://127.0.0.1:8080',
         changeOrigin: true,
         secure: false,

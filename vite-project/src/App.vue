@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import appbar from './views/appbar.vue';
-import home from './views/home.vue';
+import Appbar from './views/appbar.vue';
+import Toppage from './views/toppage.vue';
 </script>
 
 <template>
   <v-app>
     <v-main>
-      <appbar></appbar>
-      <home></home>
-      <v-btn color="something">ボタン</v-btn>
-      <v-btn color="secondary">ボタン</v-btn>
-      <v-btn color="error">ボタン</v-btn>
+      <Appbar></Appbar>
+      <Toppage></Toppage>
 </v-main>
   </v-app>
 </template>
