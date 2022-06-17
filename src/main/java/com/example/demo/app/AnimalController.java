@@ -46,7 +46,7 @@ public class AnimalController {
 		return "../static/index";
 	}
 
-	@GetMapping("/")
+	@GetMapping({"/", "/index"})
 	public String indexDisplay(Model model, @ModelAttribute AnimalFilterForm animalSearchForm, BindingResult bindingResult) {
 		var zooList = animalService.getZooList();
 		model.addAttribute("zooList", zooList);

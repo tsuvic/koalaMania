@@ -16,11 +16,16 @@
 
     <br>
     <p>【テスト】Pinia</p>
+    <p>Spring Securityで/loginを返すように設定し、エラーとする。</p>
+    <p>必要に応じてフロント側のAuthページを返すように変更する。</p>
     <p class="">{{userId}}</p>
     <v-btn @click="store.getUser" class="m-2">Pinia Axios</v-btn>
 
+    <br><br>
+    <p>【テスト】Axios </p>
+    <v-btn class="m-2">
+      <router-link to="/users">Axios</router-link>
+    </v-btn>
     <br>
-    <p>【テスト】Axios</p>
-    <router-link to="/users">Axios</router-link>
   </div>
 </template>

@@ -35,7 +35,7 @@ public class SecurityConfig {
 			.and()
 				.formLogin()
 				.loginProcessingUrl("/oauth/twitter/access")
-				.loginPage("http://127.0.0.1:3002/auth")
+				.loginPage("/login")
 
 			.and()
 			.logout()

@@ -6,9 +6,9 @@ const items = [
   {
   title:"トップページ",
   value:"topPage",
-  to:"/",
+  to:"/topPage",
   },{
-  title:"コアラマニアとは？",
+  title:"コアラマニアとは",
   value:"description",
   to:"/description",
   },{
@@ -17,13 +17,16 @@ const items = [
   to:"/animalRegister",
   },{
   title:"コアラを閲覧する",
-  value:"animalList"
+  value:"animalList",
+  to:"/animalList"
   },{
   title:"写真を投稿する",
-  value:"animalPost"
+  value:"animalPost",
+  to:"/animalPost"
   },{
   title:"問い合わせ",
-  value:"QA"
+  value:"QA",
+  to:"/QA"
   },
 ]
 

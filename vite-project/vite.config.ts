@@ -37,6 +37,11 @@ export default defineConfig({
     host: '127.0.0.1',
     port: 3002,
     proxy: {
+      // '/index': { 
+      //   target: 'http://127.0.0.1:8080',
+      //   changeOrigin: true,
+      //   secure: false,
+      // },
       '/api': { 
         target: 'http://127.0.0.1:8080',
         changeOrigin: true,
@@ -48,6 +53,11 @@ export default defineConfig({
         secure: false,
       },
       '/insert': {
+        target: 'http://127.0.0.1:8080',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/filter': {
         target: 'http://127.0.0.1:8080',
         changeOrigin: true,
         secure: false,

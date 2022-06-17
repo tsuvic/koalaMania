@@ -9,23 +9,31 @@ import Description from '/src/views/description.vue'
 
 const routes = [
   {
-    path: '/',      
+    path: "/:categories(topPage|)",  
     name: 'toppage',
-    component: TopPage 
+    component: TopPage,
   },
   {
     path: '/description',      
     name: 'description',
     component: Description 
   },
-  {
-    path: '/animalRegister',      
-    name: 'animalRegister',
-    component: TopPage,
-    beforeEnter() {
-      window.location.href = "/insert"
-    },
-  },
+  // {
+  //   path: '/animalList',      
+  //   name: 'animalList',
+  //   component: TopPage,
+  //   beforeEnter() {
+  //     window.location.href = "/filter?_zoo=on&_zoo=on&_zoo=on&_zoo=on&_zoo=on&_zoo=on&_zoo=on&_zoo=on&_zoo=on&_zoo=on&_zoo=on&_zoo=on&isMale=false&isFemale=false&isAlive=false&isDead=false&keyword="
+  //   },
+  // },
+  // {
+  //   path: '/animalRegister',      
+  //   name: 'animalRegister',
+  //   component: TopPage,
+  //   beforeEnter() {
+  //     window.location.href = "/insert"
+  //   },
+  // },
   {
     path: '/param/:param1/:param2',
     name: 'param',
@@ -59,6 +67,14 @@ const routes = [
       window.location.href = "/oauth/twitter/auth"
     },
   },
+  {
+  path: '/QA',
+  name: 'QA',
+  component: TopPage,
+  beforeEnter() {
+    window.location.href = "https://tayori.com/form/e976498f95636ad99bb9b6dbe901499a642cd107"
+  },
+},
 ]
 
 const router = createRouter({
