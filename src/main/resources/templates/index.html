@@ -35,9 +35,10 @@
     <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon.ico">
     <meta name="theme-color" content="#7952b3">
 
-    <link href="/css/background.css" rel="stylesheet">
-    <link href="/css/starter-template.css" rel="stylesheet">
-    <link href="/css/index.css" rel="stylesheet">
+    
+    
+    
+		
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link
             href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@900&display=swap"
@@ -46,7 +47,9 @@
     <script type="text/javascript">
 
     </script>
-    <link href="/css/searchResult.css" rel="stylesheet">
+
+  <script type="module" crossorigin src="/assets/index.b0a0b010.js"></script>
+  <link rel="stylesheet" href="/assets/index.daa3ca52.css">
 </head>
 
 <body>
@@ -92,7 +95,8 @@
 						aria-label="Close"></button>
 			</div>
 				<div class="modal-body">
-					<input type="checkbox" th:text="コアラ">
+					<input type="checkbox" th:id="koala" th:text="コアラ">
+					<label th:for="koala" th:text="コアラ"></label>
 				</div>
 				<div class="modal-footer">
 					<button type="submit" class="btn btn-primary">さがす</button>
@@ -136,7 +140,7 @@
 					<div class="formtext">
 						<input class="formtext" type="text" name="keyword" value=""
 							   placeholder="コアラ・動物園名">
-						<button class="topsearch_button" type="submit">さがす</button>
+						<button class="topsearch_button text-white" type="submit">さがす</button>
 					</div>
 				</div>
 			</div>
@@ -145,48 +149,8 @@
 </div>
 </form>
 
-<!-- Services-->
-<section class="page-section" id="services">
-    <div class="container">
-        <br>
-        <h3 class="text-center mt-0">各種機能・新着情報等</h3>
-        <hr class="divider my-2"/>
-        <div class="row">
-            <div class="col-lg-3 col-md-6 text-center">
-                <div class="mt-5">
-                    <i class="fas fa-4x fa-gem text-primary mb-4"></i>
-                    <h3 class="h4 mb-2">Sturdy Themes</h3>
-                    <p class="text-muted mb-0">Our themes are updated regularly to
-                        keep them bug free!</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 text-center">
-                <div class="mt-5">
-                    <i class="fas fa-4x fa-laptop-code text-primary mb-4"></i>
-                    <h3 class="h4 mb-2">Up to Date</h3>
-                    <p class="text-muted mb-0">All dependencies are kept current
-                        to keep things fresh.</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 text-center">
-                <div class="mt-5">
-                    <i class="fas fa-4x fa-globe text-primary mb-4"></i>
-                    <h3 class="h4 mb-2">Ready to Publish</h3>
-                    <p class="text-muted mb-0">You can use this design as is, or
-                        you can make changes!</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 text-center">
-                <div class="mt-5">
-                    <i class="fas fa-4x fa-heart text-primary mb-4"></i>
-                    <h3 class="h4 mb-2">Made with Love</h3>
-                    <p class="text-muted mb-0">Is it really open source if it's
-                        not made with love?</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<a href="/static/index">SPAテストページ</a>
+
 
 <script>
 		document.write('<script src="http://'

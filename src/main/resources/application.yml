@@ -10,6 +10,13 @@ server:
   port: ${PORT:8080}
 
 spring:
+  thymeleaf:
+    cache: false
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
   datasource:
     driverClassName: org.postgresql.Driver
     hikari:
@@ -35,3 +42,4 @@ spring:
       
   messages:
     basename: messages, ValidationMessages
+

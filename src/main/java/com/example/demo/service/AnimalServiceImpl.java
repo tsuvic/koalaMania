@@ -574,7 +574,5 @@ public class AnimalServiceImpl implements AnimalService {
 		} else {
 			return animalDao.filter(animalFilterForm);
 		}
-
-
-	}
+	}	
 }

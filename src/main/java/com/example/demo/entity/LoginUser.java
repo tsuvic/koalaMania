@@ -1,14 +1,11 @@
 package com.example.demo.entity;
 
-import java.util.Collection;
-import java.util.Date;
-
-import org.springframework.security.core.GrantedAuthority;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Component;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -16,7 +13,6 @@ import lombok.EqualsAndHashCode;
 public class LoginUser extends org.springframework.security.core.userdetails.User {
 
 	public final String TABLE_NAME = "login_user";
-	
 	public final String COLUMN_USER_ID = "user_id";
 	public final String COLUMN_PROVIDER = "provider";
 	public final String COLUMN_PROVIDER_ID = "provider_id";
@@ -60,13 +56,6 @@ public class LoginUser extends org.springframework.security.core.userdetails.Use
 		this.status = status;
 		this.profileImagePath = profileImagePath;
 		this.twitterLinkFlag = twitterLinkFlag;
-	}
-
-	public LoginUser(String username, String password, boolean enabled, boolean accountNonExpired,
-			boolean credentialsNonExpired, boolean accountNonLocked,
-			Collection<? extends GrantedAuthority> authorities) {
-		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
 	public LoginUser() {
