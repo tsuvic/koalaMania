@@ -41,16 +41,12 @@ public class AnimalController {
 	@Qualifier("com.cloudinary.image.url")
 	String cloudinaryImageUrl;
 
+	@GetMapping({"/", "/index"})
+	public String displayIndex() {return "index";}
+
 	@GetMapping("/static/index")
 	public String displaySpaTestPage(){
 		return "../static/index";
-	}
-
-	@GetMapping({"/", "/index"})
-	public String indexDisplay(Model model, @ModelAttribute AnimalFilterForm animalSearchForm, BindingResult bindingResult) {
-		var zooList = animalService.getZooList();
-		model.addAttribute("zooList", zooList);
-		return "index";
 	}
 
 	@GetMapping("/search")
