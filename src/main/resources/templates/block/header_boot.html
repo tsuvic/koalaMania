@@ -1,61 +1,88 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
 
-<header th:fragment="headerA_boot">
+<div id="header" th:fragment="headerA_boot">
+	<v-app>
+		<v-main>
+			<v-container>
+				<header>
+					<nav class="navbar navbar-expand-xs navbar-dark bg-dark fixed-top">
+						<div class="container-fluid">
 
-	<nav class="navbar navbar-expand-xs navbar-dark bg-dark fixed-top">
-		<div class="container-fluid">
+							<button class="navbar-toggler" type="button" data-toggle="collapse"
+								data-target="#navbarsExampleDefault"
+								aria-controls="navbarsExampleDefault" aria-expanded="false"
+								aria-label="Toggle navigation">
+								<span class="navbar-toggler-icon"></span>
+							</button>
 
-			<button class="navbar-toggler" type="button" data-toggle="collapse"
-				data-target="#navbarsExampleDefault"
-				aria-controls="navbarsExampleDefault" aria-expanded="false"
-				aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
+							<!--未認証時：ログインボタン-->
+							<div sec:authorize="!isAuthenticated()" class="d-flex flex-row">
+								<a th:href="@{/login}">
+									<button type="button" class="btn btn-dark">
+										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-check-fill" viewBox="0 0 16 16">
+											<path fill-rule="evenodd" d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+											<path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+										</svg>
+									</button>
+								</a>
+							</div>
 
+							<!--認証済：マイページへのリンク-->
+							<!--Vueについて、他のページでは有効であったが、th:fragmentとして読み込む場合は機能しない-->
+							<div sec:authorize="isAuthenticated()" class="d-flex flex-row">
+								<a th:href="@{/user/mypage/{id}(id = ${#authentication.principal.user_id})}">
+									<v-avatar size="40" class="mx-auto">
+										<img
+												th:unless="${#authentication.principal.profileImagePath == null}"
+												th:src="${#authentication.principal.profileImagePath}"
+												height="36" width="36"
+												alt="プロフィール画像">
+										<img
+											th:if="${#authentication.principal.profileImagePath == null}"
+											th:src="@{/images/user/profile/defaultUser.png}"
+											height="36" width="36"
+											alt="プロフィール画像">
+									</v-avatar>
+								</a>
+							</div>
 
-			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
-				<br>
-				<div sec:authorize="!isAuthenticated()" class="d-flex flex-row">
-					<a th:href="@{/login}"><button class="btn btn-success mx-2"
-							type="submit">ログイン</button> </a> <a th:href="@{/signup}">
-						<button class="btn btn-md btn-outline-success mx-2" type="submit">アカウント登録</button>
-					</a>
-				</div>
-
-				<div sec:authorize="isAuthenticated()" class="d-flex flex-row">
-					<a
-						th:href="@{/user/mypage/{id}(id = ${#authentication.principal.user_id})}">
-						<img
-						th:unless="${#authentication.principal.profileImagePath == null}"
-						th:src="${#authentication.principal.profileImagePath}" height="40"
-						alt="マイページ"> <img
-						th:if="${#authentication.principal.profileImagePath == null}"
-						th:src="@{/images/user/profile/defaultUser.png}" height="40"
-						alt="マイページ">
-					</a>
-					<form method="post" th:action="@{/logout}">
-						<button class="btn btn-md btn-success mx-2" type="submit">ログアウト</button>
-					</form>
-				</div>
-
-				<hr class="divider my-2" />
-				<ul class="navbar-nav me-auto mb-2 mb-md-0">
-				<li class="nav-item"><a class="nav-link" aria-current="page" href="/">コアラマニア</a></li>
-					<li class="nav-item"><a class="nav-link" aria-current="page" href="/discription">コアラマニアとは？</a></li>
-					<li class="nav-item"><a class="nav-link" href="/search">コアラ情報を閲覧する</a></li>
-					<li class="nav-item"><a class="nav-link" href="/insert">新しい動物を登録する</a></li>
-					<li class="nav-item"><a class="nav-link" aria-current="page" href="/post">投稿する</a></li>
-					<li class="nav-item"><a class="nav-link"
-						href="https://tayori.com/form/e976498f95636ad99bb9b6dbe901499a642cd107">お問い合わせ</a></li>
-				</ul>
-
-
-			</div>
-		</div>
-	</nav>
-</header>
-
+							<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+								<hr class="divider my-2" />
+								<ul class="navbar-nav me-auto mb-2 mb-md-0">
+								<li class="nav-item"><a class="nav-link" aria-current="page" href="/">トップページ</a></li>
+									<li class="nav-item"><a class="nav-link" aria-current="page" href="/discription">コアラマニアとは</a></li>
+									<li class="nav-item"><a class="nav-link" href="/insert">コアラを登録する</a></li>
+									<li class="nav-item"><a class="nav-link" href="/search">コアラを閲覧する</a></li>
+									<li class="nav-item"><a class="nav-link" aria-current="page" href="/post">写真を投稿する</a></li>
+									<li class="nav-item"><a class="nav-link"
+										href="https://tayori.com/form/e976498f95636ad99bb9b6dbe901499a642cd107">お問い合わせ</a></li>
+									<li>
+										<div sec:authorize="isAuthenticated()" class="d-flex flex-row">
+											<form method="post" th:action="@{/logout}">
+												<button class="btn btn-secondary mt-1 mb-1" type="submit">ログアウト</button>
+											</form>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</nav>
+				</header>
+			</v-container>
+		</v-main>
+	</v-app>
+</div>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+	<script>new Vue({el: '#header',vuetify: new Vuetify(),})</script>
+</body>
 </html>
