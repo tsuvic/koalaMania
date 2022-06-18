@@ -363,10 +363,10 @@ public class AnimalController {
 		return json;
 	}
 	
-	@GetMapping("/discription")
-	public String discriptionDisplay(Model model) {
+	@GetMapping("/description")
+	public String descriptionDisplay(Model model) {
 		model.addAttribute("searchResult", "コアラマニアとは");
-        return "discription";
+        return "description";
 	}
 	
 }
