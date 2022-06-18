@@ -42,13 +42,15 @@
 								<a th:href="@{/user/mypage/{id}(id = ${#authentication.principal.user_id})}">
 									<v-avatar size="40" class="mx-auto">
 										<img
-												th:unless="${#authentication.principal.profileImagePath == null}"
-												th:src="${#authentication.principal.profileImagePath}"
-												height="36" width="36"
-												alt="プロフィール画像">
+											th:unless="${#authentication.principal.profileImagePath == null}"
+											th:src="${#authentication.principal.profileImagePath}"
+											class="rounded-circle"
+											height="36" width="36"
+											alt="プロフィール画像">
 										<img
 											th:if="${#authentication.principal.profileImagePath == null}"
 											th:src="@{/images/user/profile/defaultUser.png}"
+											class="rounded-circle"
 											height="36" width="36"
 											alt="プロフィール画像">
 									</v-avatar>

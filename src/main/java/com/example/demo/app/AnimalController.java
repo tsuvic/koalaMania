@@ -42,15 +42,18 @@ public class AnimalController {
 	String cloudinaryImageUrl;
 
 	@GetMapping({"/", "/index"})
-	public String displayIndex() {return "index";}
-
+	public String indexDisplay(Model model, @ModelAttribute AnimalFilterForm animalSearchForm, BindingResult bindingResult) {
+		var zooList = animalService.getZooList();
+		model.addAttribute("zooList", zooList);
+		return "index";
+	}
 	@GetMapping("/static/index")
 	public String displaySpaTestPage(){
 		return "../static/index";
 	}
 
 	@GetMapping("/search")
-	public String displaySearchedKoara(Model model, @RequestParam(required = false, name = "keyword") String keyword,
+	public String displaySearchedKoala(Model model, @RequestParam(required = false, name = "keyword") String keyword,
 									   @ModelAttribute AnimalFilterForm animalFilterForm, @ModelAttribute AnimalSearchForm animalSearchForm, BindingResult bindingResult) {
 		List<Animal> list = new ArrayList<Animal>();
 		if (keyword == null || keyword.replaceAll(" ", "　").split("　", 0).length == 0) {
