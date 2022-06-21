@@ -78,7 +78,6 @@ public class UserRestController {
 	String getPosts(@PathVariable int userId, @ModelAttribute UserForm form, Model model) throws Exception {
 		LoginUser loginUser = userAuthenticationUtil.isUserAuthenticated();
 		List<Post> postList = postService.getPostByUserId(userId);
-		System.out.println(postList.toString());
-		return null;
+		return new ObjectMapper().writeValueAsString(postList);
 	}
 }

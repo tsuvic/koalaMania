@@ -1,18 +1,19 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+import org.springframework.stereotype.Component;
+
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.stereotype.Component;
-
-import lombok.Data;
-
 @Data
 @Component
+@JsonIgnoreProperties({"TABLE_NAME","COLUMN_POST_ID","COLUMN_USER_ID",
+		"COLUMN_ZOO_ID","COLUMN_ANIMALTYPE_ID","COLUMN_PARENT_ID","COLUMN_CONTENTS","COLUMN_VISIT_DATE"})
 public class Post {
 
 	public final String TABLE_NAME = "post";
-		
 	public final String COLUMN_POST_ID = "post_id";
 	public final String COLUMN_USER_ID = "user_id";
 	public final String COLUMN_ZOO_ID = "zoo_id";
