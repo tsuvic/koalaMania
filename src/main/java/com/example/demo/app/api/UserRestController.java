@@ -7,6 +7,7 @@ import com.example.demo.entity.LoginUser;
 import com.example.demo.entity.Post;
 import com.example.demo.service.PostService;
 import com.example.demo.service.UserService;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -76,8 +77,9 @@ public class UserRestController {
 
 	@GetMapping("/{userId}/posts")
 	String getPosts(@PathVariable int userId, @ModelAttribute UserForm form, Model model) throws Exception {
-		LoginUser loginUser = userAuthenticationUtil.isUserAuthenticated();
 		List<Post> postList = postService.getPostByUserId(userId);
-		return new ObjectMapper().writeValueAsString(postList);
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		return objectMapper.writeValueAsString(postList);
 	}
 }

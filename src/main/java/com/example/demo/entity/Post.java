@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
@@ -9,17 +9,30 @@ import java.util.List;
 
 @Data
 @Component
-@JsonIgnoreProperties({"TABLE_NAME","COLUMN_POST_ID","COLUMN_USER_ID",
-		"COLUMN_ZOO_ID","COLUMN_ANIMALTYPE_ID","COLUMN_PARENT_ID","COLUMN_CONTENTS","COLUMN_VISIT_DATE"})
 public class Post {
 
+	@JsonIgnore
 	public final String TABLE_NAME = "post";
+
+	@JsonIgnore
 	public final String COLUMN_POST_ID = "post_id";
+
+	@JsonIgnore
 	public final String COLUMN_USER_ID = "user_id";
+
+	@JsonIgnore
 	public final String COLUMN_ZOO_ID = "zoo_id";
+
+	@JsonIgnore
 	public final String COLUMN_ANIMALTYPE_ID = "animaltype_id";
+
+	@JsonIgnore
 	public final String COLUMN_PARENT_ID = "parent_id";
+
+	@JsonIgnore
 	public final String COLUMN_CONTENTS = "contents";
+
+	@JsonIgnore
 	public final String COLUMN_VISIT_DATE = "visit_date";
 
 	private int post_id;
