@@ -180,6 +180,11 @@
 
         });
     </script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
 
 </head>
 
@@ -213,13 +218,13 @@
     </div>
 
 
-    <div id="mypage" class="mt-16">
+    <div id="mypage" class="mt-16" v-cloak>
         <!--プロフィール-->
         <v-card class="mx-auto" max-width="374">
             <div class="d-flex flex-column justify-content-center align-items-center m-1" th:object="${userForm}">
                 <div class="text-center">
-                    <v-avatar size="120" class="mx-auto" density rounded>
-                        <v-img cover th:src="*{profileImagePath}">
+                    <v-avatar size="120" class="mx-auto" rounded>
+                        <v-img cover th:src="*{profileImagePath}"></v-img>
                     </v-avatar>
                 </div>
                 <div class="m-1 d-flex align-items-center mr-3 ml-3 pr-8 pl-8">
@@ -252,51 +257,69 @@
 
             <!--メニューバー-->
 
-            <v-tabs v-model="tab" centered>
-                <v-tab v-for="tab in tabs" :key="tab.key" :value="tab.value" class="text-subtitle-2">
+            <v-tabs v-model="baseTab" centered>
+                <v-tab v-for="tab in tabs" :key="tab.key" :value="tab.value" @click="onPostsClicked()"
+                    class="text-subtitle-2">
                     {{ tab.value }}
                 </v-tab>
             </v-tabs>
-            <v-window v-model="tab">
+            <v-window v-model="baseTab">
                 <v-window-item v-for="tab in tabs" :key="tab.key" :value="tab.value">
-                    <v-card class="mx-auto my-2" max-width="374">
-                        <!-- <v-progress-linear color="deep-purple" height="10" indeterminate></v-progress-linear> -->
-                        <v-img height="250" src="https://cdn.vuetifyjs.com/images/cards/cooking.png"></v-img>
-                        <v-card-title>Cafe Badilico</v-card-title>
-                        <v-card-text>
-                            <v-row align="center" class="mx-0">
-                                <v-rating :value="4.5" color="amber" dense half-increments readonly size="14">
-                                </v-rating>
-
-                                <div class="grey--text ms-4">
-                                    4.5 (413)
+                    <v-card v-if="tab.value === '投稿'" class="mx-auto my-2" max-width="374">
+                        <v-card v-for="a in 5" class="my-2 py-2">
+                            <v-img height="250" src="https://cdn.vuetifyjs.com/images/cards/cooking.png" alt=""></v-img>
+                            <v-card-header class="py-1">
+                                <v-card-header-text>
+                                    <v-card-title>晴れた日の元気なコアラ</v-card-title>
+                                    <v-card-subtitle class="py-0">
+                                        2019/12/12（金）12:00
+                                    </v-card-subtitle>
+                                    <v-card-subtitle class="py-0">
+                                        <a href="">テスト君</a>
+                                        <span>&nbsp;@&nbsp;</span>
+                                        <a href="">横浜市立金沢動物園</a>
+                                    </v-card-subtitle>
+                                </v-card-header-text>
+                            </v-card-header>
+                            <v-card-text class="py-1">
+                                <div>
+                                    今日は天気も良かったし、最高のお出かけ日和ですわ。良い写真が撮れて良かった。
                                 </div>
-                            </v-row>
-
-                            <div class="my-4 text-subtitle-1">
-                                $ • Italian, Cafe
-                            </div>
-
-                            <div>Small plates, salads & sandwiches - an intimate setting with 12 indoor seats plus
-                                patio seating.</div>
-                        </v-card-text>
-                        <v-divider class="mx-4"></v-divider>
-                        <v-card-title>Tonight's availability</v-card-title>
-                        <v-card-text>
-                            <v-chip-group v-model="selection" active-class="deep-purple accent-4 white--text" column>
-                                <v-chip>5:30PM</v-chip>
-                                <v-chip>7:30PM</v-chip>
-                                <v-chip>8:00PM</v-chip>
-                                <v-chip>9:00PM</v-chip>
-                            </v-chip-group>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-btn color="deep-purple lighten-2" text @click="reserve">
-                                Reserve
-                            </v-btn>
-                        </v-card-actions>
+                                <div class="pt-1">
+                                    <span class="text-medium-emphasis">Posted by </span>
+                                    <a href="" class="text-medium-emphasis">田中たろう</a>
+                                </div>
+                            </v-card-text>
+                            <v-container fluid class="py-1">
+                                <v-row justify="center">
+                                    <v-col cols="3" class="py-1 d-flex justify-content-center">
+                                        <v-btn icon color="grey" variant="plain">
+                                            <v-icon>mdi-star</v-icon>
+                                        </v-btn>
+                                    </v-col>
+                                    <v-col cols="3" class="py-1 d-flex justify-content-center">
+                                        <v-btn icon color="grey" variant="plain">
+                                            <v-icon>mdi-comment</v-icon>
+                                        </v-btn>
+                                    </v-col>
+                                    <v-col cols="3" class="py-1 d-flex justify-content-center">
+                                        <v-btn icon color="grey" variant="plain">
+                                            <v-icon>mdi-share</v-icon>
+                                        </v-btn>
+                                    </v-col>
+                                </v-row>
+                            </v-container>
+                        </v-card>
                     </v-card>
-
+                    <v-card v-if="tab.value === 'コメント'">
+                        コメント画面を作る
+                    </v-card>
+                    <v-card v-if="tab.value === '写真'">
+                        写真画面を作る
+                    </v-card>
+                    <v-card v-if="tab.value === 'お気に入り'">
+                        お気に入り画面を作る
+                    </v-card>
                 </v-window-item>
             </v-window>
         </v-card>
@@ -545,10 +568,10 @@
     <script type="module">
         import {createApp, computed} from 'vue'
         import {createVuetify} from 'vuetify'
-        
+
 
         const apiClient = axios.create({
-            baseURL: "http://localhost:8080/api",
+            baseURL: "http://127.0.0.1:8080/api",
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
@@ -560,19 +583,19 @@
         const mypage = {
             data() {
                 return {
-                    tab: null,
+                    baseTab: null,
                     tabs: [
-                        {key: 1, value: '投稿'},
-                        {key: 2, value: 'コメント'},
-                        {key: 3, value: '写真'},
-                        {key: 4, value: 'お気に入り'}
+                        {key: 1, value: '投稿', event: 'onPostsClicked'},
+                        {key: 2, value: 'コメント', event: 'onCommentsClicked'},
+                        {key: 3, value: '写真', event: 'onImagesClicked'},
+                        {key: 4, value: 'お気に入り', event: 'onFavoritesClicked'},
                     ],
                     text: 'こんにちは',
                 }
             },
-            method: {
-                getPosts() {
-                    return apiClient.get('/users/' + count.value);
+            methods: {
+                onPostsClicked() {
+                    console.log(apiClient.get('/users/2/posts'))
                 },
                 getComments() {
                     return apiClient.get('/api/users/' + count.value);
@@ -590,8 +613,8 @@
         const app = createApp(mypage)
         app.use(vuetify)
         app.mount('#mypage')
-
     </script>
+
 </body>
 
 </html>

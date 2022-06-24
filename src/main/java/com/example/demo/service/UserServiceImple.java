@@ -1,28 +1,20 @@
 package com.example.demo.service;
 
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
-
-import javax.imageio.ImageIO;
-
+import com.example.demo.app.UserForm;
+import com.example.demo.entity.LoginUser;
+import com.example.demo.repository.LoginUserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.app.UserForm;
-import com.example.demo.entity.LoginUser;
-import com.example.demo.repository.LoginUserDao;
+import javax.imageio.ImageIO;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.Map;
 
 @Service
 public class UserServiceImple implements UserService {
@@ -45,7 +37,7 @@ public class UserServiceImple implements UserService {
 	
 	@Override
 	public void updateMyPage(UserForm form) {
-		//プロフィール画像
+	//プロフィール画像
 		String profileImageurl = form.getProfileImagePath();
 		if (!form.getUserProfileImageUpload().isEmpty()) {
 			profileImageurl = updateUserProfileImage(form);
