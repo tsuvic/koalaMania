@@ -179,6 +179,7 @@
             }
 
         });
+
     </script>
     <style>
         [v-cloak] {
@@ -250,24 +251,24 @@
                 </div>
                 <v-btn large class="mb-5" th:if="${editFlag}"
                     th:onclick="' location.href = \'' + @{/user/edit/{user_id}(user_id=*{user_id})} + ' \' '">
-                    <div class="fs-6">　　プロフィール編集　　</div>
+                        <span class="fs-6">&nbsp;プロフィール編集&nbsp;</span>
                 </v-btn>
             </div>
 
 
             <!--メニューバー-->
-
-            <v-tabs v-model="baseTab" centered>
-                <v-tab v-for="tab in tabs" :key="tab.key" :value="tab.value" @click="onPostsClicked()"
-                    class="text-subtitle-2">
+            <v-tabs v-model="menu" centered>
+                <v-tab v-for="tab in tabs" :key="tab.key" :value="tab.value" @click="onTabClicked(tab.key)" class="text-subtitle-2">
                     {{ tab.value }}
                 </v-tab>
             </v-tabs>
-            <v-window v-model="baseTab">
+            <v-window v-model="menu">
                 <v-window-item v-for="tab in tabs" :key="tab.key" :value="tab.value">
                     <v-card v-if="tab.value === '投稿'" class="mx-auto my-2" max-width="374">
-                        <v-card v-for="a in 5" class="my-2 py-2">
-                            <v-img height="250" src="https://cdn.vuetifyjs.com/images/cards/cooking.png" alt=""></v-img>
+                        <v-card v-for="content in contents" class="my-2 py-2">
+                            {{ content }}
+                            <!-- <v-img height="250" v-if="typeof content.postImageList === 'undefined'"></v-img>
+                            <v-img height="250" v-else :src="content.postImageList[0].imageAddress" alt=""></v-img> -->
                             <v-card-header class="py-1">
                                 <v-card-header-text>
                                     <v-card-title>晴れた日の元気なコアラ</v-card-title>
@@ -583,31 +584,57 @@
         const mypage = {
             data() {
                 return {
-                    baseTab: null,
+                    menu: null,
+                    contents: null,
                     tabs: [
-                        {key: 1, value: '投稿', event: 'onPostsClicked'},
-                        {key: 2, value: 'コメント', event: 'onCommentsClicked'},
-                        {key: 3, value: '写真', event: 'onImagesClicked'},
-                        {key: 4, value: 'お気に入り', event: 'onFavoritesClicked'},
+                        {key: 1, value: '投稿'},
+                        {key: 2, value: 'コメント'},
+                        {key: 3, value: '写真'},
+                        {key: 4, value: 'お気に入り'},
                     ],
-                    text: 'こんにちは',
                 }
             },
             methods: {
+                onTabClicked(key) {
+                    switch (key) {
+                        case 1:
+                            this.onPostsClicked();
+                            break;
+                        case 2:
+                            this.onCommentsClicked();
+                            break;
+                        case 3:
+                            this.onImagesClicked();
+                            break;
+                        case 4:
+                            this.onFavoritesClicked();
+                            break;
+                    }
+                },
                 onPostsClicked() {
-                    console.log(apiClient.get('/users/2/posts'))
+                    apiClient.get('/users/2/posts')
+                        .then(response => {
+                            this.contents = response.data;
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
                 },
-                getComments() {
-                    return apiClient.get('/api/users/' + count.value);
+                onCommentsClicked() {
                 },
-                getPhotos() {
-                    return apiClient.get('/api/users/' + count.value);
+                onImagesClicked() {
                 },
-                getFavorites() {
-                    return apiClient.get('/api/users/' + count.value);
+                onFavoritesClicked() {
                 },
+            },
+            mounted() {
+                this.onPostsClicked();
+            },
+            computed:{
+
             }
         }
+
 
         const vuetify = createVuetify()
         const app = createApp(mypage)
