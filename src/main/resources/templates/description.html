@@ -1,0 +1,55 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,maximum-scale=1">
+
+<title>koalaMania</title>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<link rel="canonical"
+	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
+<!-- Bootstrap core CSS -->
+<link
+	href=https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css
+	rel="stylesheet"
+	integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+	crossorigin="anonymous">
+
+<!-- Custom styles for this template -->
+<link href="/css/searchResult.css" rel="stylesheet">
+<title th:text="${title}"></title>
+</head>
+
+<body>
+	<div th:replace="~{block/header_boot::headerA_boot}"></div>
+	<p class="text-break mt-5 pt-3">
+		もっと日常に癒やしを もっとコアラを身近に 抱きしめたい！愛くるしい！
+		このコアラは誰の子だろう？どんな子だろう？ コアラについては詳しい生態は知らないけど、ただ無心でかわいいものを見続けていたいという方、
+		特定の個体が気になって兄弟姉妹やこれまで暮らしてきた動物園に興味を持つ方もいるのかと想像します。
+
+		コアラが好きな人にはもっと好きになってもらい、 コアラをよく知らない人にはもっと知ってもらえるようなウェブサービスです。 開発経緯
+		コアラが好きなパートナーがSNS上で画像や動画をよく見ていたので、 興味本位で一緒に見始めたら、見事にハマっていきました。
+
+		コロッとした体型、枝上に上手く座り込む姿、 ユーカリの食べ方、もふもふな顔。 見ているだけで癒やされる魅力にすぐに引き込まれました。
+
+		SNS上でたくさんの画像や動画を見るようになって、 ・みんなが発信する写真や動画が流れてしまうことが残念だな
+		・兄弟や親子関係をパッと一覧で見れたらいいな ・過去に暮らしてきた動物園を知りたいな
+
+		公式の動物園のHPを閲覧したり、実際に動物園に行っても個体情報が少なかったので、 これ自分で整理してみようという思いに至りました。
+
+		最初は一人の趣味として始まったサービスの開発ですが、 今ではプログラマ、デザイナーの友人達と協力して開発を進めています。
+
+
+
+		コアラマニアでできること ・日々のコアラの様子を記録できる ・他の人の記録にリアクションすることができる
+		・家系図を見て兄弟姉妹、親子関係を確認できる ・いつ、どこの動物園に移動したか経歴を知ることがでしる …など 誕生日がわかる
+		癒し！可愛さ！幸せな気持ちになれる！ 何も考えない！もはや！ 愛くるしさ！抱きしめたい！もふもふ！ 何歳 生まれてどれくらい お父さん
+		お母さん 兄弟 どんな顔してるんだろう どんな特徴 もふもふ 顔でかい 足短い 座り方 何も考えない 自然と好きになるもの 煩わしさいらない
+		簡単に シンプルに 癒やされたい ただ見ていたい 気持ちを共有したいもある こうなって暮らしたい のんびり ユーカリ食って
+	</p>
+</body>

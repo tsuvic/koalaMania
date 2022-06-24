@@ -43,10 +43,10 @@ dependencies {
     implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     runtimeOnly('org.springframework.boot:spring-boot-devtools')
 	runtimeOnly ('org.postgresql:postgresql')
-	compileOnly 'org.projectlombok:lombok:1.18.22'
-	annotationProcessor 'org.projectlombok:lombok:1.18.22'
-	testCompileOnly 'org.projectlombok:lombok:1.18.22'
-	testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+	compileOnly 'org.projectlombok:lombok:1.18.24'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+	testCompileOnly 'org.projectlombok:lombok:1.18.24'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 	implementation ('org.webjars:jquery:3.5.1')
     implementation ('org.webjars:bootstrap:4.4.1-1')

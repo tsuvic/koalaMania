@@ -9,7 +9,7 @@ import Description from '/src/views/description.vue'
 
 const routes = [
   {
-    path: "/:categories(topPage|)",  
+    path: "/:categories(topPage|static/index|)",  
     name: 'toppage',
     component: TopPage,
   },

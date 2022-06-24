@@ -1,26 +1,17 @@
 package com.example.demo.app;
 
-import java.util.List;
-
+import com.example.demo.entity.LoginUser;
+import com.example.demo.entity.Post;
+import com.example.demo.service.*;
+import com.example.demo.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.entity.LoginUser;
-import com.example.demo.entity.Post;
-import com.example.demo.service.PostFavoriteService;
-import com.example.demo.service.PostImageFavoriteService;
-import com.example.demo.service.PostImageService;
-import com.example.demo.service.PostService;
-import com.example.demo.service.UserService;
-import com.example.demo.util.DateUtil;
+import java.util.List;
 
 @Controller
 @RequestMapping("/user")
