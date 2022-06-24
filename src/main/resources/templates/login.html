@@ -18,8 +18,6 @@
 	integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
 	crossorigin="anonymous">
 
-
-
 </head>
 
 <body>
@@ -27,16 +25,17 @@
 	<div class="container">
 		<br> <br> <br> <br>
 		<div class="row align-items-center text-center">
-			<h2>ログイン画面</h2>
+
 			<div class="d-flex flex-column bd-highlight mb-3">
 				<div class="p-2 bd-highlight">
 					<a th:href="@{/oauth/twitter/auth}">
-						<button class="btn btn-info mx-2" type="submit">Twitterでログイン</button>
+						<button class="btn btn-info mx-2" type="submit">Twitterアカウントでログイン</button>
 					</a>
 				</div>
-				<div class="p-2 bd-highlight">
-					<a th:href="@{/signup}"> アカウント登録はこちら </a>
-				</div>
+<!-- アカウント登録・管理は行わず、Twitter OAuthによる認証のみとするため、本リンクは現時点では不要-->
+<!--				<div class="p-2 bd-highlight">-->
+<!--					<a th:href="@{/signup}"> アカウント登録はこちら </a>-->
+<!--				</div>-->
 			</div>
 		</div>
 	</div>

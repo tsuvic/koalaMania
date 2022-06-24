@@ -25,6 +25,10 @@ jar {
 	version = '0.1.0'
 }
 
+bootRun {
+	sourceResources sourceSets.main
+}
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web") {exclude module: "spring-boot-starter-tomcat"}
 	implementation("org.springframework.boot:spring-boot-starter-jetty")  
@@ -33,10 +37,16 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
 	implementation('org.springframework.boot:spring-boot-starter-validation')
 	implementation('org.springframework.boot:spring-boot-starter-web')
-	runtimeOnly('org.springframework.boot:spring-boot-devtools')
+    implementation 'org.testng:testng:7.1.0'
+	implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+	implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    runtimeOnly('org.springframework.boot:spring-boot-devtools')
 	runtimeOnly ('org.postgresql:postgresql')
-	implementation('org.projectlombok:lombok')
-	annotationProcessor('org.projectlombok:lombok')
+	compileOnly 'org.projectlombok:lombok:1.18.24'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+	testCompileOnly 'org.projectlombok:lombok:1.18.24'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 	implementation ('org.webjars:jquery:3.5.1')
     implementation ('org.webjars:bootstrap:4.4.1-1')

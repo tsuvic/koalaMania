@@ -12,8 +12,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
 
 	@Configuration
-	public static class DefaultWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
-
+	public static class AppSecurityConfigureAdapter extends WebSecurityConfigurerAdapter {
 
 		@Override
 		public void configure(WebSecurity web) throws Exception {
@@ -27,15 +26,18 @@ public class SecurityConfig {
 					.antMatchers("/insert").authenticated()
 					.antMatchers("/edit/*").authenticated()
 					.antMatchers("/post/postInsert").authenticated()
-					.antMatchers("/delete/*").authenticated();
-					
-			
-			http
+					.antMatchers("/delete/*").authenticated()
+					.antMatchers("/api/users/checkAuthenticated").authenticated()
+
+			.and()
+					.exceptionHandling()
+
+			.and()
 				.formLogin()
 				.loginProcessingUrl("/oauth/twitter/access")
-				.loginPage("/login");
-			
-			http
+				.loginPage("/login")
+
+			.and()
 			.logout()
 			.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 			.logoutUrl("/logout")
@@ -43,5 +45,6 @@ public class SecurityConfig {
 			.deleteCookies("JSESSIONID").invalidateHttpSession(true)
 			.deleteCookies("autoLogin");
 		}
+
 	}
 }
