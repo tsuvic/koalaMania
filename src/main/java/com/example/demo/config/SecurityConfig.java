@@ -25,7 +25,8 @@ public class SecurityConfig {
 					.antMatchers("/").permitAll()
 					.antMatchers("/insert").authenticated()
 					.antMatchers("/edit/*").authenticated()
-					.antMatchers("/post/postInsert").authenticated()
+					.antMatchers("/post").authenticated()
+					.antMatchers("/post/*").authenticated()
 					.antMatchers("/delete/*").authenticated()
 					.antMatchers("/api/users/checkAuthenticated").authenticated()
 
