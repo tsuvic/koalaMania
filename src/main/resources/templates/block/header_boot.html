@@ -39,7 +39,7 @@
 							<!--認証済：マイページへのリンク-->
 							<!--Vueについて、他のページでは有効であったが、th:fragmentとして読み込む場合は機能しない-->
 							<div sec:authorize="isAuthenticated()" class="d-flex flex-row">
-								<a th:href="@{/user/mypage/{id}(id = ${#authentication.principal.user_id})}">
+								<a th:href="@{/users/{id}(id = ${#authentication.principal.user_id})}">
 									<v-avatar size="40" class="mx-auto">
 										<img
 											th:unless="${#authentication.principal.profileImagePath == null}"

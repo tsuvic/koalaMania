@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
 	private final UserService userService;
@@ -43,16 +43,8 @@ public class UserController {
 		this.dateUtil = dateUtil;
 	}
 
-	@GetMapping("/mypage/{user_id}")
-	public String getMyPage(@PathVariable int user_id, Model model,
-			@ModelAttribute UserForm form) {
-
-		return "redirect:/user/mypage/" + user_id + "/" + 1;
-	}
-
-	@GetMapping("/mypage/{user_id}/{tabType}")
-	public String getMyPageTabType(@PathVariable int user_id, @PathVariable int tabType, Model model,
-			@ModelAttribute UserForm form) {
+	@GetMapping("/{user_id}")
+	public String getMyPageTabType(@PathVariable int user_id, Model model, @ModelAttribute UserForm form) {
 
 		LoginUser principal = userAuthenticationUtil.isUserAuthenticated();
 		if (principal != null
@@ -74,40 +66,7 @@ public class UserController {
 			model.addAttribute("editFlag", false);
 		}
 
-		setDefaultUserProfileImage(form);
-
-		switch (tabType) {
-			case 1:
-				List<Post> postList = postService.getPostByUserId(user_id);
-				postList.stream()
-						.forEach(post -> setDefaultUserProfileImage(post));
-				setDiffTime(postList);
-				model.addAttribute("postList", postList);
-				break;
-			case 2:
-				List<Post> postFavoriteList = postFavoriteService.getPostFavoirteByUserId(user_id);
-				 postFavoriteList.stream()
-						.forEach(post -> setDefaultUserProfileImage(post));
-				 setDiffTime(postFavoriteList);
-				model.addAttribute("postList", postFavoriteList);
-				break;
-			case 3:
-				model.addAttribute("postImageList", postImageService.getPostImageListByUserId(user_id));
-				break;
-			case 4:
-				List<Post> postCommnetList = postService.getCommentByUserId(user_id);
-				postCommnetList.stream()
-						.forEach(post -> setDefaultUserProfileImage(post));
-				 setDiffTime(postCommnetList);
-				model.addAttribute("postList", postCommnetList);
-				break;
-			case 5:
-				model.addAttribute("postImageList", postImageFavoriteService.getPostImageFavoirteByUserId(user_id));
-		}
-
-		model.addAttribute("tabType", tabType);
-
-		return "user/mypage";
+		return "users/mypage";
 	}
 
 	@GetMapping("/edit/{user_id}")
@@ -126,7 +85,7 @@ public class UserController {
 
 			setDefaultUserProfileImage(form);
 
-			return "user/edit";
+			return "users/edit";
 		} else {
 
 			return "redirect:/ ";
@@ -141,7 +100,7 @@ public class UserController {
 
 		userService.updateMyPage(form);
 
-		return "redirect:/user/mypage/" + form.getUser_id();
+		return "redirect:/users/" + form.getUser_id();
 	}
 
 	/**
@@ -151,7 +110,7 @@ public class UserController {
 	*/
 	private void setDefaultUserProfileImage(UserForm form) {
 		if (form.getProfileImagePath() == null) {
-			form.setProfileImagePath("/images/user/profile/defaultUser.png");
+			form.setProfileImagePath("/images/users/profile/defaultUser.png");
 		}
 	}
 	
@@ -162,7 +121,7 @@ public class UserController {
 	*/
 	private void setDefaultUserProfileImage(Post post) {
 		if (post.getLoginUser().getProfileImagePath() == null) {
-			post.getLoginUser().setProfileImagePath("/images/user/profile/defaultUser.png");
+			post.getLoginUser().setProfileImagePath("/images/users/profile/defaultUser.png");
 		}
 	}
 	

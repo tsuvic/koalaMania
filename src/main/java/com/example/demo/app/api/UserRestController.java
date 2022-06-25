@@ -32,6 +32,10 @@ public class UserRestController {
 	}
 
 	@RequestMapping("/checkAuthenticated")
+	@CrossOrigin(
+			origins = {"http://127.0.0.1:8080","http://localhost:8080","https://koalamania.herokuapp.com"},
+			allowCredentials = "true"
+	)
 	String checkAuthenticated(@ModelAttribute UserForm form) throws Exception {
 		LoginUser loginUser = userAuthenticationUtil.isUserAuthenticated();
 		if (loginUser != null) {
@@ -48,7 +52,12 @@ public class UserRestController {
 		}
 	}
 
+
 	@GetMapping("/{userId}")
+	@CrossOrigin(
+			origins = {"http://127.0.0.1:8080","http://localhost:8080","https://koalamania.herokuapp.com"},
+			allowCredentials = "true"
+	)
 	String getUser(@PathVariable int userId, @ModelAttribute UserForm form, Model model) throws Exception {
 		LoginUser loginUser = userAuthenticationUtil.isUserAuthenticated();
 		if (loginUser != null && loginUser.getUser_id() == userId) {
@@ -70,7 +79,7 @@ public class UserRestController {
 		}
 
 		if (form.getProfileImagePath() == null) {
-			form.setProfileImagePath("/images/user/profile/defaultUser.png");
+			form.setProfileImagePath("/images/users/profile/defaultUser.png");
 		}
 		return new ObjectMapper().writeValueAsString(form);
 	}

@@ -54,7 +54,7 @@ public class ZooController {
 	*/
 	private void setDefaultUserProfileImage(Post post) {
 		if (post.getLoginUser().getProfileImagePath() == null) {
-			post.getLoginUser().setProfileImagePath("/images/user/profile/defaultUser.png");
+			post.getLoginUser().setProfileImagePath("/images/users/profile/defaultUser.png");
 		}
 	}
 

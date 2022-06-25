@@ -92,7 +92,7 @@
 //
 //        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //
-//        return "redirect:/user/mypage/" + ((LoginUser) principal).getUser_id();
+//        return "redirect:/users/mypage/" + ((LoginUser) principal).getUser_id();
 //    }
 //
 //

@@ -40,7 +40,7 @@ public class LoginUser extends org.springframework.security.core.userdetails.Use
 
 	private static final String dummyPassword = "password";
 
-	private static final String dummyUser = "user";
+	private static final String dummyUser = "users";
 
 	private static final String ROLE_USER = "ROLE_USER";
 	
