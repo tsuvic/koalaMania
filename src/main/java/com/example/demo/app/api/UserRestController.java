@@ -76,6 +76,10 @@ public class UserRestController {
 	}
 
 	@GetMapping("/{userId}/posts")
+	@CrossOrigin(
+			origins = {"http://127.0.0.1:8080","http://localhost:8080","https://koalamania.herokuapp.com"},
+			allowCredentials = "true"
+	)
 	String getPosts(@PathVariable int userId, @ModelAttribute UserForm form, Model model) throws Exception {
 		List<Post> postList = postService.getPostByUserId(userId);
 		ObjectMapper objectMapper = new ObjectMapper();

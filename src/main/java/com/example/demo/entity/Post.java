@@ -11,6 +11,8 @@ import java.util.List;
 @Component
 public class Post {
 
+	public final String TESSTTTTTTTT = "TESTTTTTTTTTTT";
+
 	@JsonIgnore
 	public final String TABLE_NAME = "post";
 
