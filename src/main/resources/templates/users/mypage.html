@@ -133,7 +133,9 @@
                                 </div>
                                 <div class="pt-1">
                                     <span class="text-medium-emphasis">Posted by </span>
-                                    <a href="" class="text-medium-emphasis">田中たろう</a>
+                                    <a href="" class="text-medium-emphasis">
+                                        {{content.loginUser.userName}}
+                                    </a>
                                 </div>
                             </v-card-text>
                             <v-container fluid class="py-1">
@@ -188,11 +190,10 @@
 
 
         const apiClient = axios.create({
-            baseURL: "http://localhost:8080/api/users",
+            baseURL: "http://127.0.0.1:8080/api/users",
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'X-CSRF-TOKEN': '${_csrf.token}'
             },
             withCredentials: true,
         });
