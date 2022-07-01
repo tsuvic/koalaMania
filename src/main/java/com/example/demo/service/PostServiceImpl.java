@@ -1,36 +1,24 @@
 package com.example.demo.service;
 
+import com.example.demo.app.PostInsertForm;
+import com.example.demo.entity.Animal;
+import com.example.demo.entity.Post;
+import com.example.demo.entity.Zoo;
+import com.example.demo.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.imageio.ImageIO;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import javax.imageio.ImageIO;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.example.demo.app.PostInsertForm;
-import com.example.demo.entity.Animal;
-import com.example.demo.entity.Post;
-import com.example.demo.entity.Zoo;
-import com.example.demo.repository.AnimalDao;
-import com.example.demo.repository.PostDao;
-import com.example.demo.repository.PostFavoriteDao;
-import com.example.demo.repository.PostImageDao;
-import com.example.demo.repository.ZooDao;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -220,6 +208,12 @@ public class PostServiceImpl implements PostService {
 			return null;
 		}
 		
+	}
+
+	//202207 インターフェースなしで試験的に実装
+	@Autowired
+	public void insertPost(Post post){
+//		postDaoImple.insertPost(post);
 	}
 
 }

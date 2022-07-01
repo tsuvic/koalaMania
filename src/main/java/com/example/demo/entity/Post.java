@@ -25,15 +25,18 @@ public class Post {
 
 	public final String COLUMN_VISIT_DATE = "visit_date";
 
+	public final String COLUMN_TITLE = "title";
+
 	private int post_id;
+	private String title;
 	private String contents;
+	private Zoo zoo;
 	private List<PostImage> postImageList;
 	private Date visitDate;
 	private Date createdDate;
 	private LoginUser loginUser;
 	private Post parentPost;
 	private List<Post> childrenPost;
-	private Zoo zoo;
 	private String displayDiffTime;
 	private long childrenCount;
 	private boolean favoriteFlag;

@@ -1,23 +1,17 @@
 package com.example.demo.repository;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.example.demo.entity.*;
+import com.example.demo.util.CommonSqlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.entity.Animal;
-import com.example.demo.entity.LoginUser;
-import com.example.demo.entity.Post;
-import com.example.demo.entity.PostImage;
-import com.example.demo.entity.Prefecture;
-import com.example.demo.entity.Zoo;
-import com.example.demo.util.CommonSqlUtil;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 public class PostDaoImple implements PostDao {
@@ -496,5 +490,12 @@ public class PostDaoImple implements PostDao {
 		}
 		return returnPostList;
 	}
+
+	//202207 インターフェースなしで試験的に実装
+	@Autowired
+	public void insertPost(Post post){
+
+	}
+
 
 }

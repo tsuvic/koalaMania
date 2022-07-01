@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,10 +72,10 @@ public class UserRestController {
 		return objectMapper.writeValueAsString(postList);
 	}
 
-	@PostMapping("/{userId}/posts")
-	String postPosts(@PathVariable int userId, @ModelAttribute Post post) throws JsonProcessingException {
+	@PostMapping("/posts")
+	@ResponseStatus(HttpStatus.CREATED)
+	String postPosts(@ModelAttribute Post post) throws JsonProcessingException {
 
-		System.out.println(userId);
 		System.out.println(post);
 		System.out.println(post.getPost_id());
 		return null;
