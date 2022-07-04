@@ -34,8 +34,10 @@ public class Post {
 	private List<PostImage> postImageList;
 	private Date visitDate;
 	private Date createdDate;
-	private LoginUser loginUser;
-	private Post parentPost;
+	private LoginUser loginUser; //削除予定 フロントからユーザー自体を受け取るため、IDではなくユーザーオブジェクトを保持している
+	private int userId; //新規追加
+	private Post parentPost; //削除予定
+	private int parentPostId; //新規追加
 	private List<Post> childrenPost;
 	private String displayDiffTime;
 	private long childrenCount;

@@ -29,15 +29,19 @@ public class PostServiceImpl implements PostService {
 	private final PostImageDao postImageDao;
 	private final PostFavoriteDao postFavoriteDao;
 	private final CloudinaryService cloudinaryService;
+	private final PostDaoImple postDaoImple;
+	private final Post post;
 	
 	@Autowired
-	public PostServiceImpl(ZooDao zooDao,AnimalDao animalDao,PostDao postDao,PostImageDao postImageDao,CloudinaryService cloudinaryService,PostFavoriteDao postFavoriteDao) {
+	public PostServiceImpl(ZooDao zooDao, AnimalDao animalDao, PostDao postDao, PostImageDao postImageDao, CloudinaryService cloudinaryService, PostFavoriteDao postFavoriteDao, PostDaoImple postDaoImple, Post post) {
 		this.zooDao = zooDao;
 		this.animalDao = animalDao;
 		this.postDao = postDao;
 		this.postImageDao = postImageDao;
 		this.postFavoriteDao = postFavoriteDao;
 		this.cloudinaryService = cloudinaryService;
+		this.postDaoImple = postDaoImple;
+		this.post = post;
 	}
 	
 	@Override
@@ -211,9 +215,24 @@ public class PostServiceImpl implements PostService {
 	}
 
 	//202207 インターフェースなしで試験的に実装
-	@Autowired
 	public void insertPost(Post post){
-//		postDaoImple.insertPost(post);
+
+		//バックエンドのバリデーションは個別に切り出して追って実装を行う
+		if (post.getParentPost() == null) {
+			Post parentPost = new Post();
+			parentPost.setPost_id(0);
+			post.setParentPost(parentPost);
+		}
+		if(post.getZoo()==null){
+			Zoo zoo = new Zoo();
+			zoo.setZoo_id(0);
+			post.setZoo(zoo);
+		}
+		post.setTitle("バックエンドテスト");
+		post.setContents("テストです");
+		System.out.println(post);
+
+		postDaoImple.insertPost(post);
 	}
 
 }

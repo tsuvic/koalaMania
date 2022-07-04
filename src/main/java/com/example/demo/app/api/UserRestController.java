@@ -6,6 +6,7 @@ import com.example.demo.app.UserForm;
 import com.example.demo.entity.LoginUser;
 import com.example.demo.entity.Post;
 import com.example.demo.service.PostService;
+import com.example.demo.service.PostServiceImpl;
 import com.example.demo.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -24,13 +25,15 @@ public class UserRestController {
 	private final UserAuthenticationUtil userAuthenticationUtil;
 	private final UserService userService;
 	private final PostService postService;
+	private final PostServiceImpl postServiceImpl;
 	static ObjectMapper objectMapper = new ObjectMapper();
 
 	@Autowired
-	public UserRestController(UserAuthenticationUtil userAuthenticationUtil, UserService userService, PostService postService) {
+	public UserRestController(UserAuthenticationUtil userAuthenticationUtil, UserService userService, PostService postService, PostServiceImpl postServiceImpl) {
 		this.userAuthenticationUtil = userAuthenticationUtil;
 		this.userService = userService;
 		this.postService = postService;
+		this.postServiceImpl = postServiceImpl;
 	}
 
 	/**
@@ -74,10 +77,11 @@ public class UserRestController {
 
 	@PostMapping("/posts")
 	@ResponseStatus(HttpStatus.CREATED)
-	String postPosts(@ModelAttribute Post post) throws JsonProcessingException {
-
-		System.out.println(post);
-		System.out.println(post.getPost_id());
+	public String postPosts(@ModelAttribute Post post) throws JsonProcessingException {
+		LoginUser user = userAuthenticationUtil.isUserAuthenticated();
+		System.out.println(user);
+		post.setLoginUser(user);
+		postServiceImpl.insertPost(post);
 		return null;
 	}
 }

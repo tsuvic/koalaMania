@@ -17,34 +17,28 @@ import java.util.stream.Collectors;
 public class PostDaoImple implements PostDao {
 
 	private final JdbcTemplate jdbcTemplate;
+	private final CommonSqlUtil commonSqlUtil;
+	private final Post ENTITY_POST;
+	private final PostImage ENTITY_POST_IMAGE;
+	private final PostFavorite ENTITY_POST_FAVORITE;
+	private final Zoo ENTITY_ZOO;
+	private final LoginUser ENTITY_LOGIN_USER;
+	private final Animal ENTITY_ANIMAL;
+	private final Prefecture ENTITY_PREFECTURE;
+	private final int defaultParentId = 0;
 
 	@Autowired
-	public PostDaoImple(JdbcTemplate jdbcTemplate) {
+	public PostDaoImple(JdbcTemplate jdbcTemplate, CommonSqlUtil commonSqlUtil, Post entity_post, PostImage entity_post_image, PostFavorite entity_post_favorite, Zoo entity_zoo, LoginUser entity_login_user, Animal entity_animal, Prefecture entity_prefecture) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.commonSqlUtil = commonSqlUtil;
+		ENTITY_POST = entity_post;
+		ENTITY_POST_IMAGE = entity_post_image;
+		ENTITY_POST_FAVORITE = entity_post_favorite;
+		ENTITY_ZOO = entity_zoo;
+		ENTITY_LOGIN_USER = entity_login_user;
+		ENTITY_ANIMAL = entity_animal;
+		ENTITY_PREFECTURE = entity_prefecture;
 	}
-
-	@Autowired
-	private CommonSqlUtil commonSqlUtil;
-
-	@Autowired
-	private Post ENTITY_POST;
-
-	@Autowired
-	private PostImage ENTITY_POST_IMAGE;
-
-	@Autowired
-	private LoginUser ENTITY_LOGIN_USER;
-
-	@Autowired
-	private Animal ENTITY_ANIMAL;
-
-	@Autowired
-	private Zoo ENTITY_ZOO;
-
-	@Autowired
-	private Prefecture ENTITY_PREFECTURE;
-
-	private int defaultParentId = 0;
 
 	@Override
 	public int insertNewPost(Post post) {
@@ -492,9 +486,24 @@ public class PostDaoImple implements PostDao {
 	}
 
 	//202207 インターフェースなしで試験的に実装
-	@Autowired
 	public void insertPost(Post post){
 
+		String sql = "INSERT INTO " +
+				ENTITY_POST.TABLE_NAME + " (" +
+				ENTITY_POST.COLUMN_PARENT_ID + "," +
+				ENTITY_POST.COLUMN_USER_ID + "," +
+				ENTITY_POST.COLUMN_ZOO_ID + "," +
+				ENTITY_POST.COLUMN_TITLE + "," +
+				ENTITY_POST.COLUMN_CONTENTS + " )" +
+				" VALUES (?,?,?,?,?)";
+
+		Map<String, Object> result = jdbcTemplate.queryForMap(sql,post.getParentPost().getPost_id(),post.getLoginUser().getUser_id(),
+				post.getZoo().getZoo_id(), post.getTitle(), post.getContents());
+
+		commonSqlUtil.updateAllCommonColumn(ENTITY_POST.TABLE_NAME, ENTITY_POST.COLUMN_POST_ID,
+				post.getLoginUser().getUser_id(), Integer.valueOf(result.get(ENTITY_POST.COLUMN_POST_ID).toString()));
+
+		System.out.println(result);
 	}
 
 
