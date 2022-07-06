@@ -20,20 +20,20 @@ public class UserController {
 	private final UserService userService;
 
 	private final PostService postService;
-	
+
 	private final PostImageService postImageService;
-	
+
 	private final PostFavoriteService postFavoriteService;
-	
-	private final PostImageFavoriteService postImageFavoriteService; 
+
+	private final PostImageFavoriteService postImageFavoriteService;
 
 	private final UserAuthenticationUtil userAuthenticationUtil;
-	
+
 	private final DateUtil dateUtil;
 
 	@Autowired
 	public UserController(UserService userService, PostFavoriteService postFavoriteService ,UserAuthenticationUtil userAuthenticationUtil,
-			PostService postService,PostImageService postImageService,PostImageFavoriteService postImageFavoriteService,DateUtil dateUtil) {
+						  PostService postService,PostImageService postImageService,PostImageFavoriteService postImageFavoriteService,DateUtil dateUtil) {
 		this.userService = userService;
 		this.userAuthenticationUtil = userAuthenticationUtil;
 		this.postService = postService;
@@ -44,12 +44,12 @@ public class UserController {
 	}
 
 	@GetMapping("/{userId}")
-	public String getMyPageTabType(@PathVariable int user_id, Model model, @ModelAttribute UserForm form) {
+	public String getMyPageTabType(@PathVariable int userId, Model model, @ModelAttribute UserForm form) {
 
 		LoginUser principal = userAuthenticationUtil.isUserAuthenticated();
 		if (principal != null
-				&& principal.getUser_id() == user_id) {
-			form.setUser_id(user_id);
+				&& principal.getUser_id() == userId) {
+			form.setUser_id(userId);
 			form.setName(((LoginUser) principal).getUserName());
 			form.setProfile(((LoginUser) principal).getProfile());
 			form.setTwitterLinkFlag(((LoginUser) principal).isTwitterLinkFlag());
@@ -57,7 +57,7 @@ public class UserController {
 			form.setProfileImagePath(((LoginUser) principal).getProfileImagePath());
 			model.addAttribute("editFlag", true);
 		} else {
-			LoginUser user = userService.findById(user_id);
+			LoginUser user = userService.findById(userId);
 			form.setName(user.getUserName());
 			form.setProfile(user.getProfile());
 			form.setTwitterLinkFlag(user.isTwitterLinkFlag());
@@ -70,13 +70,13 @@ public class UserController {
 	}
 
 	@GetMapping("/edit/{userId}")
-	public String getEditMypage(@PathVariable int user_id, Model model,
-			@ModelAttribute UserForm form) {
+	public String getEditMypage(@PathVariable int userId, Model model,
+								@ModelAttribute UserForm form) {
 
 		LoginUser principal = userAuthenticationUtil.isUserAuthenticated();
 		if (principal != null
-				&& principal.getUser_id() == user_id) {
-			form.setUser_id(user_id);
+				&& principal.getUser_id() == userId) {
+			form.setUser_id(userId);
 			form.setName(((LoginUser) principal).getUserName());
 			form.setProfile(((LoginUser) principal).getProfile());
 			form.setTwitterLinkFlag(((LoginUser) principal).isTwitterLinkFlag());
@@ -105,33 +105,33 @@ public class UserController {
 
 	/**
 	 * プロフィール画像がセットされていない場合、デフォルトの画像をセットする
-	 * 
+	 *
 	 * @param UserForm form
-	*/
+	 */
 	private void setDefaultUserProfileImage(UserForm form) {
 		if (form.getProfileImagePath() == null) {
 			form.setProfileImagePath("/images/users/profile/defaultUser.png");
 		}
 	}
-	
+
 	/**
 	 * プロフィール画像がセットされていない場合、デフォルトの画像をセットする
-	 * 
+	 *
 	 * @param UserForm form
-	*/
+	 */
 	private void setDefaultUserProfileImage(Post post) {
 		if (post.getUser().getProfileImagePath() == null) {
 			post.getUser().setProfileImagePath("/images/users/profile/defaultUser.png");
 		}
 	}
-	
+
 	private List<Post> setDiffTime(List<Post> postList) {
-	
+
 		for(Post post : postList) {
 
 			dateUtil.setPostDiffTime(post);
 		}
-		
+
 		return postList;
 	}
 

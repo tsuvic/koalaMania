@@ -14,7 +14,7 @@ public class LoginUser extends org.springframework.security.core.userdetails.Use
 
 	public final String TABLE_NAME = "login_user";
 
-	public final String COLUMN_USER_ID = "userId";
+	public final String COLUMN_USER_ID = "user_id";
 
 	public final String COLUMN_PROVIDER = "provider";
 

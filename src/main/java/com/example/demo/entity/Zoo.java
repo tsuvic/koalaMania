@@ -10,7 +10,7 @@ public class Zoo {
 	
 	public final String TABLE_NAME = "zoo";
 	
-	public final String COLUMN_ZOO_ID = "zooId";
+	public final String COLUMN_ZOO_ID = "zoo_id";
 	public final String COLUMN_ZOO_NAME = "zoo_name";
 	public final String COLUMN_PREFECTURE_ID = "prefecture_id";
 

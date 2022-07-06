@@ -14,19 +14,19 @@ public class Post {
 	public final String TABLE_NAME = "post";
 
 	@JsonIgnore
-	public final String COLUMN_POST_ID = "postId";
+	public final String COLUMN_POST_ID = "post_id";
 
 	@JsonIgnore
-	public final String COLUMN_USER_ID = "userId";
+	public final String COLUMN_USER_ID = "user_id";
 
 	@JsonIgnore
-	public final String COLUMN_ZOO_ID = "zooId";
+	public final String COLUMN_ZOO_ID = "zoo_id";
 
 	@JsonIgnore
 	public final String COLUMN_ANIMAL_TYPE_ID = "animaltype_id";
 
 	@JsonIgnore
-	public final String COLUMN_PARENT_ID = "parentId";
+	public final String COLUMN_PARENT_ID = "parent_id";
 
 	@JsonIgnore
 	public final String COLUMN_CONTENTS = "contents";

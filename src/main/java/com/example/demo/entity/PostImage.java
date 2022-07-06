@@ -15,7 +15,7 @@ public class PostImage {
 
 	public final String COLUMN_POSTIMAGE_ID = "postimage_id";
 
-	public final String COLUMN_POST_ID = "postId";
+	public final String COLUMN_POST_ID = "post_id";
 
 	public final String COLUMN_ANIMAL_ID = "animal_id";
 
