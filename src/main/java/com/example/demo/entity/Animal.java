@@ -1,11 +1,10 @@
 package com.example.demo.entity;
 
-import java.util.Date;
-import java.util.List;
-
+import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import lombok.Data;
+import java.util.Date;
+import java.util.List;
 
 @Data
 @Component
@@ -18,12 +17,12 @@ public class Animal {
 	public final String TABLE_NAME = "animal";
 	
 	public final String COLUMN_ANIMAL_ID = "animal_id";
-	public final String COLUMN_ANIMALTYPE_ID = "animaltype_id";
+	public final String COLUMN_ANIMAL_TYPE_ID = "animaltype_id";
 	public final String COLUMN_NAME = "name";
 	public final String COLUMN_SEX = "sex";
 	public final String COLUMN_BIRTHDATE = "birthdate";
 	public final String COLUMN_IS_ALIVE = "is_alive";
-	public final String COLUMN_DEATHDATE = "deathdate";
+	public final String COLUMN_DEATH_DATE = "deathdate";
 	public final String COLUMN_MOTHER = "mother";
 	public final String COLUMN_FATHER = "father";
 	public final String COLUMN_DETAILS = "details";

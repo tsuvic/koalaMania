@@ -1,24 +1,14 @@
 package com.example.demo.repository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import com.example.demo.app.AnimalFilterForm;
+import com.example.demo.entity.*;
 import com.example.demo.util.CommonSqlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.entity.Animal;
-import com.example.demo.entity.AnimalForTree;
-import com.example.demo.entity.AnimalZooHistory;
-import com.example.demo.entity.LoginUser;
-import com.example.demo.entity.Prefecture;
-import com.example.demo.entity.Zoo;
+import java.util.*;
 
 @Repository
 public class AnimalDaoImpl implements AnimalDao {
@@ -302,7 +292,7 @@ public class AnimalDaoImpl implements AnimalDao {
     @Override
     public int insert(Animal animal) {
         Map<String, Object> insertId = jdbcTemplate.queryForMap(
-                "INSERT INTO " + ENTITY_ANIMAL.TABLE_NAME + "(" + ENTITY_ANIMAL.COLUMN_NAME + ", " + ENTITY_ANIMAL.COLUMN_SEX + ", " + ENTITY_ANIMAL.COLUMN_BIRTHDATE + ", " + ENTITY_ANIMAL.COLUMN_IS_ALIVE + ", " + ENTITY_ANIMAL.COLUMN_DEATHDATE + ", " + ENTITY_ANIMAL.COLUMN_MOTHER + ", " + ENTITY_ANIMAL.COLUMN_FATHER + ", " + ENTITY_ANIMAL.COLUMN_DETAILS + ", " + ENTITY_ANIMAL.COLUMN_FEATURE + ", " + ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE + ") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING " + ENTITY_ANIMAL.COLUMN_ANIMAL_ID + "",
+                "INSERT INTO " + ENTITY_ANIMAL.TABLE_NAME + "(" + ENTITY_ANIMAL.COLUMN_NAME + ", " + ENTITY_ANIMAL.COLUMN_SEX + ", " + ENTITY_ANIMAL.COLUMN_BIRTHDATE + ", " + ENTITY_ANIMAL.COLUMN_IS_ALIVE + ", " + ENTITY_ANIMAL.COLUMN_DEATH_DATE + ", " + ENTITY_ANIMAL.COLUMN_MOTHER + ", " + ENTITY_ANIMAL.COLUMN_FATHER + ", " + ENTITY_ANIMAL.COLUMN_DETAILS + ", " + ENTITY_ANIMAL.COLUMN_FEATURE + ", " + ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE + ") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING " + ENTITY_ANIMAL.COLUMN_ANIMAL_ID + "",
                 animal.getName(), animal.getSex(), animal.getBirthdate(), animal.getIs_alive(), animal.getDeathdate(),
                 animal.getMotherAnimal().getAnimal_id(), animal.getFatherAnimal().getAnimal_id(), animal.getDetails(), animal.getFeature(),
                 animal.getProfileImagePath());
@@ -320,7 +310,7 @@ public class AnimalDaoImpl implements AnimalDao {
                 AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_ANIMAL_ID + ", " + AsMainAnimal + "." +
                 ENTITY_ANIMAL.COLUMN_NAME + ", " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_SEX + ", " +
                 AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_BIRTHDATE + ", " + AsMainAnimal + "." +
-                ENTITY_ANIMAL.COLUMN_IS_ALIVE + ", " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_DEATHDATE + ", " +
+                ENTITY_ANIMAL.COLUMN_IS_ALIVE + ", " + AsMainAnimal + "." + ENTITY_ANIMAL.COLUMN_DEATH_DATE + ", " +
 
                 AsMotherAnimal + "." + ENTITY_ANIMAL.COLUMN_ANIMAL_ID + " as " + AsMotherId + " , " +
                 AsFatherAnimal + "." + ENTITY_ANIMAL.COLUMN_ANIMAL_ID + " as " + AsFatherId + ", " +
@@ -345,7 +335,7 @@ public class AnimalDaoImpl implements AnimalDao {
         animal.setSex((int) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_SEX));
         animal.setBirthdate((Date) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_BIRTHDATE));
         animal.setIs_alive((int) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_IS_ALIVE));
-        animal.setDeathdate((Date) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_DEATHDATE));
+        animal.setDeathdate((Date) resultList.get(0).get(ENTITY_ANIMAL.COLUMN_DEATH_DATE));
         Animal motherAnimal = new Animal();
         Animal fatherAnimal = new Animal();
         if (resultList.get(0).get(AsMotherId) != null) {
@@ -366,7 +356,7 @@ public class AnimalDaoImpl implements AnimalDao {
     @Override
     public void update(Animal animal) {
         jdbcTemplate.update(
-                "UPDATE " + ENTITY_ANIMAL.TABLE_NAME + " SET " + ENTITY_ANIMAL.COLUMN_NAME + "=?, " + ENTITY_ANIMAL.COLUMN_SEX + "=?," + ENTITY_ANIMAL.COLUMN_BIRTHDATE + "=?," + ENTITY_ANIMAL.COLUMN_IS_ALIVE + "=?," + ENTITY_ANIMAL.COLUMN_DEATHDATE + "=?," + ENTITY_ANIMAL.COLUMN_MOTHER + "=?," + ENTITY_ANIMAL.COLUMN_FATHER + "=?," + ENTITY_ANIMAL.COLUMN_DETAILS + "=?," + ENTITY_ANIMAL.COLUMN_FEATURE + "=?, " + ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE + " = ? WHERE " + ENTITY_ANIMAL.COLUMN_ANIMAL_ID + " = ?",
+                "UPDATE " + ENTITY_ANIMAL.TABLE_NAME + " SET " + ENTITY_ANIMAL.COLUMN_NAME + "=?, " + ENTITY_ANIMAL.COLUMN_SEX + "=?," + ENTITY_ANIMAL.COLUMN_BIRTHDATE + "=?," + ENTITY_ANIMAL.COLUMN_IS_ALIVE + "=?," + ENTITY_ANIMAL.COLUMN_DEATH_DATE + "=?," + ENTITY_ANIMAL.COLUMN_MOTHER + "=?," + ENTITY_ANIMAL.COLUMN_FATHER + "=?," + ENTITY_ANIMAL.COLUMN_DETAILS + "=?," + ENTITY_ANIMAL.COLUMN_FEATURE + "=?, " + ENTITY_ANIMAL.COLUMN_PROFILE_IMAGE_TYPE + " = ? WHERE " + ENTITY_ANIMAL.COLUMN_ANIMAL_ID + " = ?",
                 animal.getName(), animal.getSex(), animal.getBirthdate(), animal.getIs_alive(), animal.getDeathdate(),
                 animal.getMotherAnimal().getAnimal_id(), animal.getFatherAnimal().getAnimal_id(), animal.getDetails(), animal.getFeature(),
                 animal.getProfileImagePath(), animal.getAnimal_id());
