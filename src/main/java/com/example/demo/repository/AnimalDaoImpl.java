@@ -376,7 +376,7 @@ public class AnimalDaoImpl implements AnimalDao {
 
 		/*jdbcTemplate.update("UPDATE "+ ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME  +" SET "+ ENTITY_ANIMAL_ZOO_HISTORY.COLUMN_ZOO_ID +"=? WHERE "+ ENTITY_ANIMAL.COLUMN_ANIMAL_ID +" = ?", animal.getZoo(),
 				animal.getAnimal_id());
-		commonSqlUtil.updateOnlyUpdateCommonColumn( ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME,ENTITY_ANIMAL.COLUMN_ANIMAL_ID ,(int) ((LoginUser) principal).getUser_id(),animal.getAnimal_id());*/
+		commonSqlUtil.updateOnlyUpdateCommonColumn( ENTITY_ANIMAL_ZOO_HISTORY.TABLE_NAME,ENTITY_ANIMAL.COLUMN_ANIMAL_ID ,(int) ((LoginUser) principal).getUserId(),animal.getAnimal_id());*/
     }
 
     @Override

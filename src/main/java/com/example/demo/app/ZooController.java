@@ -28,7 +28,7 @@ public class ZooController {
 		this.dateUtil = dateUtil;
 	}
 	
-	@GetMapping("/detail/{zoo_id}")
+	@GetMapping("/detail/{zooId}")
 	public String detail(@PathVariable int zoo_id, Model model){
 		
 		model.addAttribute("zoo", zooService.findById(zoo_id));

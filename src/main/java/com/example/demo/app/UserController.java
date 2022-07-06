@@ -43,7 +43,7 @@ public class UserController {
 		this.dateUtil = dateUtil;
 	}
 
-	@GetMapping("/{user_id}")
+	@GetMapping("/{userId}")
 	public String getMyPageTabType(@PathVariable int user_id, Model model, @ModelAttribute UserForm form) {
 
 		LoginUser principal = userAuthenticationUtil.isUserAuthenticated();
@@ -69,7 +69,7 @@ public class UserController {
 		return "users/mypage";
 	}
 
-	@GetMapping("/edit/{user_id}")
+	@GetMapping("/edit/{userId}")
 	public String getEditMypage(@PathVariable int user_id, Model model,
 			@ModelAttribute UserForm form) {
 

@@ -96,7 +96,7 @@ public class PostImageFavoriteDaoImpl implements PostImageFavoriteDao {
 				PostImage postImage = new PostImage();
 				postImage.setPostimage_id((int) resultList.get(0).get(ENTITY_POST_IMAGE.COLUMN_POSTIMAGE_ID));
 				Post post = new Post();
-				post.setPost_id((int) resultList.get(0).get(ENTITY_POST.COLUMN_POST_ID));
+				post.setPostId((int) resultList.get(0).get(ENTITY_POST.COLUMN_POST_ID));
 				LoginUser user = new LoginUser();
 				user.setUser_id((int) resultList.get(0).get(ENTITY_LOGIN_USER.COLUMN_USER_ID));
 				user.setUserName((String) resultList.get(0).get(ENTITY_LOGIN_USER.COLUMN_USER_NAME));
@@ -191,7 +191,7 @@ public class PostImageFavoriteDaoImpl implements PostImageFavoriteDao {
 			}
 
 			Post post = new Post();
-			post.setPost_id((int) result.get(ENTITY_POST.COLUMN_POST_ID));
+			post.setPostId((int) result.get(ENTITY_POST.COLUMN_POST_ID));
 			post.setCreatedDate((Date) result.get(commonSqlUtil.COLUMN_CREATE_DATE));
 			LoginUser loginUser = new LoginUser();
 			loginUser.setUser_id((int) result.get(ENTITY_LOGIN_USER.COLUMN_USER_ID));

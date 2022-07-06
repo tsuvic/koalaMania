@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
@@ -9,35 +10,42 @@ import java.util.List;
 @Data
 @Component
 public class Post {
+	@JsonIgnore
 	public final String TABLE_NAME = "post";
 
-	public final String COLUMN_POST_ID = "post_id";
+	@JsonIgnore
+	public final String COLUMN_POST_ID = "postId";
 
-	public final String COLUMN_USER_ID = "user_id";
+	@JsonIgnore
+	public final String COLUMN_USER_ID = "userId";
 
-	public final String COLUMN_ZOO_ID = "zoo_id";
+	@JsonIgnore
+	public final String COLUMN_ZOO_ID = "zooId";
 
-	public final String COLUMN_ANIMALTYPE_ID = "animaltype_id";
+	@JsonIgnore
+	public final String COLUMN_ANIMAL_TYPE_ID = "animaltype_id";
 
-	public final String COLUMN_PARENT_ID = "parent_id";
+	@JsonIgnore
+	public final String COLUMN_PARENT_ID = "parentId";
 
+	@JsonIgnore
 	public final String COLUMN_CONTENTS = "contents";
 
+	@JsonIgnore
 	public final String COLUMN_VISIT_DATE = "visit_date";
 
+	@JsonIgnore
 	public final String COLUMN_TITLE = "title";
 
-	private int post_id;
+	private int postId;
 	private String title;
 	private String contents;
 	private Zoo zoo;
 	private List<PostImage> postImageList;
 	private Date visitDate;
-	private Date createdDate;
-	private LoginUser loginUser; //削除予定 フロントからユーザー自体を受け取るため、IDではなくユーザーオブジェクトを保持している
-	private int userId; //新規追加
-	private Post parentPost; //削除予定
-	private int parentPostId; //新規追加
+	private Date createdDate; //削除予定
+	private LoginUser loginUser;
+	private Post parentPost;
 	private List<Post> childrenPost;
 	private String displayDiffTime;
 	private long childrenCount;

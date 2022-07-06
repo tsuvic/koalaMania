@@ -65,11 +65,11 @@ public class PostServiceImpl implements PostService {
 		Post post = new Post();
 		Zoo zoo = new Zoo();
 		Post parent = new Post();
-		parent.setPost_id(form.getParent_id());
-		zoo.setZoo_id(form.getZoo_id());
+		parent.setPostId(form.getParentId());
+		zoo.setZoo_id(form.getZooId());
 		post.setZoo(zoo);
 		post.setContents(form.getContents());
-		post.setVisitDate(getDate(form.getVisitdate()));
+		post.setVisitDate(getDate(form.getVisitDate()));
 		post.setParentPost(parent);
 		
 		int insert_id = postDao.insertNewPost(post);
@@ -130,8 +130,8 @@ public class PostServiceImpl implements PostService {
 	
 	@Override
 	public void deletePost(PostInsertForm postInsertForm) {
-		postDao.deletePost(postInsertForm.getPost_id());
-		cloudinaryService.deleteDirs(postInsertForm.getPost_id());
+		postDao.deletePost(postInsertForm.getPostId());
+		cloudinaryService.deleteDirs(postInsertForm.getPostId());
 	}
 	
 	public Date getDate(String visitDate) {
@@ -215,12 +215,12 @@ public class PostServiceImpl implements PostService {
 	}
 
 	//202207 インターフェースなしで試験的に実装
-	public void insertPost(Post post){
+	public Post insertPost(Post post){
 
 		//バックエンドのバリデーションは個別に切り出して追って実装を行う
 		if (post.getParentPost() == null) {
 			Post parentPost = new Post();
-			parentPost.setPost_id(0);
+			parentPost.setPostId(0);
 			post.setParentPost(parentPost);
 		}
 		if(post.getZoo()==null){
@@ -230,9 +230,11 @@ public class PostServiceImpl implements PostService {
 		}
 		post.setTitle("バックエンドテスト");
 		post.setContents("テストです");
-		System.out.println(post);
+		post.setVisitDate(new Date());
 
 		postDaoImple.insertPost(post);
+
+		return post;
 	}
 
 }

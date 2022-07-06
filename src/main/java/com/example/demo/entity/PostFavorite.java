@@ -13,13 +13,13 @@ public class PostFavorite {
 	public final String TABLE_NAME = "post_favorite";
 
 	@JsonIgnore
-	public final String COLUMN_POST_FAVORITE_ID = "post_id";
+	public final String COLUMN_POST_FAVORITE_ID = "postId";
 
 	@JsonIgnore
-	public final String COLUMN_POST_ID = "post_id";
+	public final String COLUMN_POST_ID = "postId";
 
 	@JsonIgnore
-	public final String COLUMN_USER_ID = "user_id";
+	public final String COLUMN_USER_ID = "userId";
 
 	private int postFavoriteId;
 	private Post post;

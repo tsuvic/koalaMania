@@ -18,7 +18,7 @@ public class AnimalZooHistory {
 	
 	public final String COLUMN_ANIMAL_ZOO_HISTORY_ID = "animal_zoo_history_id";
 	public final String COLUMN_ANIMAL_ID = "animal_id";
-	public final String COLUMN_ZOO_ID = "zoo_id";
+	public final String COLUMN_ZOO_ID = "zooId";
 	public final String COLUMN_ADMISSION_DATE = "admission_date";
 	public final String COLUMN_EXIT_DATE = "exit_date";
 

@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,11 +78,9 @@ public class UserRestController {
 
 	@PostMapping("/posts")
 	@ResponseStatus(HttpStatus.CREATED)
-	public String postPosts(@ModelAttribute Post post) throws JsonProcessingException {
-		LoginUser user = userAuthenticationUtil.isUserAuthenticated();
-		System.out.println(user);
+	public String postPosts(@ModelAttribute Post post, @AuthenticationPrincipal LoginUser user) throws JsonProcessingException {
 		post.setLoginUser(user);
-		postServiceImpl.insertPost(post);
-		return null;
+		Post insertedPost = postServiceImpl.insertPost(post);
+		return objectMapper.writeValueAsString(insertedPost);
 	}
 }
