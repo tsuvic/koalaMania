@@ -53,8 +53,8 @@ public class ZooController {
 	 * @param UserForm form
 	*/
 	private void setDefaultUserProfileImage(Post post) {
-		if (post.getLoginUser().getProfileImagePath() == null) {
-			post.getLoginUser().setProfileImagePath("/images/users/profile/defaultUser.png");
+		if (post.getUser().getProfileImagePath() == null) {
+			post.getUser().setProfileImagePath("/images/users/profile/defaultUser.png");
 		}
 	}
 

@@ -79,7 +79,7 @@ public class UserRestController {
 	@PostMapping("/posts")
 	@ResponseStatus(HttpStatus.CREATED)
 	public String postPosts(@ModelAttribute Post post, @AuthenticationPrincipal LoginUser user) throws JsonProcessingException {
-		post.setLoginUser(user);
+		post.setUser(user);
 		Post insertedPost = postServiceImpl.insertPost(post);
 		return objectMapper.writeValueAsString(insertedPost);
 	}

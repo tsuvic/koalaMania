@@ -41,14 +41,16 @@ public class Post {
 	private String title;
 	private String contents;
 	private Zoo zoo;
-	private List<PostImage> postImageList;
 	private Date visitDate;
-	private Date createdDate; //削除予定
-	private LoginUser loginUser;
-	private Post parentPost;
-	private List<Post> childrenPost;
-	private String displayDiffTime;
-	private long childrenCount;
+	private List<PostImage> postImageList;
+	private LoginUser user;
+	private Post parentPost;//コメント先
+	private List<Post> childrenPost;//コメント
 	private boolean favoriteFlag;
 	private long favoriteCount;
+
+	private String displayDiffTime;//削除予定
+	private long childrenCount;//削除予定
+
+	private Date createdDate; //削除予定
 }

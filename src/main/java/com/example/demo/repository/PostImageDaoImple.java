@@ -169,7 +169,7 @@ public class PostImageDaoImple implements PostImageDao {
 		LoginUser user = new LoginUser();
 		user.setUser_id((int) resultList.get(ENTITY_LOGIN_USER.COLUMN_USER_ID));
 		user.setUserName((String) resultList.get(ENTITY_LOGIN_USER.COLUMN_USER_NAME));
-		post.setLoginUser(user);
+		post.setUser(user);
 		postImage.setPost(post);
 
 		return postImage;

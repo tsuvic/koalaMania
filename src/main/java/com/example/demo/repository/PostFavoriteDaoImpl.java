@@ -256,7 +256,7 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 				loginUser.setUser_id((int) result.get(ENTITY_LOGIN_USER.COLUMN_USER_ID));
 				loginUser.setUserName((String) result.get(asOrginalLoginUserName));
 				loginUser.setProfileImagePath((String) result.get(ENTITY_LOGIN_USER.COLUMN_PROFILE_IMAGE_PATH));
-				post.setLoginUser(loginUser);
+				post.setUser(loginUser);
 				Zoo zoo = new Zoo();
 				zoo.setZoo_id((int) result.get(ENTITY_ZOO.COLUMN_ZOO_ID));
 				zoo.setZoo_name((String) result.get(ENTITY_ZOO.COLUMN_ZOO_NAME));
@@ -284,7 +284,7 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 					commentpost.setPostId((int) result.get(asCommentFromPostId));
 					LoginUser commentloginUser = new LoginUser();
 					commentloginUser.setUserName((String) result.get(asCommentFromLoginUserName));
-					commentpost.setLoginUser(commentloginUser);
+					commentpost.setUser(commentloginUser);
 					post.setParentPost(commentpost);
 				}
 

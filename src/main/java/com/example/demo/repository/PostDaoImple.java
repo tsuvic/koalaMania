@@ -111,7 +111,7 @@ public class PostDaoImple implements PostDao {
 		loginUser.setUser_id((int) resultList.get(0).get(ENTITY_LOGIN_USER.COLUMN_USER_ID));
 		loginUser.setUserName((String) resultList.get(0).get(ENTITY_LOGIN_USER.COLUMN_USER_NAME));
 		loginUser.setProfileImagePath((String) resultList.get(0).get(ENTITY_LOGIN_USER.COLUMN_PROFILE_IMAGE_PATH));
-		returnPost.setLoginUser(loginUser);
+		returnPost.setUser(loginUser);
 
 		returnPost.setPostImageList(new ArrayList<PostImage>());
 
@@ -161,7 +161,7 @@ public class PostDaoImple implements PostDao {
 				loginUser2.setUser_id((int) result.get(ENTITY_LOGIN_USER.COLUMN_USER_ID));
 				loginUser2.setUserName((String) result.get(ENTITY_LOGIN_USER.COLUMN_USER_NAME));
 				loginUser2.setProfileImagePath((String) result.get(ENTITY_LOGIN_USER.COLUMN_PROFILE_IMAGE_PATH));
-				post.setLoginUser(loginUser2);
+				post.setUser(loginUser2);
 
 				childrenPostLsit.add(post);
 			}
@@ -232,7 +232,7 @@ public class PostDaoImple implements PostDao {
 				loginUser.setUser_id((int) result.get(ENTITY_LOGIN_USER.COLUMN_USER_ID));
 				loginUser.setUserName((String) result.get(ENTITY_LOGIN_USER.COLUMN_USER_NAME));
 				loginUser.setProfileImagePath((String) result.get(ENTITY_LOGIN_USER.COLUMN_PROFILE_IMAGE_PATH));
-				post.setLoginUser(loginUser);
+				post.setUser(loginUser);
 				if (result.get(ENTITY_POST_IMAGE.COLUMN_IMAGE_ADDRESS) != null) {
 					PostImage postImage = new PostImage();
 					postImage.setImageAddress((String) result.get(ENTITY_POST_IMAGE.COLUMN_IMAGE_ADDRESS));
@@ -353,7 +353,7 @@ public class PostDaoImple implements PostDao {
 				loginUser.setUser_id((int) result.get(ENTITY_LOGIN_USER.COLUMN_USER_ID));
 				loginUser.setUserName((String) result.get(ENTITY_LOGIN_USER.COLUMN_USER_NAME));
 				loginUser.setProfileImagePath((String) result.get(ENTITY_LOGIN_USER.COLUMN_PROFILE_IMAGE_PATH));
-				post.setLoginUser(loginUser);
+				post.setUser(loginUser);
 				Zoo zoo = new Zoo();
 				zoo.setZoo_id((int) result.get(ENTITY_ZOO.COLUMN_ZOO_ID));
 				zoo.setZoo_name((String) result.get(ENTITY_ZOO.COLUMN_ZOO_NAME));
@@ -471,13 +471,13 @@ public class PostDaoImple implements PostDao {
 			loginUser.setUser_id((int) result.get(ENTITY_LOGIN_USER.COLUMN_USER_ID));
 			loginUser.setUserName((String) result.get(asOrginalLoginUserName));
 			loginUser.setProfileImagePath((String) result.get(ENTITY_LOGIN_USER.COLUMN_PROFILE_IMAGE_PATH));
-			post.setLoginUser(loginUser);
+			post.setUser(loginUser);
 
 			Post commentpost = new Post();
 			commentpost.setPostId((int) result.get(asCommentFromPostId));
 			LoginUser commentloginUser = new LoginUser();
 			commentloginUser.setUserName((String) result.get(asCommentFromLoginUserName));
-			commentpost.setLoginUser(commentloginUser);
+			commentpost.setUser(commentloginUser);
 			post.setParentPost(commentpost);
 
 			returnPostList.add(post);
@@ -497,11 +497,11 @@ public class PostDaoImple implements PostDao {
 				ENTITY_POST.COLUMN_CONTENTS + " )" +
 				" VALUES (?,?,?,?,?) RETURNING " + ENTITY_POST.COLUMN_POST_ID;
 
-		Map<String, Object> result = jdbcTemplate.queryForMap(sql,post.getParentPost().getPostId(),post.getLoginUser().getUser_id(),
+		Map<String, Object> result = jdbcTemplate.queryForMap(sql,post.getParentPost().getPostId(),post.getUser().getUser_id(),
 				post.getZoo().getZoo_id(), post.getTitle(), post.getContents());
 
 		commonSqlUtil.updateAllCommonColumn(ENTITY_POST.TABLE_NAME, ENTITY_POST.COLUMN_POST_ID,
-				post.getLoginUser().getUser_id(), Integer.valueOf(result.get(ENTITY_POST.COLUMN_POST_ID).toString()));
+				post.getUser().getUser_id(), Integer.valueOf(result.get(ENTITY_POST.COLUMN_POST_ID).toString()));
 
 		System.out.println(result);
 	}
