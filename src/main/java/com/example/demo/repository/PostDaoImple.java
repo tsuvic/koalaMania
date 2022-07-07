@@ -485,23 +485,35 @@ public class PostDaoImple implements PostDao {
 		return returnPostList;
 	}
 
-	//202207 インターフェースなしで試験的に実装
-	public void insertPost(Post post){
+	/* 202207 インターフェースなしで試験的に実装 */
+	/* postを入力にインピーダンスミスマッチを解消し、階層データ構造をリレーショナルモデルに変換することを責務とする */
+	/* TODO 今後、Spring Data JPA・ORM を導入する・・ https://qiita.com/KevinFQ/items/a6d92ec7b32911e50ffe */
+	public void save(LoginUser user, Post post){
 
+		/* 1ステートメントでの文字列結合であるため、コンパイル時に結合する https://qiita.com/yoshi389111/items/67354ba33f9271ef2c68 */
+		//TODO Java15 テキストブロックの導入
 		String sql = "INSERT INTO " +
 				ENTITY_POST.TABLE_NAME + " (" +
-				ENTITY_POST.COLUMN_PARENT_ID + "," +
 				ENTITY_POST.COLUMN_USER_ID + "," +
 				ENTITY_POST.COLUMN_ZOO_ID + "," +
-				ENTITY_POST.COLUMN_TITLE + "," +
-				ENTITY_POST.COLUMN_CONTENTS + " )" +
-				" VALUES (?,?,?,?,?) RETURNING " + ENTITY_POST.COLUMN_POST_ID;
+				ENTITY_POST.COLUMN_PARENT_ID + "," +
+				ENTITY_POST.COLUMN_CONTENTS + "," +
+				ENTITY_POST.COLUMN_VISIT_DATE + "," +
+				ENTITY_POST.COLUMN_TITLE +  " )" +
+				" VALUES (?,?,?,?,?,?) RETURNING " + ENTITY_POST.COLUMN_POST_ID;
 
-		Map<String, Object> result = jdbcTemplate.queryForMap(sql,post.getParentPost().getPostId(),post.getUser().getUser_id(),
-				post.getZoo().getZoo_id(), post.getTitle(), post.getContents());
+		Map<String, Object> result = jdbcTemplate.queryForMap(
+				sql,
+				user.getUser_id(),
+				post.getZoo().getZoo_id(),
+				post.getParentPost().getPostId(),
+				post.getContents(),
+				post.getVisitDate(),
+				post.getTitle()
+		);
 
 		commonSqlUtil.updateAllCommonColumn(ENTITY_POST.TABLE_NAME, ENTITY_POST.COLUMN_POST_ID,
-				post.getUser().getUser_id(), Integer.valueOf(result.get(ENTITY_POST.COLUMN_POST_ID).toString()));
+				user.getUser_id(), Integer.valueOf(result.get(ENTITY_POST.COLUMN_POST_ID).toString()));
 
 		System.out.println(result);
 	}

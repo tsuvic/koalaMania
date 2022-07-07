@@ -17,7 +17,7 @@ public class Animal {
 	public final String TABLE_NAME = "animal";
 	
 	public final String COLUMN_ANIMAL_ID = "animal_id";
-	public final String COLUMN_ANIMAL_TYPE_ID = "animaltype_id";
+	public final String COLUMN_ANIMAL_TYPE_ID = "animal_type_id";
 	public final String COLUMN_NAME = "name";
 	public final String COLUMN_SEX = "sex";
 	public final String COLUMN_BIRTHDATE = "birthdate";

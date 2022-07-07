@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.app.PostInsertForm;
 import com.example.demo.entity.Animal;
+import com.example.demo.entity.LoginUser;
 import com.example.demo.entity.Post;
 import com.example.demo.entity.Zoo;
 import com.example.demo.repository.*;
@@ -214,10 +215,11 @@ public class PostServiceImpl implements PostService {
 		
 	}
 
-	//202207 インターフェースなしで試験的に実装
-	public Post insertPost(Post post){
+	/* 202207 インターフェースなしで試験的に実装 */
+	/* ドメインモデル　postを維持することを責務とする */
+	public Post save(LoginUser user, Post post){
 
-		//バックエンドのバリデーションは個別に切り出して追って実装を行う
+		//TODO バックエンドのバリデーションは個別に切り出して実装する
 		if (post.getParentPost() == null) {
 			Post parentPost = new Post();
 			parentPost.setPostId(0);
@@ -228,11 +230,11 @@ public class PostServiceImpl implements PostService {
 			zoo.setZoo_id(0);
 			post.setZoo(zoo);
 		}
-		post.setTitle("バックエンドテスト");
+
 		post.setContents("テストです");
 		post.setVisitDate(new Date());
 
-		postDaoImple.insertPost(post);
+		postDaoImple.save(user, post);
 
 		return post;
 	}

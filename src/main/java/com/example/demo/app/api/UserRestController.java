@@ -16,8 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -78,9 +80,17 @@ public class UserRestController {
 
 	@PostMapping("/posts")
 	@ResponseStatus(HttpStatus.CREATED)
-	public String postPosts(@ModelAttribute Post post, @AuthenticationPrincipal LoginUser user) throws JsonProcessingException {
-		post.setUser(user);
-		Post insertedPost = postServiceImpl.insertPost(post);
-		return objectMapper.writeValueAsString(insertedPost);
+	public String postPosts(@RequestBody String jsonPost, @AuthenticationPrincipal LoginUser user) throws JsonProcessingException {
+		Optional<LoginUser> nullableUser = Optional.ofNullable(user);
+		Post post = objectMapper.readValue(jsonPost, Post.class);
+
+		/* https://qiita.com/rubytomato@github/items/92ac7944c830e54aa03d */
+		/* nullableUser.ifPresentOrElse(u -> {}, () -> {}); */
+		if (nullableUser.isPresent()) {
+			Post savedPost = postServiceImpl.save(nullableUser.get(), post);
+			return objectMapper.writeValueAsString(savedPost);
+		} else {
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "ログインしてください");
+		}
 	}
 }
