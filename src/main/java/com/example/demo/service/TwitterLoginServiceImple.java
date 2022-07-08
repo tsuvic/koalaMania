@@ -5,15 +5,16 @@ import com.example.demo.repository.LoginUserDao;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import twitter4j.User;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.Duration;
 
 @Service
 public class TwitterLoginServiceImple implements TwitterLoginService {
@@ -43,16 +44,18 @@ public class TwitterLoginServiceImple implements TwitterLoginService {
 	public void setCookie(LoginUser loginUser,HttpServletResponse response,HttpServletRequest request) {
 		
 		String[] hashedKeys = getHashedKeys(loginUser);
-		
-		
-		Cookie cookie = new Cookie("autoLogin", hashedKeys[0]); // Cookieの作成
-	    cookie.setMaxAge(1 * 24 * 60 * 60); // Cookieの残存期間（秒数）30日に設定
-	    cookie.setPath("/");
-	    if(request.getScheme().equals("https")) {
-	    	cookie.setSecure(true);
-	    }
-	    cookie.setHttpOnly(true);
-	    response.addCookie(cookie);
+
+		/* https://qiita.com/nannou/items/fc86d052e356e095fcbf */
+		/* https://blog.cybozu.io/entry/2020/05/07/080000 */
+		ResponseCookie responseCookie = ResponseCookie
+				.from("autoLogin", hashedKeys[0])
+				.domain(request.getServerName())
+				.maxAge(Duration.ofDays(3))
+				.path("/")
+				.httpOnly(true)
+				.secure(true)
+				.sameSite("Lax").build();
+		response.addHeader("Set-Cookie", responseCookie.toString());
 	    
 	    loginUserDao.updateAutoLoginKey(hashedKeys[1],loginUser);
 	    
