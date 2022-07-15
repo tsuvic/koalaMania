@@ -234,9 +234,7 @@ public class PostServiceImpl implements PostService {
 		post.setContents("テストです");
 		post.setVisitDate(new Date());
 
-		postDaoImple.save(user, post);
-
-		return post;
+		return postDaoImple.save(user, post);
 	}
 
 }

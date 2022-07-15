@@ -84,6 +84,7 @@ public class UserRestController {
 		Optional<LoginUser> nullableUser = Optional.ofNullable(user);
 		Post post = objectMapper.readValue(jsonPost, Post.class);
 
+		//TODO 引数としてjsonを受け取るか、postのエンティティとして受け取るか確認。バリデーションもここで実装する
 		/* https://qiita.com/rubytomato@github/items/92ac7944c830e54aa03d */
 		/* nullableUser.ifPresentOrElse(u -> {}, () -> {}); */
 		if (nullableUser.isPresent()) {

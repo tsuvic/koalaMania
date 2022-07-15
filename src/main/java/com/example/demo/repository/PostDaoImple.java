@@ -488,7 +488,7 @@ public class PostDaoImple implements PostDao {
 	/* 202207 インターフェースなしで試験的に実装 */
 	/* postを入力にインピーダンスミスマッチを解消し、階層データ構造をリレーショナルモデルに変換することを責務とする */
 	/* TODO 今後、Spring Data JPA・ORM を導入する・・ https://qiita.com/KevinFQ/items/a6d92ec7b32911e50ffe */
-	public void save(LoginUser user, Post post){
+	public Post save(LoginUser user, Post post){
 
 		/* 1ステートメントでの文字列結合であるため、コンパイル時に結合する https://qiita.com/yoshi389111/items/67354ba33f9271ef2c68 */
 		//TODO Java15 テキストブロックの導入
@@ -512,9 +512,15 @@ public class PostDaoImple implements PostDao {
 				post.getTitle()
 		);
 
-		commonSqlUtil.updateAllCommonColumn(ENTITY_POST.TABLE_NAME, ENTITY_POST.COLUMN_POST_ID,
-				user.getUser_id(), Integer.valueOf(result.get(ENTITY_POST.COLUMN_POST_ID).toString()));
+		commonSqlUtil.updateAllCommonColumn(
+				ENTITY_POST.TABLE_NAME,
+				ENTITY_POST.COLUMN_POST_ID,
+				user.getUser_id(),
+				Integer.valueOf(result.get(ENTITY_POST.COLUMN_POST_ID).toString())
+		);
 
-		System.out.println(result);
+		post.setPostId(Integer.valueOf(result.get(ENTITY_POST.COLUMN_POST_ID).toString()));
+
+		return post;
 	}
 }
