@@ -148,7 +148,7 @@ public class CloudinaryServiceImpl implements CloudinaryService{
     
     private String getUserUploadDir(int user_id) {
 		// 写真を格納するファイルのパス
-        StringBuffer dirPath = new StringBuffer("user").append("/")
+        StringBuffer dirPath = new StringBuffer("users").append("/")
         								.append(String.valueOf(user_id));
         
         return dirPath.toString();

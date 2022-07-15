@@ -98,7 +98,7 @@ public class AnimalServiceImpl implements AnimalService {
 		
 //		//選択なし
 //		Zoo zoo = new Zoo();
-//		zoo.setZoo_id(-1);
+//		zoo.setZooId(-1);
 //		zoo.setZoo_name("動物園を選択する");
 //		zooList.add(0, zoo);
 

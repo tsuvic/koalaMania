@@ -1,25 +1,18 @@
 package com.example.demo.repository;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.example.demo.app.UserAuthenticationUtil;
+import com.example.demo.entity.*;
+import com.example.demo.util.CommonSqlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.app.UserAuthenticationUtil;
-import com.example.demo.entity.Animal;
-import com.example.demo.entity.LoginUser;
-import com.example.demo.entity.Post;
-import com.example.demo.entity.PostFavorite;
-import com.example.demo.entity.PostImage;
-import com.example.demo.entity.Prefecture;
-import com.example.demo.entity.Zoo;
-import com.example.demo.util.CommonSqlUtil;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 public class PostFavoriteDaoImpl implements PostFavoriteDao {
@@ -70,7 +63,7 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 			int user_id = ((LoginUser) principal).getUser_id();
 
 			if (postList.size() > 0) {
-				String placeHolder = postList.stream().map(post -> String.valueOf(post.getPost_id()))
+				String placeHolder = postList.stream().map(post -> String.valueOf(post.getPostId()))
 						.collect(Collectors.joining(","));
 
 				String sql = "SELECT " +
@@ -82,7 +75,7 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 
 				for (Map<String, Object> result : resultList) {
 					postList.stream()
-							.filter(post -> post.getPost_id() == (int) result.get(ENTITY_POST_FAVORITE.COLUMN_POST_ID))
+							.filter(post -> post.getPostId() == (int) result.get(ENTITY_POST_FAVORITE.COLUMN_POST_ID))
 							.forEach(post -> post.setFavoriteFlag(true));
 				}
 			}
@@ -112,7 +105,7 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 				(int) result.get(ENTITY_POST_FAVORITE.COLUMN_POST_FAVORITE_ID));
 		
 		Post post = new Post();
-		post.setPost_id(post_id);
+		post.setPostId(post_id);
 		
 		getPostFavoirteCount(post);
 		
@@ -132,7 +125,7 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 		jdbcTemplate.update(sql, post_id, user_id);
 		
 		Post post = new Post();
-		post.setPost_id(post_id);
+		post.setPostId(post_id);
 		
 		getPostFavoirteCount(post);
 		
@@ -153,7 +146,7 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 					" WHERE " + ENTITY_POST_FAVORITE.COLUMN_POST_ID + " = ? " +
 					" AND " + ENTITY_POST_FAVORITE.COLUMN_USER_ID + " = ? ";
 
-			Map<String, Object> result = jdbcTemplate.queryForMap(sql, post.getPost_id(), user_id);
+			Map<String, Object> result = jdbcTemplate.queryForMap(sql, post.getPostId(), user_id);
 
 			if ((long) result.get("count") > 0) {
 				post.setFavoriteFlag(true);
@@ -247,7 +240,7 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 					postImage.setAnimal(animal);
 				}
 				Post post = new Post();
-				post.setPost_id((int) result.get(asOriginalPostId));
+				post.setPostId((int) result.get(asOriginalPostId));
 				postImage.setPost(post);
 				returnPostList.get(returnPostList.size() - 1).getPostImageList().add(postImage);
 
@@ -255,7 +248,7 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 
 			} else {
 				Post post = new Post();
-				post.setPost_id((int) result.get(asOriginalPostId));
+				post.setPostId((int) result.get(asOriginalPostId));
 				post.setContents((String) result.get(ENTITY_POST.COLUMN_CONTENTS));
 				post.setVisitDate((Date) result.get(ENTITY_POST.COLUMN_VISIT_DATE));
 				post.setCreatedDate((Date) result.get(commonSqlUtil.COLUMN_CREATE_DATE));
@@ -263,7 +256,7 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 				loginUser.setUser_id((int) result.get(ENTITY_LOGIN_USER.COLUMN_USER_ID));
 				loginUser.setUserName((String) result.get(asOrginalLoginUserName));
 				loginUser.setProfileImagePath((String) result.get(ENTITY_LOGIN_USER.COLUMN_PROFILE_IMAGE_PATH));
-				post.setLoginUser(loginUser);
+				post.setUser(loginUser);
 				Zoo zoo = new Zoo();
 				zoo.setZoo_id((int) result.get(ENTITY_ZOO.COLUMN_ZOO_ID));
 				zoo.setZoo_name((String) result.get(ENTITY_ZOO.COLUMN_ZOO_NAME));
@@ -288,10 +281,10 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 
 				if (result.get(asCommentFromPostId) != null) {
 					Post commentpost = new Post();
-					commentpost.setPost_id((int) result.get(asCommentFromPostId));
+					commentpost.setPostId((int) result.get(asCommentFromPostId));
 					LoginUser commentloginUser = new LoginUser();
 					commentloginUser.setUserName((String) result.get(asCommentFromLoginUserName));
-					commentpost.setLoginUser(commentloginUser);
+					commentpost.setUser(commentloginUser);
 					post.setParentPost(commentpost);
 				}
 
@@ -302,7 +295,7 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 		}
 
 		if (returnPostList.size() > 0) {
-			final String placeHolder = returnPostList.stream().map(post -> String.valueOf(post.getPost_id()))
+			final String placeHolder = returnPostList.stream().map(post -> String.valueOf(post.getPostId()))
 					.collect(Collectors.joining(","));
 
 			String asChildPost = "childpost";
@@ -322,7 +315,7 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 
 			for (Post parentPost : returnPostList) {
 				resultList2.stream()
-						.filter(count -> parentPost.getPost_id() == (int) count.get(ENTITY_POST.COLUMN_POST_ID))
+						.filter(count -> parentPost.getPostId() == (int) count.get(ENTITY_POST.COLUMN_POST_ID))
 						.forEach(count -> parentPost.setChildrenCount((long) count.get("count")));
 			}
 		}
@@ -336,7 +329,7 @@ public class PostFavoriteDaoImpl implements PostFavoriteDao {
 				ENTITY_POST_FAVORITE.TABLE_NAME +
 				" WHERE " + ENTITY_POST_FAVORITE.COLUMN_POST_ID + " = ? ";
 
-		Map<String, Object> result = jdbcTemplate.queryForMap(sql, post.getPost_id());
+		Map<String, Object> result = jdbcTemplate.queryForMap(sql, post.getPostId());
 
 		post.setFavoriteCount((long) result.get("count"));
 		

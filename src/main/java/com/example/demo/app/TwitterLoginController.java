@@ -50,7 +50,7 @@ public class TwitterLoginController {
 	public String login() {
     	LoginUser principal = userAuthenticationUtil.isUserAuthenticated();
 		if( principal != null) {
-			return "redirect:/user/mypage/" + ((LoginUser) principal).getUser_id();
+			return "redirect:/users/mypage/" + ((LoginUser) principal).getUser_id();
 		}else {
 			return "login";
 		}
@@ -60,7 +60,7 @@ public class TwitterLoginController {
 	public String signup() {
 		LoginUser principal = userAuthenticationUtil.isUserAuthenticated();
 		if( principal != null) {
-			return "redirect:/user/mypage/" + ((LoginUser) principal).getUser_id();
+			return "redirect:/users/mypage/" + ((LoginUser) principal).getUser_id();
 		}else {
 			return "signup";
 		}
@@ -114,6 +114,6 @@ public class TwitterLoginController {
 		}
 		
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return "redirect:/user/mypage/" + ((LoginUser) principal).getUser_id();
+		return "redirect:/users/" + ((LoginUser) principal).getUser_id();
 	}
 }

@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -13,52 +12,36 @@ import java.util.Date;
 @Component
 public class LoginUser extends org.springframework.security.core.userdetails.User {
 
-	@JsonIgnore
 	public final String TABLE_NAME = "login_user";
 
-	@JsonIgnore
 	public final String COLUMN_USER_ID = "user_id";
 
-	@JsonIgnore
 	public final String COLUMN_PROVIDER = "provider";
 
-	@JsonIgnore
 	public final String COLUMN_PROVIDER_ID = "provider_id";
 
-	@JsonIgnore
 	public final String COLUMN_PROVIDER_ADRESS = "provider_adress";
 
-	@JsonIgnore
 	public final String COLUMN_USER_NAME = "user_name";
 
-	@JsonIgnore
 	public final String COLUMN_PROFILE = "profile";
 
-	@JsonIgnore
 	public final String COLUMN_ROLE = "role";
 
-	@JsonIgnore
 	public final String COLUMN_STATUS = "status";
 
-	@JsonIgnore
 	public final String COLUMN_PROFILE_IMAGE_PATH = "profileimagepath";
 
-	@JsonIgnore
 	public final String COLUMN_TWITTER_LINK_FLAG = "twitterlinkflag";
 
-	@JsonIgnore
 	public final String COLUMN_AUTO_LOGIN = "auto_login";
 
-	@JsonIgnore
 	public final String COLUMN_LOGIN_DATE = "login_date";
 
-	@JsonIgnore
 	private static final String dummyPassword = "password";
 
-	@JsonIgnore
-	private static final String dummyUser = "user";
+	private static final String dummyUser = "users";
 
-	@JsonIgnore
 	private static final String ROLE_USER = "ROLE_USER";
 	
 	private int user_id;

@@ -1,36 +1,25 @@
 package com.example.demo.service;
 
+import com.example.demo.app.PostInsertForm;
+import com.example.demo.entity.Animal;
+import com.example.demo.entity.LoginUser;
+import com.example.demo.entity.Post;
+import com.example.demo.entity.Zoo;
+import com.example.demo.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.imageio.ImageIO;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import javax.imageio.ImageIO;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.example.demo.app.PostInsertForm;
-import com.example.demo.entity.Animal;
-import com.example.demo.entity.Post;
-import com.example.demo.entity.Zoo;
-import com.example.demo.repository.AnimalDao;
-import com.example.demo.repository.PostDao;
-import com.example.demo.repository.PostFavoriteDao;
-import com.example.demo.repository.PostImageDao;
-import com.example.demo.repository.ZooDao;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -41,15 +30,19 @@ public class PostServiceImpl implements PostService {
 	private final PostImageDao postImageDao;
 	private final PostFavoriteDao postFavoriteDao;
 	private final CloudinaryService cloudinaryService;
+	private final PostDaoImple postDaoImple;
+	private final Post post;
 	
 	@Autowired
-	public PostServiceImpl(ZooDao zooDao,AnimalDao animalDao,PostDao postDao,PostImageDao postImageDao,CloudinaryService cloudinaryService,PostFavoriteDao postFavoriteDao) {
+	public PostServiceImpl(ZooDao zooDao, AnimalDao animalDao, PostDao postDao, PostImageDao postImageDao, CloudinaryService cloudinaryService, PostFavoriteDao postFavoriteDao, PostDaoImple postDaoImple, Post post) {
 		this.zooDao = zooDao;
 		this.animalDao = animalDao;
 		this.postDao = postDao;
 		this.postImageDao = postImageDao;
 		this.postFavoriteDao = postFavoriteDao;
 		this.cloudinaryService = cloudinaryService;
+		this.postDaoImple = postDaoImple;
+		this.post = post;
 	}
 	
 	@Override
@@ -73,11 +66,11 @@ public class PostServiceImpl implements PostService {
 		Post post = new Post();
 		Zoo zoo = new Zoo();
 		Post parent = new Post();
-		parent.setPost_id(form.getParent_id());
-		zoo.setZoo_id(form.getZoo_id());
+		parent.setPostId(form.getParentId());
+		zoo.setZoo_id(form.getZooId());
 		post.setZoo(zoo);
 		post.setContents(form.getContents());
-		post.setVisitDate(getDate(form.getVisitdate()));
+		post.setVisitDate(getDate(form.getVisitDate()));
 		post.setParentPost(parent);
 		
 		int insert_id = postDao.insertNewPost(post);
@@ -138,8 +131,8 @@ public class PostServiceImpl implements PostService {
 	
 	@Override
 	public void deletePost(PostInsertForm postInsertForm) {
-		postDao.deletePost(postInsertForm.getPost_id());
-		cloudinaryService.deleteDirs(postInsertForm.getPost_id());
+		postDao.deletePost(postInsertForm.getPostId());
+		cloudinaryService.deleteDirs(postInsertForm.getPostId());
 	}
 	
 	public Date getDate(String visitDate) {
@@ -220,6 +213,28 @@ public class PostServiceImpl implements PostService {
 			return null;
 		}
 		
+	}
+
+	/* 202207 インターフェースなしで試験的に実装 */
+	/* ドメインモデル　postを維持することを責務とする */
+	public Post save(LoginUser user, Post post){
+
+		//TODO バックエンドのバリデーションは個別に切り出して実装する
+		if (post.getParentPost() == null) {
+			Post parentPost = new Post();
+			parentPost.setPostId(0);
+			post.setParentPost(parentPost);
+		}
+		if(post.getZoo()==null){
+			Zoo zoo = new Zoo();
+			zoo.setZoo_id(0);
+			post.setZoo(zoo);
+		}
+
+		post.setContents("テストです");
+		post.setVisitDate(new Date());
+
+		return postDaoImple.save(user, post);
 	}
 
 }
