@@ -83,7 +83,7 @@ public class PostImageDaoImple implements PostImageDao {
 				postImage.setPostimage_id((int) result.get(ENTITY_POST_IMAGE.COLUMN_POSTIMAGE_ID));
 				postImage.setImageAddress((String) result.get(ENTITY_POST_IMAGE.COLUMN_IMAGE_ADDRESS));
 				Post post = new Post();
-				post.setPost_id((int) result.get(ENTITY_POST_IMAGE.COLUMN_POST_ID));
+				post.setPostId((int) result.get(ENTITY_POST_IMAGE.COLUMN_POST_ID));
 				postImage.setPost(post);
 				returnPostImageList.add(postImage);
 			}
@@ -132,7 +132,7 @@ public class PostImageDaoImple implements PostImageDao {
 			}
 
 			Post post = new Post();
-			post.setPost_id((int) result.get(ENTITY_POST.COLUMN_POST_ID));
+			post.setPostId((int) result.get(ENTITY_POST.COLUMN_POST_ID));
 			post.setCreatedDate((Date) result.get(commonSqlUtil.COLUMN_CREATE_DATE));
 
 			postImage.setPost(post);
@@ -165,11 +165,11 @@ public class PostImageDaoImple implements PostImageDao {
 		PostImage postImage = new PostImage();
 		postImage.setPostimage_id((int) resultList.get(ENTITY_POST_IMAGE.COLUMN_POSTIMAGE_ID));
 		Post post = new Post();
-		post.setPost_id((int) resultList.get(ENTITY_POST.COLUMN_POST_ID));
+		post.setPostId((int) resultList.get(ENTITY_POST.COLUMN_POST_ID));
 		LoginUser user = new LoginUser();
 		user.setUser_id((int) resultList.get(ENTITY_LOGIN_USER.COLUMN_USER_ID));
 		user.setUserName((String) resultList.get(ENTITY_LOGIN_USER.COLUMN_USER_NAME));
-		post.setLoginUser(user);
+		post.setUser(user);
 		postImage.setPost(post);
 
 		return postImage;

@@ -28,7 +28,7 @@ public class ZooController {
 		this.dateUtil = dateUtil;
 	}
 	
-	@GetMapping("/detail/{zoo_id}")
+	@GetMapping("/detail/{zooId}")
 	public String detail(@PathVariable int zoo_id, Model model){
 		
 		model.addAttribute("zoo", zooService.findById(zoo_id));
@@ -53,8 +53,8 @@ public class ZooController {
 	 * @param UserForm form
 	*/
 	private void setDefaultUserProfileImage(Post post) {
-		if (post.getLoginUser().getProfileImagePath() == null) {
-			post.getLoginUser().setProfileImagePath("/images/user/profile/defaultUser.png");
+		if (post.getUser().getProfileImagePath() == null) {
+			post.getUser().setProfileImagePath("/images/users/profile/defaultUser.png");
 		}
 	}
 

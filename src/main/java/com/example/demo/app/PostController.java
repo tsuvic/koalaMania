@@ -1,19 +1,5 @@
 package com.example.demo.app;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.Post;
 import com.example.demo.entity.Zoo;
@@ -24,6 +10,13 @@ import com.example.demo.service.PostService;
 import com.example.demo.util.DateUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -48,25 +41,25 @@ public class PostController {
 	public String getNewPost(Model model,@ModelAttribute PostInsertForm postInsertForm) {
 		var zooList = animalSearvice.getZooList();
 		model.addAttribute("zooList", zooList);		
-		postInsertForm.setParent_id(0);
+		postInsertForm.setParentId(0);
 		return "post/postInsert2";
 	}
 	
-	@GetMapping("/{zoo_id}")
+	@GetMapping("/{zooId}")
 	public String getNewParentPost(@PathVariable int zoo_id, Model model,@ModelAttribute PostInsertForm postInsertForm) {
 		Zoo zoo = postService.getZooById(zoo_id);
 		List<Animal> animalList = postService.getAnimalListByZooId(zoo_id);
 		model.addAttribute("zoo",zoo);
 		model.addAttribute("title", zoo.getZoo_name() + "に投稿");
 		model.addAttribute("animalList", animalList);
-		postInsertForm.setParent_id(0);
-		postInsertForm.setZoo_id(zoo_id);
+		postInsertForm.setParentId(0);
+		postInsertForm.setZooId(zoo_id);
 		return "post/postInsert";
 	}
 	
 	@GetMapping("/animalList")
 	@ResponseBody
-	public String getAnimalList(@RequestParam(required = false, name = "zoo_id") int zoo_id,Model model) throws JsonProcessingException {
+	public String getAnimalList(@RequestParam(required = false, name = "zooId") int zoo_id,Model model) throws JsonProcessingException {
 		Zoo zoo = postService.getZooById(zoo_id);
 		List<Animal> animalList = postService.getAnimalListByZooId(zoo_id);
 		model.addAttribute("zoo", zoo);
@@ -79,7 +72,7 @@ public class PostController {
 		
 
 	
-	@GetMapping("/postDetail/{post_id}")
+	@GetMapping("/postDetail/{postId}")
 	public String getPostDetail(@PathVariable int post_id, Model model,
 			@ModelAttribute PostInsertForm postInsertForm) {
 		
@@ -100,7 +93,7 @@ public class PostController {
 			}
 		}
 		
-		postInsertForm.setParent_id(post_id);
+		postInsertForm.setParentId(post_id);
 		
 		model.addAttribute("post", post);
 		
@@ -112,7 +105,7 @@ public class PostController {
 		
 		postService.insertNewPost(postInsertForm);
 		
-		return "redirect:/zoo/detail/" + postInsertForm.getZoo_id();
+		return "redirect:/zoo/detail/" + postInsertForm.getZooId();
 	}
 	
 	@PostMapping("/insertChildPost")
@@ -120,7 +113,7 @@ public class PostController {
 		
 		postService.insertNewPost(postInsertForm);
 		
-		return "redirect:/post/postDetail/" + postInsertForm.getParent_id();
+		return "redirect:/post/postDetail/" + postInsertForm.getParentId();
 	}
 	
 	@PostMapping("/delete")
@@ -128,7 +121,7 @@ public class PostController {
 		
 		postService.deletePost(postInsertForm);
 		
-		return "redirect:/zoo/detail/" + postInsertForm.getZoo_id();
+		return "redirect:/zoo/detail/" + postInsertForm.getZooId();
 	}
 	
 	@PostMapping("/deleteChild")
@@ -136,7 +129,7 @@ public class PostController {
 		
 		postService.deletePost(postInsertForm);
 		
-		return "redirect:/post/postDetail/" + postInsertForm.getParent_id();
+		return "redirect:/post/postDetail/" + postInsertForm.getParentId();
 	}
 	
 	@PostMapping("/deleteFromMypage")
@@ -144,12 +137,12 @@ public class PostController {
 		
 		postService.deletePost(postInsertForm);
 		
-		return "redirect:/user/mypage/" + postInsertForm.getUser_id() + "/" + postInsertForm.getTabType();
+		return "redirect:/users/" + postInsertForm.getUserId();
 	}
 	
 	@GetMapping("/insertPostFavorite")
 	@ResponseBody
-	public String getInsertPostFavorite(@RequestParam(required = true, name = "post_id") int post_id) throws Exception {
+	public String getInsertPostFavorite(@RequestParam(required = true, name = "postId") int post_id) throws Exception {
 		Map<String, Object> map  = postFavoriteService.insertPostFavoirte(post_id);
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(map);
@@ -158,7 +151,7 @@ public class PostController {
 	
 	@GetMapping("/deletePostFavorite")
 	@ResponseBody
-	public String getDeletePostFavorite(@RequestParam(required = true, name = "post_id") int post_id) throws Exception {
+	public String getDeletePostFavorite(@RequestParam(required = true, name = "postId") int post_id) throws Exception {
 		Map<String, Object> map =  postFavoriteService.deletePostFavoirte(post_id);
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(map);
@@ -198,8 +191,8 @@ public class PostController {
 	 * @param UserForm form
 	*/
 	private void setDefaultUserProfileImage(Post post) {
-		if (post.getLoginUser().getProfileImagePath() == null) {
-			post.getLoginUser().setProfileImagePath("/images/user/profile/defaultUser.png");
+		if (post.getUser().getProfileImagePath() == null) {
+			post.getUser().setProfileImagePath("/images/users/profile/defaultUser.png");
 		}
 	}
 

@@ -1,27 +1,26 @@
 package com.example.demo.app;
 
-import java.util.List;
-
-import javax.validation.constraints.NotBlank;
-
+import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
-import lombok.Data;
+import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Data
 public class PostInsertForm {
 	
-	private int post_id;
+	private int postId;
 	
-	private int zoo_id = -1;
+	private int zooId = -1;
 	
-	private int parent_id;
+	private int parentId;
 	
-	private int user_id;
+	private int userId;
 	
 	private int tabType;
 	
-	private String visitdate;
+	private String visitDate;
+
 	@NotBlank
 	private String contents;
 	

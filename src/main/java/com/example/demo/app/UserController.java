@@ -14,26 +14,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
 	private final UserService userService;
 
 	private final PostService postService;
-	
+
 	private final PostImageService postImageService;
-	
+
 	private final PostFavoriteService postFavoriteService;
-	
-	private final PostImageFavoriteService postImageFavoriteService; 
+
+	private final PostImageFavoriteService postImageFavoriteService;
 
 	private final UserAuthenticationUtil userAuthenticationUtil;
-	
+
 	private final DateUtil dateUtil;
 
 	@Autowired
 	public UserController(UserService userService, PostFavoriteService postFavoriteService ,UserAuthenticationUtil userAuthenticationUtil,
-			PostService postService,PostImageService postImageService,PostImageFavoriteService postImageFavoriteService,DateUtil dateUtil) {
+						  PostService postService,PostImageService postImageService,PostImageFavoriteService postImageFavoriteService,DateUtil dateUtil) {
 		this.userService = userService;
 		this.userAuthenticationUtil = userAuthenticationUtil;
 		this.postService = postService;
@@ -43,21 +43,13 @@ public class UserController {
 		this.dateUtil = dateUtil;
 	}
 
-	@GetMapping("/mypage/{user_id}")
-	public String getMyPage(@PathVariable int user_id, Model model,
-			@ModelAttribute UserForm form) {
-
-		return "redirect:/user/mypage/" + user_id + "/" + 1;
-	}
-
-	@GetMapping("/mypage/{user_id}/{tabType}")
-	public String getMyPageTabType(@PathVariable int user_id, @PathVariable int tabType, Model model,
-			@ModelAttribute UserForm form) {
+	@GetMapping("/{userId}")
+	public String getMyPageTabType(@PathVariable int userId, Model model, @ModelAttribute UserForm form) {
 
 		LoginUser principal = userAuthenticationUtil.isUserAuthenticated();
 		if (principal != null
-				&& principal.getUser_id() == user_id) {
-			form.setUser_id(user_id);
+				&& principal.getUser_id() == userId) {
+			form.setUser_id(userId);
 			form.setName(((LoginUser) principal).getUserName());
 			form.setProfile(((LoginUser) principal).getProfile());
 			form.setTwitterLinkFlag(((LoginUser) principal).isTwitterLinkFlag());
@@ -65,7 +57,7 @@ public class UserController {
 			form.setProfileImagePath(((LoginUser) principal).getProfileImagePath());
 			model.addAttribute("editFlag", true);
 		} else {
-			LoginUser user = userService.findById(user_id);
+			LoginUser user = userService.findById(userId);
 			form.setName(user.getUserName());
 			form.setProfile(user.getProfile());
 			form.setTwitterLinkFlag(user.isTwitterLinkFlag());
@@ -74,50 +66,17 @@ public class UserController {
 			model.addAttribute("editFlag", false);
 		}
 
-		setDefaultUserProfileImage(form);
-
-		switch (tabType) {
-			case 1:
-				List<Post> postList = postService.getPostByUserId(user_id);
-				postList.stream()
-						.forEach(post -> setDefaultUserProfileImage(post));
-				setDiffTime(postList);
-				model.addAttribute("postList", postList);
-				break;
-			case 2:
-				List<Post> postFavoriteList = postFavoriteService.getPostFavoirteByUserId(user_id);
-				 postFavoriteList.stream()
-						.forEach(post -> setDefaultUserProfileImage(post));
-				 setDiffTime(postFavoriteList);
-				model.addAttribute("postList", postFavoriteList);
-				break;
-			case 3:
-				model.addAttribute("postImageList", postImageService.getPostImageListByUserId(user_id));
-				break;
-			case 4:
-				List<Post> postCommnetList = postService.getCommentByUserId(user_id);
-				postCommnetList.stream()
-						.forEach(post -> setDefaultUserProfileImage(post));
-				 setDiffTime(postCommnetList);
-				model.addAttribute("postList", postCommnetList);
-				break;
-			case 5:
-				model.addAttribute("postImageList", postImageFavoriteService.getPostImageFavoirteByUserId(user_id));
-		}
-
-		model.addAttribute("tabType", tabType);
-
-		return "user/mypage";
+		return "users/mypage";
 	}
 
-	@GetMapping("/edit/{user_id}")
-	public String getEditMypage(@PathVariable int user_id, Model model,
-			@ModelAttribute UserForm form) {
+	@GetMapping("/edit/{userId}")
+	public String getEditMypage(@PathVariable int userId, Model model,
+								@ModelAttribute UserForm form) {
 
 		LoginUser principal = userAuthenticationUtil.isUserAuthenticated();
 		if (principal != null
-				&& principal.getUser_id() == user_id) {
-			form.setUser_id(user_id);
+				&& principal.getUser_id() == userId) {
+			form.setUser_id(userId);
 			form.setName(((LoginUser) principal).getUserName());
 			form.setProfile(((LoginUser) principal).getProfile());
 			form.setTwitterLinkFlag(((LoginUser) principal).isTwitterLinkFlag());
@@ -126,7 +85,7 @@ public class UserController {
 
 			setDefaultUserProfileImage(form);
 
-			return "user/edit";
+			return "users/edit";
 		} else {
 
 			return "redirect:/ ";
@@ -141,38 +100,38 @@ public class UserController {
 
 		userService.updateMyPage(form);
 
-		return "redirect:/user/mypage/" + form.getUser_id();
+		return "redirect:/users/" + form.getUser_id();
 	}
 
 	/**
 	 * プロフィール画像がセットされていない場合、デフォルトの画像をセットする
-	 * 
+	 *
 	 * @param UserForm form
-	*/
+	 */
 	private void setDefaultUserProfileImage(UserForm form) {
 		if (form.getProfileImagePath() == null) {
-			form.setProfileImagePath("/images/user/profile/defaultUser.png");
+			form.setProfileImagePath("/images/users/profile/defaultUser.png");
 		}
 	}
-	
+
 	/**
 	 * プロフィール画像がセットされていない場合、デフォルトの画像をセットする
-	 * 
+	 *
 	 * @param UserForm form
-	*/
+	 */
 	private void setDefaultUserProfileImage(Post post) {
-		if (post.getLoginUser().getProfileImagePath() == null) {
-			post.getLoginUser().setProfileImagePath("/images/user/profile/defaultUser.png");
+		if (post.getUser().getProfileImagePath() == null) {
+			post.getUser().setProfileImagePath("/images/users/profile/defaultUser.png");
 		}
 	}
-	
+
 	private List<Post> setDiffTime(List<Post> postList) {
-	
+
 		for(Post post : postList) {
 
 			dateUtil.setPostDiffTime(post);
 		}
-		
+
 		return postList;
 	}
 

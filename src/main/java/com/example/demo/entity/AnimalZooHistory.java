@@ -1,10 +1,9 @@
 package com.example.demo.entity;
 
-import java.util.Date;
-
+import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import lombok.Data;
+import java.util.Date;
 
 @Data
 @Component

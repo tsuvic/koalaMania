@@ -57,7 +57,7 @@ public class UserServiceImple implements UserService {
 	private String updateUserProfileImage(UserForm form) {
 		try {
 			
-			File uploadFile = new File("images/user/profile/" + form.getUser_id() + form.getUserProfileImageUpload().getOriginalFilename()
+			File uploadFile = new File("images/users/profile/" + form.getUser_id() + form.getUserProfileImageUpload().getOriginalFilename()
 					.substring(form.getUserProfileImageUpload().getOriginalFilename().lastIndexOf(".")));
 
 			byte[] bytes = fileResize(form.getUserProfileImageUpload().getBytes(), form.getUserProfileImageUpload().getOriginalFilename()
