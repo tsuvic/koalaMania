@@ -1,14 +1,21 @@
+package com.example.demo.app;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 @Controller
 @RequestMapping("/")
-public class AnimalController {
-	private final AnimalService animalService;
-	private final PostImageService postImageService;
-	private final ZooHistoryValidator zooHistoryValidator;
-	
-	@Autowired
-	public AnimalController(AnimalService animalService,PostImageService postImageService, ZooHistoryValidator zooHistoryValidator) {
-		this.animalService = animalService;
-		this.postImageService = postImageService;
-		this.zooHistoryValidator = zooHistoryValidator;
+public class CommonController {
+
+	@GetMapping("/privacypolicy")
+	public String privacypolicy() {
+		return "privacypolicy";
 	}
+
+	@GetMapping("/terms")
+	public String terms() {
+		return "terms";
+	}
+
 }
