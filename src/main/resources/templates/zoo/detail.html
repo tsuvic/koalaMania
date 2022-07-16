@@ -104,13 +104,13 @@
 						style="margin: 10px; border: solid;">
 						<div style="margin: 10px;">
 							<a
-								th:href="@{/user/mypage/{user_id}(user_id=*{loginUser.user_id})}"><img
-								th:src="*{loginUser.profileImagePath}" width="40px"
+								th:href="@{/user/mypage/{user_id}(user_id=*{user.user_id})}"><img
+								th:src="*{user.profileImagePath}" width="40px"
 								height="40px"></a> <a
-								th:href="@{/user/mypage/{user_id}(user_id=*{loginUser.user_id})}"
-								th:text="*{loginUser.userName}"> </a> <span
+								th:href="@{/user/mypage/{user_id}(user_id=*{user.user_id})}"
+								th:text="*{user.userName}"> </a> <span
 								th:text="*{displayDiffTime}"></span> <input type="hidden"
-								name="favorite_post_id" th:value="*{post_id}">
+								name="favorite_post_id" th:value="*{postId}">
 							<button sec:authorize="!isAuthenticated()" type="button"
 								th:if="*{favoriteFlag == false}"
 								class="btn btn-outline-warning btn-sm postFavoriteRegister"
@@ -126,16 +126,16 @@
 								class="btn btn-warning btn-sm postFavoriteRegister"></button>
 							<button sec:authorize="isAuthenticated()"
 								class="btn btn-danger btn-sm deletePost"
-								th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
+								th:if="*{user.user_id} == ${#authentication.principal.user_id}"
 								type="button">この投稿を削除</button>
 							<input sec:authorize="isAuthenticated()"
-								th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
-								type="hidden" name="post_id" th:value="*{post_id}"> <input
+								th:if="*{user.user_id} == ${#authentication.principal.user_id}"
+								type="hidden" name="post_id" th:value="*{postId}"> <input
 								sec:authorize="isAuthenticated()"
-								th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
+								th:if="*{user.user_id} == ${#authentication.principal.user_id}"
 								type="hidden" name="zoo_id" th:value="${zoo.zoo_id}"> <input
 								sec:authorize="isAuthenticated()"
-								th:if="*{loginUser.user_id} == ${#authentication.principal.user_id}"
+								th:if="*{user.user_id} == ${#authentication.principal.user_id}"
 								type="hidden" th:name="${_csrf.parameterName}"
 								th:value="${_csrf.token}" />
 						</div>
@@ -146,7 +146,7 @@
 						<div
 							th:if="*{#dates.format(visitDate,'yyyy年M月d日')} == '9999年1月1日'"
 							th:text="'訪問日:  指定なし'" style="margin: 10px;"></div>
-						<a th:href="@{/post/postDetail/{post_id}(post_id=*{post_id})}"
+						<a th:href="@{/post/postDetail/{post_id}(post_id=*{postId})}"
 							style="text-decoration: none; color: black;">
 							<div class="grad-wrap">
 							<label class="grad-btn"></label>
@@ -163,7 +163,7 @@
 								th:href="@{/detail/{animal_id}(animal_id=*{animal.animal_id})}"
 								th:text="'#' + *{animal.name}"></a><br
 								th:unless="*{animal} == null"> <a
-								th:href="@{/post/postDetail/{post_id}(post_id=*{post.post_id})}"
+								th:href="@{/post/postDetail/{post_id}(post_id=*{post.postId})}"
 								style="text-decoration: none; color: black;"> <img
 									th:src="*{imageAddress}" width="100px" height="100px"
 									style="border: solid;">
@@ -171,7 +171,7 @@
 							</span>
 						</div>
 						<div>
-							<a th:href="@{/post/postDetail/{post_id}(post_id=*{post_id})}"
+							<a th:href="@{/post/postDetail/{post_id}(post_id=*{postId})}"
 								th:text="*{childrenCount}+'件のコメント'"> </a>
 						</div>
 					</div></td>
