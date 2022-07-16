@@ -164,6 +164,7 @@ public class PostController {
 		Map<String, Object> resultMap =  postImageFavoriteService.checkPostImageFavoriteByPostImageId(postImage_id);
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(resultMap);
+		System.out.println(json);
 		return json;
 	}
 	
