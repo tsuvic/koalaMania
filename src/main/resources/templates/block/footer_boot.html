@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+<div id="header" th:fragment="footerA_boot">
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+        <div class="row">
+            <div class="col-6 col-md">
+                <!-- <h5>Features</h5> -->
+                <h5>特徴</h5>
+                <ul class="list-unstyled text-small">
+                    <!-- <li><a class="text-muted" href="#">Team feature</a></li> -->
+                    <li><a class="text-muted" href="/description">コアラマニア</a></li>
+                    <!-- <li><a class="text-muted" href="#">Cool stuff</a></li> -->
+                    <li><a class="text-muted" href="/terms">利用規約</a></li>
+                    <!-- <li><a class="text-muted" href="#">Random feature</a></li> -->
+                    <li><a class="text-muted" href="/privacypolicy">プライバシーポリシー</a></li>
+                    <!-- <li><a class="text-muted" href="#">Stuff for developers</a></li> -->
+                    <li><a class="text-muted" href="#">開発者向け</a></li>
+                    <!-- <li><a class="text-muted" href="#">Another one</a></li> -->
+                    <li><a class="text-muted" href="#">そのほか</a></li>
+                    <!-- <li><a class="text-muted" href="#">Last time</a></li> -->
+                    <li><a class="text-muted" href="#">最後</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <!-- <h5>Resources</h5> -->
+                <h5>リソース</h5>
+                <ul class="list-unstyled text-small">
+                    <!-- <li><a class="text-muted" href="#">Resource</a></li> -->
+                    <li><a class="text-muted" href="#">リソース</a></li>
+                    <!-- <li><a class="text-muted" href="#">Resource name</a></li> -->
+                    <li><a class="text-muted" href="#">リソース名</a></li>
+                    <!-- <li><a class="text-muted" href="#">Another resource</a></li> -->
+                    <li><a class="text-muted" href="#">そのほかのリソース</a></li>
+                    <!-- <li><a class="text-muted" href="#">Final resource</a></li> -->
+                    <li><a class="text-muted" href="#">最後のリソース</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <!-- <h5>About</h5> -->
+                <h5>このサービスについて</h5>
+                <ul class="list-unstyled text-small">
+                    <!-- <li><a class="text-muted" href="#">Team</a></li> -->
+                    <li><a class="text-muted" href="#">チーム</a></li>
+                    <!-- <li><a class="text-muted" href="#">Locations</a></li> -->
+                    <li><a class="text-muted" href="#">場所</a></li>
+                    <!-- <li><a class="text-muted" href="#">Privacy</a></li> -->
+                    <li><a class="text-muted" href="#">プライバシー</a></li>
+                    <!-- <li><a class="text-muted" href="#">Terms</a></li> -->
+                    <li><a class="text-muted" href="#">利用規約</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</div>
+</div>
+<script src="../../assets/js/vendor/holder.min.js"></script>
+<script>
+  Holder.addTheme('thumb', {
+    bg: '#55595c',
+    fg: '#eceeef',
+    text: 'Thumbnail'
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+<script>new Vue({el: '#header',vuetify: new Vuetify(),})</script>
+</body>
+</html>
