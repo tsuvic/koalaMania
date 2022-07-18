@@ -60,7 +60,7 @@
     <div th:replace="~{block/header_boot::headerA_boot}"></div>
 
     <div id="mypage" class="mt-16" v-cloak>
-        <v-card class="mx-auto" max-width="374">
+        <v-card class="mx-auto" max-width="374" height="1422">
 
             <!--プロフィール-->
             <div v-if="user" class="d-flex flex-column justify-content-center align-items-center m-1"
@@ -98,7 +98,6 @@
                 </v-btn>
             </div>
 
-
             <!--メニューバー-->
             <v-tabs v-model="menu" centered>
                 <v-tab v-for="tab in tabs" :key="tab.key" :value="tab.value" @click="onTabClicked(tab.key)"
@@ -106,8 +105,11 @@
                     {{ tab.value }}
                 </v-tab>
             </v-tabs>
+
+            <!-- コンテンツ -->
             <v-window v-model="menu">
                 <v-window-item v-for="tab in tabs" :key="tab.key" :value="tab.value">
+                    <!-- 投稿用 -->
                     <v-card v-if="tab.value === '投稿'" class="mx-auto my-2" max-width="374">
                         <v-card v-for="content in contents" class="my-2 py-2">
                             <v-img v-if="content.postImageList !== null" height="250"
@@ -159,19 +161,27 @@
                             </v-container>
                         </v-card>
                     </v-card>
+                    <!-- コメント用 -->
                     <v-card v-if="tab.value === 'コメント'">
                         コメント画面を作る
                     </v-card>
+                    <!-- 写真用 -->
                     <v-card v-if="tab.value === '写真'">
                         写真画面を作る
                     </v-card>
+                    <!-- お気に入り用 -->
                     <v-card v-if="tab.value === 'お気に入り'">
                         お気に入り画面を作る
                     </v-card>
                 </v-window-item>
             </v-window>
-            <v-btn elevation="18" fab></v-btn>
-        </v-card>
+        <v-btn icon fab large top="86vh" left="78vw" position="fixed">
+            <v-icon>mdi-plus</v-icon>
+        </v-btn>
+    </v-card>
+
+
+
     </div>
 
     <!-- Vuetify3 -->
@@ -280,7 +290,6 @@
                 }
             },
         }
-
 
         const vuetify = createVuetify()
         const app = createApp(mypage)
