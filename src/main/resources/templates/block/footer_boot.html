@@ -8,17 +8,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
 </head>
 <body>
-<div id="footer" class="justify-center" th:fragment="footerA_boot">
-    <footer class="border-top justify-center">
-        <div class="d-flex justify-space-around">
-                <a class="text-muted p-2" href="/description">コアラマニアとは</a>
-                <a class="text-muted p-2" href="/terms">利用規約</a>
-                <a class="text-muted p-2" href="/privacypolicy">プライバシーポリシー</a>
-                <a class="text-muted p-2" href="https://tayori.com/form/e976498f95636ad99bb9b6dbe901499a642cd107">お問い合わせ</a>
+<div id="footer" th:fragment="footerA_boot">
+    <footer class="border-top">
+        <div class="d-flex flex-wrap">
+            <p class="p-1 col-3 text-center"><a href="/description">コアラマニアとは</a></p>
+            <p class="p-1 col-3 text-center"><a href="/terms">利用規約</a>
+            <p class="p-1 col-3 text-center"><a href="/privacypolicy">プライバシーポリシー</a></p>
+            <p class="p-1 col-3 text-center"><a href="https://tayori.com/form/e976498f95636ad99bb9b6dbe901499a642cd107">お問い合わせ</a></p>
         </div>
     </footer>
 </div>
-</div>
+
+<!-- Vuetifyの場合
+https://vuetifyjs.com/ja/components/grids/#section-4f7f304465b9
+https://vuetifyjs.com/ja/components/grids/#section-98065e8f3a-6700521d306867005f8c
+<footer id="footer" th:fragment="footerA_boot">
+    <v-container class="border-top">
+        <v-row justify="center">
+                <v-col cols="4"><a href="/description"><span class="fs-7">コアラマニアとは</span></a></v-col>
+                <v-col cols="4"><a href="/terms"><span>利用規約</span></a></v-col>
+                <v-col cols="4"><a href="/privacypolicy"><span>プライバシーポリシー</span></a></v-col>
+                <v-col cols="4"><a href="https://tayori.com/form/e976498f95636ad99bb9b6dbe901499a642cd107"><span>お問い合わせ</span></a></v-col>
+        </v-row>
+    </v-container>
+</footer> 
+-->
+
 <script src="../../assets/js/vendor/holder.min.js"></script>
 <script>
   Holder.addTheme('thumb', {

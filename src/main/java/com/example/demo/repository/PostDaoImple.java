@@ -288,6 +288,7 @@ public class PostDaoImple implements PostDao {
 		String sql = "SELECT " +
 				ENTITY_POST.TABLE_NAME + "." + ENTITY_POST.COLUMN_POST_ID + "," +
 				ENTITY_POST.TABLE_NAME + "." + ENTITY_POST.COLUMN_CONTENTS + "," +
+				ENTITY_POST.TABLE_NAME + "." + ENTITY_POST.COLUMN_TITLE + "," +
 				ENTITY_POST.TABLE_NAME + "." + ENTITY_POST.COLUMN_VISIT_DATE + "," +
 				ENTITY_POST.TABLE_NAME + "." + commonSqlUtil.COLUMN_CREATE_DATE + "," +
 				ENTITY_POST_IMAGE.TABLE_NAME + "." + ENTITY_POST_IMAGE.COLUMN_IMAGE_ADDRESS + "," +
@@ -347,6 +348,7 @@ public class PostDaoImple implements PostDao {
 				Post post = new Post();
 				post.setPostId((int) result.get(ENTITY_POST.COLUMN_POST_ID));
 				post.setContents((String) result.get(ENTITY_POST.COLUMN_CONTENTS));
+				post.setTitle((String) result.get(ENTITY_POST.COLUMN_TITLE));
 				post.setVisitDate((Date) result.get(ENTITY_POST.COLUMN_VISIT_DATE));
 				post.setCreatedDate((Date) result.get(commonSqlUtil.COLUMN_CREATE_DATE));
 				LoginUser loginUser = new LoginUser();
