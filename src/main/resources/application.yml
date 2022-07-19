@@ -7,7 +7,7 @@ com:
       url: https://res.cloudinary.com/honx7tf4c/image/upload/animal/
 
 server:
-    port: ${PORT:80}
+    port: ${PORT:8080}
 
 spring:
   thymeleaf:
