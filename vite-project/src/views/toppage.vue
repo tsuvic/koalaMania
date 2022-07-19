@@ -5,7 +5,7 @@
     <router-link to="/auth">auth</router-link> |
     <router-link to="/inbox">Inbox</router-link> |
     <router-link to="/adfnsdofjna">ERROR</router-link>
+    <router-view/>
   </div>
-  <router-view/>
 </template>
 

@@ -63,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(Arrays.asList("http://127.0.0.1:8080","http://localhost:8080","https://koalamania.herokuapp.com"));
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-		configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
+		configuration.setAllowedHeaders(Arrays.asList("*"));
 		configuration.setAllowCredentials(true);
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/api/users/**", configuration);
