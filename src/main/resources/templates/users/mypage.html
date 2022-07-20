@@ -72,11 +72,11 @@
                 </div>
                 <div class="m-1 d-flex align-items-center mr-3 ml-3 pr-8 pl-8">
                     <div class="fs-4 fw-bold text-center">
-                        {{user.name}}
+                        {{user.username}}
                     </div>
-                    <!-- <a v-if="user.twitterLinkFlag" th:href="@{https://twitter.com/{adress}(adress=*{adress})}">
+                    <a v-if="user.twitterLinkFlag" th:href="@{https://twitter.com/{adress}(adress=*{adress})}">
                         <img v-if="user.twitterLinkFlag" class="m-2 img-responsive" height="18" width="18" src="/image/2021-Twitter-logo-blue.png">
-                    </a> -->
+                    </a>
                 </div>
                 <div class="d-flex align-items-center mr-3 ml-3 pr-8 pl-8">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="m-1"
@@ -288,7 +288,7 @@
                         const day = date.getDate();
                         const dayOfWeek = date.getDay();
                         const dayOfWeekStr = ["日", "月", "火", "水", "木", "金", "土"][dayOfWeek]
-                        contents[i].visitDate = `${year}年 ${month}月 ${day}日（${dayOfWeekStr}）`;
+                        contents[i].visitDate = `${year}年${month}月${day}日（${dayOfWeekStr}）`;
                     }
                 }
             },
