@@ -71,6 +71,13 @@ public class LoginUser extends org.springframework.security.core.userdetails.Use
 		this.profileImagePath = profileImagePath;
 		this.twitterLinkFlag = twitterLinkFlag;
 	}
+
+	public LoginUser(int user_id, String userName){
+		super(userName, dummyPassword, AuthorityUtils.createAuthorityList(ROLE_USER));
+		this.user_id = user_id;
+		this.userName = userName;
+	}
+
 	public LoginUser() {
 		super(dummyUser, dummyPassword, AuthorityUtils.createAuthorityList(ROLE_USER));
 	}
