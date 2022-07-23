@@ -290,7 +290,7 @@ public class PostDaoImple implements PostDao {
 
 	/*
 	 * お気に入り一覧を取得する
-	 * 投稿一覧の取得と同様の処理で、WHERE句の条件のみ異なる
+	 * 投稿一覧の取得と同様の処理で、WHERE句の条件、JOIN句が異なる
 	 */
 	@Override
 	public List<Post> getFavoritesListByUserId(int userId) {

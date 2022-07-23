@@ -75,7 +75,8 @@
                         {{user.username}}
                     </div>
                     <a v-if="user.twitterLinkFlag" th:href="@{https://twitter.com/{adress}(adress=*{adress})}">
-                        <img v-if="user.twitterLinkFlag" class="m-2 img-responsive" height="18" width="18" src="/image/2021-Twitter-logo-blue.png">
+                        <img v-if="user.twitterLinkFlag" class="m-2 img-responsive" height="18" width="18"
+                            src="/image/2021-Twitter-logo-blue.png">
                     </a>
                 </div>
                 <div class="d-flex align-items-center mr-3 ml-3 pr-8 pl-8">
@@ -126,7 +127,8 @@
                                     <v-card-subtitle class="py-0">
                                         <a href="" v-if="content.postImageList !== null">
                                             <!-- https://teratail.com/questions/351116 -->
-                                            {{content.postImageList[0] && content.postImageList[0].animal && content.postImageList[0].animal.name}}
+                                            {{content.postImageList[0] && content.postImageList[0].animal &&
+                                            content.postImageList[0].animal.name}}
                                         </a>
                                         <span>&nbsp;@&nbsp;</span>
                                         <a href="">
@@ -184,7 +186,8 @@
                                     <v-card-subtitle class="py-0">
                                         <a href="" v-if="content.postImageList !== null">
                                             <!-- https://teratail.com/questions/351116 -->
-                                            {{content.postImageList[0] && content.postImageList[0].animal && content.postImageList[0].animal.name}}
+                                            {{content.postImageList[0] && content.postImageList[0].animal &&
+                                            content.postImageList[0].animal.name}}
                                         </a>
                                         <span>&nbsp;@&nbsp;</span>
                                         <a href="">
@@ -225,65 +228,29 @@
                             </v-container>
                         </v-card>
                     </v-card>
-                    
+
                     <!-- 写真用 -->
+                    <!-- :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`" -->
+                    <!-- :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`" -->
                     <v-card v-if="tab.value === '写真'" class="mx-auto my-2" max-width="374">
-                        <v-card v-for="content in contents" class="my-2 py-2">
-                            <v-img v-if="content.postImageList !== null" height="250"
-                                :src="content.postImageList[0].imageAddress" alt=""></v-img>
-                            <v-card-header class="py-1">
-                                <v-card-header-text>
-                                    <v-card-title>
-                                        {{content.title}}
-                                    </v-card-title>
-                                    <v-card-subtitle class="py-0">
-                                        {{content.visitDate}}
-                                    </v-card-subtitle>
-                                    <!-- TODO リンク作成 -->
-                                    <v-card-subtitle class="py-0">
-                                        <a href="" v-if="content.postImageList !== null">
-                                            <!-- https://teratail.com/questions/351116 -->
-                                            {{content.postImageList[0] && content.postImageList[0].animal && content.postImageList[0].animal.name}}
-                                        </a>
-                                        <span>&nbsp;@&nbsp;</span>
-                                        <a href="">
-                                            {{content.zoo && content.zoo.zoo_name}}
-                                        </a>
-                                    </v-card-subtitle>
-                                </v-card-header-text>
-                            </v-card-header>
-                            <v-card-text class="py-1">
-                                <div>
-                                    {{content.contents}}
-                                </div>
-                                <div class="pt-1">
-                                    <span class="text-medium-emphasis">Posted by </span>
-                                    <a href="" class="text-medium-emphasis">
-                                        {{content.user.username}}
-                                    </a>
-                                </div>
-                            </v-card-text>
-                            <v-container fluid class="py-1">
-                                <v-row justify="center">
-                                    <v-col cols="3" class="py-1 d-flex justify-content-center">
-                                        <v-btn icon color="grey" variant="plain">
-                                            <v-icon>mdi-star</v-icon>
-                                        </v-btn>
-                                    </v-col>
-                                    <v-col cols="3" class="py-1 d-flex justify-content-center">
-                                        <v-btn icon color="grey" variant="plain">
-                                            <v-icon>mdi-comment</v-icon>
-                                        </v-btn>
-                                    </v-col>
-                                    <v-col cols="3" class="py-1 d-flex justify-content-center">
-                                        <v-btn icon color="grey" variant="plain">
-                                            <v-icon>mdi-share</v-icon>
-                                        </v-btn>
-                                    </v-col>
-                                </v-row>
-                            </v-container>
-                        </v-card>
+                        <v-row>
+                            <v-col v-for="content in contents" 
+                                :key="content" class="d-flex child-flex" cols="4">
+                                <v-img v-if="content.postImageList !== null" 
+                                    :src="content.postImageList[0].imageAddress" 
+                                    alt="" aspect-ratio="1" cover
+                                    class="bg-grey-lighten-2">
+                                    <template v-slot:placeholder>
+                                        <v-row class="fill-height ma-0" align="center" justify="center">
+                                            <v-progress-circular indeterminate color="grey-lighten-5">
+                                            </v-progress-circular>
+                                        </v-row>
+                                    </template>
+                                </v-img>
+                            </v-col>
+                        </v-row>
                     </v-card>
+
                     <!-- お気に入り用 -->
                     <v-card v-if="tab.value === 'お気に入り'" class="mx-auto my-2" max-width="374">
                         <v-card v-for="content in contents" class="my-2 py-2">
@@ -301,7 +268,8 @@
                                     <v-card-subtitle class="py-0">
                                         <a href="" v-if="content.postImageList !== null">
                                             <!-- https://teratail.com/questions/351116 -->
-                                            {{content.postImageList[0] && content.postImageList[0].animal && content.postImageList[0].animal.name}}
+                                            {{content.postImageList[0] && content.postImageList[0].animal &&
+                                            content.postImageList[0].animal.name}}
                                         </a>
                                         <span>&nbsp;@&nbsp;</span>
                                         <a href="">
@@ -345,10 +313,10 @@
 
                 </v-window-item>
             </v-window>
-        <v-btn icon fab large top="86vh" left="calc(50% + (374px / 2) - 48px - 30px)" position="fixed">
-            <v-icon>mdi-plus</v-icon>
-        </v-btn>
-    </v-card>
+            <v-btn icon fab large top="86vh" left="calc(50% + (374px / 2) - 48px - 30px)" position="fixed">
+                <v-icon>mdi-plus</v-icon>
+            </v-btn>
+        </v-card>
 
     </div>
 
@@ -449,7 +417,7 @@
                             console.log(error);
                         });
                 },
-                onImagesClicked() {
+                onImagesClicked(userId) {
                     apiClient.get('/' + userId + '/images')
                         .then(response => {
                             this.toDateTime(response.data);
@@ -459,7 +427,7 @@
                             console.log(error);
                         });
                 },
-                onFavoritesClicked() {
+                onFavoritesClicked(userId) {
                     apiClient.get('/' + userId + '/favorites')
                         .then(response => {
                             this.toDateTime(response.data);
