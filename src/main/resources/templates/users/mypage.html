@@ -75,7 +75,8 @@
                         {{user.username}}
                     </div>
                     <a v-if="user.twitterLinkFlag" th:href="@{https://twitter.com/{adress}(adress=*{adress})}">
-                        <img v-if="user.twitterLinkFlag" class="m-2 img-responsive" height="18" width="18" src="/image/2021-Twitter-logo-blue.png">
+                        <img v-if="user.twitterLinkFlag" class="m-2 img-responsive" height="18" width="18"
+                            src="/image/2021-Twitter-logo-blue.png">
                     </a>
                 </div>
                 <div class="d-flex align-items-center mr-3 ml-3 pr-8 pl-8">
@@ -126,7 +127,8 @@
                                     <v-card-subtitle class="py-0">
                                         <a href="" v-if="content.postImageList !== null">
                                             <!-- https://teratail.com/questions/351116 -->
-                                            {{content.postImageList[0] && content.postImageList[0].animal && content.postImageList[0].animal.name}}
+                                            {{content.postImageList[0] && content.postImageList[0].animal &&
+                                            content.postImageList[0].animal.name}}
                                         </a>
                                         <span>&nbsp;@&nbsp;</span>
                                         <a href="">
@@ -184,7 +186,8 @@
                                     <v-card-subtitle class="py-0">
                                         <a href="" v-if="content.postImageList !== null">
                                             <!-- https://teratail.com/questions/351116 -->
-                                            {{content.postImageList[0] && content.postImageList[0].animal && content.postImageList[0].animal.name}}
+                                            {{content.postImageList[0] && content.postImageList[0].animal &&
+                                            content.postImageList[0].animal.name}}
                                         </a>
                                         <span>&nbsp;@&nbsp;</span>
                                         <a href="">
@@ -225,17 +228,31 @@
                             </v-container>
                         </v-card>
                     </v-card>
-                    
+
                     <!-- 写真用 -->
+                    <!-- :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`" -->
+                    <!-- :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`" -->
                     <v-card v-if="tab.value === '写真'" class="mx-auto my-2" max-width="374">
-                        <v-card v-for="content in contents">
-                            <v-img v-if="content.postImageList !== null" height="100"
-                            :src="content.postImageList[0].imageAddress" alt=""></v-img>
-                        </v-card>
+                        <v-row>
+                            <v-col v-for="content in contents" 
+                                :key="content" class="d-flex child-flex" cols="4">
+                                <v-img v-if="content.postImageList !== null" 
+                                    :src="content.postImageList[0].imageAddress" 
+                                    alt="" aspect-ratio="1" cover
+                                    class="bg-grey-lighten-2">
+                                    <template v-slot:placeholder>
+                                        <v-row class="fill-height ma-0" align="center" justify="center">
+                                            <v-progress-circular indeterminate color="grey-lighten-5">
+                                            </v-progress-circular>
+                                        </v-row>
+                                    </template>
+                                </v-img>
+                            </v-col>
+                        </v-row>
                     </v-card>
 
                     <!-- お気に入り用 -->
-                    <v-card v-if="tab.value === 'お気に入り'" class="mx-auto my-2" max-width="374">                            
+                    <v-card v-if="tab.value === 'お気に入り'" class="mx-auto my-2" max-width="374">
                         <v-card v-for="content in contents" class="my-2 py-2">
                             <v-img v-if="content.postImageList !== null" height="250"
                                 :src="content.postImageList[0].imageAddress" alt=""></v-img>
@@ -251,7 +268,8 @@
                                     <v-card-subtitle class="py-0">
                                         <a href="" v-if="content.postImageList !== null">
                                             <!-- https://teratail.com/questions/351116 -->
-                                            {{content.postImageList[0] && content.postImageList[0].animal && content.postImageList[0].animal.name}}
+                                            {{content.postImageList[0] && content.postImageList[0].animal &&
+                                            content.postImageList[0].animal.name}}
                                         </a>
                                         <span>&nbsp;@&nbsp;</span>
                                         <a href="">
@@ -295,10 +313,10 @@
 
                 </v-window-item>
             </v-window>
-        <v-btn icon fab large top="86vh" left="calc(50% + (374px / 2) - 48px - 30px)" position="fixed">
-            <v-icon>mdi-plus</v-icon>
-        </v-btn>
-    </v-card>
+            <v-btn icon fab large top="86vh" left="calc(50% + (374px / 2) - 48px - 30px)" position="fixed">
+                <v-icon>mdi-plus</v-icon>
+            </v-btn>
+        </v-card>
 
     </div>
 
