@@ -44,6 +44,26 @@ public class PostServiceImpl implements PostService {
 		this.postDaoImple = postDaoImple;
 		this.post = post;
 	}
+
+	@Override
+	public List<Post> getPostsByUserId(int userId){
+		return postFavoriteDao.getPostFavoriteList(postDao.getPostsListByUserId(userId));
+	}
+
+	@Override
+	public List<Post> getCommentsByUserId(int userId) {
+		return postFavoriteDao.getPostFavoriteList(postDao.getCommentsListByUserId(userId));
+	}
+
+	@Override
+	public List<Post> getImagesByUserId(int userId) {
+		return postFavoriteDao.getPostFavoriteList(postDao.getImagesListByUserId(userId));
+	}
+
+	@Override
+	public List<Post> getFavoritesByUserId(int userId) {
+		return postFavoriteDao.getPostFavoriteList(postDao.getFavoritesListByUserId(userId));
+	}
 	
 	@Override
 	public Post getPostByPostId(int post_id){
@@ -123,12 +143,7 @@ public class PostServiceImpl implements PostService {
 		}
 
 	}
-	
-	@Override
-	public List<Post> getPostByUserId(int user_id){
-		return postFavoriteDao.getPostFavoriteList(postDao.getPostListByUserId(user_id));
-	}
-	
+
 	@Override
 	public void deletePost(PostInsertForm postInsertForm) {
 		postDao.deletePost(postInsertForm.getPostId());
@@ -174,12 +189,7 @@ public class PostServiceImpl implements PostService {
 			return null;
 		}
 	}
-	
-	@Override
-	public List<Post> getCommentByUserId(int user_id) {
-		return postFavoriteDao.getPostFavoriteList(postDao.getCommentListByUserId(user_id));
-	}
-	
+
 	private byte[] fileResize(byte[] originalImage, String originalExtension) {
 		BufferedImage src = null;
 		BufferedImage dst = null;

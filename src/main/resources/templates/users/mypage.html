@@ -125,11 +125,12 @@
                                     <!-- TODO リンク作成 -->
                                     <v-card-subtitle class="py-0">
                                         <a href="" v-if="content.postImageList !== null">
-                                            {{content.postImageList[0].animal.name}}
+                                            <!-- https://teratail.com/questions/351116 -->
+                                            {{content.postImageList[0] && content.postImageList[0].animal && content.postImageList[0].animal.name}}
                                         </a>
                                         <span>&nbsp;@&nbsp;</span>
                                         <a href="">
-                                            {{content.zoo.zoo_name}}
+                                            {{content.zoo && content.zoo.zoo_name}}
                                         </a>
                                     </v-card-subtitle>
                                 </v-card-header-text>
@@ -141,7 +142,7 @@
                                 <div class="pt-1">
                                     <span class="text-medium-emphasis">Posted by </span>
                                     <a href="" class="text-medium-emphasis">
-                                        {{content.user.userName}}
+                                        {{content.user.username}}
                                     </a>
                                 </div>
                             </v-card-text>
@@ -254,13 +255,13 @@
                             this.onPostsClicked(this.userId);
                             break;
                         case 2:
-                            this.onCommentsClicked();
+                            this.onCommentsClicked(this.userId);
                             break;
                         case 3:
-                            this.onImagesClicked();
+                            this.onImagesClicked(this.userId);
                             break;
                         case 4:
-                            this.onFavoritesClicked();
+                            this.onFavoritesClicked(this.userId);
                             break;
                     }
                 },
@@ -274,7 +275,15 @@
                             console.log(error);
                         });
                 },
-                onCommentsClicked() {
+                onCommentsClicked(userId) {
+                    apiClient.get('/' + userId + '/comments')
+                        .then(response => {
+                            this.toDateTime(response.data);
+                            this.contents = response.data;
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
                 },
                 onImagesClicked() {
                 },

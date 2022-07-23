@@ -73,7 +73,28 @@ public class UserRestController {
 
 	@GetMapping("/{userId}/posts")
 	String getPosts(@PathVariable int userId) throws JsonProcessingException {
-		List<Post> postList = postService.getPostByUserId(userId);
+		List<Post> postList = postService.getPostsByUserId(userId);
+		objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		return objectMapper.writeValueAsString(postList);
+	}
+
+	@GetMapping("/{userId}/comments")
+	String getComments(@PathVariable int userId) throws JsonProcessingException {
+		List<Post> postList = postService.getCommentsByUserId(userId);
+		objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		return objectMapper.writeValueAsString(postList);
+	}
+
+	@GetMapping("/{userId}/images")
+	String getImages(@PathVariable int userId) throws JsonProcessingException {
+		List<Post> postList = postService.getImagesByUserId(userId);
+		objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		return objectMapper.writeValueAsString(postList);
+	}
+
+	@GetMapping("/{userId}/favorites")
+	String getFavorites(@PathVariable int userId) throws JsonProcessingException {
+		List<Post> postList = postService.getFavoritesByUserId(userId);
 		objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 		return objectMapper.writeValueAsString(postList);
 	}
