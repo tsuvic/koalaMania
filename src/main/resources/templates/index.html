@@ -23,7 +23,7 @@
   <link rel="canonical" href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
 </head>
 
-<body>
+<body style="visibility:hidden" onLoad="document.body.style.visibility='visible'">
 <div th:replace="~{block/header_boot::headerA_boot}"></div>
 
 <form class="searchform" method="get" th:action="@{/filter}" th:object="${animalFilterForm}">
