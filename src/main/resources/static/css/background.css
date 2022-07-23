@@ -3,9 +3,7 @@ body {
 }
 
 .masthead{
-	/*background-color: #198754;*/
 	background-image: url("../images/background-medium.jpg");
-	/*background-blend-mode: screen;*/
 	background-position: center;
 	background-repeat: no-repeat;
 	background-attachment: scroll;
@@ -18,7 +16,7 @@ body {
 .masthead::after {
   content: '';
   background-color: #24936e;
-  opacity: 0.3;
+  opacity: 0.2;
   position: absolute;
   left: 0;
   right: 0;
