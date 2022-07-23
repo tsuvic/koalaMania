@@ -1,20 +1,19 @@
 package com.example.demo.repository;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Repository;
-
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.LoginUser;
 import com.example.demo.entity.Post;
 import com.example.demo.entity.PostImage;
 import com.example.demo.util.CommonSqlUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class PostImageDaoImple implements PostImageDao {
@@ -39,6 +38,56 @@ public class PostImageDaoImple implements PostImageDao {
 
 	@Autowired
 	private Animal ENTITY_ANIMAL;
+
+	@Override
+	public List<PostImage> getPostImageListByUserId(int user_id) {
+		String sql = "SELECT " +
+				ENTITY_POST.TABLE_NAME + "." + ENTITY_POST.COLUMN_POST_ID + "," +
+				ENTITY_POST.TABLE_NAME + "." + commonSqlUtil.COLUMN_CREATE_DATE + "," +
+				ENTITY_POST_IMAGE.TABLE_NAME + "." + ENTITY_POST_IMAGE.COLUMN_POSTIMAGE_ID + "," +
+				ENTITY_POST_IMAGE.TABLE_NAME + "." + ENTITY_POST_IMAGE.COLUMN_IMAGE_ADDRESS + "," +
+				ENTITY_LOGIN_USER.TABLE_NAME + "." + ENTITY_LOGIN_USER.COLUMN_USER_ID + "," +
+				ENTITY_LOGIN_USER.TABLE_NAME + "." + ENTITY_LOGIN_USER.COLUMN_USER_NAME + "," +
+				ENTITY_LOGIN_USER.TABLE_NAME + "." + ENTITY_LOGIN_USER.COLUMN_PROFILE_IMAGE_PATH + "," +
+				ENTITY_ANIMAL.TABLE_NAME + "." + ENTITY_ANIMAL.COLUMN_ANIMAL_ID + "," +
+				ENTITY_ANIMAL.TABLE_NAME + "." + ENTITY_ANIMAL.COLUMN_NAME +
+				" FROM " + ENTITY_POST.TABLE_NAME +
+				" LEFT OUTER JOIN " + ENTITY_LOGIN_USER.TABLE_NAME + " ON " + ENTITY_POST.TABLE_NAME + "."
+				+ ENTITY_POST.COLUMN_USER_ID + " = " +
+				ENTITY_LOGIN_USER.TABLE_NAME + "." + ENTITY_LOGIN_USER.COLUMN_USER_ID +
+				" INNER JOIN " + ENTITY_POST_IMAGE.TABLE_NAME + " ON " + ENTITY_POST.TABLE_NAME + "."
+				+ ENTITY_POST.COLUMN_POST_ID + " = " +
+				ENTITY_POST_IMAGE.TABLE_NAME + "." + ENTITY_POST_IMAGE.COLUMN_POST_ID +
+				" LEFT OUTER JOIN " + ENTITY_ANIMAL.TABLE_NAME + " ON " + ENTITY_POST_IMAGE.TABLE_NAME + "."
+				+ ENTITY_POST_IMAGE.COLUMN_ANIMAL_ID + " = " +
+				ENTITY_ANIMAL.TABLE_NAME + "." + ENTITY_ANIMAL.COLUMN_ANIMAL_ID +
+				" WHERE " + ENTITY_POST.TABLE_NAME + "." + ENTITY_POST.COLUMN_USER_ID + " =  ?  " +
+				" ORDER BY " + ENTITY_POST_IMAGE.TABLE_NAME + "." + commonSqlUtil.COLUMN_CREATE_DATE + " DESC";;
+
+		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, user_id);
+
+		List<PostImage> returnPostImageList = new ArrayList<PostImage>();
+
+		for (Map<String, Object> result : resultList) {
+			PostImage postImage = new PostImage();
+			postImage.setPostimage_id((int) result.get(ENTITY_POST_IMAGE.COLUMN_POSTIMAGE_ID));
+			postImage.setImageAddress((String) result.get(ENTITY_POST_IMAGE.COLUMN_IMAGE_ADDRESS));
+			if (result.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID) != null) {
+				Animal animal = new Animal();
+				animal.setAnimal_id((int) result.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));
+				animal.setName((String) result.get(ENTITY_ANIMAL.COLUMN_NAME));
+				postImage.setAnimal(animal);
+			}
+
+			Post post = new Post();
+			post.setPostId((int) result.get(ENTITY_POST.COLUMN_POST_ID));
+			post.setCreatedDate((Date) result.get(commonSqlUtil.COLUMN_CREATE_DATE));
+
+			postImage.setPost(post);
+			returnPostImageList.add(postImage);
+		}
+		return returnPostImageList;
+	}
 
 	@Override
 	public int insertNewPostImage(int post_id, int animalId) {
@@ -91,56 +140,6 @@ public class PostImageDaoImple implements PostImageDao {
 		return returnPostImageList;
 	}
 
-	@Override
-	public List<PostImage> getPostImageListByUserId(int user_id) {
-		String sql = "SELECT " +
-				ENTITY_POST.TABLE_NAME + "." + ENTITY_POST.COLUMN_POST_ID + "," +
-				ENTITY_POST.TABLE_NAME + "." + commonSqlUtil.COLUMN_CREATE_DATE + "," +
-				ENTITY_POST_IMAGE.TABLE_NAME + "." + ENTITY_POST_IMAGE.COLUMN_POSTIMAGE_ID + "," +
-				ENTITY_POST_IMAGE.TABLE_NAME + "." + ENTITY_POST_IMAGE.COLUMN_IMAGE_ADDRESS + "," +
-				ENTITY_LOGIN_USER.TABLE_NAME + "." + ENTITY_LOGIN_USER.COLUMN_USER_ID + "," +
-				ENTITY_LOGIN_USER.TABLE_NAME + "." + ENTITY_LOGIN_USER.COLUMN_USER_NAME + "," +
-				ENTITY_LOGIN_USER.TABLE_NAME + "." + ENTITY_LOGIN_USER.COLUMN_PROFILE_IMAGE_PATH + "," +
-				ENTITY_ANIMAL.TABLE_NAME + "." + ENTITY_ANIMAL.COLUMN_ANIMAL_ID + "," +
-				ENTITY_ANIMAL.TABLE_NAME + "." + ENTITY_ANIMAL.COLUMN_NAME +
-				" FROM " + ENTITY_POST.TABLE_NAME +
-				" LEFT OUTER JOIN " + ENTITY_LOGIN_USER.TABLE_NAME + " ON " + ENTITY_POST.TABLE_NAME + "."
-				+ ENTITY_POST.COLUMN_USER_ID + " = " +
-				ENTITY_LOGIN_USER.TABLE_NAME + "." + ENTITY_LOGIN_USER.COLUMN_USER_ID +
-				" INNER JOIN " + ENTITY_POST_IMAGE.TABLE_NAME + " ON " + ENTITY_POST.TABLE_NAME + "."
-				+ ENTITY_POST.COLUMN_POST_ID + " = " +
-				ENTITY_POST_IMAGE.TABLE_NAME + "." + ENTITY_POST_IMAGE.COLUMN_POST_ID +
-				" LEFT OUTER JOIN " + ENTITY_ANIMAL.TABLE_NAME + " ON " + ENTITY_POST_IMAGE.TABLE_NAME + "."
-				+ ENTITY_POST_IMAGE.COLUMN_ANIMAL_ID + " = " +
-				ENTITY_ANIMAL.TABLE_NAME + "." + ENTITY_ANIMAL.COLUMN_ANIMAL_ID +
-				" WHERE " + ENTITY_POST.TABLE_NAME + "." + ENTITY_POST.COLUMN_USER_ID + " =  ?  " +
-				" ORDER BY " + ENTITY_POST_IMAGE.TABLE_NAME + "." + commonSqlUtil.COLUMN_CREATE_DATE + " DESC";;
-
-		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, user_id);
-
-		List<PostImage> returnPostImageList = new ArrayList<PostImage>();
-
-		for (Map<String, Object> result : resultList) {
-			PostImage postImage = new PostImage();
-			postImage.setPostimage_id((int) result.get(ENTITY_POST_IMAGE.COLUMN_POSTIMAGE_ID));
-			postImage.setImageAddress((String) result.get(ENTITY_POST_IMAGE.COLUMN_IMAGE_ADDRESS));
-			if (result.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID) != null) {
-				Animal animal = new Animal();
-				animal.setAnimal_id((int) result.get(ENTITY_ANIMAL.COLUMN_ANIMAL_ID));
-				animal.setName((String) result.get(ENTITY_ANIMAL.COLUMN_NAME));
-				postImage.setAnimal(animal);
-			}
-
-			Post post = new Post();
-			post.setPostId((int) result.get(ENTITY_POST.COLUMN_POST_ID));
-			post.setCreatedDate((Date) result.get(commonSqlUtil.COLUMN_CREATE_DATE));
-
-			postImage.setPost(post);
-			returnPostImageList.add(postImage);
-		}
-
-		return returnPostImageList;
-	}
 
 	@Override
 	public PostImage getPostImageByPostImageId(int postImage_id) {
