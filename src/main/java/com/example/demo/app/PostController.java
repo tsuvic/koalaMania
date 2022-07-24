@@ -52,7 +52,7 @@ public class PostController {
 		return "post/postInsert2";
 	}
 	
-	@GetMapping("/postInsert//{zooId}")
+	@GetMapping("/postInsert/{zooId}")
 	public String getNewParentPost(@PathVariable int zooId, Model model,@ModelAttribute PostInsertForm postInsertForm) {
 		Zoo zoo = postService.getZooById(zooId);
 		List<Animal> animalList = postService.getAnimalListByZooId(zooId);
