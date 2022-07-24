@@ -194,7 +194,6 @@
 		
 		$(".datepicker").change(function(e) {
 			let val = $(this).val();
-			console.log(val);
 			if(val){
 				$('#dateCancel').show();
 			}else{
@@ -205,7 +204,6 @@
 		$("#submitButton").click(function(e) {
 			$(this).prop('disabled',true);
 			let val = $.trim($('textarea[name="contents"]').val());
-			console.log(val);
 			if(val){
 				$(this).text('保存中...');
 				$('form').submit();
@@ -225,12 +223,7 @@
 				dataType: "json",
 				timeout: 5000,
 			}).done((json, textStatus, jqXHR) => {
-				const root =  JSON.parse(JSON.stringify(json, ["animal_id", "name"],10));				
-				
-				console.log(JSON.stringify(json, ["animal_id", "name"],10));
-				console.log(root.length);
-				console.log(json.length);
-				console.log(root[0].name);
+				const root =  JSON.parse(JSON.stringify(json, ["animal_id", "name"],10));
 				
 				$(".modal-body").empty();
 				
