@@ -28,7 +28,6 @@
 		$("#submitButton").click(function(e) {
 			$(this).prop('disabled', true);
 			let val = $.trim($('textarea[name="contents"]').val());
-			console.log(val);
 			if (val) {
 				$(this).text('送信中...');
 				$('form').submit();
@@ -54,7 +53,7 @@
 					value : postId
 				})).append($('<input/>', {
 					type : 'hidden',
-					name : 'zoo_id',
+					name : 'zooId',
 					value : zoo_id
 				})).append($('<input/>', {
 					type : 'hidden',
@@ -119,7 +118,6 @@
 		$('.addModaiImage').click(function(e) {
 			const requestParam = $(this).prev().val();
 			const img = $(this);
-			console.log(requestParam);
 			$.getJSON("/post/checkPostImageFavorite", {
 				postImage_id : requestParam
 			}, function(json) {
@@ -127,7 +125,6 @@
 				const flag = json.resourse.flag;
 				const postimageFavoriteId = json.resourse.postimageFavoriteId;
 				let text = "";
-				console.log(requestParam);
 				if (flag) {
 					$('#addAlbumButton').removeClass("btn-outline-warning");
 					$('#addAlbumButton').addClass("btn-warning");
