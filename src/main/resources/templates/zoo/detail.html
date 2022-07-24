@@ -35,11 +35,11 @@
 					method : 'post'
 				}).append($('<input/>', {
 					type : 'hidden',
-					name : 'post_id',
+					name : 'postId',
 					value : post_id
 				})).append($('<input/>', {
 					type : 'hidden',
-					name : 'zoo_id',
+					name : 'zooId',
 					value : zoo_id
 				})).append($('<input/>', {
 					type : 'hidden',
@@ -54,7 +54,7 @@
 			var button = $(this);
 			if (button.hasClass("btn-outline-warning")) {
 				$.getJSON("/post/insertPostFavorite", {
-					post_id : requestParam
+					postId : requestParam
 				}, function(json) {
 					button.removeClass("btn-outline-warning");
 					button.addClass("btn-warning");
@@ -62,7 +62,7 @@
 				});
 			} else {
 				$.getJSON("/post/deletePostFavorite", {
-					post_id : requestParam
+					postId : requestParam
 				}, function(json) {
 					button.removeClass("btn-warning");
 					button.addClass("btn-outline-warning");
@@ -88,7 +88,7 @@
 	<div th:replace="~{block/header_boot::headerA_boot}"></div>
 	<div th:object="${zoo}">
 		<button class="btn btn-primary btn-sm" type="button"
-			th:onclick="'location.href = \'' +@{/post/{zoo_id}(zoo_id=*{zoo_id})} + '\''">投稿する</button>
+			th:onclick="'location.href = \'' +@{/post/postInsert/{zoo_id}(zoo_id=*{zoo_id})} + '\''">投稿する</button>
 		<table class="table table-hover table-responsive">
 			<tr>
 				<th class="cell_title">名前</th>

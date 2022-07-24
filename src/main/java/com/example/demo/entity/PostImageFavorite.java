@@ -1,7 +1,8 @@
 package com.example.demo.entity;
 
-import lombok.Data;
 import org.springframework.stereotype.Component;
+
+import lombok.Data;
 
 @Data
 @Component
@@ -18,6 +19,7 @@ public class PostImageFavorite {
 	private int postimageFavoriteId;
 	private PostImage postImage;
 	private LoginUser user;
+	private Post post;
 	private long count;
 	private boolean flag;
 }
