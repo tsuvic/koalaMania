@@ -31,14 +31,12 @@
 							const requestParam = $(this).prev().val();
 							const img = $(this);
 
-							$
-									.getJSON(
+							$.getJSON(
 											"/post/checkPostImageFavorite",
 											{
 												postImage_id : requestParam
 											},
 											function(json) {
-												console.log(json);
 												const count = json.resourse.count;
 												const flag = json.resourse.flag;
 												const postimageFavoriteId = json.resourse.postimageFavoriteId;

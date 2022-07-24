@@ -54,10 +54,10 @@ public class PostController {
 	
 	@GetMapping("/postInsert/{zooId}")
 	public String getNewParentPost(@PathVariable int zooId, Model model,@ModelAttribute PostInsertForm postInsertForm) {
-		Zoo zoo = postService.getZooById(zooId);
 		List<Animal> animalList = postService.getAnimalListByZooId(zooId);
-		model.addAttribute("zoo",zoo);
-		model.addAttribute("title", zoo.getZoo_name() + "に投稿");
+		var zooList = animalSearvice.getZooList();
+		model.addAttribute("zooList", zooList);
+		model.addAttribute("title", "日記を投稿");
 		model.addAttribute("animalList", animalList);
 		postInsertForm.setParentId(0);
 		postInsertForm.setZooId(zooId);
@@ -73,7 +73,6 @@ public class PostController {
 		model.addAttribute("animalList", animalList);
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(animalList);
-		System.out.println(json);
 		return json;
 	}
 		
