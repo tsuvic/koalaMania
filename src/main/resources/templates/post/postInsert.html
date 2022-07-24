@@ -128,7 +128,7 @@
 			 // $('#myInput').trigger('focus');
 		}); */
 		
-		$('.animal-tag').click(function(e) {
+		$(document).on('click', '.animal-tag',function(e) {
 			$('.modal-body').find('.animal-tag').each(function(index, element) {
 				$(element).removeClass('btn-primary');
 				$(element).addClass('btn-outline-primary');
@@ -215,6 +215,35 @@
 				return false;
 			}
 		});
+		
+		$("#zooSelect").change(function(e) {
+			const zoo_id = $(this).val();
+			$.ajax({
+				type:"GET",
+				url:"/post/animalList",
+				data:{zooId : zoo_id},
+				dataType: "json",
+				timeout: 5000,
+			}).done((json, textStatus, jqXHR) => {
+				const root =  JSON.parse(JSON.stringify(json, ["animal_id", "name"],10));				
+				
+				console.log(JSON.stringify(json, ["animal_id", "name"],10));
+				console.log(root.length);
+				console.log(json.length);
+				console.log(root[0].name);
+				
+				$(".modal-body").empty();
+				
+				for(i = 0; i < root.length; i++){	
+					let animal = $("<span>");
+					animal.append($("<input>").attr('type', 'hidden').attr('name', 'animal_tag_id').attr('value', root[i].animal_id));
+					animal.append($("<button>", {addClass:"btn btn-outline-primary btn-sm animal-tag"}).attr('type', 'button').text('#' + root[i].name));
+					$(animal).appendTo(".modal-body");
+				}
+
+			})
+			$('.deleteTagButton').trigger('click');
+		});
 	});
 </script>
 
@@ -250,10 +279,13 @@
 	</div>
 	
 	<div class="container">
-		<h2 th:text="${zoo.zoo_name} + へ投稿"></h2>
-		<form th:action="@{/post/insertParentPost}" method="post"
+	<form th:action="@{/post/insertParentPost}" method="post"
 			enctype="multipart/form-data" th:object="${postInsertForm}">
-			<input type="hidden" th:field="*{zooId}">
+		訪問場所<br>
+			<select class="visitZoo" th:field="*{zooId}" th:id = "zooSelect"> <!-- selectのフォーム送信値はnameでフォームのフィールドを指定 -->
+				<option th:each="zoo : ${zooList}" th:value="${zoo.zoo_id}"
+					th:text="${zoo.zoo_name}"></option>
+			</select>
 			<div th:id="visitDate" class="form-group">
 				訪問日: <input type="text" class="datepicker" name="visitdate" value=""
 					placeholder="クリックして日付を入力" readonly></input>
