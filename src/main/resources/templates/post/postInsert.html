@@ -113,7 +113,7 @@
 			
 			const contents = $("#input-file-zone > span").length;
 			
-			if (contents >= 5) {
+			if (contents >= 1) {
 				$('.addInputFileButton').hide();
 			}
 
@@ -253,7 +253,7 @@
 		<h2 th:text="${zoo.zoo_name} + へ投稿"></h2>
 		<form th:action="@{/post/insertParentPost}" method="post"
 			enctype="multipart/form-data" th:object="${postInsertForm}">
-			<input type="hidden" th:field="*{zoo_id}">
+			<input type="hidden" th:field="*{zooId}">
 			<div th:id="visitDate" class="form-group">
 				訪問日: <input type="text" class="datepicker" name="visitdate" value=""
 					placeholder="クリックして日付を入力" readonly></input>
@@ -265,12 +265,12 @@
 			</div>
 			<div th:id="image" class="form-group">
 				<div>
-					写真(5枚まで)
+					写真(1枚まで)
 					  <button class="btn btn-outline-success btn-sm addInputFileButton"
 						type="button">写真追加</button>
 				</div>
 				<div id="input-file-zone"></div>
-				<input type="hidden" th:field="*{parent_id}">
+				<input type="hidden" th:field="*{parentId}">
 				<div id="send-zone">
 				<button class="btn btn-outline-primary btn-sm" id = "submitButton" type="submit">保存</button>
 				<button class="btn btn-warning btn-sm" type="button"

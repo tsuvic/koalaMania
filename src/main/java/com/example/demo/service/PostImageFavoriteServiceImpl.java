@@ -28,7 +28,10 @@ public class PostImageFavoriteServiceImpl implements PostImageFavoriteService {
 		
 		PostImageFavorite postImageFavorite = postImageFavoriteDao.checkPostImageFavoriteByPostImageId(postImage_id);
 		if(postImageFavorite.getPostImage() == null) {
-			postImageFavorite.setPostImage(postImageDao.getPostImageByPostImageId(postImage_id));
+			PostImage postImage = postImageDao.getPostImageByPostImageId(postImage_id);
+			postImageFavorite.setPostImage(postImage);
+			postImageFavorite.setPost(postImage.getPost());
+			postImageFavorite.setUser(postImage.getPost().getUser());
 		}
 		
 		Map<String, Object> resultMap =  new HashMap<String,Object>(){{put("status", "ok");}};
