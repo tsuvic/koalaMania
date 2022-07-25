@@ -208,7 +208,7 @@ public class PostDaoImple implements PostDao {
 
 	/*
 	 * 画像一覧を取得する
-	 * 投稿一覧の取得と同様の処理で、WHERE句の条件のみ異なる
+	 * 投稿一覧の取得と同様の処理で、WHERE句の条件のみ異なる（画像を保持する投稿のみ取得）
 	 */
 	@Override
 	public List<Post> getImagesListByUserId(int userId) {
@@ -244,6 +244,9 @@ public class PostDaoImple implements PostDao {
 				" ON " + ENTITY_POST_IMAGE.TABLE_NAME + "." + ENTITY_POST_IMAGE.COLUMN_ANIMAL_ID +
 				" = " + ENTITY_ANIMAL.TABLE_NAME + "." + ENTITY_ANIMAL.COLUMN_ANIMAL_ID +
 				" WHERE " + ENTITY_POST.TABLE_NAME + "." + ENTITY_POST.COLUMN_USER_ID + " =  ?  " +
+				" AND (" + ENTITY_POST.TABLE_NAME + "." + ENTITY_POST.COLUMN_POST_ID + " IN " +
+				" (SELECT " + ENTITY_POST_IMAGE.TABLE_NAME + "." + ENTITY_POST_IMAGE.COLUMN_POST_ID +
+				" FROM " + ENTITY_POST_IMAGE.TABLE_NAME + ")) " +
 				" ORDER BY " + ENTITY_POST.TABLE_NAME + "." + ENTITY_POST.COLUMN_VISIT_DATE + " DESC";
 
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, userId);
