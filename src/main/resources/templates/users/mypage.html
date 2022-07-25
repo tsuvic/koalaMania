@@ -112,39 +112,39 @@
                 <v-window-item v-for="tab in tabs" :key="tab.key" :value="tab.value">
                     <!-- 投稿用 -->
                     <v-card v-if="tab.value === '投稿'" class="mx-auto my-2" max-width="374">
-                        <v-card v-for="content in contents" class="my-2 py-2">
-                            <v-img v-if="content.postImageList !== null" height="250"
-                                :src="content.postImageList[0].imageAddress" alt=""></v-img>
+                        <v-card v-for="post in posts" class="my-2 py-2" :key="post">
+                            <v-img v-if="post.postImageList !== null" height="250"
+                                :src="post.postImageList[0].imageAddress" alt=""></v-img>
                             <v-card-header class="py-1">
                                 <v-card-header-text>
                                     <v-card-title>
-                                        {{content.title}}
+                                        {{post.title}}
                                     </v-card-title>
                                     <v-card-subtitle class="py-0">
-                                        {{content.visitDate}}
+                                        {{post.visitDate}}
                                     </v-card-subtitle>
                                     <!-- TODO リンク作成 -->
                                     <v-card-subtitle class="py-0">
-                                        <a href="" v-if="content.postImageList !== null">
+                                        <a href="" v-if="post.postImageList !== null">
                                             <!-- https://teratail.com/questions/351116 -->
-                                            {{content.postImageList[0] && content.postImageList[0].animal &&
-                                            content.postImageList[0].animal.name}}
+                                            {{post.postImageList[0] && post.postImageList[0].animal &&
+                                            post.postImageList[0].animal.name}}
                                         </a>
                                         <span>&nbsp;@&nbsp;</span>
                                         <a href="">
-                                            {{content.zoo && content.zoo.zoo_name}}
+                                            {{post.zoo && post.zoo.zoo_name}}
                                         </a>
                                     </v-card-subtitle>
                                 </v-card-header-text>
                             </v-card-header>
                             <v-card-text class="py-1">
                                 <div>
-                                    {{content.contents}}
+                                    {{post.contents}}
                                 </div>
                                 <div class="pt-1">
                                     <span class="text-medium-emphasis">Posted by </span>
                                     <a href="" class="text-medium-emphasis">
-                                        {{content.user.username}}
+                                        {{post.user.username}}
                                     </a>
                                 </div>
                             </v-card-text>
@@ -171,39 +171,39 @@
                     </v-card>
                     <!-- コメント用 -->
                     <v-card v-if="tab.value === 'コメント'" class="mx-auto my-2" max-width="374">
-                        <v-card v-for="content in contents" class="my-2 py-2">
-                            <v-img v-if="content.postImageList !== null" height="250"
-                                :src="content.postImageList[0].imageAddress" alt=""></v-img>
+                        <v-card v-for="comment in comments" :key="comment" class="my-2 py-2">
+                            <v-img v-if="comment.postImageList !== null" height="250"
+                                :src="comment.postImageList[0].imageAddress" alt=""></v-img>
                             <v-card-header class="py-1">
                                 <v-card-header-text>
                                     <v-card-title>
-                                        {{content.title}}
+                                        {{comment.title}}
                                     </v-card-title>
                                     <v-card-subtitle class="py-0">
-                                        {{content.visitDate}}
+                                        {{comment.visitDate}}
                                     </v-card-subtitle>
                                     <!-- TODO リンク作成 -->
                                     <v-card-subtitle class="py-0">
-                                        <a href="" v-if="content.postImageList !== null">
+                                        <a href="" v-if="comment.postImageList !== null">
                                             <!-- https://teratail.com/questions/351116 -->
-                                            {{content.postImageList[0] && content.postImageList[0].animal &&
-                                            content.postImageList[0].animal.name}}
+                                            {{comment.postImageList[0] && comment.postImageList[0].animal &&
+                                            comment.postImageList[0].animal.name}}
                                         </a>
                                         <span>&nbsp;@&nbsp;</span>
                                         <a href="">
-                                            {{content.zoo && content.zoo.zoo_name}}
+                                            {{comment.zoo && comment.zoo.zoo_name}}
                                         </a>
                                     </v-card-subtitle>
                                 </v-card-header-text>
                             </v-card-header>
                             <v-card-text class="py-1">
                                 <div>
-                                    {{content.contents}}
+                                    {{comment.contents}}
                                 </div>
                                 <div class="pt-1">
                                     <span class="text-medium-emphasis">Posted by </span>
                                     <a href="" class="text-medium-emphasis">
-                                        {{content.user.username}}
+                                        {{comment.user.username}}
                                     </a>
                                 </div>
                             </v-card-text>
@@ -234,12 +234,10 @@
                     <!-- :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`" -->
                     <v-card v-if="tab.value === '写真'" class="mx-auto my-2" max-width="374">
                         <v-row>
-                            <v-col v-for="content in contents" 
-                                :key="content" class="d-flex child-flex" cols="4">
-                                <v-img v-if="content.postImageList !== null" 
-                                    :src="content.postImageList[0].imageAddress" 
-                                    alt="" aspect-ratio="1" cover
-                                    class="bg-grey-lighten-2">
+                            <v-col v-for="image in images" :key="image" class="d-flex child-flex" cols="4">
+                                <v-img v-if="image.postImageList !== null"
+                                    :src="image.postImageList[0].imageAddress" alt="" aspect-ratio="1"
+                                    cover coverclass="bg-grey-lighten-2">
                                     <template v-slot:placeholder>
                                         <v-row class="fill-height ma-0" align="center" justify="center">
                                             <v-progress-circular indeterminate color="grey-lighten-5">
@@ -253,39 +251,39 @@
 
                     <!-- お気に入り用 -->
                     <v-card v-if="tab.value === 'お気に入り'" class="mx-auto my-2" max-width="374">
-                        <v-card v-for="content in contents" class="my-2 py-2">
-                            <v-img v-if="content.postImageList !== null" height="250"
-                                :src="content.postImageList[0].imageAddress" alt=""></v-img>
+                        <v-card v-for="favorite in favorites" class="my-2 py-2">
+                            <v-img v-if="favorite.postImageList !== null" height="250"
+                                :src="favorite.postImageList[0].imageAddress" alt=""></v-img>
                             <v-card-header class="py-1">
                                 <v-card-header-text>
                                     <v-card-title>
-                                        {{content.title}}
+                                        {{favorite.title}}
                                     </v-card-title>
                                     <v-card-subtitle class="py-0">
-                                        {{content.visitDate}}
+                                        {{favorite.visitDate}}
                                     </v-card-subtitle>
                                     <!-- TODO リンク作成 -->
                                     <v-card-subtitle class="py-0">
-                                        <a href="" v-if="content.postImageList !== null">
+                                        <a href="" v-if="favorite.postImageList !== null">
                                             <!-- https://teratail.com/questions/351116 -->
-                                            {{content.postImageList[0] && content.postImageList[0].animal &&
-                                            content.postImageList[0].animal.name}}
+                                            {{favorite.postImageList[0] && favorite.postImageList[0].animal &&
+                                            favorite.postImageList[0].animal.name}}
                                         </a>
                                         <span>&nbsp;@&nbsp;</span>
                                         <a href="">
-                                            {{content.zoo && content.zoo.zoo_name}}
+                                            {{favorite.zoo && favorite.zoo.zoo_name}}
                                         </a>
                                     </v-card-subtitle>
                                 </v-card-header-text>
                             </v-card-header>
                             <v-card-text class="py-1">
                                 <div>
-                                    {{content.contents}}
+                                    {{favorite.contents}}
                                 </div>
                                 <div class="pt-1">
                                     <span class="text-medium-emphasis">Posted by </span>
                                     <a href="" class="text-medium-emphasis">
-                                        {{content.user.username}}
+                                        {{favorite.user.username}}
                                     </a>
                                 </div>
                             </v-card-text>
@@ -349,6 +347,10 @@
             data() {
                 return {
                     menu: null,
+                    posts: null,
+                    comments: null,
+                    images: null,
+                    favorites: null,
                     contents: null,
                     user: null,
                     userId: null,
@@ -401,7 +403,7 @@
                     apiClient.get('/' + userId + '/posts')
                         .then(response => {
                             this.toDateTime(response.data);
-                            this.contents = response.data;
+                            this.posts = response.data;
                         })
                         .catch(error => {
                             console.log(error);
@@ -411,7 +413,7 @@
                     apiClient.get('/' + userId + '/comments')
                         .then(response => {
                             this.toDateTime(response.data);
-                            this.contents = response.data;
+                            this.comments = response.data;
                         })
                         .catch(error => {
                             console.log(error);
@@ -421,7 +423,7 @@
                     apiClient.get('/' + userId + '/images')
                         .then(response => {
                             this.toDateTime(response.data);
-                            this.contents = response.data;
+                            this.images = response.data;
                         })
                         .catch(error => {
                             console.log(error);
@@ -431,7 +433,7 @@
                     apiClient.get('/' + userId + '/favorites')
                         .then(response => {
                             this.toDateTime(response.data);
-                            this.contents = response.data;
+                            this.favorites = response.data;
                         })
                         .catch(error => {
                             console.log(error);
