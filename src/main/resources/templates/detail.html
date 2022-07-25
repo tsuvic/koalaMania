@@ -169,7 +169,8 @@
 			onclick="window.history.back(); return false;">戻る</button>
 	</div>
 	<div th:object="${detail}">
-		<table class="table table-hover table-responsive">
+		<div class="table-responsive">
+		<table class="table table-hover">
 			<tr>
 				<th class="cell_title">プロフィール写真</th>
 				<td><img th:src="*{profileImagePath}" width="200" height="200"></td>
@@ -241,6 +242,7 @@
 						style="border: solid; cursor: zoom-in; width: 100px; height: 100px;"></span></td>
 			</tr>
 		</table>
+		</div>
 
 		<h3 class="cell_title mx-2">動物園履歴</h3>
 
