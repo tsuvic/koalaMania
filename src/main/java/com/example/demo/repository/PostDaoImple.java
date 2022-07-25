@@ -244,6 +244,8 @@ public class PostDaoImple implements PostDao {
 				" ON " + ENTITY_POST_IMAGE.TABLE_NAME + "." + ENTITY_POST_IMAGE.COLUMN_ANIMAL_ID +
 				" = " + ENTITY_ANIMAL.TABLE_NAME + "." + ENTITY_ANIMAL.COLUMN_ANIMAL_ID +
 				" WHERE " + ENTITY_POST.TABLE_NAME + "." + ENTITY_POST.COLUMN_USER_ID + " =  ?  " +
+				" AND " + ENTITY_POST.TABLE_NAME + "." + ENTITY_POST.COLUMN_POST_ID +
+				" = " + ENTITY_POST_IMAGE.TABLE_NAME + "." + ENTITY_POST_IMAGE.COLUMN_POST_ID +
 				" ORDER BY " + ENTITY_POST.TABLE_NAME + "." + ENTITY_POST.COLUMN_VISIT_DATE + " DESC";
 
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, userId);

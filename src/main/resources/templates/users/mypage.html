@@ -234,12 +234,10 @@
                     <!-- :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`" -->
                     <v-card v-if="tab.value === '写真'" class="mx-auto my-2" max-width="374">
                         <v-row>
-                            <v-col v-for="content in contents" 
-                                :key="content" class="d-flex child-flex" cols="4">
-                                <v-img v-if="content.postImageList !== null" 
-                                    :src="content.postImageList[0].imageAddress" 
-                                    alt="" aspect-ratio="1" cover
-                                    class="bg-grey-lighten-2">
+                            <v-col v-for="content in contents" :key="content" class="d-flex child-flex" cols="4">
+                                <v-img v-if="content.postImageList !== null"
+                                    :src="content.postImageList[0].imageAddress" alt="" aspect-ratio="1"
+                                    cover coverclass="bg-grey-lighten-2">
                                     <template v-slot:placeholder>
                                         <v-row class="fill-height ma-0" align="center" justify="center">
                                             <v-progress-circular indeterminate color="grey-lighten-5">
@@ -349,6 +347,10 @@
             data() {
                 return {
                     menu: null,
+                    posts: null,
+                    comments: null,
+                    images: null,
+                    favorites: null,
                     contents: null,
                     user: null,
                     userId: null,
