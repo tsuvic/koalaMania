@@ -1,5 +1,19 @@
 package com.example.demo.app;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.Post;
 import com.example.demo.entity.Zoo;
@@ -10,13 +24,6 @@ import com.example.demo.service.PostService;
 import com.example.demo.util.DateUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 
 @Controller
@@ -45,38 +52,37 @@ public class PostController {
 		return "post/postInsert2";
 	}
 	
-	@GetMapping("/{zooId}")
-	public String getNewParentPost(@PathVariable int zoo_id, Model model,@ModelAttribute PostInsertForm postInsertForm) {
-		Zoo zoo = postService.getZooById(zoo_id);
-		List<Animal> animalList = postService.getAnimalListByZooId(zoo_id);
-		model.addAttribute("zoo",zoo);
-		model.addAttribute("title", zoo.getZoo_name() + "に投稿");
+	@GetMapping("/postInsert/{zooId}")
+	public String getNewParentPost(@PathVariable int zooId, Model model,@ModelAttribute PostInsertForm postInsertForm) {
+		List<Animal> animalList = postService.getAnimalListByZooId(zooId);
+		var zooList = animalSearvice.getZooList();
+		model.addAttribute("zooList", zooList);
+		model.addAttribute("title", "日記を投稿");
 		model.addAttribute("animalList", animalList);
 		postInsertForm.setParentId(0);
-		postInsertForm.setZooId(zoo_id);
+		postInsertForm.setZooId(zooId);
 		return "post/postInsert";
 	}
 	
 	@GetMapping("/animalList")
 	@ResponseBody
-	public String getAnimalList(@RequestParam(required = false, name = "zooId") int zoo_id,Model model) throws JsonProcessingException {
-		Zoo zoo = postService.getZooById(zoo_id);
-		List<Animal> animalList = postService.getAnimalListByZooId(zoo_id);
+	public String getAnimalList(@RequestParam(required = false, name = "zooId") int zooId,Model model) throws JsonProcessingException {
+		Zoo zoo = postService.getZooById(zooId);
+		List<Animal> animalList = postService.getAnimalListByZooId(zooId);
 		model.addAttribute("zoo", zoo);
 		model.addAttribute("animalList", animalList);
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(animalList);
-		System.out.println(json);
 		return json;
 	}
 		
 
 	
 	@GetMapping("/postDetail/{postId}")
-	public String getPostDetail(@PathVariable int post_id, Model model,
+	public String getPostDetail(@PathVariable int postId, Model model,
 			@ModelAttribute PostInsertForm postInsertForm) {
 		
-		Post post = postService.getPostByPostId(post_id);
+		Post post = postService.getPostByPostId(postId);
 		
 		dateUtil.setPostDiffTime(post);
 		
@@ -93,7 +99,9 @@ public class PostController {
 			}
 		}
 		
-		postInsertForm.setParentId(post_id);
+		postInsertForm.setParentId(postId);
+		
+		postInsertForm.setZooId(post.getZoo().getZoo_id());
 		
 		model.addAttribute("post", post);
 		
@@ -110,8 +118,7 @@ public class PostController {
 	
 	@PostMapping("/insertChildPost")
 	public String postNewChildPost(@ModelAttribute PostInsertForm postInsertForm) {
-		
-		postService.insertNewPost(postInsertForm);
+				postService.insertNewPost(postInsertForm);
 		
 		return "redirect:/post/postDetail/" + postInsertForm.getParentId();
 	}

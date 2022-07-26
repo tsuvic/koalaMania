@@ -75,7 +75,8 @@
                         {{user.username}}
                     </div>
                     <a v-if="user.twitterLinkFlag" th:href="@{https://twitter.com/{adress}(adress=*{adress})}">
-                        <img v-if="user.twitterLinkFlag" class="m-2 img-responsive" height="18" width="18" src="/image/2021-Twitter-logo-blue.png">
+                        <img v-if="user.twitterLinkFlag" class="m-2 img-responsive" height="18" width="18"
+                            src="/image/2021-Twitter-logo-blue.png">
                     </a>
                 </div>
                 <div class="d-flex align-items-center mr-3 ml-3 pr-8 pl-8">
@@ -111,37 +112,39 @@
                 <v-window-item v-for="tab in tabs" :key="tab.key" :value="tab.value">
                     <!-- 投稿用 -->
                     <v-card v-if="tab.value === '投稿'" class="mx-auto my-2" max-width="374">
-                        <v-card v-for="content in contents" class="my-2 py-2">
-                            <v-img v-if="content.postImageList !== null" height="250"
-                                :src="content.postImageList[0].imageAddress" alt=""></v-img>
+                        <v-card v-for="post in posts" class="my-2 py-2" :key="post">
+                            <v-img v-if="post.postImageList !== null" height="250"
+                                :src="post.postImageList[0].imageAddress" alt=""></v-img>
                             <v-card-header class="py-1">
                                 <v-card-header-text>
                                     <v-card-title>
-                                        {{content.title}}
+                                        {{post.title}}
                                     </v-card-title>
                                     <v-card-subtitle class="py-0">
-                                        {{content.visitDate}}
+                                        {{post.visitDate}}
                                     </v-card-subtitle>
                                     <!-- TODO リンク作成 -->
                                     <v-card-subtitle class="py-0">
-                                        <a href="" v-if="content.postImageList !== null">
-                                            {{content.postImageList[0].animal.name}}
+                                        <a href="" v-if="post.postImageList !== null">
+                                            <!-- https://teratail.com/questions/351116 -->
+                                            {{post.postImageList[0] && post.postImageList[0].animal &&
+                                            post.postImageList[0].animal.name}}
                                         </a>
                                         <span>&nbsp;@&nbsp;</span>
                                         <a href="">
-                                            {{content.zoo.zoo_name}}
+                                            {{post.zoo && post.zoo.zoo_name}}
                                         </a>
                                     </v-card-subtitle>
                                 </v-card-header-text>
                             </v-card-header>
                             <v-card-text class="py-1">
                                 <div>
-                                    {{content.contents}}
+                                    {{post.contents}}
                                 </div>
                                 <div class="pt-1">
                                     <span class="text-medium-emphasis">Posted by </span>
                                     <a href="" class="text-medium-emphasis">
-                                        {{content.user.userName}}
+                                        {{post.user.username}}
                                     </a>
                                 </div>
                             </v-card-text>
@@ -167,23 +170,151 @@
                         </v-card>
                     </v-card>
                     <!-- コメント用 -->
-                    <v-card v-if="tab.value === 'コメント'">
-                        コメント画面を作る
+                    <v-card v-if="tab.value === 'コメント'" class="mx-auto my-2" max-width="374">
+                        <v-card v-for="comment in comments" :key="comment" class="my-2 py-2">
+                            <v-img v-if="comment.postImageList !== null" height="250"
+                                :src="comment.postImageList[0].imageAddress" alt=""></v-img>
+                            <v-card-header class="py-1">
+                                <v-card-header-text>
+                                    <v-card-title>
+                                        {{comment.title}}
+                                    </v-card-title>
+                                    <v-card-subtitle class="py-0">
+                                        {{comment.visitDate}}
+                                    </v-card-subtitle>
+                                    <!-- TODO リンク作成 -->
+                                    <v-card-subtitle class="py-0">
+                                        <a href="" v-if="comment.postImageList !== null">
+                                            <!-- https://teratail.com/questions/351116 -->
+                                            {{comment.postImageList[0] && comment.postImageList[0].animal &&
+                                            comment.postImageList[0].animal.name}}
+                                        </a>
+                                        <span>&nbsp;@&nbsp;</span>
+                                        <a href="">
+                                            {{comment.zoo && comment.zoo.zoo_name}}
+                                        </a>
+                                    </v-card-subtitle>
+                                </v-card-header-text>
+                            </v-card-header>
+                            <v-card-text class="py-1">
+                                <div>
+                                    {{comment.contents}}
+                                </div>
+                                <div class="pt-1">
+                                    <span class="text-medium-emphasis">Posted by </span>
+                                    <a href="" class="text-medium-emphasis">
+                                        {{comment.user.username}}
+                                    </a>
+                                </div>
+                            </v-card-text>
+                            <v-container fluid class="py-1">
+                                <v-row justify="center">
+                                    <v-col cols="3" class="py-1 d-flex justify-content-center">
+                                        <v-btn icon color="grey" variant="plain">
+                                            <v-icon>mdi-star</v-icon>
+                                        </v-btn>
+                                    </v-col>
+                                    <v-col cols="3" class="py-1 d-flex justify-content-center">
+                                        <v-btn icon color="grey" variant="plain">
+                                            <v-icon>mdi-comment</v-icon>
+                                        </v-btn>
+                                    </v-col>
+                                    <v-col cols="3" class="py-1 d-flex justify-content-center">
+                                        <v-btn icon color="grey" variant="plain">
+                                            <v-icon>mdi-share</v-icon>
+                                        </v-btn>
+                                    </v-col>
+                                </v-row>
+                            </v-container>
+                        </v-card>
                     </v-card>
+
                     <!-- 写真用 -->
-                    <v-card v-if="tab.value === '写真'">
-                        写真画面を作る
+                    <!-- :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`" -->
+                    <!-- :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`" -->
+                    <v-card v-if="tab.value === '写真'" class="mx-auto my-2" max-width="374">
+                        <v-row>
+                            <v-col v-for="image in images" :key="image" class="d-flex child-flex" cols="4">
+                                <v-img v-if="image.postImageList !== null"
+                                    :src="image.postImageList[0].imageAddress" alt="" aspect-ratio="1"
+                                    cover coverclass="bg-grey-lighten-2">
+                                    <template v-slot:placeholder>
+                                        <v-row class="fill-height ma-0" align="center" justify="center">
+                                            <v-progress-circular indeterminate color="grey-lighten-5">
+                                            </v-progress-circular>
+                                        </v-row>
+                                    </template>
+                                </v-img>
+                            </v-col>
+                        </v-row>
                     </v-card>
+
                     <!-- お気に入り用 -->
-                    <v-card v-if="tab.value === 'お気に入り'">
-                        お気に入り画面を作る
+                    <v-card v-if="tab.value === 'お気に入り'" class="mx-auto my-2" max-width="374">
+                        <v-card v-for="favorite in favorites" class="my-2 py-2">
+                            <v-img v-if="favorite.postImageList !== null" height="250"
+                                :src="favorite.postImageList[0].imageAddress" alt=""></v-img>
+                            <v-card-header class="py-1">
+                                <v-card-header-text>
+                                    <v-card-title>
+                                        {{favorite.title}}
+                                    </v-card-title>
+                                    <v-card-subtitle class="py-0">
+                                        {{favorite.visitDate}}
+                                    </v-card-subtitle>
+                                    <!-- TODO リンク作成 -->
+                                    <v-card-subtitle class="py-0">
+                                        <a href="" v-if="favorite.postImageList !== null">
+                                            <!-- https://teratail.com/questions/351116 -->
+                                            {{favorite.postImageList[0] && favorite.postImageList[0].animal &&
+                                            favorite.postImageList[0].animal.name}}
+                                        </a>
+                                        <span>&nbsp;@&nbsp;</span>
+                                        <a href="">
+                                            {{favorite.zoo && favorite.zoo.zoo_name}}
+                                        </a>
+                                    </v-card-subtitle>
+                                </v-card-header-text>
+                            </v-card-header>
+                            <v-card-text class="py-1">
+                                <div>
+                                    {{favorite.contents}}
+                                </div>
+                                <div class="pt-1">
+                                    <span class="text-medium-emphasis">Posted by </span>
+                                    <a href="" class="text-medium-emphasis">
+                                        {{favorite.user.username}}
+                                    </a>
+                                </div>
+                            </v-card-text>
+                            <v-container fluid class="py-1">
+                                <v-row justify="center">
+                                    <v-col cols="3" class="py-1 d-flex justify-content-center">
+                                        <v-btn icon color="grey" variant="plain">
+                                            <v-icon>mdi-star</v-icon>
+                                        </v-btn>
+                                    </v-col>
+                                    <v-col cols="3" class="py-1 d-flex justify-content-center">
+                                        <v-btn icon color="grey" variant="plain">
+                                            <v-icon>mdi-comment</v-icon>
+                                        </v-btn>
+                                    </v-col>
+                                    <v-col cols="3" class="py-1 d-flex justify-content-center">
+                                        <v-btn icon color="grey" variant="plain">
+                                            <v-icon>mdi-share</v-icon>
+                                        </v-btn>
+                                    </v-col>
+                                </v-row>
+                            </v-container>
+                        </v-card>
                     </v-card>
+
                 </v-window-item>
             </v-window>
-        <v-btn icon fab large top="86vh" left="calc(50% + (374px / 2) - 48px - 30px)" position="fixed">
-            <v-icon>mdi-plus</v-icon>
-        </v-btn>
-    </v-card>
+            <v-btn icon fab large top="86vh" left="calc(50% + (374px / 2) - 48px - 30px)" position="fixed">
+                <v-icon>mdi-plus</v-icon>
+            </v-btn>
+        </v-card>
 
     </div>
 
@@ -216,6 +347,10 @@
             data() {
                 return {
                     menu: null,
+                    posts: null,
+                    comments: null,
+                    images: null,
+                    favorites: null,
                     contents: null,
                     user: null,
                     userId: null,
@@ -254,13 +389,13 @@
                             this.onPostsClicked(this.userId);
                             break;
                         case 2:
-                            this.onCommentsClicked();
+                            this.onCommentsClicked(this.userId);
                             break;
                         case 3:
-                            this.onImagesClicked();
+                            this.onImagesClicked(this.userId);
                             break;
                         case 4:
-                            this.onFavoritesClicked();
+                            this.onFavoritesClicked(this.userId);
                             break;
                     }
                 },
@@ -268,17 +403,41 @@
                     apiClient.get('/' + userId + '/posts')
                         .then(response => {
                             this.toDateTime(response.data);
-                            this.contents = response.data;
+                            this.posts = response.data;
                         })
                         .catch(error => {
                             console.log(error);
                         });
                 },
-                onCommentsClicked() {
+                onCommentsClicked(userId) {
+                    apiClient.get('/' + userId + '/comments')
+                        .then(response => {
+                            this.toDateTime(response.data);
+                            this.comments = response.data;
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
                 },
-                onImagesClicked() {
+                onImagesClicked(userId) {
+                    apiClient.get('/' + userId + '/images')
+                        .then(response => {
+                            this.toDateTime(response.data);
+                            this.images = response.data;
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
                 },
-                onFavoritesClicked() {
+                onFavoritesClicked(userId) {
+                    apiClient.get('/' + userId + '/favorites')
+                        .then(response => {
+                            this.toDateTime(response.data);
+                            this.favorites = response.data;
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
                 },
                 toDateTime(contents) {
                     for (var i in contents) {
