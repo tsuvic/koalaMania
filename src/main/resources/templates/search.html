@@ -6,38 +6,24 @@
     <meta charset="utf-8">
     <meta name="viewport"
           content="width=device-width,initial-scale=1,maximum-scale=1">
-
-    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-    <link rel="canonical"
-          href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
-    <!-- Bootstrap core CSS -->
-    <link
-            href=https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css
-            rel="stylesheet"
-            integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
-            crossorigin="anonymous">
-
-    <!-- Custom styles for this template -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
     <link href="/css/searchResult.css" rel="stylesheet">
     <title th:text="${title}">検索画面</title>
     <script type="text/javascript">
-
     </script>
 
 </head>
 
 <body>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <div th:replace="~{block/header_boot::headerA_boot}"></div>
-
 <div class="searchResult-container">
-    <br> <br> <br>
-
-    <form class="card-body row no-gutters align-items-center" method="get"
+    <p class="mt-5 pt-3"></p>
+    <form class="p-4 container-fluid" method="get"
           th:action="@{/filter}" th:object="${animalFilterForm}">
-        <div class="row">
-
-            <div class="col-8">
+        <div class="row no-gutters">
+            <div class="col-8 pr-4">
                 <!--th:field="*{isMale}"を使用するとhiddenフィールドが出力されるため、th:checkedを使用-->
                 <input type="checkbox" id="isMale" name="isMale" th:field="*{isMale}">
                 <label for="isMale">オス</label>
@@ -48,7 +34,7 @@
                 <input type="checkbox" id="isDead" name="isDead" th:field="*{isDead}">
                 <label for="isDead">死</label>
             </div>
-            <div class="col-4 btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">動物園</div>
+            <div class="col-4 btn btn-secondary" data-toggle="modal" data-target="#exampleModal">動物園</div>
 
             <!-- Modal 動物園-->
             <div class="modal fade" id="exampleModal" tabindex="-1"
@@ -57,8 +43,9 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">動物園で絞り込み</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
 
                         <div class="modal-body">
@@ -70,7 +57,7 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">決定</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">決定</button>
                         </div>
                     </div>
                 </div>
@@ -78,8 +65,8 @@
 
         </div>
 
-        <div class="row">
-            <div class="col-8">
+        <div class="row no-gutters">
+            <div class="col-8  pr-4">
                 <input class="form-control form-control form-control-borderless"
                        type="text" name="keyword" th:field="*{keyword}"
                        placeholder="キーワード">
@@ -156,29 +143,7 @@
 		document.write('<script src="http://'
 				+ (location.host || 'localhost').split(':')[0]
 				+ ':35729/livereload.js?snipver=2"></' + 'script>')
-
-
-
-
-
-
-
-
 </script>
-
-<script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
-        crossorigin="anonymous"></script>
-<script
-        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
-        integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU"
-        crossorigin="anonymous"></script>
-<script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"
-        integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj"
-        crossorigin="anonymous"></script>
-
 <div th:replace="~{block/footer_boot::footerA_boot}"></div>
 </body>
 </html>
