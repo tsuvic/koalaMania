@@ -6,23 +6,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-<link rel="canonical"
-	href="https://getbootstrap.jp/docs/5.0/examples/starter-template/">
-<!-- Bootstrap core CSS -->
-<link
-	href=https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css
-	rel="stylesheet"
-	integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
-	crossorigin="anonymous">
-
 <!-- Custom styles for this template -->
-
-
-<!-- Custom styles for this template -->
-<link href="/css/starter-template.css" rel="stylesheet">
 <script type="text/javascript">
 	$(function() {
 		$('.addModaiImage')
@@ -136,6 +123,7 @@
 </head>
 
 <body>
+	<p class="mt-5 pt-3"></p>
 	<!-- Modal -->
 	<button type="button" data-toggle="modal" id="opneModalButton"
 		data-target="#exampleModalCenter" style="display: none;"></button>
@@ -179,7 +167,8 @@
 			onclick="window.history.back(); return false;">戻る</button>
 	</div>
 	<div th:object="${detail}">
-		<table class="table table-hover table-responsive">
+		<div class="table-responsive">
+		<table class="table table-hover">
 			<tr>
 				<th class="cell_title">プロフィール写真</th>
 				<td><img th:src="*{profileImagePath}" width="200" height="200"></td>
@@ -251,6 +240,7 @@
 						style="border: solid; cursor: zoom-in; width: 100px; height: 100px;"></span></td>
 			</tr>
 		</table>
+		</div>
 
 		<h3 class="cell_title mx-2">動物園履歴</h3>
 
