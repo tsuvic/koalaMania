@@ -238,6 +238,7 @@
                                 <v-img v-if="image.postImageList !== null"
                                     :src="image.postImageList[0].imageAddress" alt="" aspect-ratio="1"
                                     cover coverclass="bg-grey-lighten-2">
+                                    <!-- https://developer.mozilla.org/ja/docs/Web/Web_Components/Using_templates_and_slots -->
                                     <template v-slot:placeholder>
                                         <v-row class="fill-height ma-0" align="center" justify="center">
                                             <v-progress-circular indeterminate color="grey-lighten-5">
