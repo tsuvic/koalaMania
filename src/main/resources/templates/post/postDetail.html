@@ -17,11 +17,6 @@
 	integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
 	crossorigin="anonymous">
 
-
-<!-- Custom styles for this template -->
-<link href="/css/starter-template.css" rel="stylesheet">
-
-
 <title th:text="${title}"></title>
 <script type="text/javascript">
 	$(function() {
@@ -247,6 +242,7 @@
 		</div>
 	</div>
 	<div th:replace="~{block/header_boot::headerA_boot}"></div>
+	<p class="mt-5 pt-3"></p>
 	<div class="container">
 		<div th:object="${post.zoo}">
 			<a th:href="@{/zoo/detail/{zoo_id}(zoo_id=${post.zoo.zoo_id})}"
