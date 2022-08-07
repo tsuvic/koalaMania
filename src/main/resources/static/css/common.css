@@ -1,0 +1,14 @@
+/*ページ共通のスタイルおよびBootstrapの設定上書き用*/
+
+/*Bootstrapのフォント設定は日本語フォントが無いため上書き*/
+:root{
+  --font-family-sans-serif: "Noto Sans Japanese", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", メイリオ, Meiryo, "ＭＳ Ｐゴシック", Osaka, sans-serif;
+}
+
+body {
+  font-family: var(--font-family-sans-serif);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-sans-serif);
+}
