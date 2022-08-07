@@ -30,7 +30,6 @@ $(function() {
 
 <body>
 	<div th:replace="~{block/header_boot::headerA_boot}"></div>
-	<p class="mt-5 pt-3"></p>
 	<form th:action="@{/user/edit}" method="post"
 			enctype="multipart/form-data" th:object="${userForm}">
 			<input type="hidden" th:field="*{user_id}">

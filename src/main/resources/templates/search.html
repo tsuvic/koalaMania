@@ -20,7 +20,6 @@
     <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <div th:replace="~{block/header_boot::headerA_boot}"></div>
 <div class="searchResult-container">
-    <p class="mt-5 pt-3"></p>
     <form class="p-4 container-fluid" method="get"
           th:action="@{/filter}" th:object="${animalFilterForm}">
         <div class="row no-gutters">

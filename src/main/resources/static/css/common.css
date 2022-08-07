@@ -13,3 +13,8 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-family-sans-serif);
 }
+
+/*navvar用のpadding*/
+body {
+  padding-top: 3.5rem;
+}
