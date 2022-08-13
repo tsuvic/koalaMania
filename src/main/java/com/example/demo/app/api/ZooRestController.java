@@ -22,6 +22,6 @@ public class ZooRestController {
     @GetMapping("/zoo")
     public String getAllZoo() throws JsonProcessingException {
         var allZooList = zooDao.getZooList();
-        return objectMapper.writeValueAsString(allZooList);
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(allZooList);
     }
 }

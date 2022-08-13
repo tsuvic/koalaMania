@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -21,24 +19,16 @@ public class AnimalRestController {
     private final AnimalDao animalDao;
 
     @GetMapping("/animals")
-    public String getAnimals(
-            @RequestParam(required = false, name = "keyword") Optional<String> keyword,
-            @RequestParam(required = false, name = "zoo") Optional<List<Integer>> ZooId,
-            @RequestParam(required = false, name = "animal") Optional<List<Integer>> AnimalId
-
+    public String searchAnimals(
+            //* @ModelAttribute AnimalSearchForm animalSearchForm RESTであるため、Formは不要 **/
+            //* IDもリクエストパラメータとしてinputするため、Stringとなる *//
+            //* 分岐のロジック・動的SQLの生成はDAOの責務とする　searchメソッドに渡すためにデフォルト値を設定する *//
+            @RequestParam(required = false, defaultValue = "", name = "keyword") Optional<String> keyword,
+            @RequestParam(required = false, defaultValue = "", name = "zoo") Optional<String> ZooId,
+            @RequestParam(required = false, defaultValue = "", name = "animal") Optional<String> AnimalId
     ) throws JsonProcessingException {
-
-        List searchResult = new ArrayList();
-
-        //TODO animalServiceからも参照するanimalDaoにsplit wordsの責務を持たせる形となっているため、リファクタリングが必要
-        if(keyword.isPresent()){
-            searchResult = animalDao.findByKeyword(keyword.get());
-        }
-
-        if (keyword.isEmpty() && ZooId.isEmpty() && AnimalId.isEmpty()) {
-            searchResult = animalDao.getAll();
-        }
-        return objectMapper.writeValueAsString(searchResult);
-
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(
+                animalDao.searchAnimals(keyword, ZooId, AnimalId)
+        );
     }
 }

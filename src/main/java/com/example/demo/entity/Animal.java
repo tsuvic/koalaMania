@@ -13,9 +13,8 @@ public class Animal {
 	public Animal() {
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
-	
+
 	public final String TABLE_NAME = "animal";
-	
 	public final String COLUMN_ANIMAL_ID = "animal_id";
 	public final String COLUMN_ANIMAL_TYPE_ID = "animal_type_id";
 	public final String COLUMN_NAME = "name";
@@ -36,10 +35,6 @@ public class Animal {
 	private Date birthdate;
 	private int is_alive;
 	private Date deathdate;
-	/*private String mother;
-	private String father;
-	private int mother_id;
-	private int father_id;*/
 	private String details;
 	private String feature;
 	private String stringBirthDate;

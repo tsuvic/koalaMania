@@ -35,4 +35,6 @@ public interface AnimalDao {
 	List<AnimalForTree> getChildrenAnimalForTree(int animal_id, int sex);
 
     List<Animal> filter(AnimalFilterForm animalSearchForm);
+
+	List<Animal> searchAnimals(String keyword, String ZooId, String AnimalId);
 }
