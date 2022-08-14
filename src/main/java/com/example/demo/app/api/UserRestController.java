@@ -21,7 +21,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
 
-
+/**
+* ユーザーページ向けのREST APIを提供するクラス
+*/
 @RestController
 @RequestMapping("/api/users")
 public class UserRestController {
@@ -42,7 +44,7 @@ public class UserRestController {
 	/**
 	 *　Spring Securityにて認証有無を確認する
 	 * @param form ユーザーフォーム
-	 * @return 認証済みの場合、ユーザー情報
+	 * @return 認証済みの場合:ユーザー情報, 未認証の場合:null
 	 * @throws Exception
 	 */
 	@RequestMapping("/checkAuthenticated")
@@ -55,6 +57,14 @@ public class UserRestController {
 		}
 	}
 
+	/**
+	 * ユーザー情報を取得する
+	 * @param userId
+	 * @param form
+	 * @param model
+	 * @return
+	 * @throws JsonProcessingException
+	 */
 	@GetMapping("/{userId}")
 	String getUser(@PathVariable int userId, @ModelAttribute UserForm form, Model model) throws JsonProcessingException {
 		LoginUser user = userAuthenticationUtil.isUserAuthenticated();

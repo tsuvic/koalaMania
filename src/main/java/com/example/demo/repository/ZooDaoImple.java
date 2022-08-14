@@ -1,15 +1,14 @@
 package com.example.demo.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.example.demo.entity.Prefecture;
+import com.example.demo.entity.Zoo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.entity.Prefecture;
-import com.example.demo.entity.Zoo;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ZooDaoImple implements ZooDao {
@@ -49,7 +48,8 @@ private final JdbcTemplate jdbcTemplate;
 	
 	@Override
 	public List<Zoo> getZooList() {
-		String sql = "SELECT "+ ENTITY_ZOO.COLUMN_ZOO_ID +", "+ ENTITY_ZOO.COLUMN_ZOO_NAME +" FROM "+ ENTITY_ZOO.TABLE_NAME +" ORDER BY "+ ENTITY_ZOO.COLUMN_ZOO_ID +" ASC";
+		String sql = "SELECT "+ ENTITY_ZOO.COLUMN_ZOO_ID +", " + ENTITY_ZOO.COLUMN_ZOO_NAME
+				+ " FROM "+ ENTITY_ZOO.TABLE_NAME +" ORDER BY "+ ENTITY_ZOO.COLUMN_ZOO_ID +" ASC";
 		List<Map<String, Object>> resultZooList = jdbcTemplate.queryForList(sql);
 		List<Zoo> zooList = new ArrayList<>();
 		for (Map<String, Object> result : resultZooList) {

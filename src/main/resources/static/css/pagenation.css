@@ -1,0 +1,53 @@
+.next.disable,
+.prev.disable {
+    pointer-events: none;
+    background: #ddd;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination p {
+    border: none;
+    border-radius: 50%;
+    padding: 5px 10px;
+    margin: 0 5px;
+    background: #24936e;
+    color: #fff;
+    height: 60px;
+    width: 60px;
+    line-height: 50px;
+    text-align: center;
+}
+.next:hover, .prev:hover, .page_counter li:hover {
+    cursor: pointer;
+}
+.page_counter {
+    display: flex;
+    list-style: none;
+    padding-left: 0;
+    margin: 0 10px;
+}
+
+.page_counter li {
+    border: 1px solid #606060;
+    border-radius: 50%;
+    padding: 5px 10px;
+    height: 60px;
+    width: 60px;
+    line-height: 50px;
+    text-align: center;
+}
+
+.page_counter li.active {
+    background: #24936e;
+    color: #fff;
+}
+
+.page_counter li + li {
+    margin-left: 5px;
+}
+
+
