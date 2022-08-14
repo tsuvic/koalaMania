@@ -9,15 +9,13 @@
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
     <link href="/css/common.css" rel="stylesheet">
     <link href="/css/searchResult.css" rel="stylesheet">
+    <link href="/css/pagenation.css" rel="stylesheet">
     <title th:text="${title}">検索画面</title>
-    <script type="text/javascript">
-    </script>
-
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 </head>
 
 <body>
-    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <div th:replace="~{block/header_boot::headerA_boot}"></div>
 <div class="searchResult-container">
     <form class="p-4 container-fluid" method="get"
@@ -137,8 +135,15 @@
                 </div>
             </div>
         </div>
+        <div class="pagination">
+            <p class="total_counter"></p>
+            <p class="prev">前へ</p>
+            <ul class="page_counter"></ul>
+            <p class="next">次へ</p>
+        </div>
     </div>
 </div>
+<script src="/js/pagenation.js"></script>
 <script>
 		document.write('<script src="http://'
 				+ (location.host || 'localhost').split(':')[0]
