@@ -20,8 +20,18 @@
     width: 60px;
     line-height: 50px;
     text-align: center;
+    font-size: 16px;
+    font-weight: 700;
 }
-.next:hover, .prev:hover, .page_counter li:hover {
+@media screen and (max-width: 799px) {
+ .pagination p {
+    display: none;
+ }
+}
+
+
+.next:hover, .prev:hover, 
+.page_counter li:hover {
     cursor: pointer;
 }
 .page_counter {
@@ -32,18 +42,29 @@
 }
 
 .page_counter li {
-    border: 1px solid #606060;
+    background: #606060;
+    color: #fff;
+    border: none;
     border-radius: 50%;
     padding: 5px 10px;
     height: 60px;
     width: 60px;
     line-height: 50px;
     text-align: center;
+    font-size: 16px;
+    font-weight: 700;
 }
+@media screen and (max-width: 799px) {
+    .page_counter li {
+        height: 40px;
+        width: 40px;
+        line-height: 30px;
+        font-size: 14px;
+    }
+   }
 
 .page_counter li.active {
     background: #24936e;
-    color: #fff;
 }
 
 .page_counter li + li {
