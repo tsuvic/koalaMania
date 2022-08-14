@@ -41,8 +41,8 @@
     text-align: center;
 }
 
-.page_counter li.current {
-    background: #606060;
+.page_counter li.active {
+    background: #24936e;
     color: #fff;
 }
 

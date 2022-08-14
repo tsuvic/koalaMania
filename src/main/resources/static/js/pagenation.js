@@ -10,7 +10,7 @@ const next_btn = document.querySelector('.next');
 const count = 30;
 
 //グローバル変数
-let current_step;
+let current_step = 1;
 let index_start;
 let index_end;
 
@@ -18,22 +18,32 @@ let index_end;
 // total_stepという変数に合計のページ数を割り当て
 // current_stepで現在のページ番号を定義
 // current_step_updateはページネーションの次へ前へのボタンがクリックされた際に渡される値
-function split_page(current_step_update){
+function split_page(){
   total_step = Math.ceil(redraw_elements.length / count);
-  if( current_step_update === undefined || current_step === 1){
-    current_step = 1;
+  if(current_step === 1){
+    next_btn_active();
+    if(Math.ceil(redraw_elements.length) < count){
+      next_btn_disable();
+    }
+    prev_btn_disable();
+  } else if( current_step === total_step ) {
     next_btn_disable(); prev_btn_active();
-  } else if( current_step_update === total_step ) {
-    next_btn_active(); prev_btn_disable();
   } else {
-    current_step = current_step_update;
-    next_btn_disable(); prev_btn_disable();
+    next_btn_active(); prev_btn_active();
     console.log(current_step);
   }
 
   total_el.textContent = current_step + '/' + total_step;
   redraw(redraw_elements.length, total_step, current_step, count);
-}
+  document.querySelectorAll('.page_number').forEach((element, index) => {
+      if (current_step == Number(element.getAttribute('data-counter-id'))){
+        element.classList.add('active');
+      }
+      else{
+        element.classList.remove('active');
+      }
+    })
+  }
 
 // DOMの描画
 function redraw(total, total_step, current_step, count)
@@ -73,35 +83,37 @@ function create_page_counter()
 
 //次へや前へが押された時のイベント処理
 next_btn.addEventListener('click', ()=> {
-  split_page(current_step += 1);
+  current_step += 1;
+  split_page();
 });
 
 prev_btn.addEventListener('click', ()=> {
-  split_page(current_step -= 1);
+  current_step -= 1;
+  split_page();
 });
 
 //class付与・削除関数
 prev_btn_active = () => {
-  prev_btn.classList.add('disable');
-}
-prev_btn_disable = () => {
   prev_btn.classList.remove('disable');
 }
-next_btn_disable = () => {
-  next_btn.classList.remove('disable');
+prev_btn_disable = () => {
+  prev_btn.classList.add('disable');
 }
 next_btn_active = () => {
+  next_btn.classList.remove('disable');
+}
+next_btn_disable = () => {
   next_btn.classList.add('disable');
 }
 
 //DOMの構築が完了したタイミングでページネーション実行
 window.addEventListener('DOMContentLoaded', () => {
-  split_page();
   create_page_counter();
+  split_page();
   document.querySelectorAll('.page_number').forEach((element, index) => {
     element.addEventListener('click', function(e) {
       current_step = Number(element.getAttribute('data-counter-id'));
-      split_page(current_step);
+      split_page();
     })
   })
 })
