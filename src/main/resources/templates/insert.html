@@ -10,6 +10,7 @@
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+<link href="/css/common.css" rel="stylesheet">
 <title th:text="${title}">Insert title here</title>
 <script type="text/javascript">
 
@@ -261,7 +262,6 @@
 
 <body>
 	<div th:replace="~{block/header_boot::headerA_boot}"></div>
-	<p class="mt-5 pt-3"></p>
 	<div class="container">
 		<h1 th:text="${title}"></h1>
 		<!--タイトル名を 変数式でControllerから取得 -->

@@ -9,6 +9,7 @@
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+<link href="/css/common.css" rel="stylesheet">
 <link href="/css/postgrad.css" rel="stylesheet">
 <script type="text/javascript">
 	$(function() {
@@ -74,7 +75,6 @@
 
 <body>
 	<div th:replace="~{block/header_boot::headerA_boot}"></div>
-	<p class="mt-5 pt-3"></p>
 	<div th:object="${zoo}">
 		<button class="btn btn-primary btn-sm" type="button"
 			th:onclick="'location.href = \'' +@{/post/postInsert/{zoo_id}(zoo_id=*{zoo_id})} + '\''">投稿する</button>
