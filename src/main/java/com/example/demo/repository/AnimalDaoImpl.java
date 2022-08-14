@@ -801,7 +801,7 @@ public class AnimalDaoImpl implements AnimalDao {
     }
 
     @Override
-    public List<Animal> searchAnimals(String keyword, String zooId, String animalId){
+    public List<Animal> searchAnimals(Optional<String> keyword, Optional<String> zooId, Optional<String> animalId){
         /**
          * Entityとテーブルの関係性を整理し、SQLとAPの責務を整理する必要がある。
          * 例えば、中間テーブルも含め、Entityをテーブルと同一のデータを保持させ、シンプルにORMで取得し、APで返却用のデータを組み立てる。
@@ -813,20 +813,28 @@ public class AnimalDaoImpl implements AnimalDao {
 
         //SQLで使用するために、引数の文字列を全て、半角区切りに変換後に分割し、Collectionにする。
         String keywordList []
-                = keyword
-                    .replaceAll(",", " ")
-                    .replaceAll("　", " ")
-                    .split(" ");
+                = keyword.isPresent()
+                ? keyword.get()
+                .replaceAll(" ", ",")
+                .replaceAll("　", ",")
+                .split(",")
+                : new String[0];
 
         String zooIdList []
-                = zooId
-                    .replaceAll(","," ")
-                    .split(" ");
+                = zooId.isPresent()
+                ? zooId.get()
+                    .replaceAll(" ", ",")
+                    .replaceAll("　", ",")
+                    .split(",")
+                : new String[0];
 
         String animalIdList []
-                = animalId
-                    .replaceAll(","," ")
-                    .split(" ");
+                = animalId.isPresent()
+                ? animalId.get()
+                    .replaceAll(" ", ",")
+                    .replaceAll("　", ",")
+                    .split(",")
+                : new String[0];
 
         String sql = """
             SELECT
@@ -892,11 +900,11 @@ public class AnimalDaoImpl implements AnimalDao {
             for(int i = 0; i < keywordList.length; i++){
                 sql += """
                 ( 
-                    animal.name LIKE '% + %s + %' 
-                    OR animal.details LIKE '% + %s + %'
-                    OR zoo.zoo_name LIKE '% + %s + %'
-                    OR mother.name LIKE '% + %s + %'
-                    OR father.name LIKE '% + %s + %'
+                    animal.name LIKE '%%s%' 
+                    OR animal.details LIKE '%%s%'
+                    OR zoo.zoo_name LIKE '%%s%'
+                    OR mother.name LIKE '%%s%'
+                    OR father.name LIKE '%%s%'
                 )
                 """.replaceAll("%s", keywordList[i]);
 
@@ -906,8 +914,14 @@ public class AnimalDaoImpl implements AnimalDao {
             }
         }
 
+
         // SQL実行結果をMap型リストへ代入
         List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql);
+        System.out.println(sql);
+        System.out.println(resultList);
+        System.out.println(keyword);
+        System.out.println(keywordList);
+
 
         // view返却用のリストを生成
         List<Animal> animalsList = new ArrayList<Animal>();
