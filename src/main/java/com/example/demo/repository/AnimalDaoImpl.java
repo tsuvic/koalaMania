@@ -14,6 +14,7 @@ import java.util.*;
 public class AnimalDaoImpl implements AnimalDao {
 
     private final JdbcTemplate jdbcTemplate;
+    public Object searchAnimals;
 
     @Autowired
     private Animal ENTITY_ANIMAL;
@@ -34,6 +35,7 @@ public class AnimalDaoImpl implements AnimalDao {
     public AnimalDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
 
     String AsMainAnimal = "mainAnimal";
     String AsMotherAnimal = "motherAnimal";
@@ -798,4 +800,165 @@ public class AnimalDaoImpl implements AnimalDao {
         return list;
     }
 
+    @Override
+    public List<Animal> searchAnimals(Optional<String> keyword, Optional<String> zooId, Optional<String> animalId){
+        /**
+         * Entityとテーブルの関係性を整理し、SQLとAPの責務を整理する必要がある。
+         * 例えば、中間テーブルも含め、Entityをテーブルと同一のデータを保持させ、シンプルにORMで取得し、APで返却用のデータを組み立てる。
+         * 現状、中間テーブルも含め、そのほかのテーブルのデータをSQLで全て取得し、1つのanimalインスタンスにボイラーコードで詰め込んでいる。
+         * https://www.docswell.com/s/MasatoshiTada/5Q4EMZ-spring-101#p30
+         * https://www.docswell.com/s/MasatoshiTada/K7MM75-jdbc-intro
+         * https://www.docswell.com/s/MasatoshiTada/596WW5-how-to-choose-java-orm
+         */
+
+        //SQLで使用するために、引数の文字列を全て、半角区切りに変換後に分割し、Collectionにする。
+        String keywordList []
+                = keyword.isPresent()
+                ? keyword.get()
+                .replaceAll(" ", ",")
+                .replaceAll("　", ",")
+                .split(",")
+                : new String[0];
+
+        String zooIdList []
+                = zooId.isPresent()
+                ? zooId.get()
+                    .replaceAll(" ", ",")
+                    .replaceAll("　", ",")
+                    .split(",")
+                : new String[0];
+
+        String animalIdList []
+                = animalId.isPresent()
+                ? animalId.get()
+                    .replaceAll(" ", ",")
+                    .replaceAll("　", ",")
+                    .split(",")
+                : new String[0];
+
+        String sql = """
+            SELECT
+                animal.animal_id,
+                animal.animal_type_id,
+                animal.name,
+                animal.sex,
+                animal.birthdate,
+                animal.is_alive,
+                animal.mother,
+                animal.father,
+                animal.details,
+                animal.profile_image_type,
+                animal.updated_by,
+                animal.updated_date,
+                animal_zoo_history.zoo_id,
+                animal_zoo_history.admission_date,
+                animal_zoo_history.exit_date,
+                zoo.zoo_name,
+                prefecture.prefecture_name,
+                mother.animal_id AS mother_id,
+                mother.name AS mother_name,
+                father.animal_id AS father_id,
+                father.name AS father_name
+                
+            FROM
+                animal
+
+            LEFT JOIN
+                (
+                    SELECT animal_id, MAX(exit_date)
+                    FROM animal_zoo_history
+                    GROUP BY animal_id
+                )
+                AS animal_zoo_history_tmp
+                ON animal.animal_id = animal_zoo_history_tmp.animal_id
+            
+            LEFT JOIN
+                animal_zoo_history
+                ON animal_zoo_history.animal_id = animal.animal_id
+                AND animal_zoo_history.exit_date = animal_zoo_history_tmp.MAX
+            
+            LEFT JOIN
+                zoo ON animal_zoo_history.zoo_id = zoo.zoo_id
+
+            LEFT JOIN
+                prefecture ON zoo.prefecture_id = prefecture.prefecture_id
+                
+            LEFT JOIN
+                animal AS mother ON animal.mother = mother.animal_id
+                
+            LEFT JOIN
+                animal AS father ON animal.father = father.animal_id
+                                
+            """;
+
+        //動的SQLを生成する
+        if(keywordList.length > 0 && zooIdList.length > 0 && animalIdList.length > 0){
+            sql += "WHERE ";
+        }
+
+        if(keywordList.length > 0){
+            for(int i = 0; i < keywordList.length; i++){
+                sql += """
+                ( 
+                    animal.name LIKE '%%s%' 
+                    OR animal.details LIKE '%%s%'
+                    OR zoo.zoo_name LIKE '%%s%'
+                    OR mother.name LIKE '%%s%'
+                    OR father.name LIKE '%%s%'
+                )
+                """.replaceAll("%s", keywordList[i]);
+
+            if(i < keywordList.length - 1){
+                    sql += " AND ";
+                }
+            }
+        }
+
+
+        // SQL実行結果をMap型リストへ代入
+        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql);
+        System.out.println(sql);
+        System.out.println(resultList);
+        System.out.println(keyword);
+        System.out.println(keywordList);
+
+
+        // view返却用のリストを生成
+        List<Animal> animalsList = new ArrayList<Animal>();
+
+        // MAP型リストからMapを繰り返し出力し、ObjectをAnimalインスタンスにsetする
+        for (Map<String, Object> result : resultList) {
+            Animal animal = new Animal();
+            animal.setAnimal_id((int) result.get("animal_id"));
+            animal.setName((String) result.get("name"));
+            animal.setSex((int) result.get("sex"));
+            animal.setBirthdate((Date) result.get("birthdate"));
+            animal.setProfileImagePath((String) result.get("profile_image_type"));
+
+            if (result.get("mother_id") != null) {
+                Animal motherAnimal = new Animal();
+                motherAnimal.setAnimal_id((int) result.get("mother_id"));
+                motherAnimal.setName((String) result.get("mother_name"));
+                animal.setMotherAnimal(motherAnimal);
+            }
+
+            if (result.get("father_id") != null) {
+                Animal fatherAnimal = new Animal();
+                fatherAnimal.setAnimal_id((int) result.get("father_id"));
+                fatherAnimal.setName((String) result.get("father_name"));
+                animal.setFatherAnimal(fatherAnimal);
+            }
+
+            if(result.get("zoo_id") != null){
+                AnimalZooHistory animalZooHistory = new AnimalZooHistory();
+                Zoo zoo = new Zoo();
+                zoo.setZoo_id((int) result.get("zoo_id"));
+                zoo.setZoo_name((String) result.get("zoo_name"));
+                animalZooHistory.setZoo(zoo);
+                animal.setAnimalZooHistoryList(Arrays.asList(animalZooHistory));
+            }
+            animalsList.add(animal);
+        }
+        return animalsList;
+    }
 }
