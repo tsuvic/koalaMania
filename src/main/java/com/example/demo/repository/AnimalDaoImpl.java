@@ -1,14 +1,25 @@
 package com.example.demo.repository;
 
-import com.example.demo.app.AnimalFilterForm;
-import com.example.demo.entity.*;
-import com.example.demo.util.CommonSqlUtil;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import com.example.demo.app.AnimalFilterForm;
+import com.example.demo.entity.Animal;
+import com.example.demo.entity.AnimalForTree;
+import com.example.demo.entity.AnimalZooHistory;
+import com.example.demo.entity.LoginUser;
+import com.example.demo.entity.Prefecture;
+import com.example.demo.entity.Zoo;
+import com.example.demo.util.CommonSqlUtil;
 
 @Repository
 public class AnimalDaoImpl implements AnimalDao {
@@ -910,6 +921,23 @@ public class AnimalDaoImpl implements AnimalDao {
 
             if(i < keywordList.length - 1){
                     sql += " AND ";
+                }
+            }
+        }
+        
+        if(zooIdList.length > 0 && !zooIdList[0].toString().isEmpty()){
+        	if(keywordList.length > 0){
+        		 sql += " AND ";
+        	}
+            for(int i = 0; i < zooIdList.length; i++){
+                sql += """
+                ( 
+                    zoo.zoo_id =  '%s'
+                )
+                """.replaceAll("%s", zooIdList[i]);
+
+            if(i < zooIdList.length - 1){
+                    sql += " OR ";
                 }
             }
         }
