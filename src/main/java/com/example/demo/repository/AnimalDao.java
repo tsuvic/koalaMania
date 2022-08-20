@@ -1,12 +1,13 @@
 package com.example.demo.repository;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import com.example.demo.app.AnimalFilterForm;
 import com.example.demo.entity.Animal;
 import com.example.demo.entity.AnimalForTree;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 public interface AnimalDao {
 	List<Animal> getAll();
@@ -37,5 +38,5 @@ public interface AnimalDao {
 
     List<Animal> filter(AnimalFilterForm animalSearchForm);
 
-	List<Animal> searchAnimals(Optional<String> keyword, Optional<String> ZooId, Optional<String> AnimalId);
+    Map<String, Object> searchAnimals(Optional<String> keyword, Optional<String> ZooId, Optional<String> AnimalId,boolean isMale,boolean isFemale, boolean isAlive, boolean isDead,int page);
 }
