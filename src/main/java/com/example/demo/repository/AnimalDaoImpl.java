@@ -1,14 +1,26 @@
 package com.example.demo.repository;
 
-import com.example.demo.app.AnimalFilterForm;
-import com.example.demo.entity.*;
-import com.example.demo.util.CommonSqlUtil;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import com.example.demo.app.AnimalFilterForm;
+import com.example.demo.entity.Animal;
+import com.example.demo.entity.AnimalForTree;
+import com.example.demo.entity.AnimalZooHistory;
+import com.example.demo.entity.LoginUser;
+import com.example.demo.entity.Prefecture;
+import com.example.demo.entity.Zoo;
+import com.example.demo.util.CommonSqlUtil;
 
 @Repository
 public class AnimalDaoImpl implements AnimalDao {
@@ -801,7 +813,7 @@ public class AnimalDaoImpl implements AnimalDao {
     }
 
     @Override
-    public List<Animal> searchAnimals(Optional<String> keyword, Optional<String> zooId, Optional<String> animalId){
+    public  Map<String, Object> searchAnimals(Optional<String> keyword, Optional<String> zooId, Optional<String> animalId,boolean isMale,boolean isFemale, boolean isAlive, boolean isDead, int page){
         /**
          * Entityとテーブルの関係性を整理し、SQLとAPの責務を整理する必要がある。
          * 例えば、中間テーブルも含め、Entityをテーブルと同一のデータを保持させ、シンプルにORMで取得し、APで返却用のデータを組み立てる。
@@ -836,7 +848,7 @@ public class AnimalDaoImpl implements AnimalDao {
                     .split(",")
                 : new String[0];
 
-        String sql = """
+        String select = """
             SELECT
                 animal.animal_id,
                 animal.animal_type_id,
@@ -859,6 +871,8 @@ public class AnimalDaoImpl implements AnimalDao {
                 mother.name AS mother_name,
                 father.animal_id AS father_id,
                 father.name AS father_name
+                """;
+        String from = """
                 
             FROM
                 animal
@@ -892,13 +906,17 @@ public class AnimalDaoImpl implements AnimalDao {
             """;
 
         //動的SQLを生成する
-        if(keywordList.length > 0 && zooIdList.length > 0 && animalIdList.length > 0){
-            sql += "WHERE ";
+        String where = "";
+        
+        if(keywordList.length > 0 || zooIdList.length > 0 ||  animalIdList.length > 0 
+        		|| isMale || isFemale || isAlive || isDead){
+            from  += "WHERE ";
+            
         }
 
         if(keywordList.length > 0){
             for(int i = 0; i < keywordList.length; i++){
-                sql += """
+                where += """
                 ( 
                     animal.name LIKE '%%s%' 
                     OR animal.details LIKE '%%s%'
@@ -909,15 +927,80 @@ public class AnimalDaoImpl implements AnimalDao {
                 """.replaceAll("%s", keywordList[i]);
 
             if(i < keywordList.length - 1){
-                    sql += " AND ";
+                    where += " AND ";
                 }
             }
         }
+        
+        if(zooIdList.length > 0 && !zooIdList[0].toString().isEmpty()){
+        	if(!where.isEmpty()) {
+        		 where += " AND ";
+        	}
+            for(int i = 0; i < zooIdList.length; i++){
+                where += """
+                ( 
+                    zoo.zoo_id =  '%s'
+                )
+                """.replaceAll("%s", zooIdList[i]);
 
+	            if(i < zooIdList.length - 1){
+	                    where += " OR ";
+	            }
+            }
+        }
+        
+        if(isMale && !isFemale){
+        	if(!where.isEmpty()) {
+       		 	where += " AND ";
+        	}
+        	where += """
+                        animal.sex =  '%s'
+                    """.replaceAll("%s","1");
+        }
+        
+        if(isFemale && !isMale){
+        	if(!where.isEmpty()) {
+       		 	where += " AND ";
+        	}
+        	where += """
+                        animal.sex =  '%s'
+                    """.replaceAll("%s","2");
+        }
+        
+        if(isAlive && !isDead){
+        	if(!where.isEmpty()) {
+       		 	where += " AND ";
+        	}
+        	where += """
+                        animal.is_alive =  '%s'
+                    """.replaceAll("%s","1");
+        }
+        
+        if(isDead && !isAlive){
+        	if(!where.isEmpty()) {
+       		 	where += " AND ";
+        	}
+        	where += """
+                        animal.is_alive =  '%s'
+                    """.replaceAll("%s","0");
+        }
+        
+        if(!where.isEmpty()) {
+   		 	from += where;
+    	}
+        
+        String limit  = """
+        		ORDER BY animal.updated_date DESC
+                LIMIT %s OFFSET %c 
+            """.replaceAll("%s","14").replaceAll("%c",Integer.toString(15*(page-1))) ;
 
+        String countSql = """
+        		SELECT COUNT(animal.animal_id)
+        		""" + from;
         // SQL実行結果をMap型リストへ代入
-        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql);
-        System.out.println(sql);
+        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(select + from + limit);
+        List<Map<String, Object>> countResultList = jdbcTemplate.queryForList(countSql);
+        System.out.println(from);
         System.out.println(resultList);
         System.out.println(keyword);
         System.out.println(keywordList);
@@ -959,6 +1042,9 @@ public class AnimalDaoImpl implements AnimalDao {
             }
             animalsList.add(animal);
         }
-        return animalsList;
+        Map<String, Object> response = new HashMap<>();
+        response.put("resource", animalsList);
+        response.put("count",countResultList.get(0).get("count"));
+        return response;
     }
 }
