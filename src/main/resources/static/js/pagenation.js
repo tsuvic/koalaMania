@@ -17,7 +17,6 @@ let index_end;
 // ページ数を算出する
 // total_stepという変数に合計のページ数を割り当て
 // current_stepで現在のページ番号を定義
-// current_step_updateはページネーションの次へ前へのボタンがクリックされた際に渡される値
 function split_page(){
   total_step = Math.ceil(redraw_elements.length / count);
   if(current_step === 1){
@@ -33,7 +32,7 @@ function split_page(){
     console.log(current_step);
   }
 
-  total_el.textContent = current_step + '/' + total_step;
+  // total_el.textContent = current_step + '/' + total_step;
   redraw(redraw_elements.length, total_step, current_step, count);
   document.querySelectorAll('.page_number').forEach((element, index) => {
       if (current_step == Number(element.getAttribute('data-counter-id'))){

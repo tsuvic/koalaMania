@@ -47,10 +47,6 @@ public class AnimalController {
 		model.addAttribute("zooList", zooList);
 		return "index";
 	}
-	@GetMapping("/static/index")
-	public String displaySpaTestPage(){
-		return "../static/index";
-	}
 
 	@GetMapping("/search")
 	public String displaySearchedKoala(Model model, @RequestParam(required = false, name = "keyword") String keyword,
