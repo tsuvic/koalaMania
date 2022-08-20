@@ -21,17 +21,22 @@ public class AnimalRestController {
     static ObjectMapper objectMapper = new ObjectMapper();
     private final AnimalDao animalDao;
     @GetMapping("/animals")
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:3000","https://loquacious-pasca-67dd24.netlify.app"})
     public String searchAnimals(
             //* @ModelAttribute AnimalSearchForm animalSearchForm RESTであるため、Formは不要 **/
             //* IDもリクエストパラメータとしてinputするため、Stringとなる *//
             //* 分岐のロジック・動的SQLの生成はDAOの責務とする　searchメソッドに渡すためにデフォルト値を設定する *//
             @RequestParam(required = false, defaultValue = "", name = "keyword") Optional<String> keyword,
             @RequestParam(required = false, defaultValue = "", name = "zoo") Optional<String> ZooId,
-            @RequestParam(required = false, defaultValue = "", name = "animal") Optional<String> AnimalId
+            @RequestParam(required = false, defaultValue = "", name = "animal") Optional<String> AnimalId,
+            @RequestParam(required = false, defaultValue = "false", name = "isMale") boolean isMale,
+            @RequestParam(required = false, defaultValue = "false", name = "isFemale") boolean isFemale,
+            @RequestParam(required = false, defaultValue = "false", name = "isAlive") boolean isAlive,
+            @RequestParam(required = false, defaultValue = "false", name = "isDead") boolean isDead,
+            @RequestParam(required = false, defaultValue = "1", name = "page") int page
     ) throws JsonProcessingException {
         return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(
-                animalDao.searchAnimals(keyword, ZooId, AnimalId)
+                animalDao.searchAnimals(keyword, ZooId, AnimalId, isMale, isFemale,isAlive,isDead,page)
         );
     }
 }

@@ -22,7 +22,7 @@ public class ZooRestController {
     }
 
     @GetMapping("/zoo")
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:3000","https://loquacious-pasca-67dd24.netlify.app"})
     public String getAllZoo() throws JsonProcessingException {
         var allZooList = zooDao.getZooList();
         return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(allZooList);
