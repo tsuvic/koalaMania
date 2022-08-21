@@ -10,6 +10,8 @@ import twitter4j.User;
 public interface TwitterLoginService {
 	LoginUser userLogin(User twitterUser,HttpServletResponse response,HttpServletRequest request);
 	
+	LoginUser checkUserApi(long twitterId, HttpServletResponse response,HttpServletRequest request);
+	
 	void setCookie(LoginUser loginUser,HttpServletResponse response,HttpServletRequest request);
 	
 	String[] getHashedKeys(LoginUser loginUser);

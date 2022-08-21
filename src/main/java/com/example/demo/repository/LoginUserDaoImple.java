@@ -34,6 +34,23 @@ public class LoginUserDaoImple implements LoginUserDao {
 	public LoginUserDaoImple(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
+	
+	@Override
+	public 
+	LoginUser checkUserApi(long twitterId) {
+		String sql = "SELECT * FROM  " + ENTITY_LOGIN_USER.TABLE_NAME + " WHERE " + ENTITY_LOGIN_USER.COLUMN_PROVIDER + " = ? AND " + ENTITY_LOGIN_USER.COLUMN_PROVIDER_ID + " = ?";
+		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql,PROVIDER_TWITTER,twitterId);
+		if(resultList.size() < 1) {
+			
+			return null;
+			
+		} else {
+			LoginUser checkLoginUser = getLoginUser(resultList.get(0));
+			updateProviderAdressAndLoginDate(checkLoginUser);
+			
+			return checkLoginUser;
+		}	
+	};
 
 
 	@Override

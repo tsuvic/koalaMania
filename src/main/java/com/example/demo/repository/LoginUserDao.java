@@ -5,6 +5,8 @@ import com.example.demo.entity.LoginUser;
 public interface LoginUserDao {
 	LoginUser checkUser(twitter4j.User twitterUser);
 	
+	LoginUser checkUserApi(long twitterId);
+	
 	void insertUser(LoginUser insertUser);
 	
 	void updateProviderAdressAndLoginDate(LoginUser updateUser);

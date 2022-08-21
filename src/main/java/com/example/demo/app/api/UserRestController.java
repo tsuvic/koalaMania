@@ -1,25 +1,38 @@
 //SPAテスト用に実装したが、本番では不要
 package com.example.demo.app.api;
 
+import java.util.List;
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.example.demo.app.UserAuthenticationUtil;
 import com.example.demo.app.UserForm;
 import com.example.demo.entity.LoginUser;
 import com.example.demo.entity.Post;
 import com.example.demo.service.PostService;
 import com.example.demo.service.PostServiceImpl;
+import com.example.demo.service.TwitterLoginService;
 import com.example.demo.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
 * ユーザーページ向けのREST APIを提供するクラス
@@ -31,14 +44,16 @@ public class UserRestController {
 	private final UserService userService;
 	private final PostService postService;
 	private final PostServiceImpl postServiceImpl;
+	private final TwitterLoginService twitterLoginService;
 	static ObjectMapper objectMapper = new ObjectMapper();
 
 	@Autowired
-	public UserRestController(UserAuthenticationUtil userAuthenticationUtil, UserService userService, PostService postService, PostServiceImpl postServiceImpl) {
+	public UserRestController(UserAuthenticationUtil userAuthenticationUtil, UserService userService, PostService postService, PostServiceImpl postServiceImp, TwitterLoginService twitterLoginService) {
 		this.userAuthenticationUtil = userAuthenticationUtil;
 		this.userService = userService;
 		this.postService = postService;
-		this.postServiceImpl = postServiceImpl;
+		this.postServiceImpl = postServiceImp;
+		this.twitterLoginService = twitterLoginService;
 	}
 
 	/**
@@ -123,6 +138,22 @@ public class UserRestController {
 			return objectMapper.writeValueAsString(savedPost);
 		} else {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "ログインしてください");
+		}
+	}
+	
+	/**
+	 *　Spring Securityにて認証有無を確認する
+	 * @param form ユーザーフォーム
+	 * @return 認証済みの場合:ユーザー情報, 未認証の場合:null
+	 * @throws Exception
+	 */
+	@RequestMapping("/checkLogin")
+	String checkLogin(@RequestParam(required = true, defaultValue = "", name = "twitterId") String twitterId ,HttpServletResponse response,HttpServletRequest request) throws JsonProcessingException {
+		LoginUser loginUser = twitterLoginService.checkUserApi(Long.parseLong(twitterId),response,request);
+		if (loginUser != null) {
+			return objectMapper.writeValueAsString(loginUser);
+		} else {
+			return null;
 		}
 	}
 }
