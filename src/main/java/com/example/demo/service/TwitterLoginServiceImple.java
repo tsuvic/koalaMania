@@ -1,7 +1,10 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.LoginUser;
-import com.example.demo.repository.LoginUserDao;
+import java.time.Duration;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,11 +13,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import twitter4j.User;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.time.Duration;
+import com.example.demo.entity.LoginUser;
+import com.example.demo.repository.LoginUserDao;
+
+import twitter4j.User;
 
 @Service
 public class TwitterLoginServiceImple implements TwitterLoginService {
@@ -41,6 +44,16 @@ public class TwitterLoginServiceImple implements TwitterLoginService {
 	}
 	
 	@Override
+	public LoginUser checkUserApi(long twitterId, HttpServletResponse response,HttpServletRequest request) {
+		
+		LoginUser loginUser = loginUserDao.checkUserApi(twitterId);
+		
+		setCookie(loginUser,response,request);
+	    
+		return loginUser;
+	}
+	
+	@Override
 	public void setCookie(LoginUser loginUser,HttpServletResponse response,HttpServletRequest request) {
 		
 		String[] hashedKeys = getHashedKeys(loginUser);
@@ -50,7 +63,7 @@ public class TwitterLoginServiceImple implements TwitterLoginService {
 		ResponseCookie responseCookie = ResponseCookie
 				.from("autoLogin", hashedKeys[0])
 				.domain(request.getServerName())
-				.maxAge(Duration.ofDays(3))
+				.maxAge(Duration.ofDays(30))
 				.path("/")
 				.httpOnly(true)
 				.secure(true)
