@@ -1,11 +1,11 @@
 package com.example.demo.repository;
 
-import java.util.List;
-
 import com.example.demo.entity.Zoo;
 
+import java.util.List;
+
 public interface ZooDao {
-	Zoo findById(int id);
-	
+	Zoo findById(int zooId);
+	Zoo getFavoriteZoo(int userId);
 	List<Zoo> getZooList();
 }

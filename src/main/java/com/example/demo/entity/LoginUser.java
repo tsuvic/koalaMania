@@ -34,6 +34,8 @@ public class LoginUser extends org.springframework.security.core.userdetails.Use
 
 	public final String COLUMN_TWITTER_LINK_FLAG = "twitterlinkflag";
 
+	public final String COLUMN_FAVORITE_ZOO = "favorite_zoo";
+
 	public final String COLUMN_AUTO_LOGIN = "auto_login";
 
 	public final String COLUMN_LOGIN_DATE = "login_date";
@@ -43,7 +45,9 @@ public class LoginUser extends org.springframework.security.core.userdetails.Use
 	private static final String dummyUser = "users";
 
 	private static final String ROLE_USER = "ROLE_USER";
-	
+
+
+
 	private int user_id;
 	private String provider;
 	private long provider_id;
@@ -55,10 +59,11 @@ public class LoginUser extends org.springframework.security.core.userdetails.Use
 	private boolean twitterLinkFlag;
 	private int status;
 	private Date loginDate;
+	private long favoriteZoo;
 
 	public LoginUser(String userName, String password, String authorities,int user_id,
 			String provider,long provider_id,String provider_adress,String profile,
-			int status,String profileImagePath, boolean twitterLinkFlag) {
+			int status,String profileImagePath, boolean twitterLinkFlag, long favoriteZoo) {
 		super(userName, password, AuthorityUtils.createAuthorityList(authorities));
 		this.user_id = user_id;
 		this.provider = provider;
@@ -70,6 +75,7 @@ public class LoginUser extends org.springframework.security.core.userdetails.Use
 		this.status = status;
 		this.profileImagePath = profileImagePath;
 		this.twitterLinkFlag = twitterLinkFlag;
+		this.favoriteZoo = favoriteZoo;
 	}
 
 	public LoginUser(int user_id, String userName){
