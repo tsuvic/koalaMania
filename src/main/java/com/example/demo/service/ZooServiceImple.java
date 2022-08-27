@@ -1,14 +1,13 @@
 package com.example.demo.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.example.demo.entity.Post;
 import com.example.demo.entity.Zoo;
 import com.example.demo.repository.PostDao;
 import com.example.demo.repository.PostFavoriteDao;
 import com.example.demo.repository.ZooDao;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ZooServiceImple implements ZooService {
@@ -24,14 +23,17 @@ public class ZooServiceImple implements ZooService {
 	}
 	
 	@Override
-	public Zoo findById(int zoo_id) {
-		
-		return zooDao.findById(zoo_id);
+	public Zoo findById(int zooId) {
+		return zooDao.findById(zooId);
 	}
-	
+
 	@Override
-	public List<Post> getPostListByZooId(int zoo_id){
-		
-		return postFavoriteDao.getPostFavoriteList(postDao.getPostListByZooId(zoo_id));
+	public Zoo getFavoriteZoo(int userId){
+		return zooDao.getFavoriteZoo(userId);
+	}
+
+	@Override
+	public List<Post> getPostListByZooId(int zooId){
+		return postFavoriteDao.getPostFavoriteList(postDao.getPostListByZooId(zooId));
 	}
 }

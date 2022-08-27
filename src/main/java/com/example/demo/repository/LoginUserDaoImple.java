@@ -1,15 +1,14 @@
 package com.example.demo.repository;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import com.example.demo.entity.LoginUser;
+import com.example.demo.util.CommonSqlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.entity.LoginUser;
-import com.example.demo.util.CommonSqlUtil;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class LoginUserDaoImple implements LoginUserDao {
@@ -22,13 +21,11 @@ public class LoginUserDaoImple implements LoginUserDao {
 	private final String ROLE_USER = "ROLE_USER";
 	private final String ROLE_ADMIN = "ROLE_ADMIN";
 	private final boolean DEFAULT_TWITTER_LINK_FLAG = true;
-	
-	
-	
+
 	@Autowired
 	private CommonSqlUtil commonSqlUtil;
 	
-	private final  LoginUser ENTITY_LOGIN_USER = new LoginUser(dummyPassword, dummyPassword, ROLE_USER, 0, null, 0, null, null, 0 ,null,true);
+	private final  LoginUser ENTITY_LOGIN_USER = new LoginUser(dummyPassword, dummyPassword, ROLE_USER, 0, null, 0, null, null, 0 ,null, true, 5);
 	
 	@Autowired
 	public LoginUserDaoImple(JdbcTemplate jdbcTemplate) {
@@ -41,24 +38,20 @@ public class LoginUserDaoImple implements LoginUserDao {
 		String sql = "SELECT * FROM  " + ENTITY_LOGIN_USER.TABLE_NAME + " WHERE " + ENTITY_LOGIN_USER.COLUMN_PROVIDER + " = ? AND " + ENTITY_LOGIN_USER.COLUMN_PROVIDER_ID + " = ?";
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql,PROVIDER_TWITTER,twitterId);
 		if(resultList.size() < 1) {
-			
 			return null;
-			
 		} else {
 			LoginUser checkLoginUser = getLoginUser(resultList.get(0));
 			updateProviderAdressAndLoginDate(checkLoginUser);
-			
 			return checkLoginUser;
 		}	
 	};
-
 
 	@Override
 	public LoginUser checkUser(twitter4j.User twitterUser) {
 		String sql = "SELECT * FROM  " + ENTITY_LOGIN_USER.TABLE_NAME + " WHERE " + ENTITY_LOGIN_USER.COLUMN_PROVIDER + " = ? AND " + ENTITY_LOGIN_USER.COLUMN_PROVIDER_ID + " = ?";
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql,PROVIDER_TWITTER,twitterUser.getId());
 		if(resultList.size() < 1) {
-			LoginUser checkLoginUser = new LoginUser(twitterUser.getName(), dummyPassword, ROLE_USER, 0, null, 0, null, null, 0 , null ,true);
+			LoginUser checkLoginUser = new LoginUser(twitterUser.getName(), dummyPassword, ROLE_USER, 0, null, 0, null, null, 0 , null ,true, 5);
 			checkLoginUser.setProvider(PROVIDER_TWITTER);
 			checkLoginUser.setProvider_id(twitterUser.getId());
 			checkLoginUser.setProfile(null);
@@ -137,10 +130,9 @@ public class LoginUserDaoImple implements LoginUserDao {
 	}
 	
 	@Override
-	public LoginUser findById(int user_id) {
+	public LoginUser findById(int userId) {
 		String sql = "SELECT * FROM  " + ENTITY_LOGIN_USER.TABLE_NAME + " WHERE " +  ENTITY_LOGIN_USER.COLUMN_USER_ID + " = ?";
-		Map<String, Object> resultMap = jdbcTemplate.queryForMap(sql,user_id);
-		
+		Map<String, Object> resultMap = jdbcTemplate.queryForMap(sql,userId);
 		return getLoginUser(resultMap);
 	}
 	
@@ -154,10 +146,17 @@ public class LoginUserDaoImple implements LoginUserDao {
 		
 		return findById(loginUser.getUser_id());
 	}
-	
+
+	/**
+	 * SQL結果をObjectにSetする共通処理を抽象化した処理：改善の余地あり
+	 * TODO Recordsクラス、DataClassRowMapperを使用することで本処理のようなボイラープレートを排除すべき
+	 * TODO https://www.docswell.com/s/MasatoshiTada/5Q4EMZ-spring-101#p31
+	 * @param getUserMap
+	 * @return LoginUser
+	 */
 	public LoginUser getLoginUser(Map<String,Object>getUserMap) {
-		
-		LoginUser loginUser = new LoginUser((String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_USER_NAME), 
+		LoginUser loginUser = new LoginUser(
+				(String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_USER_NAME),
 				dummyPassword, (String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_ROLE), 
 				(int) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_USER_ID), 
 				(String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_PROVIDER), 
@@ -166,8 +165,9 @@ public class LoginUserDaoImple implements LoginUserDao {
 				(String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_PROFILE), 
 				(int) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_STATUS),
 				(String) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_PROFILE_IMAGE_PATH),
-				(boolean) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_TWITTER_LINK_FLAG));
-		
+				(boolean) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_TWITTER_LINK_FLAG),
+				(long) getUserMap.get(ENTITY_LOGIN_USER.COLUMN_FAVORITE_ZOO)
+		);
 		return loginUser;
 	}
 
