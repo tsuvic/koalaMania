@@ -30,9 +30,9 @@ public class UserServiceImple implements UserService {
 	}
 
 	@Override
-	public LoginUser findById(int user_id) {
+	public LoginUser findById(int userId) {
 		// TODO 自動生成されたメソッド・スタブ
-		return loginUserdao.findById(user_id);
+		return loginUserdao.findById(userId);
 	}
 	
 	@Override
@@ -43,9 +43,19 @@ public class UserServiceImple implements UserService {
 			profileImageurl = updateUserProfileImage(form);
 		}
 		
-		LoginUser loginUser = new LoginUser(form.getName() ,"dummy", 
-				"ROLE_USER", form.getUser_id() ,null, 0, null, form.getProfile(), 
-				0, profileImageurl, form.isTwitterLinkFlag());
+		LoginUser loginUser = new LoginUser(
+				form.getName() ,
+				"dummy",
+				"ROLE_USER",
+				form.getUser_id(),
+				null,
+				0,
+				null,
+				form.getProfile(),
+				0,
+				profileImageurl,
+				form.isTwitterLinkFlag(),
+				form.getFavoriteZooId());
 		
 		LoginUser newLoginUser = loginUserdao.updateMyPage(loginUser);
 		

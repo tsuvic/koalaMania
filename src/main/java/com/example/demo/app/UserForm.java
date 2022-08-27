@@ -1,10 +1,9 @@
 package com.example.demo.app;
 
-import javax.validation.constraints.NotBlank;
-
+import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
-import lombok.Data;
+import javax.validation.constraints.NotBlank;
 
 @Data
 public class UserForm {
@@ -17,6 +16,8 @@ public class UserForm {
 	private String profile;
 	
 	private boolean twitterLinkFlag;
+
+	private long favoriteZooId = 5;
 	
 	private String adress;
 	
