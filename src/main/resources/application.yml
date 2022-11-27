@@ -7,7 +7,9 @@ com:
       url: https://res.cloudinary.com/honx7tf4c/image/upload/animal/
 
 server:
-    port: ${PORT:8080}
+  port: ${PORT:8080}
+  # adrdess: "0.0.0.0"
+  # https://spring.pleiades.io/spring-boot/docs/current/reference/html/application-properties.html#appendix.application-properties.server
 
 spring:
   thymeleaf:
@@ -39,7 +41,6 @@ spring:
       app-secret: ${TWITTER_SECRET}
       callback-url: ${TWITTER_CALLBACK_URL}
       autoLoginKey: ${AUTO_LOGIN_KEY}
-      
+
   messages:
     basename: messages, ValidationMessages
-
