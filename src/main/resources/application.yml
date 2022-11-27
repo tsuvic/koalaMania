@@ -8,6 +8,8 @@ com:
 
 server:
     port: ${PORT:8080}
+    adrdess: "0.0.0.0"
+    # https://spring.pleiades.io/spring-boot/docs/current/reference/html/application-properties.html#appendix.application-properties.server
 
 spring:
   thymeleaf:

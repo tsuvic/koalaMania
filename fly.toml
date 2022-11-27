@@ -1,4 +1,4 @@
-# fly.toml file generated for koalamania on 2022-10-22T21:55:51+09:00
+# fly.toml file generated for koalamania on 2022-11-27T08:42:43+09:00
 
 app = "koalamania"
 kill_signal = "SIGINT"
@@ -6,6 +6,16 @@ kill_timeout = 5
 processes = []
 
 [env]
+  MY_SPECIAL_ENV = "some_value"
+  MAX_PLAYER_COUNT = "15"
+  AUTO_LOGIN_KEY = "+*tani$tsuba\\katsu-hama!"
+  CLOUD_API_KEY = "222873739668934"
+  CLOUD_API_SECRET = "kA_QQZ854E_YIZ7N5G10_lHzhzE"
+  CLOUD_NAME = "honx7tf4c"
+  CLOUDINARY_URL = "cloudinary://222873739668934:kA_QQZ854E_YIZ7N5G10_lHzhzE@honx7tf4c"
+  TWITTER_API = "dTmokIaLxuChRxlSGyvYCmN2m"
+  TWITTER_CALLBACK_URL = "http://127.0.0.1:8080/oauth/twitter/access"
+  TWITTER_SECRET = "iS27Jp0Dg7nntDiBjyn0aTc7ert1kUlQOAScwHpSD0PGVYTw9K"
 
 [experimental]
   allowed_public_ports = []
