@@ -1,14 +1,13 @@
-package com.example.koalamaniaapi;
+package com.example.koalamania;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class KoalamaniaApiApplication {
+public class KoalamaniaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(KoalamaniaApiApplication.class, args);
-		System.out.println("こんにちは！");
+		SpringApplication.run(KoalamaniaApplication.class, args);
 	}
 
 }

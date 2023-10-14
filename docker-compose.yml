@@ -14,7 +14,7 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=password
   app:
-    build: .
+    build: .images/app
     env_file:
       - ./.env
     tty: true

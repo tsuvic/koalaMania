@@ -1,10 +1,10 @@
-package com.example.koalamaniaapi;
+package com.example.koalamania;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class KoalamaniaApiApplicationTests {
+class KoalamaniaApplicationTests {
 
 	@Test
 	void contextLoads() {
