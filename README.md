@@ -8,3 +8,9 @@
 
 その後、以下のコマンドでappとpostgresが起動する
 `docker compose up -d`
+
+プロジェクトのbuild方法
+`docker compose exec app sh gradlew build`
+
+プロジェクトの実行方法
+`docker compose exec app java -jar build/libs/koalamania-api-0.0.1-SNAPSHOT.jar`
