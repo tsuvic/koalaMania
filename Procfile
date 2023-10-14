@@ -1,1 +1,0 @@
-web: java -Dserver.port=$PORT -jar build/libs/koalaMania-0.0.1-SNAPSHOT.jar

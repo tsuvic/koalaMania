@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - db-store:/var/lib/postgresql/data
+      - ./sql/init:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_DB=koala_mania
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password
+  app:
+    build: .
+    env_file:
+      - ./.env
+    tty: true
+    volumes:
+      - ./:/app # Spring Bootのプロジェクト
+    ports:
+      - 8080:8080 # 通常実行
+      - 5050:5050 # デバッグ用
+    depends_on:
+      - postgres
+volumes:
+  db-store:

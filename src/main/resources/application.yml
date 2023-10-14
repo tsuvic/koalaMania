@@ -42,4 +42,3 @@ spring:
       
   messages:
     basename: messages, ValidationMessages
-
