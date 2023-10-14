@@ -1,7 +1,7 @@
 # koalaMania
 コアラマニアのリポジトリです。
 
-#初期設定
+# 起動方法
 .env.sampleを.envにコピー
 `cp .env.sample .env`
 .envに必要な環境変数をセット
