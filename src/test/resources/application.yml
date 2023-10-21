@@ -1,0 +1,21 @@
+spring:
+  thymeleaf:
+    cache: false
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+  datasource:
+    driverClassName: org.postgresql.Driver
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 4
+      minimum-idle: 4
+    password: ${POSTGRES_PASS}
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_USER}
+  flyway:
+    enabled: false
+    baseline-on-migrate: true # 既にあるテーブルなどがあるデータベースでもマイグレーションを実行する
+    baseline-version: 0

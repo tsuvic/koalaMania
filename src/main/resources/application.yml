@@ -19,12 +19,16 @@ spring:
       enabled: true
   datasource:
     driverClassName: org.postgresql.Driver
-    hikari:
-      maximum-pool-size: 4
-      minimum-idle: 4
     password: ${POSTGRES_PASS}
     url: ${POSTGRES_URL}
     username: ${POSTGRES_USER}
+  flyway:
+    enabled: true
+    user: ${POSTGRES_USER}
+    password: ${POSTGRES_PASS}
+    url:  ${POSTGRES_URL}
+    baseline-on-migrate: true # 既にあるテーブルなどがあるデータベースでもマイグレーションを実行する
+    baseline-version: 0	
 
   jpa:
     show-sql: true
@@ -42,3 +46,4 @@ spring:
       
   messages:
     basename: messages, ValidationMessages
+
