@@ -71,7 +71,7 @@ INSERT INTO public.zoo (zoo_name,prefecture_id,created_by,updated_by,created_dat
 INSERT INTO public.animal_type ("name",created_date,updated_date,created_by,updated_by) VALUES
 	 ('コアラ',now(),now(),1,1);
 
-INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
+INSERT INTO public.animal ("name",sex,birth_date,is_alive,death_date,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
 	 ('ニシチ',1,'2019-02-07',0,'2021-03-31',51,52,'一番好きだったコアラ。可愛かった。。','未入力','https://res.cloudinary.com/honx7tf4c/image/upload/v1628385384/animal/9/profile/9.jpg',1,2,'2021-06-19 14:43:59.213189','2021-08-08 10:16:43.602467',1),
 	 ('ニーナ',2,'2016-09-27',0,'2020-05-04',0,10,'父と同じ名前のコアラから子を作った','未入力','https://res.cloudinary.com/honx7tf4c/image/upload/v1628385473/animal/51/profile/51.jpg',1,2,'2021-06-19 14:43:59.213189','2021-08-08 16:09:46.223299',1),
 	 ('きらら',2,'2018-09-06',1,'9999-01-01',25,27,'未入力','未入力','https://res.cloudinary.com/honx7tf4c/image/upload/v1628385661/animal/11/profile/11.jpg',1,2,'2021-06-19 14:43:59.213189','2021-08-08 10:21:01.997034',1),
@@ -82,7 +82,7 @@ INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father
 	 ('test',2,'2021-03-04',1,'9999-01-01',0,0,'未入力','未入力','/images/defaultAnimal.png',2,2,'2021-12-03 20:02:55.417944','2021-12-03 20:11:22.161845',1),
 	 ('たんぽぽ',2,'2020-04-26',1,'9999-01-01',13,14,'未入力','未入力','https://res.cloudinary.com/honx7tf4c/image/upload/v1640432681/animal/182/profile/182.jpg',2,2,'2021-12-19 13:58:48.56305','2021-12-25 20:44:42.120953',1),
 	 ('ユウキ',1,'2009-06-01',0,'2019-08-21',0,0,'未入力','2から6',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1);
-INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
+INSERT INTO public.animal ("name",sex,birth_date,is_alive,death_date,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
 	 ('のぞみ',2,'2008-03-01',1,'9999-01-01',0,0,'自由奔放さと愛嬌がある小悪魔的コアラ','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('母親',2,'1933-01-01',1,'9999-01-01',101,99,'aaa','dddd','https://res.cloudinary.com/honx7tf4c/image/upload/v1624066315/koala/88/profile/88.jpg',1,2,'2021-06-19 14:43:59.213189','2021-06-28 21:23:04.772092',1),
 	 ('メイ',2,'2004-01-01',0,'2014-01-01',0,0,'未入力','未入力','/images/defaultAnimal.png',2,2,'2021-08-08 15:34:13.078077','2021-08-10 17:19:04.51628',1),
@@ -94,7 +94,7 @@ INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father
 	 ('アーチャー',1,'2007-03-08',0,'2015-04-03',0,0,'http://blog.livedoor.jp/minami758/archives/1564079.html','未入力','/images/defaultAnimal.png',1,2,'2021-06-19 14:43:59.213189','2021-08-09 17:51:23.921603',1),
 	 ('更新テスト',2,'2012-07-16',1,'9999-01-01',37,35,'更新','更新','https://res.cloudinary.com/honx7tf4c/image/upload/v1624187315/koala/108/profile/108.jpg',6,1,'2021-06-20 19:43:33.341305','2021-07-10 17:04:37.98235',1),
 	 ('コハル',2,'2019-04-02',1,'9999-01-01',19,17,'毛の色が濃い','未入力','https://res.cloudinary.com/honx7tf4c/image/upload/v1640432583/animal/6/profile/6.jpg',1,2,'2021-06-19 14:43:59.213189','2021-12-25 20:43:03.80268',1);
-INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
+INSERT INTO public.animal ("name",sex,birth_date,is_alive,death_date,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
 	 ('だいち',1,'2013-08-18',1,'9999-01-01',44,59,'寝相がおっさん','https://withnews.jp/article/f0180608005qq000000000000000W00o10101qq000017461A',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('ユウキ',1,'2010-09-07',0,'2019-08-21',0,0,'未入力','多摩から金沢へ',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('ユイ',2,'2018-06-25',1,'9999-01-01',44,42,'未入力','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
@@ -105,7 +105,7 @@ INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father
 	 ('ブンダ',1,'2010-09-15',1,'9999-01-01',0,0,'未入力','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('キボウ',2,'2019-10-17',1,'9999-01-01',43,41,'未入力','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('ヒマワリ',2,'2019-06-22',1,'9999-01-01',44,41,'未入力','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1);
-INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
+INSERT INTO public.animal ("name",sex,birth_date,is_alive,death_date,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
 	 ('ビー',1,'2019-05-21',1,'9999-01-01',15,17,'未入力','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('ハナ',2,'2019-05-20',1,'9999-01-01',33,32,'未入力','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('マイ',2,'2019-05-15',1,'9999-01-01',50,32,'未入力','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
@@ -116,7 +116,7 @@ INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father
 	 ('クレメンツ',2,'1997-11-20',1,'9999-01-01',0,0,'長寿。日本におけるコアラの長寿最高記録は、以前東山で暮らしていたオスの「ラム」の23歳11か月です。世界最高記録が25歳のようなので、あと4か月ほどで21歳になるクレメンツが、コアラとしてはかなりの高齢だということを感じて頂けるでしょうか。','http://www.higashiyama.city.nagoya.jp/blog/2018/07/post-3625.html',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('ティリー',2,'2009-12-15',1,'9999-01-01',0,0,'"りん" "きらら" "インディコ"を育てあげたビッグママ（実際、体もビッグ!）。６児の母。','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('ココ',2,'2010-05-05',1,'9999-01-01',72,71,'小柄で可愛らしいココですが、実は...東山のメスたちの中で１番のマッチョ！腕から肩にかけて筋肉ムキムキで、枝の間も軽々と移動していく運動神経抜群。','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1);
-INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
+INSERT INTO public.animal ("name",sex,birth_date,is_alive,death_date,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
 	 ('タイチ',1,'2012-05-03',1,'9999-01-01',0,0,'未入力','5から1',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('ホリー',2,'2013-12-15',1,'9999-01-01',0,0,'未入力','https://www.sankei.com/photo/daily/news/160328/dly1603280032-n1.html',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('エマ',2,'2018-12-06',1,'9999-01-01',30,32,'投票で命名。外国語で「大きな愛情をもってほしい」という願いが込められている','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
@@ -127,7 +127,7 @@ INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father
 	 ('ユメ',2,'2015-01-02',1,'9999-01-01',0,0,'未入力','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('リオ',2,'2015-12-10',1,'9999-01-01',0,0,'','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('ワトル',2,'2020-05-14',1,'9999-01-01',21,27,'とにかく可愛い。小柄な体格。オーストラリアの人たちになじみの深い国花にちなみ「ワトルWattle」と命名。','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1);
-INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
+INSERT INTO public.animal ("name",sex,birth_date,is_alive,death_date,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
 	 ('ウルル',1,'2007-05-26',0,'2017-12-18',0,0,'コタロウ(10)の父','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('ウメ',2,'2010-08-05',1,'9999-01-01',74,78,'コタロウ(10)の母','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('チャーリー',1,'2014-11-27',1,'9999-01-01',25,58,'母親のティリーがオーストラリアから来て日本で初めて産んだ子どもであり、父親のアーチャーが最後に残してくれた子','なし','https://res.cloudinary.com/honx7tf4c/image/upload/v1640432608/animal/14/profile/14.jpg',1,2,'2021-06-19 14:43:59.213189','2021-12-25 20:43:28.718919',1),
@@ -138,7 +138,7 @@ INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father
 	 ('みなみ',1,'1996-05-01',0,'2018-08-05',0,0,'未入力','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('ミライ',2,'2009-10-25',0,'2020-06-10',79,0,'未入力','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('セイ',1,'2018-06-26',0,'2020-03-23',65,41,'未入力','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1);
-INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
+INSERT INTO public.animal ("name",sex,birth_date,is_alive,death_date,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
 	 ('ココロ',2,'2011-09-26',0,'2019-12-25',0,49,'未入力','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('ジンベラン',2,'2013-02-23',1,'9999-01-01',0,0,'2015年1月にオーストラリアから来園したオスのボウ、メスのドリー、ジンベランの3頭のうちの1頭','未入力','https://res.cloudinary.com/honx7tf4c/image/upload/v1628402732/animal/18/profile/18.jpg',1,2,'2021-06-19 14:43:59.213189','2021-08-08 15:05:33.024509',1),
 	 ('リリー',2,'2018-03-28',1,'9999-01-01',53,17,'親の故郷であるオーストラリアクイーンズランド州のユーカリの木の下に咲く花「リリーピリー」から命名。','元気いっぱい！食いしん坊！','https://res.cloudinary.com/honx7tf4c/image/upload/v1628407737/animal/16/profile/16.jpg',1,2,'2021-06-19 14:43:59.213189','2021-08-08 16:28:57.901481',1),
@@ -149,7 +149,7 @@ INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father
 	 ('エミ',2,'2013-08-08',0,'2019-07-25',68,71,'未入力','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('ピース',1,'2011-06-06',0,'2016-12-09',0,58,'ハニーの父','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('ラム',1,'1988-04-28',0,'2012-03-30',0,0,'長寿。','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1);
-INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
+INSERT INTO public.animal ("name",sex,birth_date,is_alive,death_date,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
 	 ('ティムタム',1,'2005-09-03',0,'2013-07-26',0,0,'未入力','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('ミナト',1,'2014-06-12',0,'2018-12-20',74,49,'未入力','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('モミジ',2,'2006-05-29',1,'9999-01-01',79,80,'未入力','6から4',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
@@ -160,7 +160,7 @@ INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father
 	 ('モモジ',1,'1997-02-07',0,'2007-02-17',0,0,'未入力','未入力',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('インディコ',2,'2019-12-22',1,'9999-01-01',37,35,'イシンにとって初めて、ティリーにとって６人目の赤ちゃん。オーストラリア先住民の言葉で月の意味。','丸顔。',NULL,1,1,'2021-06-19 14:43:59.213189','2021-06-19 14:43:59.213189',1),
 	 ('ゆめ',2,'2009-01-01',0,'2018-07-02',0,0,'だいちとそらの母親。','未入力','/images/defaultAnimal.png',1,2,'2021-06-19 14:43:59.213189','2021-08-10 14:18:21.553922',1);
-INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
+INSERT INTO public.animal ("name",sex,birth_date,is_alive,death_date,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
 	 ('父方の祖母',2,'1904-01-01',1,'9999-01-01',0,0,'aaa','aa','https://res.cloudinary.com/honx7tf4c/image/upload/v1624853620/koala/98/profile/98.jpg',1,2,'2021-06-19 14:43:59.213189','2021-06-28 20:20:55.201271',1),
 	 ('いぶき',1,'2020-08-27',1,'9999-01-01',28,23,'父親のイシンに似ている..!?','誕生日要確認','/images/defaultAnimal.png',1,2,'2021-06-19 14:43:59.213189','2021-08-10 09:52:55.321546',1),
 	 ('父親',1,'1975-01-01',1,'9999-01-01',98,89,'ああ','あ','https://res.cloudinary.com/honx7tf4c/image/upload/v1624066292/koala/86/profile/86.jpg',1,2,'2021-06-19 14:43:59.213189','2021-06-28 21:27:15.154346',1),
@@ -171,7 +171,7 @@ INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father
 	 ('義理の兄',1,'2019-01-01',0,'9999-01-01',104,86,'herokuのエラー画面が無条件で表示されてしまう','テスト','https://res.cloudinary.com/honx7tf4c/image/upload/v1621863231/koala/106/profile/106.jpg',1,2,'2021-06-19 14:43:59.213189','2021-06-28 21:25:01.227994',1),
 	 ('兄',1,'1992-01-01',1,'9999-01-01',88,86,'aa','aa','https://res.cloudinary.com/honx7tf4c/image/upload/v1621143609/koala/102/profile/102.jpg',1,2,'2021-06-19 14:43:59.213189','2021-06-28 21:21:49.03538',1),
 	 ('メインコアラ',1,'2008-01-01',1,'9999-01-01',88,86,'あ','あ','https://res.cloudinary.com/honx7tf4c/image/upload/v1624066247/koala/85/profile/85.jpg',1,2,'2021-06-19 14:43:59.213189','2021-06-28 21:22:33.468857',1);
-INSERT INTO public.animal ("name",sex,birthdate,is_alive,deathdate,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
+INSERT INTO public.animal ("name",sex,birth_date,is_alive,death_date,mother,father,details,feature,profile_image_type,created_by,updated_by,created_date,updated_date,animal_type_id) VALUES
 	 ('妹',2,'2014-12-01',1,'9999-01-01',88,86,'aa','aa','https://res.cloudinary.com/honx7tf4c/image/upload/v1621143855/koala/103/profile/103.jpg',1,2,'2021-06-19 14:43:59.213189','2021-08-10 10:19:11.51419',1),
 	 ('父方の祖父',1,'1901-01-01',1,'9999-01-01',0,0,'yhky','kgjgkj','https://res.cloudinary.com/honx7tf4c/image/upload/v1624066352/koala/89/profile/89.jpg',1,2,'2021-06-19 14:43:59.213189','2021-06-28 21:26:58.282225',1),
 	 ('コタロウ',1,'2015-09-25',1,'9999-01-01',50,49,'ウルルとウメの２頭目の子供。','4から5','https://res.cloudinary.com/honx7tf4c/image/upload/v1628385729/animal/52/profile/52.jpg',1,2,'2021-06-19 14:43:59.213189','2021-08-08 10:22:09.55352',1),

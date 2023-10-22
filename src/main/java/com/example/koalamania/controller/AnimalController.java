@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.koalamania.entity.Animal;
+import com.example.koalamania.entity.AnimalEntity;
 import com.example.koalamania.service.AnimalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -27,7 +27,7 @@ public class AnimalController {
 
     @GetMapping("/animals")
     public String searchAnimals(@RequestParam(required = false, name = "keyword") String keyword)  throws Exception {
-        List<Animal> result = animalService.searchAnimals(keyword);
+        List<AnimalEntity> result = animalService.searchAnimals(keyword);
         ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(result);
         return json;

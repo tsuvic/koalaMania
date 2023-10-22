@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 @Component
-public class Animal {
+public class AnimalEntity {
     private int animal_id;
 	private String name;
 	private int sex;
